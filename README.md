@@ -12,16 +12,16 @@ Aside from being a fully featured game engine and toolkit, Banshee can also be u
 **WARNING: Banshee is still in development and should not be used in production.**
 
 # Features
-* [Features](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/features.md) - A list of all currently available features.
-* [Roadmap](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/roadmap.md) - A list of features to be implemented in both near and far future. 
+* [Core features](https://github.com/GameFoundry/bsf/blob/master/Documentation/GitHub/features.md) - A list of all core engine features.
+* [Editor features](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/features.md) - A list of all editor specific features.
+* [Roadmap](https://github.com/GameFoundry/bsf/blob/master/Documentation/GitHub/roadmap.md) - A list of features to be implemented in both near and far future. 
 
 # Download
 * [Binaries](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/install.md) - Download pre-built binaries for the most recent version.
 * [Compiling](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/compiling.md) - Learn how to compile the engine yourself.
 
 # Documentation
-* [Managed](http://docs.banshee3d.com/Managed/index.html) - Documentation for the scripting (C#) API. This is what most users will be interested in.
-* [Native](http://docs.banshee3d.com/Native/index.html) - Documentation for the native (C++) API. This is meant for advanced users meaning to extend/modify the engine.
+* [Documentation](http://docs.banshee3d.com/Managed/index.html) - Documentation for the scripting (C#) API.
 
 # About
 * [License](https://github.com/BearishSun/BansheeEngine/blob/master/Documentation/GitHub/license.md) - Information about Banshee's license.

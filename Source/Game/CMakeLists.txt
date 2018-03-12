@@ -1,14 +1,5 @@
 # Source files and their filters
 include(CMakeSources.cmake)
-
-# Includes
-set(Game_INC 
-	"./"
-	"../BansheeUtility" 
-	"../BansheeCore"
-	"../BansheeEngine")
-
-include_directories(${Game_INC})	
 	
 # Target
 if(WIN32)
@@ -16,6 +7,9 @@ if(WIN32)
 else()
 	add_executable(Game ${BS_GAME_SRC})
 endif()
+
+# Includes
+target_include_directories(Game PRIVATE "./")
 
 # Post-build step
 if(WIN32)
@@ -55,7 +49,7 @@ endif()
 
 # Libraries
 ## Local libs
-target_link_libraries(Game BansheeEngine BansheeUtility BansheeCore)
+target_link_libraries(Game bsf)
 
 # IDE specific
 set_property(TARGET Game PROPERTY FOLDER Executable)
