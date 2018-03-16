@@ -26,3 +26,4 @@ Documentation/html
 Source/Experimental
 Source/Scripting/MBansheeEngine/Generated
 Source/Scripting/MBansheeEditor/Generated
+.vs/*
