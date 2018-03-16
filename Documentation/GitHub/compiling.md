@@ -21,7 +21,9 @@ Use the guide below to get Banshee up and running as quickly as possible. Scroll
 	  - `Xcode`
 	- See all valid generators: [cmake-generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html)
 - Build the project using your chosen tool
-  - Build files will be placed in `BansheeBuild` folder
+  - Build files will be placed in `BansheeBuild` folder (e.g. Visual Studio or XCode solution, Makefiles)
+- Run the editor
+  - Editor executable and libraries will be placed in `BansheeEngine/bin` folder
 	 
 ## Customizing the build
 

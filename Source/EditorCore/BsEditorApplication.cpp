@@ -160,7 +160,7 @@ namespace bs
 
 	void EditorApplication::loadScriptSystem()
 	{
-		loadPlugin("BansheeMono", &mMonoPlugin);
+		loadPlugin("bsfMono", &mMonoPlugin);
 		loadPlugin("SBansheeEngine", &mSBansheeEnginePlugin);
 		loadPlugin("SBansheeEditor", &mSBansheeEditorPlugin);
 	}
