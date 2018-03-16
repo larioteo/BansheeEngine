@@ -9,10 +9,10 @@ Use the guide below to get Banshee up and running as quickly as possible. Scroll
   - See [here](#otherDeps)
 - Run the following commands in the terminal/command line:
   - `git clone https://github.com/BearishSun/BansheeEngine.git`
-  - `cd BansheeEngine`
-  - `mkdir Build`
-  - `cd Build`
-  - `cmake -G "$generator$" ../`
+  - `mkdir BansheeBuild`
+    - Note the build folder must be *OUTSIDE* of Banshee's root folder
+  - `cd BansheeBuild`
+  - `cmake -G "$generator$" ../BansheeEngine`
     - Where *$generator$* should be replaced with any of the supported generators. Some common ones:
 	  - `Visual Studio 14 2015 Win64` - Visual Studio 2015 (64-bit build)
 	  - `Visual Studio 15 2017 Win64` - Visual Studio 2017 (64-bit build)
@@ -21,7 +21,7 @@ Use the guide below to get Banshee up and running as quickly as possible. Scroll
 	  - `Xcode`
 	- See all valid generators: [cmake-generators](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html)
 - Build the project using your chosen tool
-  - Build files will be placed in `BansheeEngine\Build` folder
+  - Build files will be placed in `BansheeBuild` folder
 	 
 ## Customizing the build
 
