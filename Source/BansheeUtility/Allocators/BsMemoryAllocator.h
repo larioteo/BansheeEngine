@@ -421,7 +421,7 @@ namespace bs
 			bs_free<Alloc>((void*)p);
 		}
 
-		size_t max_size() const { return std::numeric_limits<size_type>::max() / sizeof(T); }
+		static constexpr size_t max_size() noexcept { return std::numeric_limits<size_type>::max() / sizeof(T); }
 		void construct(pointer p, const_reference t) { new (p) T(t); }
 		void destroy(pointer p) { p->~T(); }
 		/* This version of construct() (with a varying number of parameters)
