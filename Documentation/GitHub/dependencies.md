@@ -123,6 +123,7 @@ Additionally, if the dependency structure still isn't clear, download one of the
    
 **bison**
 - Bison 3.0.4
+- Only required if BUILD_BSL option is specified during the build (off by default)
 - **Windows**
   - http://sourceforge.net/projects/winflexbison/files/
 - **Linux**
@@ -133,6 +134,7 @@ Additionally, if the dependency structure still isn't clear, download one of the
  
 **flex**
 - Flex 2.6.1
+- Only required if BUILD_BSL option is specified during the build (off by default)
 - **Windows**
   - http://sourceforge.net/projects/winflexbison/files/
 - **Linux**
@@ -143,6 +145,7 @@ Additionally, if the dependency structure still isn't clear, download one of the
 
 **BansheeSBGen**
  - Banshee Script Binding Generator 1.0
+ - Only required if GENERATE_SCRIPT_BINDINGS option is specified during the build (off by default)
  - https://github.com/BearishSun/BansheeSBGen
  - Required for generation of C# script binding files. Not required if not using the scripting sub-system.
  - Executable (tool)

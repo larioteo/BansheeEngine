@@ -1,0 +1,48 @@
+#include "BsScriptCMeshCollider.generated.h"
+#include "BsMonoMethod.h"
+#include "BsMonoClass.h"
+#include "BsMonoUtil.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCMeshCollider.h"
+#include "BsScriptResourceManager.h"
+#include "BsScriptPhysicsMesh.generated.h"
+
+namespace bs
+{
+	ScriptCMeshCollider::ScriptCMeshCollider(MonoObject* managedInstance, const GameObjectHandle<CMeshCollider>& value)
+		:TScriptComponent(managedInstance, value)
+	{
+	}
+
+	void ScriptCMeshCollider::initRuntimeData()
+	{
+		metaData.scriptClass->addInternalCall("Internal_setMesh", (void*)&ScriptCMeshCollider::Internal_setMesh);
+		metaData.scriptClass->addInternalCall("Internal_getMesh", (void*)&ScriptCMeshCollider::Internal_getMesh);
+
+	}
+
+	void ScriptCMeshCollider::Internal_setMesh(ScriptCMeshCollider* thisPtr, MonoObject* mesh)
+	{
+		ResourceHandle<PhysicsMesh> tmpmesh;
+		ScriptPhysicsMesh* scriptmesh;
+		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		if(scriptmesh != nullptr)
+			tmpmesh = scriptmesh->getHandle();
+		thisPtr->getHandle()->setMesh(tmpmesh);
+	}
+
+	MonoObject* ScriptCMeshCollider::Internal_getMesh(ScriptCMeshCollider* thisPtr)
+	{
+		ResourceHandle<PhysicsMesh> tmp__output;
+		tmp__output = thisPtr->getHandle()->getMesh();
+
+		MonoObject* __output;
+		ScriptResourceBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		if(script__output != nullptr)
+			__output = script__output->getManagedInstance();
+		else
+			__output = nullptr;
+
+		return __output;
+	}
+}

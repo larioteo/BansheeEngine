@@ -24,6 +24,4 @@ Documentation/html
 *.aps
 *.opendb
 Source/Experimental
-Source/Scripting/MBansheeEngine/Generated
-Source/Scripting/MBansheeEditor/Generated
 .vs/*

@@ -468,7 +468,7 @@ namespace bs
 
 				if (!isNativeResource)
 				{
-					Vector<SubResourceRaw> importedResourcesRaw = gImporter()._importAllRaw(fileEntry->path, curImportOptions);
+					Vector<SubResourceRaw> importedResourcesRaw = gImporter()._importAll(fileEntry->path, curImportOptions);
 					Vector<SPtr<ProjectResourceMeta>> existingResourceMetas = fileEntry->meta->getAllResourceMetaData();
 					fileEntry->meta->clearResourceMetaData();
 

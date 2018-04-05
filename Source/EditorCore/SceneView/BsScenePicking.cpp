@@ -127,21 +127,23 @@ namespace bs
 						UINT32 idx = (UINT32)pickData.size();
 
 						bool useAlphaShader = false;
-						SPtr<RasterizerState> rasterizerState;
+						SPtr<RasterizerState> rasterizerState = RasterizerState::getDefault();
 
 						HMaterial originalMat = renderable->getMaterial(i);
 						if (originalMat != nullptr && originalMat->getNumPasses() > 0)
 						{
 							SPtr<Pass> firstPass = originalMat->getPass(0); // Note: We only ever check the first pass, problem?
-							useAlphaShader = firstPass->hasBlending();
+							const auto& pipelineState = firstPass->getGraphicsPipelineState();
+							if(pipelineState)
+							{
+								useAlphaShader = firstPass->hasBlending();
 
-							if (firstPass->getRasterizerState() == nullptr)
-								rasterizerState = RasterizerState::getDefault();
-							else
-								rasterizerState = firstPass->getRasterizerState();
+								if (pipelineState->getRasterizerState() == nullptr)
+									rasterizerState = RasterizerState::getDefault();
+								else
+									rasterizerState = pipelineState->getRasterizerState();
+							}
 						}
-						else
-							rasterizerState = RasterizerState::getDefault();
 
 						CullingMode cullMode = rasterizerState->getProperties().getCullMode();
 

@@ -13,7 +13,7 @@ add_library(SBansheeEngine SHARED
 # Includes
 set(SBansheeEngine_INC 
 	"./"
-	"${PROJECT_BINARY_DIR}/Generated/Engine/Include")
+	"./Generated")
 
 target_include_directories(SBansheeEngine PUBLIC ${SBansheeEngine_INC})
 	

@@ -13,7 +13,7 @@ add_library(SBansheeEditor SHARED
 # Includes
 set(SBansheeEditor_INC 
 	"./"
-	"${PROJECT_BINARY_DIR}/Generated/Editor/Include")
+	"./Generated")
 
 target_include_directories(SBansheeEditor PRIVATE ${SBansheeEditor_INC})
 	
