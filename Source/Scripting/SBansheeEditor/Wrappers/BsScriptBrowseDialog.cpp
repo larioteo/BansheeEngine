@@ -23,7 +23,7 @@ namespace bs
 	bool ScriptBrowseDialog::internal_OpenFile(MonoString* defaultFolder, MonoString* filterList, bool allowMultiselect,
 											   MonoArray** outPaths)
 	{
-		Path defaultFolderNative = MonoUtil::monoToWString(defaultFolder);
+		Path defaultFolderNative = MonoUtil::monoToString(defaultFolder);
 		String filterListNative = MonoUtil::monoToString(filterList);
 		
 		FileDialogType type = (FileDialogType)((UINT32)FileDialogType::OpenFile | (UINT32)FileDialogType::Multiselect);
@@ -35,7 +35,7 @@ namespace bs
 
 			for (UINT32 i = 0; i < (UINT32)paths.size(); i++)
 			{
-				MonoString* monoString = MonoUtil::wstringToMono(paths[i].toWString());
+				MonoString* monoString = MonoUtil::stringToMono(paths[i].toString());
 				pathArray.set(i, monoString);
 			}
 
@@ -51,7 +51,7 @@ namespace bs
 
 	bool ScriptBrowseDialog::internal_OpenFolder(MonoString* defaultFolder, MonoString** outPath)
 	{
-		Path defaultFolderNative = MonoUtil::monoToWString(defaultFolder);
+		Path defaultFolderNative = MonoUtil::monoToString(defaultFolder);
 
 		FileDialogType type = FileDialogType::OpenFolder;
 
@@ -60,7 +60,7 @@ namespace bs
 		{
 			if (paths.size() > 0)
 			{
-				MonoString* path = MonoUtil::wstringToMono(paths[0].toWString());
+				MonoString* path = MonoUtil::stringToMono(paths[0].toString());
 				MonoUtil::referenceCopy(outPath, (MonoObject*)path);
 			}
 			else
@@ -77,7 +77,7 @@ namespace bs
 
 	bool ScriptBrowseDialog::internal_SaveFile(MonoString* defaultFolder, MonoString* filterList, MonoString** outPath)
 	{
-		Path defaultFolderNative = MonoUtil::monoToWString(defaultFolder);
+		Path defaultFolderNative = MonoUtil::monoToString(defaultFolder);
 		String filterListNative = MonoUtil::monoToString(filterList);
 
 		FileDialogType type = FileDialogType::Save;
@@ -87,7 +87,7 @@ namespace bs
 		{
 			if (paths.size() > 0)
 			{
-				MonoString* path = MonoUtil::wstringToMono(paths[0].toWString());
+				MonoString* path = MonoUtil::stringToMono(paths[0].toString());
 				MonoUtil::referenceCopy(outPath, (MonoObject*)path);
 			}
 			else

@@ -25,7 +25,7 @@ namespace bs
 		return BuildData::getRTTIStatic();
 	}
 
-	const WString BuildManager::BUILD_FOLDER_NAME = L"Builds/";
+	const char* BuildManager::BUILD_FOLDER_NAME = "Builds/";
 
 	BuildManager::BuildManager()
 	{
@@ -63,21 +63,21 @@ namespace bs
 		return nullptr;
 	}
 
-	Vector<WString> BuildManager::getFrameworkAssemblies(PlatformType type) const
+	Vector<String> BuildManager::getFrameworkAssemblies(PlatformType type) const
 	{
 		switch (type)
 		{
 		case PlatformType::Windows:
 		default:
-			return { L"mscorlib", L"System", L"System.Core" };
+			return { u8"mscorlib", u8"System", u8"System.Core" };
 		}
 	}
 
 	Vector<Path> BuildManager::getNativeBinaries(PlatformType type) const
 	{
-		Vector<Path> libs = { L"bsfEngine", L"bsfCore", L"bsfUtility",
-			L"bsfD3D11RenderAPI", L"bsfGLRenderAPI", L"bsfMono",
-			L"RenderBeast", L"SBansheeEngine",  L"mono-2.0-sgen", L"nvtt" };
+		Vector<Path> libs = { u8"bsfEngine", u8"bsfCore", u8"bsfUtility",
+			u8"bsfD3D11RenderAPI", u8"bsfGLRenderAPI", u8"bsfMono",
+			u8"RenderBeast", u8"SBansheeEngine",  u8"mono-2.0-sgen", u8"nvtt" };
 
 		switch (type)
 		{
@@ -114,7 +114,7 @@ namespace bs
 			switch (platform)
 			{
 			case PlatformType::Windows:
-				return gEditorApplication().getProjectPath() + BUILD_FOLDER_NAME + L"Windows";
+				return gEditorApplication().getProjectPath() + BUILD_FOLDER_NAME + u8"Windows";
 			default:
 				break;
 			}
@@ -154,7 +154,7 @@ namespace bs
 		return Path::BLANK;
 	}
 
-	WString BuildManager::getDefines(PlatformType type) const
+	String BuildManager::getDefines(PlatformType type) const
 	{
 		return getPlatformInfo(type)->defines;
 	}

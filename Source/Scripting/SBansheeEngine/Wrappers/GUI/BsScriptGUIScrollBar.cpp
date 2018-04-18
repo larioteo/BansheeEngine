@@ -83,7 +83,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIScrollBarHorz* guiScrollBar = GUIScrollBarHorz::create(options, toString(MonoUtil::monoToWString(style)));
+		GUIScrollBarHorz* guiScrollBar = GUIScrollBarHorz::create(options, MonoUtil::monoToString(style));
 		ScriptGUIScrollBarH* scriptScrollBar = new (bs_alloc<ScriptGUIScrollBarH>()) ScriptGUIScrollBarH(instance, guiScrollBar);
 
 		guiScrollBar->onScrollOrResize.connect(std::bind(&ScriptGUIScrollBarH::onScroll, scriptScrollBar, _1, _2));
@@ -118,7 +118,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIScrollBarVert* guiScrollBar = GUIScrollBarVert::create(options, toString(MonoUtil::monoToWString(style)));
+		GUIScrollBarVert* guiScrollBar = GUIScrollBarVert::create(options, MonoUtil::monoToString(style));
 		ScriptGUIScrollBarV* scriptScrollBar = new (bs_alloc<ScriptGUIScrollBarV>()) ScriptGUIScrollBarV(instance, guiScrollBar);
 
 		guiScrollBar->onScrollOrResize.connect(std::bind(&ScriptGUIScrollBarV::onScroll, scriptScrollBar, _1, _2));
@@ -153,7 +153,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIScrollBarHorz* guiScrollBar = GUIScrollBarHorz::create(true, options, toString(MonoUtil::monoToWString(style)));
+		GUIScrollBarHorz* guiScrollBar = GUIScrollBarHorz::create(true, options, MonoUtil::monoToString(style));
 		ScriptGUIResizeableScrollBarH* scriptScrollBar = new (bs_alloc<ScriptGUIResizeableScrollBarH>()) ScriptGUIResizeableScrollBarH(instance, guiScrollBar);
 
 		guiScrollBar->onScrollOrResize.connect(std::bind(&ScriptGUIResizeableScrollBarH::onScroll, scriptScrollBar, _1, _2));
@@ -188,7 +188,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIScrollBarVert* guiScrollBar = GUIScrollBarVert::create(true, options, toString(MonoUtil::monoToWString(style)));
+		GUIScrollBarVert* guiScrollBar = GUIScrollBarVert::create(true, options, MonoUtil::monoToString(style));
 		ScriptGUIResizeableScrollBarV* scriptScrollBar = new (bs_alloc<ScriptGUIResizeableScrollBarV>()) ScriptGUIResizeableScrollBarV(instance, guiScrollBar);
 
 		guiScrollBar->onScrollOrResize.connect(std::bind(&ScriptGUIResizeableScrollBarV::onScroll, scriptScrollBar, _1, _2));

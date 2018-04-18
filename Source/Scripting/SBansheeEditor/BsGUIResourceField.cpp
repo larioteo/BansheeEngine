@@ -42,7 +42,7 @@ namespace bs
 
 		mDropButton = GUIDropButton::create((UINT32)DragAndDropType::Resources, GUIOptions(GUIOption::flexibleWidth()), 
 			getSubStyleName(BuiltinEditorResources::ObjectFieldDropBtnStyleName));
-		mClearButton = GUIButton::create(HString(L""), getSubStyleName(BuiltinEditorResources::ObjectFieldClearBtnStyleName));
+		mClearButton = GUIButton::create(HString(""), getSubStyleName(BuiltinEditorResources::ObjectFieldClearBtnStyleName));
 		mClearButton->onClick.connect(std::bind(&GUIResourceField::onClearButtonClicked, this));
 
 		mLayout->addElement(mDropButton);
@@ -187,7 +187,7 @@ namespace bs
 
 				mUUID = value.getUUID();
 
-				WString title = value->getName() + L" (" + toWString(mType) + L")";
+				String title = value->getName() + " (" + mType + ")";
 				mDropButton->setContent(GUIContent(HEString(title)));
 			}
 		}
@@ -217,7 +217,7 @@ namespace bs
 
 				mUUID = value.getUUID();
 
-				WString title = value->getName() + L" (" + toWString(mType) + L")";
+				String title = value->getName() + " (" + mType + ")";
 				mDropButton->setContent(GUIContent(HEString(title)));
 			}
 		}
@@ -235,11 +235,11 @@ namespace bs
 		Path resPath = gProjectLibrary().uuidToPath(mUUID);
 		if (!resPath.isEmpty())
 		{
-			WString title = resPath.getWFilename(false) + L" (" + toWString(mType) + L")";
+			String title = resPath.getFilename(false) + " (" + mType + ")";
 			mDropButton->setContent(GUIContent(HEString(title)));
 		}
 		else
-			mDropButton->setContent(GUIContent(HEString(L"None (" + toWString(mType) + L")")));
+			mDropButton->setContent(GUIContent(HEString("None (" + mType + ")")));
 
 		if (triggerEvent)
 		{

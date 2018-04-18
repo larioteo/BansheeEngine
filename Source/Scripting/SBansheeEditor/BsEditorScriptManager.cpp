@@ -127,7 +127,7 @@ namespace bs
 
 	void EditorScriptManager::loadMonoTypes()
 	{
-		WString editorAssemblyPath = gEditorApplication().getEditorAssemblyPath().toWString();
+		String editorAssemblyPath = gEditorApplication().getEditorAssemblyPath().toString();
 		mEditorAssembly = &MonoManager::instance().loadAssembly(editorAssemblyPath, EDITOR_ASSEMBLY);
 
 		mProgramEdClass = mEditorAssembly->getClass("BansheeEditor", "Program");

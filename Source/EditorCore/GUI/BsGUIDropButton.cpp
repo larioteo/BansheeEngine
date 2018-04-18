@@ -14,7 +14,7 @@ namespace bs
 	}
 
 	GUIDropButton::GUIDropButton(UINT32 dragType, const String& styleName, const GUIDimensions& dimensions)
-		:GUIButtonBase(styleName, GUIContent(HString(L"None")), dimensions), mDragType(dragType)
+		:GUIButtonBase(styleName, GUIContent(HString("None")), dimensions), mDragType(dragType)
 	{
 
 	}

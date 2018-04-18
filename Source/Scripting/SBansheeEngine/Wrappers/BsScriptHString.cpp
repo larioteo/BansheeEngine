@@ -22,18 +22,18 @@ namespace bs
 
 	void ScriptHString::internal_createInstance(MonoObject* instance, MonoString* identifier, UINT32 tableId)
 	{
-		HString string(MonoUtil::monoToWString(identifier), tableId);
+		HString string(MonoUtil::monoToString(identifier), tableId);
 		
 		new (bs_alloc<ScriptHString>()) ScriptHString(instance, string);
 	}
 
 	void ScriptHString::internal_setParameter(ScriptHString* nativeInstance, UINT32 idx, MonoString* value)
 	{
-		nativeInstance->mString.setParameter(idx, MonoUtil::monoToWString(value));
+		nativeInstance->mString.setParameter(idx, MonoUtil::monoToString(value));
 	}
 
 	void ScriptHString::internal_getValue(ScriptHString* nativeInstance, MonoString** value)
 	{
-		MonoUtil::referenceCopy(value, (MonoObject*)MonoUtil::wstringToMono(nativeInstance->mString.getValue()));
+		MonoUtil::referenceCopy(value, (MonoObject*)MonoUtil::stringToMono(nativeInstance->mString.getValue()));
 	}
 }

@@ -32,7 +32,7 @@ namespace bs
 		const String ASSEMBLY_ENTRY_POINT = "Program::Start";
 
 		MonoManager::startUp();
-		MonoAssembly& bansheeEngineAssembly = MonoManager::instance().loadAssembly(engineAssemblyPath.toWString(), ENGINE_ASSEMBLY);
+		MonoAssembly& bansheeEngineAssembly = MonoManager::instance().loadAssembly(engineAssemblyPath.toString(), ENGINE_ASSEMBLY);
 
 		PlayInEditorManager::startUp();
 		ScriptDebug::startUp();
@@ -52,7 +52,7 @@ namespace bs
 		Path gameAssemblyPath = gApplication().getGameAssemblyPath();
 		if (FileSystem::exists(gameAssemblyPath))
 		{
-			MonoManager::instance().loadAssembly(gameAssemblyPath.toWString(), SCRIPT_GAME_ASSEMBLY);
+			MonoManager::instance().loadAssembly(gameAssemblyPath.toString(), SCRIPT_GAME_ASSEMBLY);
 			ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_GAME_ASSEMBLY);
 		}
 
@@ -77,12 +77,12 @@ namespace bs
 		}
 		else // Otherwise just additively load them
 		{
-			MonoManager::instance().loadAssembly(engineAssemblyPath.toWString(), ENGINE_ASSEMBLY);
+			MonoManager::instance().loadAssembly(engineAssemblyPath.toString(), ENGINE_ASSEMBLY);
 			ScriptAssemblyManager::instance().loadAssemblyInfo(ENGINE_ASSEMBLY);
 
 			if (FileSystem::exists(gameAssemblyPath))
 			{
-				MonoManager::instance().loadAssembly(gameAssemblyPath.toWString(), SCRIPT_GAME_ASSEMBLY);
+				MonoManager::instance().loadAssembly(gameAssemblyPath.toString(), SCRIPT_GAME_ASSEMBLY);
 				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_GAME_ASSEMBLY);
 			}
 

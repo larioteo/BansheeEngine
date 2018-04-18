@@ -36,7 +36,7 @@ namespace bs
 		}
 
 		mDropButton = GUIDropButton::create((UINT32)DragAndDropType::Resources, getSubStyleName(BuiltinEditorResources::TextureFieldDropStyleName));
-		mClearButton = GUIButton::create(HString(L""), getSubStyleName(BuiltinEditorResources::TextureFieldClearBtnStyleName));
+		mClearButton = GUIButton::create(HString(""), getSubStyleName(BuiltinEditorResources::TextureFieldClearBtnStyleName));
 		mClearButton->onClick.connect(std::bind(&GUITextureField::onClearButtonClicked, this));
 
 		GUIPanel* dropTargetPanel = mLayout->addNewElement<GUIPanel>();
@@ -216,7 +216,7 @@ namespace bs
 		}
 		else
 		{
-			mDropButton->setContent(GUIContent(HString(L"(None)")));
+			mDropButton->setContent(GUIContent(HString("(None)")));
 			mClearButton->setVisible(false);
 		}
 

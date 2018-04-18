@@ -152,7 +152,7 @@ namespace bs
 		mDrawHelper->rectangle(area);
 	}
 
-	void HandleDrawManager::drawText(const Vector3& position, const WString& text, const HFont& font, UINT32 fontSize, float size)
+	void HandleDrawManager::drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize, float size)
 	{
 		Matrix4 scale = Matrix4::scaling(size);
 		mDrawHelper->setTransform(mTransform * scale);

@@ -68,7 +68,7 @@ namespace bs
 		}
 
 		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
-		GUIToggle* guiToggle = GUIToggle::create(nativeContent, toggleGroup, options, toString(MonoUtil::monoToWString(style)));
+		GUIToggle* guiToggle = GUIToggle::create(nativeContent, toggleGroup, options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUIToggle>()) ScriptGUIToggle(instance, guiToggle);
 

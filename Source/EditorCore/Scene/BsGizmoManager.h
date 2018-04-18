@@ -219,7 +219,7 @@ namespace bs
 		 * @param[in]	font		Font to use for rendering the text's characters.
 		 * @param[in]	fontSize	Size of the characters, in points.
 		 */
-		void drawText(const Vector3& position, const WString& text, const HFont& font, UINT32 fontSize = 16);
+		void drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize = 16);
 
 		/**
 		 * Clears all gizmo data, but doesn't update the meshes or the render data. (Calling update would create empty
@@ -366,7 +366,7 @@ namespace bs
 		struct TextData : CommonData
 		{
 			Vector3 position;
-			WString text;
+			String text;
 			HFont font;
 			UINT32 fontSize;
 		};

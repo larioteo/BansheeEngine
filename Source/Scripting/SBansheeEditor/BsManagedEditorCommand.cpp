@@ -193,7 +193,7 @@ namespace bs
 	}
 
 	CmdManaged::CmdManaged(ScriptCmdManaged* scriptObj)
-		: EditorCommand(L""), mScriptObj(scriptObj), mRefCount(0)
+		: EditorCommand(""), mScriptObj(scriptObj), mRefCount(0)
 	{
 
 	}

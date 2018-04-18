@@ -54,7 +54,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUISliderHorz* guiSlider = GUISliderHorz::create(options, toString(MonoUtil::monoToWString(style)));
+		GUISliderHorz* guiSlider = GUISliderHorz::create(options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUISliderH>()) ScriptGUISliderH(instance, guiSlider);
 		guiSlider->onChanged.connect(std::bind(&ScriptGUISliderH::onChanged, nativeInstance, _1));
@@ -159,7 +159,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUISliderVert* guiSlider = GUISliderVert::create(options, toString(MonoUtil::monoToWString(style)));
+		GUISliderVert* guiSlider = GUISliderVert::create(options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUISliderV>()) ScriptGUISliderV(instance, guiSlider);
 		guiSlider->onChanged.connect(std::bind(&ScriptGUISliderV::onChanged, nativeInstance, _1));

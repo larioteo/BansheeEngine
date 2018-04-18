@@ -1,4 +1,4 @@
-technique GizmoPicking
+shader GizmoPicking
 {
 	raster
 	{

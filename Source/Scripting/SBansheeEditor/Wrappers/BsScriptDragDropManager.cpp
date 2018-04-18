@@ -161,7 +161,7 @@ namespace bs
 		UINT32 idx = 0;
 		for (auto& path : paths)
 		{
-			MonoString* managedPath = MonoUtil::wstringToMono(path.toWString());
+			MonoString* managedPath = MonoUtil::stringToMono(path.toString());
 
 			arrStrings.set(idx, managedPath);
 			idx++;
@@ -181,7 +181,7 @@ namespace bs
 		for (UINT32 i = 0; i < pathsArray.size(); i++)
 		{
 			MonoString* monoPath = pathsArray.get<MonoString*>(i);
-			paths[i] = MonoUtil::monoToWString(monoPath);
+			paths[i] = MonoUtil::monoToString(monoPath);
 		}
 
 		new (bs_alloc<ScriptResourceDragDropData>()) ScriptResourceDragDropData(managedInstance, paths);
@@ -194,7 +194,7 @@ namespace bs
 		UINT32 idx = 0;
 		for (auto& path : instance->mPaths)
 		{
-			MonoString* managedPath = MonoUtil::wstringToMono(path.toWString());
+			MonoString* managedPath = MonoUtil::stringToMono(path.toString());
 
 			arrStrings.set(idx, managedPath);
 			idx++;

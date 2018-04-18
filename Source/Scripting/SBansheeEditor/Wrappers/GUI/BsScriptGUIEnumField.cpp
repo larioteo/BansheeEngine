@@ -49,12 +49,12 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		String styleName = toString(MonoUtil::monoToWString(style));
+		String styleName = MonoUtil::monoToString(style);
 
 		ScriptArray namesArr(names);
 		Vector<HString> nativeNames;
 		for (UINT32 i = 0; i < namesArr.size(); i++)
-			nativeNames.push_back(HString(namesArr.get<WString>(i)));
+			nativeNames.push_back(HString(namesArr.get<String>(i)));
 
 		GUIListBoxField* guiField = nullptr;
 		if (withTitle)

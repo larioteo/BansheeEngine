@@ -43,7 +43,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIProgressBar* progressBar = GUIProgressBar::create(options, toString(MonoUtil::monoToWString(style)));
+		GUIProgressBar* progressBar = GUIProgressBar::create(options, MonoUtil::monoToString(style));
 		new (bs_alloc<ScriptGUIProgressBar>()) ScriptGUIProgressBar(instance, progressBar);
 	}
 

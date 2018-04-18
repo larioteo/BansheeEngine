@@ -14,7 +14,7 @@ namespace bs
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel), mToggle(nullptr), mValue(false)
 	{
-		mToggle = GUIToggle::create(HString(L""), getSubStyleName(getToggleStyleType()));
+		mToggle = GUIToggle::create(HString(""), getSubStyleName(getToggleStyleType()));
 		mToggle->onToggled.connect(std::bind(&GUIToggleField::valueChanged, this, _1));
 
 		mLayout->addElement(mToggle);

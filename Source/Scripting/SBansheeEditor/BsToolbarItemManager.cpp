@@ -130,14 +130,14 @@ namespace bs
 			MonoString* monoTexturePath;
 			mIconField->get(toolbarItemAttrib, &monoTexturePath);
 
-			Path texturePath = MonoUtil::monoToWString(monoTexturePath);
+			Path texturePath = MonoUtil::monoToString(monoTexturePath);
 			icon = static_resource_cast<SpriteTexture>(gProjectLibrary().load(texturePath));
 		}
 
 		MonoString* tooltipMono;
 		mTooltipField->get(toolbarItemAttrib, &tooltipMono);
 
-		tooltip = HString(MonoUtil::monoToWString(tooltipMono));
+		tooltip = HString(MonoUtil::monoToString(tooltipMono));
 
 		mPriorityField->get(toolbarItemAttrib, &priority);
 		mSeparatorField->get(toolbarItemAttrib, &separator);

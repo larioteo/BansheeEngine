@@ -77,7 +77,7 @@ namespace bs
 			options.addOption(scriptArray.get<GUIOption>(i));
 
 		GUIScrollArea* guiScrollArea = GUIScrollArea::create(vertBarType, horzBarType, options, 
-			toString(MonoUtil::monoToWString(scrollBarStyle)), toString(MonoUtil::monoToWString(scrollAreaStyle)));
+			MonoUtil::monoToString(scrollBarStyle), MonoUtil::monoToString(scrollAreaStyle));
 
 		new (bs_alloc<ScriptGUIScrollArea>()) ScriptGUIScrollArea(instance, guiScrollArea);
 	}

@@ -43,7 +43,7 @@ namespace bs
 		const ProjectLibrary::LibraryEntry* rootEntry = gProjectLibrary().getRootEntry();
 
 		mRootElement.mFullPath = rootEntry->path;
-		mRootElement.mElementName = mRootElement.mFullPath.getWTail();
+		mRootElement.mElementName = mRootElement.mFullPath.getTail();
 
 		expandElement(&mRootElement);
 
@@ -87,7 +87,7 @@ namespace bs
 		// Do nothing, updates are handled via callbacks
 	}
 
-	void GUIResourceTreeView::renameTreeElement(GUITreeView::TreeElement* element, const WString& name)
+	void GUIResourceTreeView::renameTreeElement(GUITreeView::TreeElement* element, const String& name)
 	{
 		ResourceTreeElement* resourceTreeElement = static_cast<ResourceTreeElement*>(element);
 		
@@ -150,7 +150,7 @@ namespace bs
 		newChild->mFullPath = fullPath;
 		newChild->mSortedIdx = (UINT32)parent->mChildren.size();
 		newChild->mIsVisible = parent->mIsVisible && parent->mIsExpanded;
-		newChild->mElementName = fullPath.getWTail();
+		newChild->mElementName = fullPath.getTail();
 
 		parent->mChildren.push_back(newChild);
 
@@ -226,7 +226,7 @@ namespace bs
 			for (auto& child : current->mChildren)
 			{
 				ResourceTreeElement* resourceChild = static_cast<ResourceTreeElement*>(child);
-				if (Path::comparePathElem(curElem, UTF8::fromWide(resourceChild->mElementName)))
+				if (Path::comparePathElem(curElem, resourceChild->mElementName))
 				{
 					idx++;
 					current = resourceChild;
@@ -366,11 +366,11 @@ namespace bs
 		if(FileSystem::exists(path))
 		{
 			Path newPath = path;
-			WString filename = path.getWFilename(false);
+			String filename = path.getFilename(false);
 			UINT32 cnt = 1;
 			do 
 			{
-				newPath.setBasename(filename + toWString(cnt));
+				newPath.setBasename(filename + toString(cnt));
 				cnt++;
 			} while (FileSystem::exists(newPath));
 
@@ -421,7 +421,7 @@ namespace bs
 
 			for(UINT32 i = 0; i < mDraggedResources->numObjects; i++)
 			{
-				WString filename = mDraggedResources->resourcePaths[i].getWFilename();
+				String filename = mDraggedResources->resourcePaths[i].getFilename();
 				Path currentParent = mDraggedResources->resourcePaths[i].getParent();
 
 				if(currentParent != destDir)

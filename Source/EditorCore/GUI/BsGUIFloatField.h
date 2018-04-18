@@ -69,7 +69,7 @@ namespace bs
 		virtual ~GUIFloatField();
 
 		/** @copydoc GUIElementContainer::_hasCustomCursor */
-		bool _hasCustomCursor(const Vector2I position, CursorType& type) const override;
+		bool _hasCustomCursor(Vector2I position, CursorType& type) const override;
 
 		/** @copydoc GUIElementContainer::_mouseEvent */
 		bool _mouseEvent(const GUIMouseEvent& ev) override;
@@ -78,7 +78,7 @@ namespace bs
 		void styleUpdated() override;
 
 		/**	Triggered when the input box value changes. */
-		void valueChanging(const WString& newValue);
+		void valueChanging(const String& newValue);
 
 		/** Triggered when the input box value changes and is confirmed. */
 		void valueChanged(float newValue);
@@ -96,7 +96,7 @@ namespace bs
 		float applyRangeAndStep(float value) const;
 
 		/** Callback that checks can the provided string be converted to a floating point value. */
-		static bool floatFilter(const WString& str);
+		static bool floatFilter(const String& str);
 
 		static const float DRAG_SPEED;
 

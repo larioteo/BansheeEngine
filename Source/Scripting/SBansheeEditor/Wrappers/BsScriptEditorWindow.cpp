@@ -76,8 +76,8 @@ namespace bs
 
 	MonoObject* ScriptEditorWindow::internal_createOrGetInstance(MonoString* ns, MonoString* typeName)
 	{
-		String strTypeName = toString(MonoUtil::monoToWString(typeName));
-		String strNamespace = toString(MonoUtil::monoToWString(ns));
+		String strTypeName = MonoUtil::monoToString(typeName);
+		String strNamespace = MonoUtil::monoToString(ns);
 		String fullName = strNamespace + "." + strTypeName;
 
 		auto findIter = OpenScriptEditorWindows.find(fullName);
@@ -95,8 +95,8 @@ namespace bs
 
 	MonoObject* ScriptEditorWindow::internal_getInstance(MonoString* ns, MonoString* typeName)
 	{
-		String strTypeName = toString(MonoUtil::monoToWString(typeName));
-		String strNamespace = toString(MonoUtil::monoToWString(ns));
+		String strTypeName = MonoUtil::monoToString(typeName);
+		String strNamespace = MonoUtil::monoToString(ns);
 		String fullName = strNamespace + "." + strTypeName;
 
 		auto findIter = OpenScriptEditorWindows.find(fullName);
@@ -388,7 +388,7 @@ namespace bs
 
 	ScriptEditorWidget::ScriptEditorWidget(const String& ns, const String& type, UINT32 defaultWidth, 
 		UINT32 defaultHeight, bool localUndoRedo, EditorWidgetContainer& parentContainer)
-		: EditorWidgetBase(HString(toWString(type)), ns + "." + type, defaultWidth, defaultHeight, parentContainer)
+		: EditorWidgetBase(HString(type), ns + "." + type, defaultWidth, defaultHeight, parentContainer)
 		, mNamespace(ns), mTypename(type), mOnInitializeThunk(nullptr), mOnDestroyThunk(nullptr), mUpdateThunk(nullptr)
 		, mManagedInstance(nullptr), mGCHandle(0), mGetDisplayName(nullptr), mScriptOwner(nullptr), mContentsPanel(nullptr)
 		, mIsInitialized(false), mHasLocalUndoRedo(localUndoRedo)

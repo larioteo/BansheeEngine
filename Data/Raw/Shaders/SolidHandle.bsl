@@ -5,7 +5,7 @@ options
 	priority = 10;
 };
 
-technique SolidGizmo
+shader SolidGizmo
 {
 	mixin SolidGizmoBase;
 

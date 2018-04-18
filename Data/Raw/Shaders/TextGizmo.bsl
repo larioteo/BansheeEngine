@@ -1,4 +1,4 @@
-technique TextGizmo
+shader TextGizmo
 {
 	blend
 	{

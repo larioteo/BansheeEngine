@@ -46,21 +46,21 @@ namespace bs
 
 	void MDCodeEditor::openFile(const Path& solutionPath, const Path& filePath, UINT32 lineNumber) const
 	{
-		WString args = L"--no-splash \"" + solutionPath.toWString() + L"\" \"" + filePath.toWString() + L";" + toWString(lineNumber) + L"\"";
+		String args = "--no-splash \"" + solutionPath.toString() + "\" \"" + filePath.toString() + ";" + toString(lineNumber) + "\"";
 
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-		WString pathStr = mExecPath.toWString();
-		ShellExecuteW(0, L"open", pathStr.c_str(), args.c_str(), NULL, SW_HIDE);
+		WString pathStr = UTF8::toWide(mExecPath.toString());
+		WString wideArgs = UTF8::toWide(args);
+		ShellExecuteW(0, L"open", pathStr.c_str(), wideArgs.c_str(), NULL, SW_HIDE);
 #elif BS_PLATFORM == BS_PLATFORM_LINUX
-		String narrowArgs = UTF8::fromWide(args);
 		pid_t pid = fork();
 
 		if(pid == 0)
 		{
 			const char* commandPattern = "flatpak run com.xamarin.MonoDevelop %s";
 
-			char* commandStr = (char*) malloc((UINT32) narrowArgs.size() + (UINT32) strlen(commandPattern) + 1);
-			sprintf(commandStr, commandPattern, narrowArgs.c_str());
+			char* commandStr = (char*) malloc((UINT32) args.size() + (UINT32) strlen(commandPattern) + 1);
+			sprintf(commandStr, commandPattern, args.c_str());
 
 			system(commandStr);
 			free(commandStr);
@@ -74,8 +74,9 @@ namespace bs
 	{
 		String solutionString = CSProject::writeSolution(CSProjectVersion::MonoDevelop, data);
 		solutionString = StringUtil::replaceAll(solutionString, "\n", "\r\n");
+
 		Path solutionPath = outputPath;
-		solutionPath.append(data.name + L".sln");
+		solutionPath.append(data.name + ".sln");
 
 		for (auto& project : data.projects)
 		{
@@ -83,7 +84,7 @@ namespace bs
 			projectString = StringUtil::replaceAll(projectString, "\n", "\r\n");
 
 			Path projectPath = outputPath;
-			projectPath.append(project.name + L".csproj");
+			projectPath.append(project.name + ".csproj");
 
 			SPtr<DataStream> projectStream = FileSystem::createAndOpenFile(projectPath);
 			projectStream->write(projectString.c_str(), projectString.size() * sizeof(String::value_type));
@@ -125,7 +126,7 @@ namespace bs
 		if (installPath.empty())
 			return;
 
-		mInstallPath = Path(installPath) + Path("XamarinStudio.exe");
+		mInstallPath = Path(UTF8::fromWide(installPath)) + Path("XamarinStudio.exe");
 #elif BS_PLATFORM == BS_PLATFORM_LINUX
 		Path monoDevelopDir = LinuxPlatform::getHomeDir();
 		monoDevelopDir.append(".local/share/flatpak/app/com.xamarin.MonoDevelop");

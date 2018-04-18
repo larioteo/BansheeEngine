@@ -50,7 +50,7 @@ namespace bs
 
 		if (hasCloseButton)
 		{
-			mCloseButton = GUIButton::create(HString(L""), "WinCloseBtn");
+			mCloseButton = GUIButton::create(HString(""), "WinCloseBtn");
 			contentLayoutX->addElement(mCloseButton);
 			
 			mCloseButton->onClick.connect(std::bind(&ModalWindow::close, this));

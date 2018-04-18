@@ -26,7 +26,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 * @return						Cloned object.
 		 */
-		static HSceneObject execute(const HSceneObject& sceneObject, const WString& description = StringUtil::WBLANK);
+		static HSceneObject execute(const HSceneObject& sceneObject, const String& description = StringUtil::BLANK);
 
 		/**
 		 * Creates new scene object(s) by cloning existing objects. Automatically registers the command with undo/redo 
@@ -36,7 +36,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 * @return						Cloned objects.
 		 */
-		static Vector<HSceneObject> execute(const Vector<HSceneObject>& sceneObjects, const WString& description = StringUtil::WBLANK);
+		static Vector<HSceneObject> execute(const Vector<HSceneObject>& sceneObjects, const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -47,7 +47,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdCloneSO(const WString& description, const Vector<HSceneObject>& originals);
+		CmdCloneSO(const String& description, const Vector<HSceneObject>& originals);
 
 		Vector<HSceneObject> mOriginals;
 		Vector<HSceneObject> mClones;

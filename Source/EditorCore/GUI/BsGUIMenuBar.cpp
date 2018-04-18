@@ -78,9 +78,9 @@ namespace bs
 		bgLayout->addElement(mBgTexture);
 
 		mLogoTexture = GUITexture::create(TextureScaleMode::StretchToFit, getLogoStyleType());
-		mMinBtn = GUIButton::create(HString(L""), "WinMinimizeBtn");
-		mMaxBtn = GUIButton::create(HString(L""), "WinMaximizeBtn");
-		mCloseBtn = GUIButton::create(HString(L""), "WinCloseBtn");
+		mMinBtn = GUIButton::create(HString(""), "WinMinimizeBtn");
+		mMaxBtn = GUIButton::create(HString(""), "WinMaximizeBtn");
+		mCloseBtn = GUIButton::create(HString(""), "WinCloseBtn");
 		mSplitterLine = GUITexture::create(TextureScaleMode::StretchToFit, getLineStyleType());
 
 		GUILayout* mainLayout = mMainPanel->addNewElement<GUILayoutX>();
@@ -141,11 +141,11 @@ namespace bs
 		refreshNonClientAreas();
 	}
 
-	GUIMenuItem* GUIMenuBar::addMenuItem(const WString& path, std::function<void()> callback, 
+	GUIMenuItem* GUIMenuBar::addMenuItem(const String& path, std::function<void()> callback, 
 		INT32 priority, const ShortcutKey& shortcut)
 	{
-		WString strippedPath = path;
-		WString rootName;
+		String strippedPath = path;
+		String rootName;
 
 		if(!stripPath(strippedPath, rootName))
 			return nullptr;
@@ -164,10 +164,10 @@ namespace bs
 		return subMenu->menu->addMenuItem(strippedPath, callback, priority, shortcut);
 	}
 
-	GUIMenuItem* GUIMenuBar::addMenuItemSeparator(const WString& path, INT32 priority)
+	GUIMenuItem* GUIMenuBar::addMenuItemSeparator(const String& path, INT32 priority)
 	{
-		WString strippedPath = path;
-		WString rootName;
+		String strippedPath = path;
+		String rootName;
 
 		if(!stripPath(strippedPath, rootName))
 			return nullptr;
@@ -183,7 +183,7 @@ namespace bs
 		return subMenu->menu->addSeparator(strippedPath, priority);
 	}
 
-	GUIMenuBar::GUIMenuBarData* GUIMenuBar::addNewButton(const WString& name, INT32 priority)
+	GUIMenuBar::GUIMenuBarData* GUIMenuBar::addNewButton(const String& name, INT32 priority)
 	{
 		UINT32 numElements = (UINT32)mChildMenus.size();
 		UINT32 position = numElements;
@@ -218,10 +218,10 @@ namespace bs
 		return &newSubMenu;
 	}
 
-	GUIMenuItem* GUIMenuBar::getMenuItem(const WString& path)
+	GUIMenuItem* GUIMenuBar::getMenuItem(const String& path)
 	{
-		WString strippedPath = path;
-		WString rootName;
+		String strippedPath = path;
+		String rootName;
 
 		if(!stripPath(strippedPath, rootName))
 			return nullptr;
@@ -233,15 +233,15 @@ namespace bs
 		return subMenu->menu->getMenuItem(strippedPath);
 	}
 
-	void GUIMenuBar::removeMenuItem(const WString& path)
+	void GUIMenuBar::removeMenuItem(const String& path)
 	{
-		WString strippedPath = path;
-		WString rootName;
+		String strippedPath = path;
+		String rootName;
 
 		if(!stripPath(strippedPath, rootName))
 			return;
 
-		if(strippedPath == L"")
+		if(strippedPath == "")
 		{
 			UINT32 curIdx = 0;
 			GUIMenuBarData* subMenuToRemove = nullptr;
@@ -294,7 +294,7 @@ namespace bs
 		}
 	}
 
-	const GUIMenuBar::GUIMenuBarData* GUIMenuBar::getSubMenu(const WString& name) const
+	const GUIMenuBar::GUIMenuBarData* GUIMenuBar::getSubMenu(const String& name) const
 	{
 		for(auto& subMenu : mChildMenus)
 		{
@@ -415,20 +415,20 @@ namespace bs
 		}
 	}
 
-	void GUIMenuBar::registerShortcut(const WString& path, const ShortcutKey& shortcut, std::function<void()> callback)
+	void GUIMenuBar::registerShortcut(const String& path, const ShortcutKey& shortcut, std::function<void()> callback)
 	{
 		ShortcutManager::instance().addShortcut(shortcut, callback);
 
-		WString trimmedPath = path;
-		StringUtil::trim(trimmedPath, L"/\\", false, true);
+		String trimmedPath = path;
+		StringUtil::trim(trimmedPath, "/\\", false, true);
 
 		mEntryShortcuts[trimmedPath] = shortcut;
 	}
 
-	void GUIMenuBar::unregisterShortcut(const WString& path)
+	void GUIMenuBar::unregisterShortcut(const String& path)
 	{
-		WString trimmedPath = path;
-		StringUtil::trim(trimmedPath, L"/\\", false, true);
+		String trimmedPath = path;
+		StringUtil::trim(trimmedPath, "/\\", false, true);
 
 		auto findIter = mEntryShortcuts.find(trimmedPath);
 		if (findIter != mEntryShortcuts.end())
@@ -438,9 +438,9 @@ namespace bs
 		}
 	}
 
-	bool GUIMenuBar::stripPath(WString& path, WString& pathRoot) const
+	bool GUIMenuBar::stripPath(String& path, String& pathRoot) const
 	{
-		Vector<WString> pathElements = StringUtil::split(path, L"/");
+		Vector<String> pathElements = StringUtil::split(path, "/");
 		if(pathElements.size() == 0)
 			return false;
 
@@ -453,7 +453,7 @@ namespace bs
 		return true;
 	}
 
-	void GUIMenuBar::openSubMenu(const WString& name)
+	void GUIMenuBar::openSubMenu(const String& name)
 	{
 		const GUIMenuBarData* subMenu = getSubMenu(name);
 		if(subMenu == nullptr)
@@ -503,7 +503,7 @@ namespace bs
 		}		
 	}
 
-	void GUIMenuBar::onSubMenuHover(const WString& name)
+	void GUIMenuBar::onSubMenuHover(const String& name)
 	{
 		if(mSubMenuOpen)
 		{

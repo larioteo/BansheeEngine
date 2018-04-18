@@ -15,7 +15,7 @@ namespace bs
 	GUITextField::GUITextField(const PrivatelyConstruct& dummy, bool multiline, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		:GUIElementContainer(dimensions, style),
-		mInputBox(nullptr), mLayout(nullptr), mLabel(nullptr), mHasInputFocus(false), mValue(L"")
+		mInputBox(nullptr), mLayout(nullptr), mLabel(nullptr), mHasInputFocus(false), mValue("")
 	{
 		mLayout = GUILayoutX::create();
 		_registerChildElement(mLayout);
@@ -147,7 +147,7 @@ namespace bs
 			GUIDimensions::create(), false);
 	}
 
-	void GUITextField::setValue(const WString& value)
+	void GUITextField::setValue(const String& value)
 	{
 		mValue = value;
 		mInputBox->setText(value);
@@ -161,7 +161,7 @@ namespace bs
 		mInputBox->setTint(color);
 	}
 
-	void GUITextField::_setValue(const WString& value, bool triggerEvent)
+	void GUITextField::_setValue(const String& value, bool triggerEvent)
 	{
 		setValue(value);
 
@@ -188,9 +188,9 @@ namespace bs
 		mInputBox->setStyle(getSubStyleName(getInputStyleType()));
 	}
 
-	void GUITextField::valueChanged(const WString& newValue)
+	void GUITextField::valueChanged(const String& newValue)
 	{
-		CmdInputFieldValueChange<GUITextField, WString>::execute(this, newValue);
+		CmdInputFieldValueChange<GUITextField, String>::execute(this, newValue);
 	}
 
 	void GUITextField::focusChanged(bool focus)

@@ -23,7 +23,7 @@ namespace bs
 		 *
 		 * @param[in]	newValue	New string value.
 		 */
-		void onChanged(const WString& newValue);
+		void onChanged(const String& newValue);
 
 		/** Triggered when the user confirms input in the native text field. */
 		void onConfirmed();

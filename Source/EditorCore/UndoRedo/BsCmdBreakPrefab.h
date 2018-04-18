@@ -25,7 +25,7 @@ namespace bs
 		 * @param[in]	sceneObject		Scene object whose prefab link to break.
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 */
-		static void execute(const HSceneObject& sceneObject, const WString& description = StringUtil::WBLANK);
+		static void execute(const HSceneObject& sceneObject, const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -36,7 +36,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdBreakPrefab(const WString& description, const HSceneObject& sceneObject);
+		CmdBreakPrefab(const String& description, const HSceneObject& sceneObject);
 
 		/**	Clears all internal cached data. Should be called whenever a change is commited. */
 		void clear();

@@ -5,7 +5,7 @@
 
 namespace bs
 {
-	CmdCloneSO::CmdCloneSO(const WString& description, const Vector<HSceneObject>& originals)
+	CmdCloneSO::CmdCloneSO(const String& description, const Vector<HSceneObject>& originals)
 		:EditorCommand(description), mOriginals(originals)
 	{
 
@@ -16,7 +16,7 @@ namespace bs
 
 	}
 
-	HSceneObject CmdCloneSO::execute(const HSceneObject& sceneObject, const WString& description)
+	HSceneObject CmdCloneSO::execute(const HSceneObject& sceneObject, const String& description)
 	{
 		// Register command and commit it
 		CmdCloneSO* command = new (bs_alloc<CmdCloneSO>()) CmdCloneSO(description, { sceneObject });
@@ -31,7 +31,7 @@ namespace bs
 		return HSceneObject();
 	}
 
-	Vector<HSceneObject> CmdCloneSO::execute(const Vector<HSceneObject>& sceneObjects, const WString& description)
+	Vector<HSceneObject> CmdCloneSO::execute(const Vector<HSceneObject>& sceneObjects, const String& description)
 	{
 		// Register command and commit it
 		CmdCloneSO* command = new (bs_alloc<CmdCloneSO>()) CmdCloneSO(description, sceneObjects);

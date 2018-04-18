@@ -28,7 +28,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 * @return						Instantiated object.
 		 */
-		static HSceneObject execute(const HPrefab& prefab, const WString& description = StringUtil::WBLANK);
+		static HSceneObject execute(const HPrefab& prefab, const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -39,7 +39,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdInstantiateSO(const WString& description, const HPrefab& prefab);
+		CmdInstantiateSO(const String& description, const HPrefab& prefab);
 
 		HPrefab mPrefab;
 		HSceneObject mSceneObject;

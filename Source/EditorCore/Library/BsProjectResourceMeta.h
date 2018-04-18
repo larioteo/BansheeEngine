@@ -29,11 +29,11 @@ namespace bs
 		 * @param[in]	resourceMetaData	Non-project library specific meta-data.
 		 * @return							New project library resource meta data instance.
 		 */
-		static SPtr<ProjectResourceMeta> create(const WString& name, const UUID& uuid, UINT32 typeId, 
+		static SPtr<ProjectResourceMeta> create(const String& name, const UUID& uuid, UINT32 typeId, 
 			const SPtr<ResourceMetaData>& resourceMetaData);
 
 		/** Returns the name of the resource, unique within the file containing the resource. */
-		const WString& getUniqueName() const { return mName; }
+		String getUniqueName() const;
 
 		/**	Returns the UUID of the resource this meta data belongs to. */
 		const UUID& getUUID() const { return mUUID; }

@@ -4,7 +4,7 @@
 
 namespace bs
 {
-	EditorCommand::EditorCommand(const WString& description)
+	EditorCommand::EditorCommand(const String& description)
 		:mDescription(description), mId(0)
 	{ }
 }

@@ -29,7 +29,7 @@ namespace bs
 
 	MonoObject* ScriptResources::internal_Load(MonoString* path, bool keepLoaded)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 
 		HResource resource = GameResourceManager::instance().load(nativePath, keepLoaded);
 		if (resource == nullptr)

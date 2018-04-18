@@ -46,7 +46,7 @@ namespace bs
 		if(texture != nullptr)
 			nativeTexture = ScriptSpriteTexture::toNative(texture)->getHandle();
 
-		GUITexture* guiTexture = GUITexture::create(nativeTexture, scale, transparent, options, toString(MonoUtil::monoToWString(style)));
+		GUITexture* guiTexture = GUITexture::create(nativeTexture, scale, transparent, options, MonoUtil::monoToString(style));
 
 		new (bs_alloc<ScriptGUITexture>()) ScriptGUITexture(instance, guiTexture);
 	}

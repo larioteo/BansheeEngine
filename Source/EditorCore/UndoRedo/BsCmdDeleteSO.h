@@ -26,7 +26,7 @@ namespace bs
 		 * @param[in]	sceneObject	Scene object to delete.
 		 * @param[in]	description	Optional description of what exactly the command does.
 		 */
-		static void execute(const HSceneObject& sceneObject, const WString& description = StringUtil::WBLANK);
+		static void execute(const HSceneObject& sceneObject, const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -37,7 +37,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdDeleteSO(const WString& description, const HSceneObject& sceneObject);
+		CmdDeleteSO(const String& description, const HSceneObject& sceneObject);
 
 		/**
 		 * Saves the state of the specified object, all of its children and components. Make sure to call clear() when you

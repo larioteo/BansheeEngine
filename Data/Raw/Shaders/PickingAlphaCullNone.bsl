@@ -1,6 +1,6 @@
 #include "$EDITOR$/PickingAlphaCull.bslinc"
 
-technique PickingAlphaCullNone
+shader PickingAlphaCullNone
 {
 	mixin PickingAlphaCull;
 

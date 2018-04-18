@@ -42,7 +42,7 @@ namespace bs
 		for(UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIInputBox* guiInputBox = GUIInputBox::create(multiline, options, toString(MonoUtil::monoToWString(style)));
+		GUIInputBox* guiInputBox = GUIInputBox::create(multiline, options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUIInputBox>()) ScriptGUIInputBox(instance, guiInputBox);
 
@@ -52,13 +52,13 @@ namespace bs
 	void ScriptGUIInputBox::internal_getText(ScriptGUIInputBox* nativeInstance, MonoString** text)
 	{
 		GUIInputBox* inputBox = (GUIInputBox*)nativeInstance->getGUIElement();
-		MonoUtil::referenceCopy(text, (MonoObject*)MonoUtil::wstringToMono(inputBox->getText()));
+		MonoUtil::referenceCopy(text, (MonoObject*)MonoUtil::stringToMono(inputBox->getText()));
 	}
 
 	void ScriptGUIInputBox::internal_setText(ScriptGUIInputBox* nativeInstance, MonoString* text)
 	{
 		GUIInputBox* inputBox = (GUIInputBox*)nativeInstance->getGUIElement();
-		inputBox->setText(MonoUtil::monoToWString(text));
+		inputBox->setText(MonoUtil::monoToString(text));
 	}
 
 	void ScriptGUIInputBox::internal_setTint(ScriptGUIInputBox* nativeInstance, Color* color)
@@ -67,9 +67,9 @@ namespace bs
 		inputBox->setTint(*color);
 	}
 
-	void ScriptGUIInputBox::onChanged(const WString& newValue)
+	void ScriptGUIInputBox::onChanged(const String& newValue)
 	{
-		MonoString* monoValue = MonoUtil::wstringToMono(newValue);
+		MonoString* monoValue = MonoUtil::stringToMono(newValue);
 		MonoUtil::invokeThunk(onChangedThunk, getManagedInstance(), monoValue);
 	}
 

@@ -38,11 +38,11 @@ namespace bs
 		if(mTabBtnStyle == StringUtil::BLANK)
 			mTabBtnStyle = "TabbedBarBtn";
 
-		mMaxBtn = GUIButton::create(HString(L""), mMaximizeBtnStyle);
+		mMaxBtn = GUIButton::create(HString(""), mMaximizeBtnStyle);
 		mMaxBtn->_setElementDepth(1);
 		_registerChildElement(mMaxBtn);
 
-		mCloseBtn = GUIButton::create(HString(L""), mCloseBtnStyle);
+		mCloseBtn = GUIButton::create(HString(""), mCloseBtnStyle);
 		mCloseBtn->_setElementDepth(1);
 		_registerChildElement(mCloseBtn);
 

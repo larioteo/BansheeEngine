@@ -180,13 +180,13 @@ namespace bs
 	MonoString* ScriptEditorSettings::internal_GetLastOpenProject()
 	{
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
-		return MonoUtil::wstringToMono(settings->getLastOpenProject().toWString());
+		return MonoUtil::stringToMono(settings->getLastOpenProject().toString());
 	}
 
 	void ScriptEditorSettings::internal_SetLastOpenProject(MonoString* value)
 	{
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
-		settings->setLastOpenProject(MonoUtil::monoToWString(value));
+		settings->setLastOpenProject(MonoUtil::monoToString(value));
 	}
 
 	bool ScriptEditorSettings::internal_GetAutoLoadLastProject()
@@ -207,13 +207,13 @@ namespace bs
 		const Vector<RecentProject>& recentProjects = settings->getRecentProjects();
 		UINT32 numEntries = (UINT32)recentProjects.size();
 
-		ScriptArray outputPaths = ScriptArray::create<WString>(numEntries);
+		ScriptArray outputPaths = ScriptArray::create<String>(numEntries);
 		ScriptArray outputTimeStamps = ScriptArray::create<UINT64>(numEntries);
 
 		for (UINT32 i = 0; i < numEntries; i++)
 		{
-			WString projectPath = recentProjects[i].path.toWString();
-			MonoString* monoPath = MonoUtil::wstringToMono(projectPath);
+			String projectPath = recentProjects[i].path.toString();
+			MonoString* monoPath = MonoUtil::stringToMono(projectPath);
 
 			outputPaths.set(i, monoPath);
 			outputTimeStamps.set(i, recentProjects[i].accessTimestamp);
@@ -232,7 +232,7 @@ namespace bs
 		Vector<RecentProject> recentProjects(numEntries);
 		for (UINT32 i = 0; i < numEntries; i++)
 		{
-			recentProjects[i].path = pathsArray.get<WString>(i);
+			recentProjects[i].path = pathsArray.get<String>(i);
 			recentProjects[i].accessTimestamp = timeStampsArray.get<UINT64>(i);
 		}
 

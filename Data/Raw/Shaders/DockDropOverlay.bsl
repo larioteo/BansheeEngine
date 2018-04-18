@@ -1,4 +1,4 @@
-technique DockDropOverlay
+shader DockDropOverlay
 {
 	blend
 	{

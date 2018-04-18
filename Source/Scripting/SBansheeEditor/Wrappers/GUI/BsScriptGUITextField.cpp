@@ -46,7 +46,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		String styleName = toString(MonoUtil::monoToWString(style));
+		String styleName = MonoUtil::monoToString(style);
 
 		GUITextField* guiField = nullptr;
 		if (withTitle)
@@ -68,10 +68,10 @@ namespace bs
 	void ScriptGUITextField::internal_getValue(ScriptGUITextField* nativeInstance, MonoString** output)
 	{
 		if (nativeInstance->isDestroyed())
-			*output = MonoUtil::wstringToMono(StringUtil::WBLANK);
+			*output = MonoUtil::stringToMono(StringUtil::BLANK);
 
 		GUITextField* field = static_cast<GUITextField*>(nativeInstance->getGUIElement());
-		MonoUtil::referenceCopy(output, (MonoObject*)MonoUtil::wstringToMono(field->getValue()));
+		MonoUtil::referenceCopy(output, (MonoObject*)MonoUtil::stringToMono(field->getValue()));
 	}
 
 	void ScriptGUITextField::internal_setValue(ScriptGUITextField* nativeInstance, MonoString* value)
@@ -80,7 +80,7 @@ namespace bs
 			return;
 
 		GUITextField* field = static_cast<GUITextField*>(nativeInstance->getGUIElement());
-		field->setValue(MonoUtil::monoToWString(value));
+		field->setValue(MonoUtil::monoToString(value));
 	}
 
 	void ScriptGUITextField::internal_hasInputFocus(ScriptGUITextField* nativeInstance, bool* output)
@@ -101,9 +101,9 @@ namespace bs
 		field->setTint(*color);
 	}
 
-	void ScriptGUITextField::onChanged(const WString& newValue)
+	void ScriptGUITextField::onChanged(const String& newValue)
 	{
-		MonoString* monoNewValue = MonoUtil::wstringToMono(newValue);
+		MonoString* monoNewValue = MonoUtil::stringToMono(newValue);
 		MonoUtil::invokeThunk(onChangedThunk, getManagedInstance(), monoNewValue);
 	}
 

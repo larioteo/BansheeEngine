@@ -63,9 +63,9 @@ namespace bs
 		}
 
 		UINT32 numPaths = (UINT32)resourcePaths.size();
-		ScriptArray array = ScriptArray::create<WString>(numPaths);
+		ScriptArray array = ScriptArray::create<String>(numPaths);
 		for (UINT32 i = 0; i < numPaths; i++)
-			array.set(i, resourcePaths[i].toWString());
+			array.set(i, resourcePaths[i].toString());
 
 		MonoUtil::invokeThunk(onResourceDroppedThunk, getManagedInstance(), sceneMonoObject, array.getInternal());
 	}
@@ -79,7 +79,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		String styleName = toString(MonoUtil::monoToWString(style));
+		String styleName = MonoUtil::monoToString(style);
 
 		GUISceneTreeView* treeView = GUISceneTreeView::create(options);
 		new (bs_alloc<ScriptGUISceneTreeView>()) ScriptGUISceneTreeView(instance, treeView);

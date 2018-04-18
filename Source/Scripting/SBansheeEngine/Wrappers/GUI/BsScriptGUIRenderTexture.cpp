@@ -46,7 +46,7 @@ namespace bs
 		if (texture != nullptr)
 			renderTexture = texture->getInternal();
 
-		GUIRenderTexture* guiTexture = GUIRenderTexture::create(renderTexture, transparent, options, toString(MonoUtil::monoToWString(style)));
+		GUIRenderTexture* guiTexture = GUIRenderTexture::create(renderTexture, transparent, options, MonoUtil::monoToString(style));
 
 		new (bs_alloc<ScriptGUIRenderTexture>()) ScriptGUIRenderTexture(instance, guiTexture);
 	}

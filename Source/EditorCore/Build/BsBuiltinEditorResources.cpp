@@ -59,15 +59,15 @@ namespace bs
 	const String BuiltinEditorResources::TextureFieldDropStyleName = "TextureDrop";
 	const String BuiltinEditorResources::TextureFieldClearBtnStyleName = "TextureClearButton";
 
-	const WString BuiltinEditorResources::DefaultFontFilename = L"arial.ttf";
-	const WString BuiltinEditorResources::DefaultAAFontFilename = L"arialAA.ttf";
+	const String BuiltinEditorResources::DefaultFontFilename = "arial.ttf";
+	const String BuiltinEditorResources::DefaultAAFontFilename = "arialAA.ttf";
 	const UINT32 BuiltinEditorResources::DefaultFontSize = 8;
 	const UINT32 BuiltinEditorResources::TitleFontSize = 16;
 
 	const Color BuiltinEditorResources::TextNormalColor = Color(0.7f, 0.7f, 0.7f);
 	const Color BuiltinEditorResources::TextActiveColor = Color(0.0f, 0.0f, 0.0f);
 
-	const WString BuiltinEditorResources::GUISkinFile = L"GUISkin";
+	const String BuiltinEditorResources::GUISkinFile = "GUISkin";
 
 	const char* BuiltinEditorResources::DataListFile = "DataList.json";
 	const char* BuiltinEditorResources::ShaderFolder = "Shaders/";
@@ -76,244 +76,244 @@ namespace bs
 	const char* BuiltinEditorResources::ShaderIncludeFolder = "Shaders/Includes/";
 	const char* BuiltinEditorResources::SpriteSubFolder = "Sprites/";
 
-	const WString BuiltinEditorResources::FolderIconTex = L"FolderIcon.psd";
-	const WString BuiltinEditorResources::MeshIconTex = L"MeshIcon.psd";
-	const WString BuiltinEditorResources::TextureIconTex = L"TextureIcon.psd";
-	const WString BuiltinEditorResources::FontIconTex = L"FontIcon.psd";
-	const WString BuiltinEditorResources::PlainTextIconTex = L"TextIcon.psd";
-	const WString BuiltinEditorResources::ScriptCodeIconTex = L"CSharpIcon.psd";
-	const WString BuiltinEditorResources::ShaderIconTex = L"ShaderIcon.psd";
-	const WString BuiltinEditorResources::ShaderIncludeIconTex = L"ShaderIncludeIcon.psd";
-	const WString BuiltinEditorResources::MaterialIconTex = L"MaterialIcon.psd";
-	const WString BuiltinEditorResources::SpriteTextureIconTex = L"SpriteIcon.psd";
-	const WString BuiltinEditorResources::PrefabIconTex = L"PrefabIcon.psd";
-	const WString BuiltinEditorResources::GUISkinIconTex = L"GUISkinIcon.psd";
-	const WString BuiltinEditorResources::PhysicsMaterialIconTex = L"PhysicsMaterialIcon.psd";
-	const WString BuiltinEditorResources::PhysicsMeshIconTex = L"PhysicsMeshIcon.psd";
-	const WString BuiltinEditorResources::AudioClipIconTex = L"AudioClipIcon.psd";
-	const WString BuiltinEditorResources::AnimationClipIconTex = L"AnimationClipIcon.psd";
+	const String BuiltinEditorResources::FolderIconTex = u8"FolderIcon.psd";
+	const String BuiltinEditorResources::MeshIconTex = u8"MeshIcon.psd";
+	const String BuiltinEditorResources::TextureIconTex = u8"TextureIcon.psd";
+	const String BuiltinEditorResources::FontIconTex = u8"FontIcon.psd";
+	const String BuiltinEditorResources::PlainTextIconTex = u8"TextIcon.psd";
+	const String BuiltinEditorResources::ScriptCodeIconTex = u8"CSharpIcon.psd";
+	const String BuiltinEditorResources::ShaderIconTex = u8"ShaderIcon.psd";
+	const String BuiltinEditorResources::ShaderIncludeIconTex = u8"ShaderIncludeIcon.psd";
+	const String BuiltinEditorResources::MaterialIconTex = u8"MaterialIcon.psd";
+	const String BuiltinEditorResources::SpriteTextureIconTex = u8"SpriteIcon.psd";
+	const String BuiltinEditorResources::PrefabIconTex = u8"PrefabIcon.psd";
+	const String BuiltinEditorResources::GUISkinIconTex = u8"GUISkinIcon.psd";
+	const String BuiltinEditorResources::PhysicsMaterialIconTex = u8"PhysicsMaterialIcon.psd";
+	const String BuiltinEditorResources::PhysicsMeshIconTex = u8"PhysicsMeshIcon.psd";
+	const String BuiltinEditorResources::AudioClipIconTex = u8"AudioClipIcon.psd";
+	const String BuiltinEditorResources::AnimationClipIconTex = u8"AnimationClipIcon.psd";
 
-	const WString BuiltinEditorResources::ButtonNormalTex = L"ButtonNormal.png";
-	const WString BuiltinEditorResources::ButtonHoverTex = L"ButtonHover.png";
-	const WString BuiltinEditorResources::ButtonActiveTex = L"ButtonActive.png";
+	const String BuiltinEditorResources::ButtonNormalTex = u8"ButtonNormal.png";
+	const String BuiltinEditorResources::ButtonHoverTex = u8"ButtonHover.png";
+	const String BuiltinEditorResources::ButtonActiveTex = u8"ButtonActive.png";
 
-	const WString BuiltinEditorResources::ButtonLeftNormalTex = L"ButtonLeftNormal.png";
-	const WString BuiltinEditorResources::ButtonLeftHoverTex = L"ButtonLeftHover.png";
-	const WString BuiltinEditorResources::ButtonLeftActiveTex = L"ButtonLeftActive.png";
+	const String BuiltinEditorResources::ButtonLeftNormalTex = u8"ButtonLeftNormal.png";
+	const String BuiltinEditorResources::ButtonLeftHoverTex = u8"ButtonLeftHover.png";
+	const String BuiltinEditorResources::ButtonLeftActiveTex = u8"ButtonLeftActive.png";
 
-	const WString BuiltinEditorResources::ButtonRightNormalTex = L"ButtonRightNormal.png";
-	const WString BuiltinEditorResources::ButtonRightHoverTex = L"ButtonRightHover.png";
-	const WString BuiltinEditorResources::ButtonRightActiveTex = L"ButtonRightActive.png";
+	const String BuiltinEditorResources::ButtonRightNormalTex = u8"ButtonRightNormal.png";
+	const String BuiltinEditorResources::ButtonRightHoverTex = u8"ButtonRightHover.png";
+	const String BuiltinEditorResources::ButtonRightActiveTex = u8"ButtonRightActive.png";
 
-	const WString BuiltinEditorResources::ToggleNormalTex = L"ToggleNormal.png";
-	const WString BuiltinEditorResources::ToggleHoverTex = L"ToggleHover.png";
-	const WString BuiltinEditorResources::ToggleNormalOnTex = L"ToggleNormalOn.png";
-	const WString BuiltinEditorResources::ToggleHoverOnTex = L"ToggleHoverOn.png";
+	const String BuiltinEditorResources::ToggleNormalTex = u8"ToggleNormal.png";
+	const String BuiltinEditorResources::ToggleHoverTex = u8"ToggleHover.png";
+	const String BuiltinEditorResources::ToggleNormalOnTex = u8"ToggleNormalOn.png";
+	const String BuiltinEditorResources::ToggleHoverOnTex = u8"ToggleHoverOn.png";
 
-	const WString BuiltinEditorResources::InputBoxNormalTex = L"InputBoxNormal.png";
-	const WString BuiltinEditorResources::InputBoxHoverTex = L"InputBoxHover.png";
-	const WString BuiltinEditorResources::InputBoxFocusedTex = L"InputBoxActive.png";
+	const String BuiltinEditorResources::InputBoxNormalTex = u8"InputBoxNormal.png";
+	const String BuiltinEditorResources::InputBoxHoverTex = u8"InputBoxHover.png";
+	const String BuiltinEditorResources::InputBoxFocusedTex = u8"InputBoxActive.png";
 
-	const WString BuiltinEditorResources::ObjectDropBtnNormalTex = L"ObjectDropNormal.png";
-	const WString BuiltinEditorResources::ObjectDropBtnNormalOnTex = L"ObjectDropNormalOn.png";
-	const WString BuiltinEditorResources::ObjectClearBtnNormalTex = L"ObjectDropClearNormal.png";
-	const WString BuiltinEditorResources::ObjectClearBtnHoverTex = L"ObjectDropClearHover.png";
-	const WString BuiltinEditorResources::ObjectClearBtnActiveTex = L"ObjectDropClearActive.png";
+	const String BuiltinEditorResources::ObjectDropBtnNormalTex = u8"ObjectDropNormal.png";
+	const String BuiltinEditorResources::ObjectDropBtnNormalOnTex = u8"ObjectDropNormalOn.png";
+	const String BuiltinEditorResources::ObjectClearBtnNormalTex = u8"ObjectDropClearNormal.png";
+	const String BuiltinEditorResources::ObjectClearBtnHoverTex = u8"ObjectDropClearHover.png";
+	const String BuiltinEditorResources::ObjectClearBtnActiveTex = u8"ObjectDropClearActive.png";
 	
-	const WString BuiltinEditorResources::DropDownBtnNormalTex = L"DropDownButtonNormal.png";
-	const WString BuiltinEditorResources::DropDownBtnHoverTex = L"DropDownButtonHover.png";
-	const WString BuiltinEditorResources::DropDownBtnActiveTex = L"DropDownButtonActive.png";
+	const String BuiltinEditorResources::DropDownBtnNormalTex = u8"DropDownButtonNormal.png";
+	const String BuiltinEditorResources::DropDownBtnHoverTex = u8"DropDownButtonHover.png";
+	const String BuiltinEditorResources::DropDownBtnActiveTex = u8"DropDownButtonActive.png";
 
-	const WString BuiltinEditorResources::SliderHBackgroundTex = L"SliderHBackground.png";
-	const WString BuiltinEditorResources::SliderHFillTex = L"SliderHFill.png";
-	const WString BuiltinEditorResources::SliderVBackgroundTex = L"SliderVBackground.png";
-	const WString BuiltinEditorResources::SliderVFillTex = L"SliderVFill.png";
-	const WString BuiltinEditorResources::SliderHandleNormalTex = L"SliderHandleNormal.png";
-	const WString BuiltinEditorResources::SliderHandleHoverTex = L"SliderHandleHover.png";
-	const WString BuiltinEditorResources::SliderHandleActiveTex = L"SliderHandleActive.png";
+	const String BuiltinEditorResources::SliderHBackgroundTex = u8"SliderHBackground.png";
+	const String BuiltinEditorResources::SliderHFillTex = u8"SliderHFill.png";
+	const String BuiltinEditorResources::SliderVBackgroundTex = u8"SliderVBackground.png";
+	const String BuiltinEditorResources::SliderVFillTex = u8"SliderVFill.png";
+	const String BuiltinEditorResources::SliderHandleNormalTex = u8"SliderHandleNormal.png";
+	const String BuiltinEditorResources::SliderHandleHoverTex = u8"SliderHandleHover.png";
+	const String BuiltinEditorResources::SliderHandleActiveTex = u8"SliderHandleActive.png";
 
-	const WString BuiltinEditorResources::FoldoutOpenNormalTex = L"FoldoutNormalOn.png";
-	const WString BuiltinEditorResources::FoldoutOpenHoverTex = L"FoldoutHoverOn.png";
-	const WString BuiltinEditorResources::FoldoutOpenActiveTex = L"FoldoutHoverOn.png";
-	const WString BuiltinEditorResources::FoldoutClosedNormalTex = L"FoldoutNormalOff.png";
-	const WString BuiltinEditorResources::FoldoutClosedHoverTex = L"FoldoutHoverOff.png";
-	const WString BuiltinEditorResources::FoldoutClosedActiveTex = L"FoldoutHoverOff.png";
+	const String BuiltinEditorResources::FoldoutOpenNormalTex = u8"FoldoutNormalOn.png";
+	const String BuiltinEditorResources::FoldoutOpenHoverTex = u8"FoldoutHoverOn.png";
+	const String BuiltinEditorResources::FoldoutOpenActiveTex = u8"FoldoutHoverOn.png";
+	const String BuiltinEditorResources::FoldoutClosedNormalTex = u8"FoldoutNormalOff.png";
+	const String BuiltinEditorResources::FoldoutClosedHoverTex = u8"FoldoutHoverOff.png";
+	const String BuiltinEditorResources::FoldoutClosedActiveTex = u8"FoldoutHoverOff.png";
 
-	const WString BuiltinEditorResources::WindowBackgroundTex = L"WindowBackground.png";
+	const String BuiltinEditorResources::WindowBackgroundTex = u8"WindowBackground.png";
 
-	const WString BuiltinEditorResources::WindowFrameNormal = L"WindowFrameNormal.png";
-	const WString BuiltinEditorResources::WindowFrameFocused = L"WindowFrameFocused.png";
+	const String BuiltinEditorResources::WindowFrameNormal = u8"WindowFrameNormal.png";
+	const String BuiltinEditorResources::WindowFrameFocused = u8"WindowFrameFocused.png";
 
-	const WString BuiltinEditorResources::CloseButtonNormalTex = L"CloseButtonNormal.png";
-	const WString BuiltinEditorResources::CloseButtonHoverTex = L"CloseButtonHover.png";
-	const WString BuiltinEditorResources::CloseButtonActiveTex = L"CloseButtonActive.png";
+	const String BuiltinEditorResources::CloseButtonNormalTex = u8"CloseButtonNormal.png";
+	const String BuiltinEditorResources::CloseButtonHoverTex = u8"CloseButtonHover.png";
+	const String BuiltinEditorResources::CloseButtonActiveTex = u8"CloseButtonActive.png";
 
-	const WString BuiltinEditorResources::MinButtonNormalTex = L"MinimizeButtonNormal.png"; 
-	const WString BuiltinEditorResources::MinButtonHoverTex = L"MinimizeButtonHover.png"; 
-	const WString BuiltinEditorResources::MinButtonActiveTex = L"MinimizeButtonActive.png";
+	const String BuiltinEditorResources::MinButtonNormalTex = u8"MinimizeButtonNormal.png"; 
+	const String BuiltinEditorResources::MinButtonHoverTex = u8"MinimizeButtonHover.png"; 
+	const String BuiltinEditorResources::MinButtonActiveTex = u8"MinimizeButtonActive.png";
 
-	const WString BuiltinEditorResources::MaxButtonNormalTex = L"MaximizeButtonNormal.png";
-	const WString BuiltinEditorResources::MaxButtonHoverTex = L"MaximizeButtonHover.png";
-	const WString BuiltinEditorResources::MaxButtonActiveTex = L"MaximizeButtonActive.png";
+	const String BuiltinEditorResources::MaxButtonNormalTex = u8"MaximizeButtonNormal.png";
+	const String BuiltinEditorResources::MaxButtonHoverTex = u8"MaximizeButtonHover.png";
+	const String BuiltinEditorResources::MaxButtonActiveTex = u8"MaximizeButtonActive.png";
 
-	const WString BuiltinEditorResources::TabBarBackgroundTex = L"TabBarBackground.png";
-	const WString BuiltinEditorResources::TitleBarBackgroundTex = L"TitleBarBackground.png";
+	const String BuiltinEditorResources::TabBarBackgroundTex = u8"TabBarBackground.png";
+	const String BuiltinEditorResources::TitleBarBackgroundTex = u8"TitleBarBackground.png";
 
-	const WString BuiltinEditorResources::TabButtonNormalTex = L"TabButtonNormal.png";
-	const WString BuiltinEditorResources::TabButtonFocusedTex = L"TabButtonFocused.png";
+	const String BuiltinEditorResources::TabButtonNormalTex = u8"TabButtonNormal.png";
+	const String BuiltinEditorResources::TabButtonFocusedTex = u8"TabButtonFocused.png";
 
-	const WString BuiltinEditorResources::ScrollBarUpNormalTex = L"ScrollArrowUpNormal.png";
-	const WString BuiltinEditorResources::ScrollBarUpHoverTex = L"ScrollArrowUpHover.png";
-	const WString BuiltinEditorResources::ScrollBarUpActiveTex = L"ScrollArrowUpActive.png";
+	const String BuiltinEditorResources::ScrollBarUpNormalTex = u8"ScrollArrowUpNormal.png";
+	const String BuiltinEditorResources::ScrollBarUpHoverTex = u8"ScrollArrowUpHover.png";
+	const String BuiltinEditorResources::ScrollBarUpActiveTex = u8"ScrollArrowUpActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarDownNormalTex = L"ScrollArrowDownNormal.png";
-	const WString BuiltinEditorResources::ScrollBarDownHoverTex = L"ScrollArrowDownHover.png";
-	const WString BuiltinEditorResources::ScrollBarDownActiveTex = L"ScrollArrowDownActive.png";
+	const String BuiltinEditorResources::ScrollBarDownNormalTex = u8"ScrollArrowDownNormal.png";
+	const String BuiltinEditorResources::ScrollBarDownHoverTex = u8"ScrollArrowDownHover.png";
+	const String BuiltinEditorResources::ScrollBarDownActiveTex = u8"ScrollArrowDownActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarLeftNormalTex = L"ScrollArrowLeftNormal.png";
-	const WString BuiltinEditorResources::ScrollBarLeftHoverTex = L"ScrollArrowLeftHover.png";
-	const WString BuiltinEditorResources::ScrollBarLeftActiveTex = L"ScrollArrowLeftActive.png";
+	const String BuiltinEditorResources::ScrollBarLeftNormalTex = u8"ScrollArrowLeftNormal.png";
+	const String BuiltinEditorResources::ScrollBarLeftHoverTex = u8"ScrollArrowLeftHover.png";
+	const String BuiltinEditorResources::ScrollBarLeftActiveTex = u8"ScrollArrowLeftActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarRightNormalTex = L"ScrollArrowRightNormal.png";
-	const WString BuiltinEditorResources::ScrollBarRightHoverTex = L"ScrollArrowRightHover.png";
-	const WString BuiltinEditorResources::ScrollBarRightActiveTex = L"ScrollArrowRightActive.png";
+	const String BuiltinEditorResources::ScrollBarRightNormalTex = u8"ScrollArrowRightNormal.png";
+	const String BuiltinEditorResources::ScrollBarRightHoverTex = u8"ScrollArrowRightHover.png";
+	const String BuiltinEditorResources::ScrollBarRightActiveTex = u8"ScrollArrowRightActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarHandleHorzNormalTex = L"ScrollBarHHandleNormal.png";
-	const WString BuiltinEditorResources::ScrollBarHandleHorzHoverTex = L"ScrollBarHHandleHover.png";
-	const WString BuiltinEditorResources::ScrollBarHandleHorzActiveTex = L"ScrollBarHHandleActive.png";
+	const String BuiltinEditorResources::ScrollBarHandleHorzNormalTex = u8"ScrollBarHHandleNormal.png";
+	const String BuiltinEditorResources::ScrollBarHandleHorzHoverTex = u8"ScrollBarHHandleHover.png";
+	const String BuiltinEditorResources::ScrollBarHandleHorzActiveTex = u8"ScrollBarHHandleActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarHandleVertNormalTex = L"ScrollBarVHandleNormal.png";
-	const WString BuiltinEditorResources::ScrollBarHandleVertHoverTex = L"ScrollBarVHandleHover.png";
-	const WString BuiltinEditorResources::ScrollBarHandleVertActiveTex = L"ScrollBarVHandleActive.png";
+	const String BuiltinEditorResources::ScrollBarHandleVertNormalTex = u8"ScrollBarVHandleNormal.png";
+	const String BuiltinEditorResources::ScrollBarHandleVertHoverTex = u8"ScrollBarVHandleHover.png";
+	const String BuiltinEditorResources::ScrollBarHandleVertActiveTex = u8"ScrollBarVHandleActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleHorzNormalTex = L"ScrollBarHHandleResizeableNormal.png";
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleHorzHoverTex = L"ScrollBarHHandleResizeableHover.png";
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleHorzActiveTex = L"ScrollBarHHandleResizeableActive.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleHorzNormalTex = u8"ScrollBarHHandleResizeableNormal.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleHorzHoverTex = u8"ScrollBarHHandleResizeableHover.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleHorzActiveTex = u8"ScrollBarHHandleResizeableActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleVertNormalTex = L"ScrollBarVHandleResizeableNormal.png";
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleVertHoverTex = L"ScrollBarVHandleResizeableHover.png";
-	const WString BuiltinEditorResources::ScrollBarResizeableHandleVertActiveTex = L"ScrollBarVHandleResizeableActive.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleVertNormalTex = u8"ScrollBarVHandleResizeableNormal.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleVertHoverTex = u8"ScrollBarVHandleResizeableHover.png";
+	const String BuiltinEditorResources::ScrollBarResizeableHandleVertActiveTex = u8"ScrollBarVHandleResizeableActive.png";
 
-	const WString BuiltinEditorResources::ScrollBarHBgTex = L"ScrollBarHBackground.png";
-	const WString BuiltinEditorResources::ScrollBarVBgTex = L"ScrollBarVBackground.png";
+	const String BuiltinEditorResources::ScrollBarHBgTex = u8"ScrollBarHBackground.png";
+	const String BuiltinEditorResources::ScrollBarVBgTex = u8"ScrollBarVBackground.png";
 
-	const WString BuiltinEditorResources::DropDownBoxBgTex = L"DropDownBoxBg.png";
-	const WString BuiltinEditorResources::DropDownBoxSideBgTex = L"DropDownBoxSideBg.png";
-	const WString BuiltinEditorResources::DropDownBoxHandleTex = L"DropDownBoxScrollHandle.png";
+	const String BuiltinEditorResources::DropDownBoxBgTex = u8"DropDownBoxBg.png";
+	const String BuiltinEditorResources::DropDownBoxSideBgTex = u8"DropDownBoxSideBg.png";
+	const String BuiltinEditorResources::DropDownBoxHandleTex = u8"DropDownBoxScrollHandle.png";
 
-	const WString BuiltinEditorResources::DropDownBoxEntryNormalTex = L"DropDownBoxEntryNormal.png";
-	const WString BuiltinEditorResources::DropDownBoxEntryHoverTex = L"DropDownBoxEntryHover.png";
+	const String BuiltinEditorResources::DropDownBoxEntryNormalTex = u8"DropDownBoxEntryNormal.png";
+	const String BuiltinEditorResources::DropDownBoxEntryHoverTex = u8"DropDownBoxEntryHover.png";
 
-	const WString BuiltinEditorResources::DropDownBoxEntryToggleNormalTex = L"DropDownBoxEntryToggleNormal.png";
-	const WString BuiltinEditorResources::DropDownBoxEntryToggleHoverTex = L"DropDownBoxEntryToggleHover.png";
-	const WString BuiltinEditorResources::DropDownBoxEntryToggleNormalOnTex = L"DropDownBoxEntryToggleNormalOn.png";
-	const WString BuiltinEditorResources::DropDownBoxEntryToggleHoverOnTex = L"DropDownBoxEntryToggleHoverOn.png";
+	const String BuiltinEditorResources::DropDownBoxEntryToggleNormalTex = u8"DropDownBoxEntryToggleNormal.png";
+	const String BuiltinEditorResources::DropDownBoxEntryToggleHoverTex = u8"DropDownBoxEntryToggleHover.png";
+	const String BuiltinEditorResources::DropDownBoxEntryToggleNormalOnTex = u8"DropDownBoxEntryToggleNormalOn.png";
+	const String BuiltinEditorResources::DropDownBoxEntryToggleHoverOnTex = u8"DropDownBoxEntryToggleHoverOn.png";
 
-	const WString BuiltinEditorResources::DropDownBoxBtnUpNormalTex = L"DropDownBoxArrowUpNormal.png";
-	const WString BuiltinEditorResources::DropDownBoxBtnUpHoverTex = L"DropDownBoxArrowUpHover.png";
+	const String BuiltinEditorResources::DropDownBoxBtnUpNormalTex = u8"DropDownBoxArrowUpNormal.png";
+	const String BuiltinEditorResources::DropDownBoxBtnUpHoverTex = u8"DropDownBoxArrowUpHover.png";
 
-	const WString BuiltinEditorResources::DropDownBoxBtnDownNormalTex = L"DropDownBoxArrowDownNormal.png";
-	const WString BuiltinEditorResources::DropDownBoxBtnDownHoverTex = L"DropDownBoxArrowDownHover.png";
+	const String BuiltinEditorResources::DropDownBoxBtnDownNormalTex = u8"DropDownBoxArrowDownNormal.png";
+	const String BuiltinEditorResources::DropDownBoxBtnDownHoverTex = u8"DropDownBoxArrowDownHover.png";
 
-	const WString BuiltinEditorResources::DropDownBoxEntryExpNormalTex = L"DropDownBoxExpandBtnNormal.png";
-	const WString BuiltinEditorResources::DropDownBoxEntryExpHoverTex = L"DropDownBoxExpandBtnHover.png";
+	const String BuiltinEditorResources::DropDownBoxEntryExpNormalTex = u8"DropDownBoxExpandBtnNormal.png";
+	const String BuiltinEditorResources::DropDownBoxEntryExpHoverTex = u8"DropDownBoxExpandBtnHover.png";
 
-	const WString BuiltinEditorResources::DropDownSeparatorTex = L"DropDownBoxSeparator.png";
+	const String BuiltinEditorResources::DropDownSeparatorTex = u8"DropDownBoxSeparator.png";
 
-	const WString BuiltinEditorResources::MenuBarBgTex = L"MenuBarBackground.png";
-	const WString BuiltinEditorResources::MenuBarBansheeLogoTex = L"MenuBarLog.png";
+	const String BuiltinEditorResources::MenuBarBgTex = u8"MenuBarBackground.png";
+	const String BuiltinEditorResources::MenuBarBansheeLogoTex = u8"MenuBarLog.png";
 
-	const WString BuiltinEditorResources::MenuBarBtnNormalTex = L"MenuBarButtonNormal.png";
-	const WString BuiltinEditorResources::MenuBarBtnActiveTex = L"MenuBarButtonActive.png";
-	const WString BuiltinEditorResources::MenuBarBtnHoverTex = L"MenuBarButtonHover.png";
+	const String BuiltinEditorResources::MenuBarBtnNormalTex = u8"MenuBarButtonNormal.png";
+	const String BuiltinEditorResources::MenuBarBtnActiveTex = u8"MenuBarButtonActive.png";
+	const String BuiltinEditorResources::MenuBarBtnHoverTex = u8"MenuBarButtonHover.png";
 
-	const WString BuiltinEditorResources::MenuBarLineNormalTex = L"MenuBarLineNormal.png";
-	const WString BuiltinEditorResources::MenuBarLineActiveTex = L"MenuBarLineActive.png";
+	const String BuiltinEditorResources::MenuBarLineNormalTex = u8"MenuBarLineNormal.png";
+	const String BuiltinEditorResources::MenuBarLineActiveTex = u8"MenuBarLineActive.png";
 
-	const WString BuiltinEditorResources::ToolBarBtnNormalTex = L"ToolBarButtonNormal.png";
-	const WString BuiltinEditorResources::ToolBarBtnHoverTex = L"ToolBarButtonHover.png";
-	const WString BuiltinEditorResources::ToolBarBtnActiveTex = L"ToolBarButtonActive.png";
+	const String BuiltinEditorResources::ToolBarBtnNormalTex = u8"ToolBarButtonNormal.png";
+	const String BuiltinEditorResources::ToolBarBtnHoverTex = u8"ToolBarButtonHover.png";
+	const String BuiltinEditorResources::ToolBarBtnActiveTex = u8"ToolBarButtonActive.png";
 
-	const WString BuiltinEditorResources::ToolBarSeparatorTex = L"ToolBarSeparator.png";
+	const String BuiltinEditorResources::ToolBarSeparatorTex = u8"ToolBarSeparator.png";
 
-	const WString BuiltinEditorResources::TreeViewExpandButtonOffNormal = L"ExpandArrowNormalOff.png";
-	const WString BuiltinEditorResources::TreeViewExpandButtonOffHover = L"ExpandArrowHoverOff.png";
-	const WString BuiltinEditorResources::TreeViewExpandButtonOnNormal = L"ExpandArrowNormalOn.png";
-	const WString BuiltinEditorResources::TreeViewExpandButtonOnHover = L"ExpandArrowHoverOn.png";
+	const String BuiltinEditorResources::TreeViewExpandButtonOffNormal = u8"ExpandArrowNormalOff.png";
+	const String BuiltinEditorResources::TreeViewExpandButtonOffHover = u8"ExpandArrowHoverOff.png";
+	const String BuiltinEditorResources::TreeViewExpandButtonOnNormal = u8"ExpandArrowNormalOn.png";
+	const String BuiltinEditorResources::TreeViewExpandButtonOnHover = u8"ExpandArrowHoverOn.png";
 
-	const WString BuiltinEditorResources::TreeViewHighlightBackground = L"TreeViewHighlightBackground.psd";
-	const WString BuiltinEditorResources::TreeViewEditBox = L"TreeViewEditBox.psd";
-	const WString BuiltinEditorResources::TreeViewElementHighlight = L"TreeViewElementHighlight.psd";
-	const WString BuiltinEditorResources::TreeViewElementSepHighlight = L"TreeViewElementSepHighlight.psd";
+	const String BuiltinEditorResources::TreeViewHighlightBackground = u8"TreeViewHighlightBackground.psd";
+	const String BuiltinEditorResources::TreeViewEditBox = u8"TreeViewEditBox.psd";
+	const String BuiltinEditorResources::TreeViewElementHighlight = u8"TreeViewElementHighlight.psd";
+	const String BuiltinEditorResources::TreeViewElementSepHighlight = u8"TreeViewElementSepHighlight.psd";
 
-	const WString BuiltinEditorResources::ColorPickerSliderHorzHandleTex = L"ColorPickerSliderHorzHandle.psd";
-	const WString BuiltinEditorResources::ColorPickerSliderVertHandleTex = L"ColorPickerSliderVertHandle.psd";
-	const WString BuiltinEditorResources::ColorPickerSlider2DHandleTex = L"ColorPicker2DHandle.psd";
+	const String BuiltinEditorResources::ColorPickerSliderHorzHandleTex = u8"ColorPickerSliderHorzHandle.psd";
+	const String BuiltinEditorResources::ColorPickerSliderVertHandleTex = u8"ColorPickerSliderVertHandle.psd";
+	const String BuiltinEditorResources::ColorPickerSlider2DHandleTex = u8"ColorPicker2DHandle.psd";
 
-	const WString BuiltinEditorResources::ProgressBarFillTex = L"ProgressBarFill.png";
-	const WString BuiltinEditorResources::ProgressBarBgTex = L"ProgressBarBg.png";
+	const String BuiltinEditorResources::ProgressBarFillTex = u8"ProgressBarFill.png";
+	const String BuiltinEditorResources::ProgressBarBgTex = u8"ProgressBarBg.png";
 
-	const WString BuiltinEditorResources::SelectionAreaTex = L"SelectionHighlight.png";
-	const WString BuiltinEditorResources::SelectionBgTex = L"SelectionBg.psd";
+	const String BuiltinEditorResources::SelectionAreaTex = u8"SelectionHighlight.png";
+	const String BuiltinEditorResources::SelectionBgTex = u8"SelectionBg.psd";
 
-	const WString BuiltinEditorResources::TextureDropTex = L"TextureDrop.png";
-	const WString BuiltinEditorResources::TextureDropOnTex = L"TextureDropHover.png";
+	const String BuiltinEditorResources::TextureDropTex = u8"TextureDrop.png";
+	const String BuiltinEditorResources::TextureDropOnTex = u8"TextureDropHover.png";
 
-	const WString BuiltinEditorResources::XButtonNormalTex = L"XBtnNormal.png";
-	const WString BuiltinEditorResources::XButtonHoverTex = L"XBtnHover.png";
-	const WString BuiltinEditorResources::XButtonActiveTex = L"XBtnActive.png";
+	const String BuiltinEditorResources::XButtonNormalTex = u8"XBtnNormal.png";
+	const String BuiltinEditorResources::XButtonHoverTex = u8"XBtnHover.png";
+	const String BuiltinEditorResources::XButtonActiveTex = u8"XBtnActive.png";
 
-	const WString BuiltinEditorResources::StatusBarBgTex = L"StatusBarBackground.png";
-	const WString BuiltinEditorResources::ScrollAreaBgTex = L"ScrollAreaBg.png";
+	const String BuiltinEditorResources::StatusBarBgTex = u8"StatusBarBackground.png";
+	const String BuiltinEditorResources::ScrollAreaBgTex = u8"ScrollAreaBg.png";
 
-	const WString BuiltinEditorResources::InspectorTitleBgTex = L"InspectorTitleBg.png";
-	const WString BuiltinEditorResources::InspectorContentBgTex = L"InspectorContentBg.png";
-	const WString BuiltinEditorResources::InspectorContentBgAlternateTex = L"InspectorContentBgAlternate.png";
+	const String BuiltinEditorResources::InspectorTitleBgTex = u8"InspectorTitleBg.png";
+	const String BuiltinEditorResources::InspectorContentBgTex = u8"InspectorContentBg.png";
+	const String BuiltinEditorResources::InspectorContentBgAlternateTex = u8"InspectorContentBgAlternate.png";
 
-	const WString BuiltinEditorResources::LibraryEntryFirstBgTex = L"LibraryEntryFirstBg.png";
-	const WString BuiltinEditorResources::LibraryEntryBgTex = L"LibraryEntryBg.png";
-	const WString BuiltinEditorResources::LibraryEntryLastBgTex = L"LibraryEntryLastBg.png";
+	const String BuiltinEditorResources::LibraryEntryFirstBgTex = u8"LibraryEntryFirstBg.png";
+	const String BuiltinEditorResources::LibraryEntryBgTex = u8"LibraryEntryBg.png";
+	const String BuiltinEditorResources::LibraryEntryLastBgTex = u8"LibraryEntryLastBg.png";
 
-	const WString BuiltinEditorResources::LibraryEntryVertFirstBgTex = L"LibraryEntryVertFirstBg.png";
-	const WString BuiltinEditorResources::LibraryEntryVertBgTex = L"LibraryEntryVertBg.png";
-	const WString BuiltinEditorResources::LibraryEntryVertLastBgTex = L"LibraryEntryVertLastBg.png";
+	const String BuiltinEditorResources::LibraryEntryVertFirstBgTex = u8"LibraryEntryVertFirstBg.png";
+	const String BuiltinEditorResources::LibraryEntryVertBgTex = u8"LibraryEntryVertBg.png";
+	const String BuiltinEditorResources::LibraryEntryVertLastBgTex = u8"LibraryEntryVertLastBg.png";
 
-	const wchar_t* BuiltinEditorResources::SplashScreenName = L"SplashScreen.png";
+	const char* BuiltinEditorResources::SplashScreenName = u8"SplashScreen.png";
 
 	/************************************************************************/
 	/* 									SHADERS                      		*/
 	/************************************************************************/
 
-	const WString BuiltinEditorResources::ShaderDockOverlayFile = L"DockDropOverlay.bsl";
-	const WString BuiltinEditorResources::ShaderSceneGridFile = L"SceneGrid.bsl";
-	const WString BuiltinEditorResources::ShaderPickingCullNoneFile = L"PickingCullNone.bsl";
-	const WString BuiltinEditorResources::ShaderPickingCullCWFile = L"PickingCullCW.bsl";
-	const WString BuiltinEditorResources::ShaderPickingCullCCWFile = L"PickingCullCCW.bsl";
-	const WString BuiltinEditorResources::ShaderPickingAlphaCullNoneFile = L"PickingAlphaCullNone.bsl";
-	const WString BuiltinEditorResources::ShaderPickingAlphaCullCWFile = L"PickingAlphaCullCW.bsl";
-	const WString BuiltinEditorResources::ShaderPickingAlphaCullCCWFile = L"PickingAlphaCullCCW.bsl";
-	const WString BuiltinEditorResources::ShaderLineGizmoFile = L"LineGizmo.bsl";
-	const WString BuiltinEditorResources::ShaderWireGizmoFile = L"WireGizmo.bsl";
-	const WString BuiltinEditorResources::ShaderSolidGizmoFile = L"SolidGizmo.bsl";
-	const WString BuiltinEditorResources::ShaderLineHandleFile = L"LineHandle.bsl";
-	const WString BuiltinEditorResources::ShaderSolidHandleFile = L"SolidHandle.bsl";
-	const WString BuiltinEditorResources::ShaderHandleClearAlphaFile = L"ClearHandleAlpha.bsl";
-	const WString BuiltinEditorResources::ShaderIconGizmoFile = L"IconGizmo.bsl";
-	const WString BuiltinEditorResources::ShaderGizmoPickingFile = L"GizmoPicking.bsl";
-	const WString BuiltinEditorResources::ShaderGizmoPickingAlphaFile = L"GizmoPickingAlpha.bsl";
-	const WString BuiltinEditorResources::ShaderTextGizmoFile = L"TextGizmo.bsl";
-	const WString BuiltinEditorResources::ShaderSelectionFile = L"Selection.bsl";
+	const String BuiltinEditorResources::ShaderDockOverlayFile = u8"DockDropOverlay.bsl";
+	const String BuiltinEditorResources::ShaderSceneGridFile = u8"SceneGrid.bsl";
+	const String BuiltinEditorResources::ShaderPickingCullNoneFile = u8"PickingCullNone.bsl";
+	const String BuiltinEditorResources::ShaderPickingCullCWFile = u8"PickingCullCW.bsl";
+	const String BuiltinEditorResources::ShaderPickingCullCCWFile = u8"PickingCullCCW.bsl";
+	const String BuiltinEditorResources::ShaderPickingAlphaCullNoneFile = u8"PickingAlphaCullNone.bsl";
+	const String BuiltinEditorResources::ShaderPickingAlphaCullCWFile = u8"PickingAlphaCullCW.bsl";
+	const String BuiltinEditorResources::ShaderPickingAlphaCullCCWFile = u8"PickingAlphaCullCCW.bsl";
+	const String BuiltinEditorResources::ShaderLineGizmoFile = u8"LineGizmo.bsl";
+	const String BuiltinEditorResources::ShaderWireGizmoFile = u8"WireGizmo.bsl";
+	const String BuiltinEditorResources::ShaderSolidGizmoFile = u8"SolidGizmo.bsl";
+	const String BuiltinEditorResources::ShaderLineHandleFile = u8"LineHandle.bsl";
+	const String BuiltinEditorResources::ShaderSolidHandleFile = u8"SolidHandle.bsl";
+	const String BuiltinEditorResources::ShaderHandleClearAlphaFile = u8"ClearHandleAlpha.bsl";
+	const String BuiltinEditorResources::ShaderIconGizmoFile = u8"IconGizmo.bsl";
+	const String BuiltinEditorResources::ShaderGizmoPickingFile = u8"GizmoPicking.bsl";
+	const String BuiltinEditorResources::ShaderGizmoPickingAlphaFile = u8"GizmoPickingAlpha.bsl";
+	const String BuiltinEditorResources::ShaderTextGizmoFile = u8"TextGizmo.bsl";
+	const String BuiltinEditorResources::ShaderSelectionFile = u8"Selection.bsl";
 
 	/************************************************************************/
 	/* 								OTHER							  		*/
 	/************************************************************************/
-	const WString BuiltinEditorResources::EmptyShaderCodeFile = L"EmptyShaderText.txt";
-	const WString BuiltinEditorResources::EmptyCSScriptCodeFile = L"EmptyCSScriptText.txt";
+	const String BuiltinEditorResources::EmptyShaderCodeFile = u8"EmptyShaderText.txt";
+	const String BuiltinEditorResources::EmptyCSScriptCodeFile = u8"EmptyCSScriptText.txt";
 
 	BuiltinEditorResources::BuiltinEditorResources()
 	{
 		// Set up paths
-		BuiltinRawDataFolder = gEditorApplication().getDataPath() + L"Raw/";
+		BuiltinRawDataFolder = gEditorApplication().getDataPath() + "Raw/";
 		EditorRawSkinFolder = BuiltinRawDataFolder + SkinFolder;
 		EditorRawIconsFolder = BuiltinRawDataFolder + IconFolder;
 		EditorRawShaderFolder = BuiltinRawDataFolder + ShaderFolder;
@@ -334,7 +334,7 @@ namespace bs
 		{
 			time_t lastUpdateTime;
 			UINT32 modifications = BuiltinResourcesHelper::checkForModifications(BuiltinRawDataFolder,
-				BuiltinDataFolder + L"Timestamp.asset", lastUpdateTime);
+				BuiltinDataFolder + "Timestamp.asset", lastUpdateTime);
 
 			// Check if manifest needs to be rebuilt
 			if (modifications == 0 && !FileSystem::exists(ResourceManifestPath))
@@ -361,7 +361,7 @@ namespace bs
 				}
 
 				preprocess(modifications == 2, lastUpdateTime);
-				BuiltinResourcesHelper::writeTimestamp(BuiltinDataFolder + L"Timestamp.asset");
+				BuiltinResourcesHelper::writeTimestamp(BuiltinDataFolder + "Timestamp.asset");
 
 				ResourceManifest::save(mResourceManifest, ResourceManifestPath, BuiltinDataFolder);
 			}
@@ -400,9 +400,9 @@ namespace bs
 		mShaderHandleLine = getShader(ShaderLineHandleFile);
 		mShaderSelection = getShader(ShaderSelectionFile);
 
-		mDefaultFont = gResources().load<Font>(BuiltinDataFolder + (DefaultFontFilename + L".asset"));
-		mDefaultAAFont = gResources().load<Font>(BuiltinDataFolder + (DefaultAAFontFilename + L".asset"));
-		mSkin = gResources().load<GUISkin>(BuiltinDataFolder + (GUISkinFile + L".asset"));
+		mDefaultFont = gResources().load<Font>(BuiltinDataFolder + (DefaultFontFilename + ".asset"));
+		mDefaultAAFont = gResources().load<Font>(BuiltinDataFolder + (DefaultAAFontFilename + ".asset"));
+		mSkin = gResources().load<GUISkin>(BuiltinDataFolder + (GUISkinFile + ".asset"));
 	}
 
 	BuiltinEditorResources::~BuiltinEditorResources()
@@ -606,8 +606,8 @@ namespace bs
 
 		// Import splash screen
 		{
-			Path inputPath = BuiltinRawDataFolder + WString(SplashScreenName);
-			Path outputPath = BuiltinDataFolder + (WString(SplashScreenName) + L".asset");
+			Path inputPath = BuiltinRawDataFolder + String(SplashScreenName);
+			Path outputPath = BuiltinDataFolder + (String(SplashScreenName) + ".asset");
 
 			auto textureIO = gImporter().createImportOptions<TextureImportOptions>(inputPath);
 			textureIO->setCPUCached(true);
@@ -624,7 +624,7 @@ namespace bs
 		// Generate & save GUI skin
 		{
 			SPtr<GUISkin> skin = generateGUISkin();
-			Path outputPath = BuiltinDataFolder + (GUISkinFile + L".asset");
+			Path outputPath = BuiltinDataFolder + (GUISkinFile + ".asset");
 
 			HResource skinResource = gResources()._createResourceHandle(skin, UUID("ec0ea68d-efa5-4a3b-a6fc-b15aaec9689f"));
 
@@ -640,12 +640,12 @@ namespace bs
 		SPtr<GUISkin> skin = GUISkin::_createPtr();
 
 		Path defaultFontPath = BuiltinDataFolder;
-		defaultFontPath.append(DefaultFontFilename + L".asset");
+		defaultFontPath.append(DefaultFontFilename + ".asset");
 
 		HFont defaultFont = gResources().load<Font>(defaultFontPath);
 
 		Path defaultAAFontPath = BuiltinDataFolder;
-		defaultAAFontPath.append(DefaultAAFontFilename + L".asset");
+		defaultAAFontPath.append(DefaultAAFontFilename + ".asset");
 
 		HFont defaultAAFont = gResources().load<Font>(defaultAAFontPath);
 
@@ -1428,7 +1428,7 @@ namespace bs
 		/************************************************************************/
 
 		GUIElementStyle separator;
-		separator.normal.texture = getGUITexture(L"Separator.png");
+		separator.normal.texture = getGUITexture("Separator.png");
 		separator.hover.texture = separator.normal.texture;
 		separator.active.texture = separator.normal.texture;
 		separator.fixedHeight = false;
@@ -1443,12 +1443,12 @@ namespace bs
 		/************************************************************************/
 
 		GUIElementStyle headerBackground;
-		headerBackground.normal.texture = getGUITexture(L"HeaderBg.png");
+		headerBackground.normal.texture = getGUITexture("HeaderBg.png");
 
 		skin->setStyle("HeaderBackground", headerBackground);
 
 		GUIElementStyle header;
-		header.normal.texture = getGUITexture(L"Header.png");
+		header.normal.texture = getGUITexture("Header.png");
 		header.normal.textColor = TextNormalColor;
 		header.border.bottom = 2;
 		header.fixedHeight = true;
@@ -2219,26 +2219,26 @@ namespace bs
 		return skin;
 	}
 
-	HSpriteTexture BuiltinEditorResources::getGUITexture(const WString& name) const
+	HSpriteTexture BuiltinEditorResources::getGUITexture(const String& name) const
 	{
 		Path texturePath = EditorSkinSpritesFolder;
-		texturePath.append(L"sprite_" + name + L".asset");
+		texturePath.append("sprite_" + name + ".asset");
 
 		return gResources().load<SpriteTexture>(texturePath);
 	}
 
-	HSpriteTexture BuiltinEditorResources::getGUIIcon(const WString& name) const
+	HSpriteTexture BuiltinEditorResources::getGUIIcon(const String& name) const
 	{
 		Path texturePath = EditorIconSpritesFolder;
-		texturePath.append(L"sprite_" + name + L".asset");
+		texturePath.append("sprite_" + name + ".asset");
 
 		return gResources().load<SpriteTexture>(texturePath);
 	}
 
-	HShader BuiltinEditorResources::getShader(const WString& name) const
+	HShader BuiltinEditorResources::getShader(const String& name) const
 	{
 		Path programPath = EditorShaderFolder;
-		programPath.append(name + L".asset");
+		programPath.append(name + ".asset");
 
 		HShader shader = gResources().load<Shader>(programPath);
 
@@ -2330,7 +2330,7 @@ namespace bs
 
 	HSpriteTexture BuiltinEditorResources::getLibraryIcon(ProjectIcon icon, int size) const
 	{
-		WString iconName;
+		String iconName;
 
 		switch (icon)
 		{
@@ -2388,11 +2388,11 @@ namespace bs
 			return HSpriteTexture();
 
 		if (size <= 16)
-			iconName += L"16";
+			iconName += "16";
 		else if (size <= 32)
-			iconName += L"32";
+			iconName += "32";
 		else if (size <= 48)
-			iconName += L"48";
+			iconName += "48";
 
 		return getGUIIcon(iconName);
 	}
@@ -2402,49 +2402,49 @@ namespace bs
 		switch (icon)
 		{
 		case ToolbarIcon::NewCamera:
-			return getGUIIcon(L"ToolbarNewCameraIcon.png");
+			return getGUIIcon("ToolbarNewCameraIcon.png");
 		case ToolbarIcon::NewRenderable:
-			return getGUIIcon(L"ToolbarNewRenderableIcon.png");
+			return getGUIIcon("ToolbarNewRenderableIcon.png");
 		case ToolbarIcon::NewPointLight:
-			return getGUIIcon(L"ToolbarNewPointLightIcon.png");
+			return getGUIIcon("ToolbarNewPointLightIcon.png");
 		case ToolbarIcon::NewDirLight:
-			return getGUIIcon(L"ToolbarNewDirectionalLightIcon.png");
+			return getGUIIcon("ToolbarNewDirectionalLightIcon.png");
 		case ToolbarIcon::NewSpotLight:
-			return getGUIIcon(L"ToolbarNewSpotLightIcon.png");
+			return getGUIIcon("ToolbarNewSpotLightIcon.png");
 		case ToolbarIcon::NewSceneObject:
-			return getGUIIcon(L"ToolbarNewSceneObjectIcon.png");
+			return getGUIIcon("ToolbarNewSceneObjectIcon.png");
 		case ToolbarIcon::NewCube:
-			return getGUIIcon(L"ToolbarNewCubeIcon.png");
+			return getGUIIcon("ToolbarNewCubeIcon.png");
 		case ToolbarIcon::NewSphere:
-			return getGUIIcon(L"ToolbarNewSphereIcon.png");
+			return getGUIIcon("ToolbarNewSphereIcon.png");
 		case ToolbarIcon::NewCone:
-			return getGUIIcon(L"ToolbarNewConeIcon.png");
+			return getGUIIcon("ToolbarNewConeIcon.png");
 		case ToolbarIcon::NewQuad:
-			return getGUIIcon(L"ToolbarNewQuadIcon.png");
+			return getGUIIcon("ToolbarNewQuadIcon.png");
 		case ToolbarIcon::NewMat:
-			return getGUIIcon(L"ToolbarNewMaterialIcon.png");
+			return getGUIIcon("ToolbarNewMaterialIcon.png");
 		case ToolbarIcon::NewCSScript:
-			return getGUIIcon(L"ToolbarNewCSScriptIcon.png");
+			return getGUIIcon("ToolbarNewCSScriptIcon.png");
 		case ToolbarIcon::NewShader:
-			return getGUIIcon(L"ToolbarNewShaderIcon.png");
+			return getGUIIcon("ToolbarNewShaderIcon.png");
 		case ToolbarIcon::NewSpriteTex:
-			return getGUIIcon(L"ToolbarNewSpriteTextureIcon.png");
+			return getGUIIcon("ToolbarNewSpriteTextureIcon.png");
 		case ToolbarIcon::Pause:
-			return getGUIIcon(L"ToolbarPauseIcon.png");
+			return getGUIIcon("ToolbarPauseIcon.png");
 		case ToolbarIcon::Play:
-			return getGUIIcon(L"ToolbarPlayIcon.png");
+			return getGUIIcon("ToolbarPlayIcon.png");
 		case ToolbarIcon::Step:
-			return getGUIIcon(L"ToolbarStepIcon.png");
+			return getGUIIcon("ToolbarStepIcon.png");
 		case ToolbarIcon::Undo:
-			return getGUIIcon(L"ToolbarUndoIcon.png");
+			return getGUIIcon("ToolbarUndoIcon.png");
 		case ToolbarIcon::Redo:
-			return getGUIIcon(L"ToolbarRedoIcon.png");
+			return getGUIIcon("ToolbarRedoIcon.png");
 		case ToolbarIcon::OpenProject:
-			return getGUIIcon(L"ToolbarOpenProjectIcon.png");
+			return getGUIIcon("ToolbarOpenProjectIcon.png");
 		case ToolbarIcon::SaveProject:
-			return getGUIIcon(L"ToolbarSaveProjectIcon.png");
+			return getGUIIcon("ToolbarSaveProjectIcon.png");
 		case ToolbarIcon::SaveScene:
-			return getGUIIcon(L"ToolbarSaveSceneIcon.png");
+			return getGUIIcon("ToolbarSaveSceneIcon.png");
 		}
 
 		return HSpriteTexture();
@@ -2458,44 +2458,44 @@ namespace bs
 		switch (icon)
 		{
 		case SceneWindowIcon::View:
-			off = getGUIIcon(L"SceneViewIcon.png");
-			on = getGUIIcon(L"SceneViewIconOn.png");
+			off = getGUIIcon("SceneViewIcon.png");
+			on = getGUIIcon("SceneViewIconOn.png");
 			break;
 		case SceneWindowIcon::Move:
-			off = getGUIIcon(L"SceneMoveIcon.png");
-			on = getGUIIcon(L"SceneMoveIconOn.png");
+			off = getGUIIcon("SceneMoveIcon.png");
+			on = getGUIIcon("SceneMoveIconOn.png");
 			break;
 		case SceneWindowIcon::Rotate:
-			off = getGUIIcon(L"SceneRotateIcon.png");
-			on = getGUIIcon(L"SceneRotateIconOn.png");
+			off = getGUIIcon("SceneRotateIcon.png");
+			on = getGUIIcon("SceneRotateIconOn.png");
 			break;
 		case SceneWindowIcon::Scale:
-			off = getGUIIcon(L"SceneScaleIcon.png");
-			on = getGUIIcon(L"SceneScaleIconOn.png");
+			off = getGUIIcon("SceneScaleIcon.png");
+			on = getGUIIcon("SceneScaleIconOn.png");
 			break;
 		case SceneWindowIcon::Pivot:
-			off = getGUIIcon(L"ScenePivotIcon.png");
-			on = getGUIIcon(L"ScenePivotIconOn.png");
+			off = getGUIIcon("ScenePivotIcon.png");
+			on = getGUIIcon("ScenePivotIconOn.png");
 			break;
 		case SceneWindowIcon::Center:
-			off = getGUIIcon(L"SceneCenterIcon.png");
-			on = getGUIIcon(L"SceneCenterIconOn.png");
+			off = getGUIIcon("SceneCenterIcon.png");
+			on = getGUIIcon("SceneCenterIconOn.png");
 			break;
 		case SceneWindowIcon::Local:
-			off = getGUIIcon(L"SceneLocalIcon.png");
-			on = getGUIIcon(L"SceneLocalIconOn.png");
+			off = getGUIIcon("SceneLocalIcon.png");
+			on = getGUIIcon("SceneLocalIconOn.png");
 			break;
 		case SceneWindowIcon::World:
-			off = getGUIIcon(L"SceneWorldIcon.png");
-			on = getGUIIcon(L"SceneWorldIconOn.png");
+			off = getGUIIcon("SceneWorldIcon.png");
+			on = getGUIIcon("SceneWorldIconOn.png");
 			break;
 		case SceneWindowIcon::MoveSnap:
-			off = getGUIIcon(L"SceneMoveSnapIcon.png");
-			on = getGUIIcon(L"SceneMoveSnapIconOn.png");
+			off = getGUIIcon("SceneMoveSnapIcon.png");
+			on = getGUIIcon("SceneMoveSnapIconOn.png");
 			break;
 		case SceneWindowIcon::RotateSnap:
-			off = getGUIIcon(L"SceneRotateSnapIcon.png");
-			on = getGUIIcon(L"SceneRotateSnapIconOn.png");
+			off = getGUIIcon("SceneRotateSnapIcon.png");
+			on = getGUIIcon("SceneRotateSnapIconOn.png");
 			break;
 		}
 
@@ -2517,13 +2517,13 @@ namespace bs
 		switch (icon)
 		{
 		case LibraryWindowIcon::Home:
-			return getGUIIcon(L"LibraryHomeIcon.png");
+			return getGUIIcon("LibraryHomeIcon.png");
 		case LibraryWindowIcon::Up:
-			return getGUIIcon(L"LibraryUpIcon.png");
+			return getGUIIcon("LibraryUpIcon.png");
 		case LibraryWindowIcon::Clear:
-			return getGUIIcon(L"LibraryClearSearchIcon.png");
+			return getGUIIcon("LibraryClearSearchIcon.png");
 		case LibraryWindowIcon::Options:
-			return getGUIIcon(L"LibraryOptionsIcon.png");
+			return getGUIIcon("LibraryOptionsIcon.png");
 		}
 
 		return HSpriteTexture();
@@ -2534,27 +2534,27 @@ namespace bs
 		switch (icon)
 		{
 		case InspectorWindowIcon::Create:
-			return getGUIIcon(L"InspectorCreateIcon.png");
+			return getGUIIcon("InspectorCreateIcon.png");
 		case InspectorWindowIcon::Clone:
-			return getGUIIcon(L"InspectorCloneIcon.png");
+			return getGUIIcon("InspectorCloneIcon.png");
 		case InspectorWindowIcon::Clear:
-			return getGUIIcon(L"InspectorClearIcon.png");
+			return getGUIIcon("InspectorClearIcon.png");
 		case InspectorWindowIcon::Resize:
-			return getGUIIcon(L"InspectorResizeIcon.png");
+			return getGUIIcon("InspectorResizeIcon.png");
 		case InspectorWindowIcon::Delete:
-			return getGUIIcon(L"InspectorDeleteIcon.png");
+			return getGUIIcon("InspectorDeleteIcon.png");
 		case InspectorWindowIcon::MoveUp:
-			return getGUIIcon(L"InspectorMoveUpIcon.png");
+			return getGUIIcon("InspectorMoveUpIcon.png");
 		case InspectorWindowIcon::MoveDown:
-			return getGUIIcon(L"InspectorMoveDownIcon.png");
+			return getGUIIcon("InspectorMoveDownIcon.png");
 		case InspectorWindowIcon::Edit:
-			return getGUIIcon(L"InspectorEditIcon.png");
+			return getGUIIcon("InspectorEditIcon.png");
 		case InspectorWindowIcon::Apply:
-			return getGUIIcon(L"InspectorApplyIcon.png");
+			return getGUIIcon("InspectorApplyIcon.png");
 		case InspectorWindowIcon::Add:
-			return getGUIIcon(L"InspectorAddIcon.png");
+			return getGUIIcon("InspectorAddIcon.png");
 		case InspectorWindowIcon::Cancel:
-			return getGUIIcon(L"InspectorCancelIcon.png");
+			return getGUIIcon("InspectorCancelIcon.png");
 		}
 
 		return HSpriteTexture();
@@ -2568,35 +2568,35 @@ namespace bs
 		switch (icon)
 		{
 		case AnimationWindowIcon::Play:
-			off = getGUIIcon(L"AnimationPlayIcon.png");
-			on = getGUIIcon(L"AnimationPlayIconOn.png");
+			off = getGUIIcon("AnimationPlayIcon.png");
+			on = getGUIIcon("AnimationPlayIconOn.png");
 			break;
 		case AnimationWindowIcon::Record:
-			off = getGUIIcon(L"AnimationRecordIcon.png");
-			on = getGUIIcon(L"AnimationRecordIconOn.png");
+			off = getGUIIcon("AnimationRecordIcon.png");
+			on = getGUIIcon("AnimationRecordIconOn.png");
 			break;
 		case AnimationWindowIcon::FrameForward:
-			off = getGUIIcon(L"AnimationFrameForwardIcon.png");
-			on = getGUIIcon(L"AnimationFrameForwardIconOn.png");
+			off = getGUIIcon("AnimationFrameForwardIcon.png");
+			on = getGUIIcon("AnimationFrameForwardIconOn.png");
 			break;
 		case AnimationWindowIcon::FrameBack:
-			off = getGUIIcon(L"AnimationFrameBackIcon.png");
-			on = getGUIIcon(L"AnimationFrameBackIconOn.png");
+			off = getGUIIcon("AnimationFrameBackIcon.png");
+			on = getGUIIcon("AnimationFrameBackIconOn.png");
 			break;
 		case AnimationWindowIcon::AddEvent:
-			off = getGUIIcon(L"AnimationAddEventIcon.png");
-			on = getGUIIcon(L"AnimationAddEventIconOn.png");
+			off = getGUIIcon("AnimationAddEventIcon.png");
+			on = getGUIIcon("AnimationAddEventIconOn.png");
 			break;
 		case AnimationWindowIcon::AddKeyframe:
-			off = getGUIIcon(L"AnimationAddKeyframeIcon.png");
-			on = getGUIIcon(L"AnimationAddKeyframeIconOn.png");
+			off = getGUIIcon("AnimationAddKeyframeIcon.png");
+			on = getGUIIcon("AnimationAddKeyframeIconOn.png");
 			break;
 		case AnimationWindowIcon::Event:
-			off = getGUIIcon(L"AnimationEventIcon.png");
+			off = getGUIIcon("AnimationEventIcon.png");
 			on = off;
 			break;
 		case AnimationWindowIcon::Keyframe:
-			off = getGUIIcon(L"AnimationKeyframeIcon.png");
+			off = getGUIIcon("AnimationKeyframeIcon.png");
 			on = off;
 			break;
 		}
@@ -2621,9 +2621,9 @@ namespace bs
 		case EditorIcon::X:
 			return getGUIIcon(XButtonNormalTex);
 		case EditorIcon::Component:
-			return getGUIIcon(L"IconComponent.png");
+			return getGUIIcon("IconComponent.png");
 		case EditorIcon::SceneObject:
-			return getGUIIcon(L"IconSceneObject.png");
+			return getGUIIcon("IconSceneObject.png");
 		}
 
 		return HSpriteTexture();
@@ -2638,11 +2638,11 @@ namespace bs
 				switch (icon)
 				{
 				case LogMessageIcon::Info:
-					return getGUIIcon(L"IconInfoDark.png");
+					return getGUIIcon("IconInfoDark.png");
 				case LogMessageIcon::Warning:
-					return getGUIIcon(L"IconWarningDark.png");
+					return getGUIIcon("IconWarningDark.png");
 				case LogMessageIcon::Error:
-					return getGUIIcon(L"IconErrorDark.png");
+					return getGUIIcon("IconErrorDark.png");
 				}
 			}
 			else
@@ -2650,11 +2650,11 @@ namespace bs
 				switch (icon)
 				{
 				case LogMessageIcon::Info:
-					return getGUIIcon(L"IconInfo.png");
+					return getGUIIcon("IconInfo.png");
 				case LogMessageIcon::Warning:
-					return getGUIIcon(L"IconWarning.png");
+					return getGUIIcon("IconWarning.png");
 				case LogMessageIcon::Error:
-					return getGUIIcon(L"IconError.png");
+					return getGUIIcon("IconError.png");
 				}
 			}
 		}
@@ -2663,11 +2663,11 @@ namespace bs
 			switch (icon)
 			{
 			case LogMessageIcon::Info:
-				return getGUIIcon(L"IconInfo32.png");
+				return getGUIIcon("IconInfo32.png");
 			case LogMessageIcon::Warning:
-				return getGUIIcon(L"IconWarning32.png");
+				return getGUIIcon("IconWarning32.png");
 			case LogMessageIcon::Error:
-				return getGUIIcon(L"IconError32.png");
+				return getGUIIcon("IconError32.png");
 			}
 		}
 
@@ -2676,34 +2676,34 @@ namespace bs
 
 	SPtr<PixelData> BuiltinEditorResources::getSplashScreen()
 	{
-		Path splashScreenPath = gEditorApplication().getDataPath() + (WString(SplashScreenName) + L".asset");
+		Path splashScreenPath = gEditorApplication().getDataPath() + (String(SplashScreenName) + ".asset");
 		FileDecoder fd(splashScreenPath);
 
 		return std::static_pointer_cast<PixelData>(fd.decode());
 	}
 
-	WString BuiltinEditorResources::getEmptyShaderCode() const
+	String BuiltinEditorResources::getEmptyShaderCode() const
 	{
 		Path filePath = BuiltinDataFolder;
 		filePath.append(EmptyShaderCodeFile);
 
 		SPtr<DataStream> fileStream = FileSystem::openFile(filePath);
 		if (fileStream != nullptr)
-			return fileStream->getAsWString();
+			return fileStream->getAsString();
 
-		return StringUtil::WBLANK;
+		return StringUtil::BLANK;
 	}
 
-	WString BuiltinEditorResources::getEmptyCSScriptCode() const
+	String BuiltinEditorResources::getEmptyCSScriptCode() const
 	{
 		Path filePath = BuiltinDataFolder;
 		filePath.append(EmptyCSScriptCodeFile);
 
 		SPtr<DataStream> fileStream = FileSystem::openFile(filePath);
 		if (fileStream != nullptr)
-			return fileStream->getAsWString();
+			return fileStream->getAsString();
 
-		return StringUtil::WBLANK;
+		return StringUtil::BLANK;
 	}
 
 	Path BuiltinEditorResources::getShaderIncludeFolder()

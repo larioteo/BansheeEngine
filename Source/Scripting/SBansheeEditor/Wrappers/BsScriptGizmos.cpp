@@ -153,7 +153,7 @@ namespace bs
 
 	void ScriptGizmos::internal_DrawText(Vector3* position, MonoString* text, ScriptFont* font, int size)
 	{
-		WString nativeText = MonoUtil::monoToWString(text);
+		String nativeText = MonoUtil::monoToString(text);
 
 		HFont fontHandle;
 		if (font != nullptr)

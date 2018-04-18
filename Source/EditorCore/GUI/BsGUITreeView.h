@@ -188,7 +188,7 @@ namespace bs
 		virtual void updateTreeElementHierarchy() = 0;
 
 		/**	Changes the name of the content associated with the provided tree element. */
-		virtual void renameTreeElement(TreeElement* element, const WString& name) = 0;
+		virtual void renameTreeElement(TreeElement* element, const String& name) = 0;
 
 		/**	Deletes the content associated with the provided tree element. */
 		virtual void deleteTreeElement(TreeElement* element) = 0;

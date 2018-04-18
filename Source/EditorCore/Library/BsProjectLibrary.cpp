@@ -23,16 +23,16 @@ using namespace std::placeholders;
 
 namespace bs
 {
-	const Path ProjectLibrary::RESOURCES_DIR = L"Resources/";
+	const Path ProjectLibrary::RESOURCES_DIR = "Resources/";
 	const Path ProjectLibrary::INTERNAL_RESOURCES_DIR = PROJECT_INTERNAL_DIR + GAME_RESOURCES_FOLDER_NAME;
-	const WString ProjectLibrary::LIBRARY_ENTRIES_FILENAME = L"ProjectLibrary.asset";
-	const WString ProjectLibrary::RESOURCE_MANIFEST_FILENAME = L"ResourceManifest.asset";
+	const char* ProjectLibrary::LIBRARY_ENTRIES_FILENAME = "ProjectLibrary.asset";
+	const char* ProjectLibrary::RESOURCE_MANIFEST_FILENAME = "ResourceManifest.asset";
 
 	ProjectLibrary::LibraryEntry::LibraryEntry()
 		:type(LibraryEntryType::Directory), parent(nullptr)
 	{ }
 
-	ProjectLibrary::LibraryEntry::LibraryEntry(const Path& path, const WString& name, DirectoryEntry* parent, LibraryEntryType type)
+	ProjectLibrary::LibraryEntry::LibraryEntry(const Path& path, const String& name, DirectoryEntry* parent, LibraryEntryType type)
 		:type(type), path(path), elementName(name), parent(parent)
 	{ }
 
@@ -40,21 +40,21 @@ namespace bs
 		: lastUpdateTime(0)
 	{ }
 
-	ProjectLibrary::FileEntry::FileEntry(const Path& path, const WString& name, DirectoryEntry* parent)
+	ProjectLibrary::FileEntry::FileEntry(const Path& path, const String& name, DirectoryEntry* parent)
 		: LibraryEntry(path, name, parent, LibraryEntryType::File), lastUpdateTime(0)
 	{ }
 
 	ProjectLibrary::DirectoryEntry::DirectoryEntry()
 	{ }
 
-	ProjectLibrary::DirectoryEntry::DirectoryEntry(const Path& path, const WString& name, DirectoryEntry* parent)
+	ProjectLibrary::DirectoryEntry::DirectoryEntry(const Path& path, const String& name, DirectoryEntry* parent)
 		:LibraryEntry(path, name, parent, LibraryEntryType::Directory)
 	{ }
 
 	ProjectLibrary::ProjectLibrary()
 		: mRootEntry(nullptr), mIsLoaded(false)
 	{
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getWTail(), nullptr);
+		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 	}
 
 	ProjectLibrary::~ProjectLibrary()
@@ -75,7 +75,7 @@ namespace bs
 
 		if(mRootEntry == nullptr)
 		{
-			mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getWTail(), nullptr);
+			mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 		}
 
 		Path pathToSearch = fullPath;
@@ -87,7 +87,7 @@ namespace bs
 				if (isMeta(pathToSearch))
 				{
 					Path sourceFilePath = pathToSearch;
-					sourceFilePath.setExtension(L"");
+					sourceFilePath.setExtension("");
 
 					if (!FileSystem::isFile(sourceFilePath))
 					{
@@ -178,7 +178,7 @@ namespace bs
 						if(isMeta(filePath))
 						{
 							Path sourceFilePath = filePath;
-							sourceFilePath.setExtension(L"");
+							sourceFilePath.setExtension("");
 
 							if(!FileSystem::isFile(sourceFilePath))
 							{
@@ -274,7 +274,7 @@ namespace bs
 	ProjectLibrary::FileEntry* ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
 		const SPtr<ImportOptions>& importOptions, bool forceReimport)
 	{
-		FileEntry* newResource = bs_new<FileEntry>(filePath, filePath.getWTail(), parent);
+		FileEntry* newResource = bs_new<FileEntry>(filePath, filePath.getTail(), parent);
 		parent->mChildren.push_back(newResource);
 
 		reimportResourceInternal(newResource, importOptions, forceReimport);
@@ -285,7 +285,7 @@ namespace bs
 
 	ProjectLibrary::DirectoryEntry* ProjectLibrary::addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath)
 	{
-		DirectoryEntry* newEntry = bs_new<DirectoryEntry>(dirPath, dirPath.getWTail(), parent);
+		DirectoryEntry* newEntry = bs_new<DirectoryEntry>(dirPath, dirPath.getTail(), parent);
 		parent->mChildren.push_back(newEntry);
 
 		onEntryAdded(newEntry->path);
@@ -364,7 +364,7 @@ namespace bs
 		bool forceReimport, bool pruneResourceMetas)
 	{
 		Path metaPath = fileEntry->path;
-		metaPath.setFilename(metaPath.getWFilename() + L".meta");
+		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 		if(fileEntry->meta == nullptr)
 		{
@@ -424,7 +424,7 @@ namespace bs
 
 				// Don't load dependencies because we don't need them, but also because they might not be in the manifest
 				// which would screw up their UUIDs.
-				importedResources.push_back({ L"primary", gResources().load(fileEntry->path, ResourceLoadFlag::KeepSourceData) });
+				importedResources.push_back({ "primary", gResources().load(fileEntry->path, ResourceLoadFlag::KeepSourceData) });
 			}
 
 			if(fileEntry->meta == nullptr)
@@ -551,7 +551,7 @@ namespace bs
 				{
 					String uuidStr = entry.value.getUUID().toString();
 
-					internalResourcesPath.setFilename(toWString(uuidStr) + L".asset");
+					internalResourcesPath.setFilename(uuidStr + ".asset");
 					gResources().save(entry.value, internalResourcesPath, true);
 
 					const UUID& uuid = entry.value.getUUID();
@@ -586,29 +586,29 @@ namespace bs
 		return lastModifiedTime <= resource->lastUpdateTime;
 	}
 
-	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const WString& pattern)
+	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const String& pattern)
 	{
 		return search(pattern, {});
 	}
 
-	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const WString& pattern, const Vector<UINT32>& typeIds)
+	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const String& pattern, const Vector<UINT32>& typeIds)
 	{
 		Vector<LibraryEntry*> foundEntries;
 
-		std::wregex escape(L"[.^$|()\\[\\]{}*+?\\\\]");
-		WString replace(L"\\\\&");
-		WString escapedPattern = std::regex_replace(pattern, escape, replace, std::regex_constants::match_default | std::regex_constants::format_sed);
+		std::regex escape("[.^$|()\\[\\]{}*+?\\\\]");
+		String replace("\\\\&");
+		String escapedPattern = std::regex_replace(pattern, escape, replace, std::regex_constants::match_default | std::regex_constants::format_sed);
 
 		// For some reason MSVC stdlib implementation requires a different pattern than stdlib one
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-		std::wregex wildcard(L"\\\\\\*");
+		std::regex wildcard("\\\\\\*");
 #else
-		std::wregex wildcard(L"\\\\\\\\\\*");
+		std::regex wildcard("\\\\\\\\\\*");
 #endif
-		WString wildcardReplace(L".*");
-		WString searchPattern = std::regex_replace(escapedPattern, wildcard, L".*");
+		String wildcardReplace(".*");
+		String searchPattern = std::regex_replace(escapedPattern, wildcard, ".*");
 
-		std::wregex searchRegex(searchPattern, std::regex_constants::ECMAScript | std::regex_constants::icase);
+		std::regex searchRegex(searchPattern, std::regex_constants::ECMAScript | std::regex_constants::icase);
 
 		Stack<DirectoryEntry*> todo;
 		todo.push(mRootEntry);
@@ -702,7 +702,7 @@ namespace bs
 				current = nullptr;
 				for (auto& child : dirEntry->mChildren)
 				{
-					if (Path::comparePathElem(curElem, UTF8::fromWide(child->elementName)))
+					if (Path::comparePathElem(curElem, child->elementName))
 					{
 						idx++;
 						current = child;
@@ -764,7 +764,7 @@ namespace bs
 				auto& resourceMetas = fileEntry->meta->getResourceMetaData();
 				for(auto& resMeta : resourceMetas)
 				{
-					if (resMeta->getUniqueName() == path.getWTail())
+					if (resMeta->getUniqueName() == path.getTail())
 						return resMeta;
 				}
 
@@ -776,7 +776,7 @@ namespace bs
 				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(entry);
 				for (auto& child : dirEntry->mChildren)
 				{
-					if (Path::comparePathElem(path.getTail(), UTF8::fromWide(child->elementName)))
+					if (Path::comparePathElem(path.getTail(), child->elementName))
 					{
 						if (child->type == LibraryEntryType::File)
 						{
@@ -833,7 +833,7 @@ namespace bs
 
 		deleteEntry(assetPath);
 
-		resource->setName(path.getWFilename(false));
+		resource->setName(path.getFilename(false));
 
 		Path absPath = assetPath.getAbsolute(getResourcesFolder());
 		Resources::instance().save(resource, absPath, false);
@@ -979,7 +979,7 @@ namespace bs
 				newEntryParent->mChildren.push_back(oldEntry);
 				oldEntry->parent = newEntryParent;
 				oldEntry->path = newFullPath;
-				oldEntry->elementName = newFullPath.getWTail();
+				oldEntry->elementName = newFullPath.getTail();
 
 				if(oldEntry->type == LibraryEntryType::Directory) // Update child paths
 				{
@@ -1088,7 +1088,7 @@ namespace bs
 				for (auto& child : sourceDir->mChildren)
 				{
 					Path childDestPath = destDir->path;
-					childDestPath.append(child->path.getWTail());
+					childDestPath.append(child->path.getTail());
 
 					if (child->type == LibraryEntryType::File)
 					{
@@ -1158,7 +1158,7 @@ namespace bs
 		resEntry->meta->setIncludeInBuild(include);
 
 		Path metaPath = resEntry->path;
-		metaPath.setFilename(metaPath.getWFilename() + L".meta");
+		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 		FileEncoder fs(metaPath);
 		fs.encode(resEntry->meta.get());
@@ -1180,7 +1180,7 @@ namespace bs
 		resMeta->mUserData = userData;
 
 		Path metaPath = fileEntry->path;
-		metaPath.setFilename(metaPath.getWFilename() + L".meta");
+		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 		FileEncoder fs(metaPath);
 		fs.encode(fileEntry->meta.get());
@@ -1275,21 +1275,21 @@ namespace bs
 	Path ProjectLibrary::getMetaPath(const Path& path) const
 	{
 		Path metaPath = path;
-		metaPath.setFilename(metaPath.getWFilename() + L".meta");
+		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 		return metaPath;
 	}
 
 	bool ProjectLibrary::isMeta(const Path& fullPath) const
 	{
-		return fullPath.getWExtension() == L".meta";
+		return fullPath.getExtension() == ".meta";
 	}
 
 	bool ProjectLibrary::isNative(const Path& path) const
 	{
-		WString extension = path.getWExtension();
+		String extension = path.getExtension();
 
-		return extension == L".asset" || extension == L".prefab";
+		return extension == ".asset" || extension == ".prefab";
 	}
 
 	void ProjectLibrary::unloadLibrary()
@@ -1301,7 +1301,7 @@ namespace bs
 		mResourcesFolder = Path::BLANK;
 
 		clearEntries();
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getWTail(), nullptr);
+		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		mDependencies.clear();
 		gResources().unregisterResourceManifest(mResourceManifest);
@@ -1382,7 +1382,7 @@ namespace bs
 		mResourcesFolder = mProjectFolder;
 		mResourcesFolder.append(RESOURCES_DIR);
 
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getWTail(), nullptr);
+		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		Path libraryEntriesPath = mProjectFolder;
 		libraryEntriesPath.append(PROJECT_INTERNAL_DIR);
@@ -1437,7 +1437,7 @@ namespace bs
 						if (resEntry->meta == nullptr)
 						{
 							Path metaPath = resEntry->path;
-							metaPath.setFilename(metaPath.getWFilename() + L".meta");
+							metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 							if (FileSystem::isFile(metaPath))
 							{

@@ -66,7 +66,7 @@ namespace bs
 			}
 		}
 
-		GUIListBox* guiListBox = GUIListBox::create(nativeElements, multiselect, options, toString(MonoUtil::monoToWString(style)));
+		GUIListBox* guiListBox = GUIListBox::create(nativeElements, multiselect, options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUIListBox>()) ScriptGUIListBox(instance, guiListBox);
 

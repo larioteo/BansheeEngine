@@ -23,7 +23,7 @@ namespace bs
 		mInputBox = GUIInputBox::create(false, GUIOptions(GUIOption::fixedWidth(75)), getSubStyleName(getInputStyleType()));
 		mInputBox->setFilter(&GUISliderField::floatFilter);
 
-		mInputBox->onValueChanged.connect(std::bind((void(GUISliderField::*)(const WString&))&GUISliderField::inputBoxValueChanging, this, _1));
+		mInputBox->onValueChanged.connect(std::bind((void(GUISliderField::*)(const String&))&GUISliderField::inputBoxValueChanging, this, _1));
 		mInputBox->onConfirm.connect(std::bind(&GUISliderField::inputBoxValueChanged, this, true));
 		mInputBox->onFocusChanged.connect(std::bind(&GUISliderField::inputBoxFocusChanged, this, _1));
 
@@ -32,7 +32,7 @@ namespace bs
 		mLayout->addElement(mInputBox);
 
 		setValue(0);
-		mInputBox->setText(L"0");
+		mInputBox->setText("0");
 	}
 
 	GUISliderField::~GUISliderField()
@@ -58,12 +58,11 @@ namespace bs
 
 		float clampedValue = mSlider->getValue();
 
-		// Only update with new value if it actually changed, otherwise
-		// problems can occur when user types in "0." and the field
-		// updates back to "0" effectively making "." unusable
+		// Only update with new value if it actually changed, otherwise problems can occur when user types in "0." and the
+		// field updates back to "0" effectively making "." unusable
 		float curValue = parseFloat(mInputBox->getText());
 		if (clampedValue != curValue)
-			mInputBox->setText(toWString(clampedValue));
+			mInputBox->setText(toString(clampedValue));
 		return clampedValue;
 	}
 
@@ -120,7 +119,8 @@ namespace bs
 		mInputBox->setStyle(getSubStyleName(getInputStyleType()));
 	}
 
-	void GUISliderField::inputBoxValueChanging(const WString& newValue) {
+	void GUISliderField::inputBoxValueChanging(const String& newValue) 
+	{
 		inputBoxValueChanged(false);
 	}
 
@@ -137,9 +137,9 @@ namespace bs
 				onValueChanged(mSlider->getValue());
 			}
 		}
-		else if (mInputBox->getText() == L"" && confirmed) //Avoid leaving label blank
+		else if (mInputBox->getText() == "" && confirmed) //Avoid leaving label blank
 		{
-			mInputBox->setText(L"0");
+			mInputBox->setText("0");
 		}
 	}
 
@@ -167,9 +167,9 @@ namespace bs
 		_setValue(newValue, true);
 	}
 
-	bool GUISliderField::floatFilter(const WString& str)
+	bool GUISliderField::floatFilter(const String& str)
 	{
-		bool result = std::regex_match(str, std::wregex(L"-?(\\d*(\\.\\d*)?)?"));
+		bool result = std::regex_match(str, std::regex("-?(\\d*(\\.\\d*)?)?"));
 		return result;
 	}
 }

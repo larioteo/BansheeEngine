@@ -5,7 +5,7 @@
 
 namespace bs
 {
-	CmdReparentSO::CmdReparentSO(const WString& description, const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent)
+	CmdReparentSO::CmdReparentSO(const String& description, const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent)
 		:EditorCommand(description), mSceneObjects(sceneObjects), mNewParent(newParent)
 	{
 		for(auto& sceneObject : mSceneObjects)
@@ -15,7 +15,7 @@ namespace bs
 	}
 
 	void CmdReparentSO::execute(const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent,
-		const WString& description)
+		const String& description)
 	{
 		// Register command and commit it
 		CmdReparentSO* command = new (bs_alloc<CmdReparentSO>()) CmdReparentSO(description, sceneObjects, newParent);
@@ -25,7 +25,7 @@ namespace bs
 		commandPtr->commit();
 	}
 
-	void CmdReparentSO::execute(HSceneObject& sceneObject, const HSceneObject& newParent, const WString& description)
+	void CmdReparentSO::execute(HSceneObject& sceneObject, const HSceneObject& newParent, const String& description)
 	{
 		// Register command and commit it
 		CmdReparentSO* command = new (bs_alloc<CmdReparentSO>()) CmdReparentSO(description, { sceneObject }, newParent);

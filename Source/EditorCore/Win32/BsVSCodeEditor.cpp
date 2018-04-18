@@ -16,6 +16,7 @@
 #include "Win32/dte80a.tlh"
 
 #include "Win32/Setup.Configuration.h"
+#include "String/BsUnicode.h"
 _COM_SMARTPTR_TYPEDEF(ISetupInstance, __uuidof(ISetupInstance));
 _COM_SMARTPTR_TYPEDEF(ISetupInstance2, __uuidof(ISetupInstance2));
 _COM_SMARTPTR_TYPEDEF(IEnumSetupInstances, __uuidof(IEnumSetupInstances));
@@ -152,7 +153,8 @@ namespace bs
 			if (FAILED(CreateClassMoniker(clsID, &dteMoniker)))
 				return nullptr;
 
-			CComBSTR bstrSolution(solutionPath.toWString(Path::PathType::Windows).c_str());
+			WString wideSolutionPath = UTF8::toWide(solutionPath.toString(Path::PathType::Windows));
+			CComBSTR bstrSolution(wideSolutionPath.c_str());
 			CComPtr<IMoniker> moniker;
 			ULONG count = 0;
 			while (enumMoniker->Next(1, &moniker, &count) == S_OK)
@@ -212,7 +214,8 @@ namespace bs
 			if (FAILED(dte->get_Solution(&solution)))
 				return nullptr;
 
-			CComBSTR bstrSolution(solutionPath.toWString(Path::PathType::Windows).c_str());
+			WString wideSolutionPath = UTF8::toWide(solutionPath.toString(Path::PathType::Windows));
+			CComBSTR bstrSolution(wideSolutionPath.c_str());
 			if (FAILED(solution->Open(bstrSolution)))
 				return nullptr;
 
@@ -245,7 +248,9 @@ namespace bs
 			if (FAILED(dte->get_ItemOperations(&itemOperations)))
 				return false;
 
-			CComBSTR bstrFilePath(filePath.toWString(Path::PathType::Windows).c_str());
+			WString wideFilePath = UTF8::toWide(filePath.toString(Path::PathType::Windows));
+
+			CComBSTR bstrFilePath(wideFilePath.c_str());
 			CComBSTR bstrKind(EnvDTE::vsViewKindPrimary);
 			CComPtr<EnvDTE::Window> window = nullptr;
 			if (FAILED(itemOperations->OpenFile(bstrFilePath, bstrKind, &window)))
@@ -339,7 +344,7 @@ namespace bs
 		String solutionString = CSProject::writeSolution(csProjVer, data);
 		solutionString = StringUtil::replaceAll(solutionString, "\n", "\r\n");
 		Path solutionPath = outputPath;
-		solutionPath.append(data.name + L".sln");
+		solutionPath.append(data.name + ".sln");
 
 		for (auto& project : data.projects)
 		{
@@ -347,7 +352,7 @@ namespace bs
 			projectString = StringUtil::replaceAll(projectString, "\n", "\r\n");
 
 			Path projectPath = outputPath;
-			projectPath.append(project.name + L".csproj");
+			projectPath.append(project.name + ".csproj");
 
 			SPtr<DataStream> projectStream = FileSystem::createAndOpenFile(projectPath);
 			projectStream->write(projectString.c_str(), projectString.size() * sizeof(String::value_type));
@@ -421,7 +426,7 @@ namespace bs
 
 			VSVersionInfo info;
 			info.name = version.second.name;
-			info.execPath = installPath.append(version.second.executable);
+			info.execPath = UTF8::fromWide(installPath.append(version.second.executable));
 			info.CLSID = clsID;
 			info.version = version.first;
 
@@ -495,7 +500,7 @@ namespace bs
 			{
 				VSVersionInfo info;
 				info.name = WString(bstrName);
-				info.execPath = Path(WString(bstrInstallationPath)) + Path(L"Common7/IDE/devenv.exe");
+				info.execPath = Path(UTF8::fromWide(WString(bstrInstallationPath))) + Path("Common7/IDE/devenv.exe");
 				info.version = VisualStudioVersion::VS2017;
 				info.CLSID = L"{3829D1F4-A427-4C75-B63C-7ABB7521B225}";
 

@@ -752,7 +752,7 @@ namespace bs
 
 		if(element->mIsVisible)
 		{
-			HString name(toWString(element->mName));
+			HString name(element->mName);
 			if(element->mElement == nullptr)
 			{
 				element->mElement = GUILabel::create(name, mElementBtnStyle);
@@ -780,7 +780,7 @@ namespace bs
 			{
 				if(element->mFoldoutBtn == nullptr)
 				{
-					element->mFoldoutBtn = GUIToggle::create(GUIContent(HString(L"")), mFoldoutBtnStyle);
+					element->mFoldoutBtn = GUIToggle::create(GUIContent(HString("")), mFoldoutBtnStyle);
 					_registerChildElement(element->mFoldoutBtn);
 
 					element->mFoldoutBtn->onToggled.connect(std::bind(&GUITreeView::elementToggled, this, element, _1));
@@ -860,7 +860,7 @@ namespace bs
 
 		mEditElement = element;
 		mNameEditBox->setVisible(true);
-		mNameEditBox->setText(toWString(element->mName));
+		mNameEditBox->setText(element->mName);
 		mNameEditBox->setFocus(true);
 
 		if(element->mElement != nullptr)
@@ -876,7 +876,7 @@ namespace bs
 
 		if(applyChanges)
 		{
-			WString newName = mNameEditBox->getText();
+			String newName = mNameEditBox->getText();
 			renameTreeElement(mEditElement, newName);
 		}
 

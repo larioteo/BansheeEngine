@@ -47,7 +47,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		String styleName = toString(MonoUtil::monoToWString(style));
+		String styleName = MonoUtil::monoToString(style);
 
 		GUIVector4Field* field = nullptr;
 		if (withTitle)

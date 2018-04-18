@@ -5,7 +5,7 @@
 
 namespace bs
 {
-	CmdCreateSO::CmdCreateSO(const WString& description, const String& name, UINT32 flags)
+	CmdCreateSO::CmdCreateSO(const String& description, const String& name, UINT32 flags)
 		:EditorCommand(description), mName(name), mFlags(flags)
 	{
 
@@ -16,7 +16,7 @@ namespace bs
 
 	}
 
-	HSceneObject CmdCreateSO::execute(const String& name, UINT32 flags, const WString& description)
+	HSceneObject CmdCreateSO::execute(const String& name, UINT32 flags, const String& description)
 	{
 		// Register command and commit it
 		CmdCreateSO* command = new (bs_alloc<CmdCreateSO>()) CmdCreateSO(description, name, flags);

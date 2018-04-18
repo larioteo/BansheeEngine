@@ -79,24 +79,24 @@ namespace bs
 
 	MonoArray* ScriptBuildManager::internal_GetFrameworkAssemblies(PlatformType type)
 	{
-		Vector<WString> frameworkAssemblies = BuildManager::instance().getFrameworkAssemblies(type);
+		Vector<String> frameworkAssemblies = BuildManager::instance().getFrameworkAssemblies(type);
 
-		ScriptArray outArray = ScriptArray::create<WString>((UINT32)frameworkAssemblies.size());
+		ScriptArray outArray = ScriptArray::create<String>((UINT32)frameworkAssemblies.size());
 		UINT32 idx = 0;
 		for (auto& assemblyName : frameworkAssemblies)
-			outArray.set(idx++, MonoUtil::wstringToMono(assemblyName));
+			outArray.set(idx++, MonoUtil::stringToMono(assemblyName));
 
 		return outArray.getInternal();
 	}
 
 	MonoString* ScriptBuildManager::internal_GetMainExecutable(PlatformType type)
 	{
-		return MonoUtil::wstringToMono(BuildManager::instance().getMainExecutable(type).toWString());
+		return MonoUtil::stringToMono(BuildManager::instance().getMainExecutable(type).toString());
 	}
 
 	MonoString* ScriptBuildManager::internal_GetDefines(PlatformType type)
 	{
-		return MonoUtil::wstringToMono(BuildManager::instance().getDefines(type));
+		return MonoUtil::stringToMono(BuildManager::instance().getDefines(type));
 	}
 
 	MonoArray* ScriptBuildManager::internal_GetNativeBinaries(PlatformType type)
@@ -104,10 +104,10 @@ namespace bs
 		Vector<Path> paths = BuildManager::instance().getNativeBinaries(type);
 
 		UINT32 numEntries = (UINT32)paths.size();
-		ScriptArray outArray = ScriptArray::create<WString>(numEntries);
+		ScriptArray outArray = ScriptArray::create<String>(numEntries);
 		for (UINT32 i = 0; i < numEntries; i++)
 		{
-			outArray.set(i, MonoUtil::wstringToMono(paths[i].toWString()));
+			outArray.set(i, MonoUtil::stringToMono(paths[i].toString()));
 		}
 
 		return outArray.getInternal();
@@ -161,7 +161,7 @@ namespace bs
 			path = BuildManager::instance().getBuildFolder(nativeFolderType, platform);
 		}
 
-		return MonoUtil::wstringToMono(path.toWString());
+		return MonoUtil::stringToMono(path.toString());
 	}
 
 	void ScriptBuildManager::internal_InjectIcons(MonoString* filePath, ScriptPlatformInfo* info)
@@ -169,7 +169,7 @@ namespace bs
 		if (info == nullptr)
 			return;
 
-		Path executablePath = MonoUtil::monoToWString(filePath);
+		Path executablePath = MonoUtil::monoToString(filePath);
 
 		Map<UINT32, SPtr<PixelData>> icons;
 		SPtr<PlatformInfo> platformInfo = info->getPlatformInfo();
@@ -293,7 +293,7 @@ namespace bs
 		} 
 
 		// Copy resources
-		Path buildPath = MonoUtil::monoToWString(buildFolder);
+		Path buildPath = MonoUtil::monoToString(buildFolder);
 
 		Path outputPath = buildPath;
 		outputPath.append(GAME_RESOURCES_FOLDER_NAME);
@@ -375,7 +375,7 @@ namespace bs
 		Path destRoot = BuildManager::instance().getBuildFolder(BuildFolder::DestinationRoot, platformInfo->type);
 		Path destIconFile = destRoot;
 		destIconFile.append(iconFolder);
-		destIconFile.setFilename(BuiltinResources::IconTextureName + L".asset");
+		destIconFile.setFilename(BuiltinResources::IconTextureName + ".asset");
 
 		switch (platformInfo->type)
 		{
@@ -439,7 +439,7 @@ namespace bs
 			}
 		}
 
-		Path outputPath = MonoUtil::monoToWString(buildFolder);
+		Path outputPath = MonoUtil::monoToString(buildFolder);
 		outputPath.append(GAME_SETTINGS_NAME);
 
 		FileEncoder fe(outputPath);

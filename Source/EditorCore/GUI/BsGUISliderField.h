@@ -80,7 +80,7 @@ namespace bs
 		void inputBoxValueChanged(bool confirmed = true);
 
 		/**	Triggered when the input box value is changing. */
-		void inputBoxValueChanging(const WString& newValue);
+		void inputBoxValueChanging(const String& newValue);
 
 		/**	Triggered when the slider is moved. */
 		void sliderChanged(float newValue);
@@ -89,7 +89,7 @@ namespace bs
 		void inputBoxFocusChanged(bool focus);
 
 		/**	Callback that checks can the provided string be	converted to a floating point value. */
-		static bool floatFilter(const WString& str);
+		static bool floatFilter(const String& str);
 
 		GUIInputBox* mInputBox;
 		GUISliderHorz* mSlider;

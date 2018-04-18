@@ -24,7 +24,7 @@ namespace bs
 		/**	Contains data about the top level menu elements. */
 		struct GUIMenuBarData
 		{
-			WString name;
+			String name;
 			GUIMenu* menu;
 			GUIButton* button;
 			GUIFixedSpace* space;
@@ -87,7 +87,7 @@ namespace bs
 		 * @param[in]	shortcut	Keyboard shortcut key to display next to the interactable element, and register with the
 		 *							global shortcut manager.
 		 */
-		GUIMenuItem* addMenuItem(const WString& path, std::function<void()> callback, INT32 priority = 0, 
+		GUIMenuItem* addMenuItem(const String& path, std::function<void()> callback, INT32 priority = 0, 
 			const ShortcutKey& shortcut = ShortcutKey::NONE);
 
 		/**
@@ -97,15 +97,15 @@ namespace bs
 		 * @param[in]	priority	Determines where is the separator positioned compared to other elements in the same 
 		 *							sub-menu. Higher priority elements get placed higher up in the sub-menu.
 		 */
-		GUIMenuItem* addMenuItemSeparator(const WString& path, INT32 priority = 0);
+		GUIMenuItem* addMenuItemSeparator(const String& path, INT32 priority = 0);
 
 		/**	Returns an existing menu item at the specified path, or null if one cannot be found. */
-		GUIMenuItem* getMenuItem(const WString& path);
+		GUIMenuItem* getMenuItem(const String& path);
 
 		/**
 		 * Removes a menu item from the specified path. If this path points to a sub-menu entire sub-menu will be removed.
 		 */
-		void removeMenuItem(const WString& path);
+		void removeMenuItem(const String& path);
 
 		/**	Removes the specified menu item. */
 		void removeMenuItem(GUIMenuItem* item);
@@ -146,10 +146,10 @@ namespace bs
 		void removeToolBarButton(const String& name);
 	private:
 		/**	Finds a top level sub-menu with the specified name. */
-		const GUIMenuBarData* getSubMenu(const WString& name) const;
+		const GUIMenuBarData* getSubMenu(const String& name) const;
 
 		/**	Adds a new top level sub-menu button. */
-		GUIMenuBarData* addNewButton(const WString& name, INT32 priority);
+		GUIMenuBarData* addNewButton(const String& name, INT32 priority);
 
 		/**
 		 * Attempts to remove the first element from the specified path. First element returned in specified in @p pathRoot,
@@ -157,18 +157,18 @@ namespace bs
 		 *
 		 * @return	False if first element doesn't exist, true otherwise.
 		 */
-		bool stripPath(WString& path, WString& pathRoot) const;
+		bool stripPath(String& path, String& pathRoot) const;
 
 		/**
 		 * Registers a shortcut with the global shortcut manager. Pressing the shortcut will trigger the provided callback.
 		 */
-		void registerShortcut(const WString& path, const ShortcutKey& shortcut, std::function<void()> callback);
+		void registerShortcut(const String& path, const ShortcutKey& shortcut, std::function<void()> callback);
 
 		/**	Unregisters a shortcut assigned to the provided path from the global shortcut manager. */
-		void unregisterShortcut(const WString& path);
+		void unregisterShortcut(const String& path);
 
 		/**	Opens a top level sub-menu with the provided name. */
-		void openSubMenu(const WString& name);
+		void openSubMenu(const String& name);
 
 		/**	Closes any currently active sub-menu. */
 		void closeSubMenu();
@@ -178,7 +178,7 @@ namespace bs
 		 *
 		 * @param[in]	name	Name of the sub-menu the user is hovering over.
 		 */
-		void onSubMenuHover(const WString& name);
+		void onSubMenuHover(const String& name);
 
 		/**	Triggered when a sub-menu is closed. */
 		void onSubMenuClosed();
@@ -215,7 +215,7 @@ namespace bs
 		GUIButton* mCloseBtn;
 
 		Vector<GUIMenuBarData> mChildMenus;
-		UnorderedMap<WString, ShortcutKey> mEntryShortcuts;
+		UnorderedMap<String, ShortcutKey> mEntryShortcuts;
 		Vector<GUIToolBarData> mToolbarElements;
 
 		GUIButton* mSubMenuButton;

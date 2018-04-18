@@ -54,7 +54,7 @@ namespace bs
 		FolderMonitor* monitor = nullptr;
 		if (folder != nullptr)
 		{
-			Path folderPath = MonoUtil::monoToWString(folder);
+			Path folderPath = MonoUtil::monoToString(folder);
 
 			FolderChangeBits folderChanges;
 			folderChanges |= FolderChangeBit::FileName;
@@ -76,29 +76,29 @@ namespace bs
 	void ScriptFolderMonitor::onMonitorFileModified(const Path& path)
 	{
 		MonoObject* instance = MonoUtil::getObjectFromGCHandle(mGCHandle);
-		MonoString* monoPath = MonoUtil::wstringToMono(path.toWString());
+		MonoString* monoPath = MonoUtil::stringToMono(path.toString());
 		MonoUtil::invokeThunk(OnModifiedThunk, instance, monoPath);
 	}
 
 	void ScriptFolderMonitor::onMonitorFileAdded(const Path& path)
 	{
 		MonoObject* instance = MonoUtil::getObjectFromGCHandle(mGCHandle);
-		MonoString* monoPath = MonoUtil::wstringToMono(path.toWString());
+		MonoString* monoPath = MonoUtil::stringToMono(path.toString());
 		MonoUtil::invokeThunk(OnAddedThunk, instance, monoPath);
 	}
 
 	void ScriptFolderMonitor::onMonitorFileRemoved(const Path& path)
 	{
 		MonoObject* instance = MonoUtil::getObjectFromGCHandle(mGCHandle);
-		MonoString* monoPath = MonoUtil::wstringToMono(path.toWString());
+		MonoString* monoPath = MonoUtil::stringToMono(path.toString());
 		MonoUtil::invokeThunk(OnRemovedThunk, instance, monoPath);
 	}
 
 	void ScriptFolderMonitor::onMonitorFileRenamed(const Path& from, const Path& to)
 	{
 		MonoObject* instance = MonoUtil::getObjectFromGCHandle(mGCHandle);
-		MonoString* monoPathFrom = MonoUtil::wstringToMono(from.toWString());
-		MonoString* monoPathTo = MonoUtil::wstringToMono(to.toWString());
+		MonoString* monoPathFrom = MonoUtil::stringToMono(from.toString());
+		MonoString* monoPathTo = MonoUtil::stringToMono(to.toString());
 
 		MonoUtil::invokeThunk(OnRenamedThunk, instance, monoPathFrom, monoPathTo);
 	}

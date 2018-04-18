@@ -7,7 +7,7 @@
 
 namespace bs
 {
-	CmdRecordSO::CmdRecordSO(const WString& description, const HSceneObject& sceneObject, bool recordHierarchy)
+	CmdRecordSO::CmdRecordSO(const String& description, const HSceneObject& sceneObject, bool recordHierarchy)
 		: EditorCommand(description), mSceneObject(sceneObject), mRecordHierarchy(recordHierarchy)
 		, mSerializedObject(nullptr), mSerializedObjectSize(0)
 	{
@@ -31,7 +31,7 @@ namespace bs
 		}
 	}
 
-	void CmdRecordSO::execute(const HSceneObject& sceneObject, bool recordHierarchy, const WString& description)
+	void CmdRecordSO::execute(const HSceneObject& sceneObject, bool recordHierarchy, const String& description)
 	{
 		// Register command and commit it
 		CmdRecordSO* command = new (bs_alloc<CmdRecordSO>()) CmdRecordSO(description, sceneObject, recordHierarchy);

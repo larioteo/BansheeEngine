@@ -115,7 +115,7 @@ namespace bs
 
 		for (UINT32 i = 0; i < (UINT32)paths.size(); i++)
 		{
-			MonoString* monoString = MonoUtil::wstringToMono(paths[i].toWString());
+			MonoString* monoString = MonoUtil::stringToMono(paths[i].toString());
 			pathArray.set(i, monoString);
 		}
 
@@ -190,7 +190,7 @@ namespace bs
 
 	void ScriptSelection::onResourcePing(const Path& resPath)
 	{
-		MonoString* monoResPath = MonoUtil::wstringToMono(resPath.toWString());
+		MonoString* monoResPath = MonoUtil::stringToMono(resPath.toString());
 
 		MonoUtil::invokeThunk(OnPingResourceThunk, monoResPath);
 	}

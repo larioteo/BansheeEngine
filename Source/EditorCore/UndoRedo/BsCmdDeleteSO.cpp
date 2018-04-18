@@ -7,7 +7,7 @@
 
 namespace bs
 {
-	CmdDeleteSO::CmdDeleteSO(const WString& description, const HSceneObject& sceneObject)
+	CmdDeleteSO::CmdDeleteSO(const String& description, const HSceneObject& sceneObject)
 		: EditorCommand(description), mSceneObject(sceneObject), mSerializedObject(nullptr), mSerializedObjectSize(0)
 		, mSerializedObjectParentId(0)
 	{
@@ -32,7 +32,7 @@ namespace bs
 		}
 	}
 
-	void CmdDeleteSO::execute(const HSceneObject& sceneObject, const WString& description)
+	void CmdDeleteSO::execute(const HSceneObject& sceneObject, const String& description)
 	{
 		// Register command and commit it
 		CmdDeleteSO* command = new (bs_alloc<CmdDeleteSO>()) CmdDeleteSO(description, sceneObject);

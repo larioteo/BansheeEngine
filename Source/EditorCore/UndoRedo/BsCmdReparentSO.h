@@ -28,7 +28,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 */
 		static void execute(const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent, 
-			const WString& description = StringUtil::WBLANK);
+			const String& description = StringUtil::BLANK);
 
 		/**
 		 * Creates and executes the command on the provided scene object. Automatically registers the command with
@@ -39,7 +39,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 */
 		static void execute(HSceneObject& sceneObject, const HSceneObject& newParent, 
-			const WString& description = StringUtil::WBLANK);
+			const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -50,7 +50,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdReparentSO(const WString& description, const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent);
+		CmdReparentSO(const String& description, const Vector<HSceneObject>& sceneObjects, const HSceneObject& newParent);
 
 		Vector<HSceneObject> mSceneObjects;
 		Vector<HSceneObject> mOldParents;

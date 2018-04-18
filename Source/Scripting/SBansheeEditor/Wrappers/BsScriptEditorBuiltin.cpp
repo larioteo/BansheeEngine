@@ -41,16 +41,16 @@ namespace bs
 
 	MonoString* ScriptEditorBuiltin::internal_GetEmptyShaderCode()
 	{
-		WString code = BuiltinEditorResources::instance().getEmptyShaderCode();
+		String code = BuiltinEditorResources::instance().getEmptyShaderCode();
 
-		return MonoUtil::wstringToMono(code);
+		return MonoUtil::stringToMono(code);
 	}
 
 	MonoString* ScriptEditorBuiltin::internal_GetEmptyCSScriptCode()
 	{
-		WString code = BuiltinEditorResources::instance().getEmptyCSScriptCode();
+		String code = BuiltinEditorResources::instance().getEmptyCSScriptCode();
 
-		return MonoUtil::wstringToMono(code);
+		return MonoUtil::stringToMono(code);
 	}
 
 	MonoObject* ScriptEditorBuiltin::internal_GetToolbarIcon(ToolbarIcon icon)

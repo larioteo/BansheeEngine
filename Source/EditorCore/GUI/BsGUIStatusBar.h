@@ -52,7 +52,7 @@ namespace bs
 		 * @param[in]	name		Name of the project.
 		 * @param[in]	modified	Should the project be displayed as modified (and needs saving).
 		 */
-		void setProject(const WString& name, bool modified);
+		void setProject(const String& name, bool modified);
 
 		/**
 		 * Updates the active scene displayed on the status bar.
@@ -60,13 +60,13 @@ namespace bs
 		 * @param[in]	name		Name of the scene.
 		 * @param[in]	modified	Should the scene be displayed as modified (and needs saving).
 		 */
-		void setScene(const WString& name, bool modified);
+		void setScene(const String& name, bool modified);
 
 		/**	Activates or deactivates the "compilation in progress" visuals on the status bar. */
 		void setIsCompiling(bool compiling);
 
 		/** @copydoc GUIElement::setTint */
-		virtual void setTint(const Color& color) override;
+		void setTint(const Color& color) override;
 
 		/** @copydoc GUIElement::_updateLayoutInternal */
 		void _updateLayoutInternal(const GUILayoutData& data) override;

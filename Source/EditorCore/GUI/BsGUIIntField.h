@@ -69,7 +69,7 @@ namespace bs
 		virtual ~GUIIntField();
 
 		/** @copydoc GUIElement::_hasCustomCursor */
-		bool _hasCustomCursor(const Vector2I position, CursorType& type) const override;
+		bool _hasCustomCursor(Vector2I position, CursorType& type) const override;
 
 		/** @copydoc GUIElement::_mouseEvent */
 		bool _mouseEvent(const GUIMouseEvent& ev)  override;
@@ -78,7 +78,7 @@ namespace bs
 		void styleUpdated() override;
 
 		/**	Triggered when the input box value changes. */
-		void valueChanged(const WString& newValue);
+		void valueChanged(const String& newValue);
 
 		/**
 		 * Triggered when the input box value changes, but unlike the previous overload the value is parsed into an integer
@@ -99,7 +99,7 @@ namespace bs
 		INT32 applyRangeAndStep(INT32 value) const;
 
 		/**	Callback that checks can the provided string be converted to an integer value. */
-		static bool intFilter(const WString& str);
+		static bool intFilter(const String& str);
 
 		static const INT32 DRAG_SPEED;
 

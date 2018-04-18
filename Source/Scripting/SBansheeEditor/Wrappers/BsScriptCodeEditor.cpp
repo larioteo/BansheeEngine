@@ -53,7 +53,7 @@ namespace bs
 
 	void ScriptCodeEditor::internal_OpenFile(MonoString* path, UINT32 line)
 	{
-		Path filePath = MonoUtil::monoToWString(path);
+		Path filePath = MonoUtil::monoToString(path);
 
 		CodeEditorManager::instance().openFile(filePath, line);
 	}

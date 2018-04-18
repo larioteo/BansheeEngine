@@ -57,12 +57,12 @@ namespace bs
 
 	MonoString* ScriptPlatformInfo::internal_GetDefines(ScriptPlatformInfoBase* thisPtr)
 	{
-		return MonoUtil::wstringToMono(thisPtr->getPlatformInfo()->defines);
+		return MonoUtil::stringToMono(thisPtr->getPlatformInfo()->defines);
 	}
 
 	void ScriptPlatformInfo::internal_SetDefines(ScriptPlatformInfoBase* thisPtr, MonoString* value)
 	{
-		thisPtr->getPlatformInfo()->defines = MonoUtil::monoToWString(value);
+		thisPtr->getPlatformInfo()->defines = MonoUtil::monoToString(value);
 	}
 
 	MonoObject* ScriptPlatformInfo::internal_GetMainScene(ScriptPlatformInfoBase* thisPtr)

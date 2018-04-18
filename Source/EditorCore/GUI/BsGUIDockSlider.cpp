@@ -13,7 +13,7 @@ namespace bs
 	}
 
 	GUIDockSlider::GUIDockSlider(bool horizontal, const String& styleName, const GUIDimensions& dimensions)
-		: GUIButtonBase(styleName, GUIContent(HString(L"")), dimensions), mHorizontal(horizontal), mDragInProgress(false)
+		: GUIButtonBase(styleName, GUIContent(HString("")), dimensions), mHorizontal(horizontal), mDragInProgress(false)
 	{
 
 	}

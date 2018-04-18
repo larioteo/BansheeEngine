@@ -17,9 +17,9 @@ namespace bs
 		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel),
 		mFieldX(nullptr), mFieldY(nullptr), mFieldZ(nullptr)
 	{
-		mFieldX = GUIFloatField::create(HString(L"X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldY = GUIFloatField::create(HString(L"Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldZ = GUIFloatField::create(HString(L"Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
+		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
+		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
+		mFieldZ = GUIFloatField::create(HString("Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
 
 		mFieldX->onValueChanged.connect(std::bind(&GUIVector3Field::valueChanged, this, _1));
 		mFieldY->onValueChanged.connect(std::bind(&GUIVector3Field::valueChanged, this, _1));

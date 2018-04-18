@@ -31,7 +31,7 @@ namespace bs
 		 * @param[in]	description		Optional description of what exactly the command does.
 		 */
 		static void execute(const HSceneObject& sceneObject, bool recordHierarchy = false, 
-			const WString& description = StringUtil::WBLANK);
+			const String& description = StringUtil::BLANK);
 
 		/** @copydoc EditorCommand::commit */
 		void commit() override;
@@ -42,7 +42,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdRecordSO(const WString& description, const HSceneObject& sceneObject, bool recordHierarchy);
+		CmdRecordSO(const String& description, const HSceneObject& sceneObject, bool recordHierarchy);
 
 		/**
 		 * Saves the state of the specified object, all of its children and components. Make sure to call clear() when you

@@ -5,6 +5,7 @@
 #include "BsEditorPrerequisites.h"
 #include "Reflection/BsRTTIType.h"
 #include "Library/BsProjectLibraryEntries.h"
+#include "String/BsUnicode.h"
 
 namespace bs
 {
@@ -53,10 +54,13 @@ namespace bs
 			memory += sizeof(UINT32);
 			size += sizeof(UINT32);
 
+			// For compatibility, encoding the name as a wide string
+			WString elemName = UTF8::toWide(data.elementName);
+
 			UINT32 type = (UINT32)data.type;
 			memory = rttiWriteElem(type, memory, size);
 			memory = rttiWriteElem(data.path, memory, size);
-			memory = rttiWriteElem(data.elementName, memory, size);
+			memory = rttiWriteElem(elemName, memory, size);
 			memory = rttiWriteElem(data.lastUpdateTime, memory, size);
 
 			memcpy(memoryStart, &size, sizeof(UINT32));
@@ -73,7 +77,11 @@ namespace bs
 			data.type = (bs::ProjectLibrary::LibraryEntryType)type;
 
 			memory = rttiReadElem(data.path, memory);
-			memory = rttiReadElem(data.elementName, memory);
+
+			WString elemName;
+			memory = rttiReadElem(elemName, memory);
+			data.elementName = UTF8::fromWide(elemName);
+
 			memory = rttiReadElem(data.lastUpdateTime, memory);
 
 			return size;
@@ -81,8 +89,10 @@ namespace bs
 
 		static UINT32 getDynamicSize(const bs::ProjectLibrary::FileEntry& data)	
 		{ 
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + rttiGetElemSize(data.elementName) +
-				rttiGetElemSize(data.lastUpdateTime);
+			WString elemName = UTF8::toWide(data.elementName);
+
+			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
+				rttiGetElemSize(elemName) + rttiGetElemSize(data.lastUpdateTime);
 
 #if BS_DEBUG_MODE
 			if(dataSize > std::numeric_limits<UINT32>::max())
@@ -106,9 +116,12 @@ namespace bs
 			memory += sizeof(UINT32);
 			size += sizeof(UINT32);
 
+			// For compatibility, encoding the name as a wide string
+			WString elemName = UTF8::toWide(data.elementName);
+
 			memory = rttiWriteElem(data.type, memory, size);
 			memory = rttiWriteElem(data.path, memory, size);
-			memory = rttiWriteElem(data.elementName, memory, size);
+			memory = rttiWriteElem(elemName, memory, size);
 
 			UINT32 numChildren = (UINT32)data.mChildren.size();
 			memory = rttiWriteElem(numChildren, memory, size);
@@ -138,7 +151,10 @@ namespace bs
 
 			memory = rttiReadElem(data.type, memory);
 			memory = rttiReadElem(data.path, memory);
-			memory = rttiReadElem(data.elementName, memory);
+
+			WString elemName;
+			memory = rttiReadElem(elemName, memory);
+			data.elementName = UTF8::fromWide(elemName);
 
 			UINT32 numChildren = 0;
 			memory = rttiReadElem(numChildren, memory);
@@ -171,7 +187,9 @@ namespace bs
 
 		static UINT32 getDynamicSize(const bs::ProjectLibrary::DirectoryEntry& data)	
 		{ 
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + rttiGetElemSize(data.elementName);
+			WString elemName = UTF8::toWide(data.elementName);
+			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
+				rttiGetElemSize(elemName);
 
 			dataSize += sizeof(UINT32);
 

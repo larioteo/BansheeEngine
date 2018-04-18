@@ -156,7 +156,7 @@ namespace bs
 		 * @param[in]	fontSize	Size of the characters, in points.
 		 * @param[in]	size		Uniform scale of the rendered mesh.
 		 */
-		void drawText(const Vector3& position, const WString& text, const HFont& font, UINT32 fontSize = 16, float size = 1.0f);
+		void drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize = 16, float size = 1.0f);
 
 		/**	Queues all the handle draw commands queued since the last call to clear() for rendering. */
 		void draw(const SPtr<Camera>& camera);

@@ -118,7 +118,7 @@ namespace bs
 
 	void ScriptEditorApplication::internal_SetStatusScene(MonoString* name, bool modified)
 	{
-		WString nativeScene = MonoUtil::monoToWString(name);
+		String nativeScene = MonoUtil::monoToString(name);
 
 		MainEditorWindow* mainWindow = EditorWindowManager::instance().getMainWindow();
 		mainWindow->getStatusBar().setScene(nativeScene, modified);
@@ -131,7 +131,7 @@ namespace bs
 		if (gEditorApplication().isProjectLoaded())
 			mainWindow->getStatusBar().setProject(gEditorApplication().getProjectName(), modified);
 		else
-			mainWindow->getStatusBar().setProject(L"None", false);
+			mainWindow->getStatusBar().setProject("None", false);
 	}
 
 	void ScriptEditorApplication::internal_SetStatusCompiling(bool compiling)
@@ -144,14 +144,14 @@ namespace bs
 	{
 		Path projectPath = gEditorApplication().getProjectPath();
 
-		return MonoUtil::wstringToMono(projectPath.toWString());
+		return MonoUtil::stringToMono(projectPath.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetProjectName()
 	{
-		WString projectName = gEditorApplication().getProjectName();
+		String projectName = gEditorApplication().getProjectName();
 
-		return MonoUtil::wstringToMono(projectName);
+		return MonoUtil::stringToMono(projectName);
 	}
 
 	bool ScriptEditorApplication::internal_GetProjectLoaded()
@@ -163,67 +163,67 @@ namespace bs
 	{
 		Path compilerPath = MonoManager::instance().getCompilerPath();
 
-		return MonoUtil::wstringToMono(compilerPath.toWString());
+		return MonoUtil::stringToMono(compilerPath.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetMonoExecPath()
 	{
 		Path path = MonoManager::instance().getMonoExecPath();
 
-		return MonoUtil::wstringToMono(path.toWString());
+		return MonoUtil::stringToMono(path.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetBuiltinReleaseAssemblyPath()
 	{
 		Path releaseAssemblyFolder = Paths::getReleaseAssemblyPath();
 
-		return MonoUtil::wstringToMono(releaseAssemblyFolder.toWString());
+		return MonoUtil::stringToMono(releaseAssemblyFolder.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetBuiltinDebugAssemblyPath()
 	{
 		Path debugAssemblyFolder = Paths::getDebugAssemblyPath();
 
-		return MonoUtil::wstringToMono(debugAssemblyFolder.toWString());
+		return MonoUtil::stringToMono(debugAssemblyFolder.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetScriptAssemblyPath()
 	{
 		Path assemblyFolder = gEditorApplication().getScriptAssemblyFolder();
 
-		return MonoUtil::wstringToMono(assemblyFolder.toWString());
+		return MonoUtil::stringToMono(assemblyFolder.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetFrameworkAssemblyPath()
 	{
 		Path assemblyFolder = MonoManager::instance().getFrameworkAssembliesFolder();
 
-		return MonoUtil::wstringToMono(assemblyFolder.toWString());
+		return MonoUtil::stringToMono(assemblyFolder.toString());
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetEngineAssemblyName()
 	{
-		return MonoUtil::wstringToMono(toWString(ENGINE_ASSEMBLY) + L".dll");
+		return MonoUtil::stringToMono(String(ENGINE_ASSEMBLY) + ".dll");
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetEditorAssemblyName()
 	{
-		return MonoUtil::wstringToMono(toWString(EDITOR_ASSEMBLY) + L".dll");
+		return MonoUtil::stringToMono(String(EDITOR_ASSEMBLY) + ".dll");
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetScriptGameAssemblyName()
 	{
-		return MonoUtil::wstringToMono(toWString(SCRIPT_GAME_ASSEMBLY) + L".dll");
+		return MonoUtil::stringToMono(String(SCRIPT_GAME_ASSEMBLY) + ".dll");
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetScriptEditorAssemblyName()
 	{
-		return MonoUtil::wstringToMono(toWString(SCRIPT_EDITOR_ASSEMBLY) + L".dll");
+		return MonoUtil::stringToMono(String(SCRIPT_EDITOR_ASSEMBLY) + ".dll");
 	}
 
 	MonoObject* ScriptEditorApplication::internal_SaveScene(MonoString* path)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 		HSceneObject sceneRoot = gSceneManager().getRootNode();
 		
 		SPtr<ProjectResourceMeta> resMeta = gProjectLibrary().findResourceMeta(nativePath);
@@ -250,7 +250,7 @@ namespace bs
 
 	bool ScriptEditorApplication::internal_IsValidProject(MonoString* path)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 		return gEditorApplication().isValidProjectPath(nativePath);
 	}
 
@@ -262,7 +262,7 @@ namespace bs
 	void ScriptEditorApplication::internal_LoadProject(MonoString* path)
 	{
 		mRequestProjectLoad = true;
-		mProjectLoadPath = MonoUtil::monoToWString(path);
+		mProjectLoadPath = MonoUtil::monoToString(path);
 	}
 
 	void ScriptEditorApplication::internal_UnloadProject()
@@ -272,7 +272,7 @@ namespace bs
 
 	void ScriptEditorApplication::internal_CreateProject(MonoString* path)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 
 		gEditorApplication().createProject(nativePath);
 	}
@@ -284,7 +284,7 @@ namespace bs
 
 	void ScriptEditorApplication::internal_OpenFolder(MonoString* path)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 
 		Platform::openFolder(nativePath);
 	}

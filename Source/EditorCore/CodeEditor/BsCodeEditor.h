@@ -17,17 +17,17 @@ namespace bs
 	/** Contains data about a reference to a project in an external editor solution. */
 	struct BS_ED_EXPORT CodeProjectReference
 	{
-		WString name;
+		String name;
 		Path path;
 	};
 
 	/**	Contains data about a single project in an external editor solution. */
 	struct BS_ED_EXPORT CodeProjectData
 	{
-		WString name;
+		String name;
 		Vector<Path> codeFiles;
 		Vector<Path> nonCodeFiles;
-		WString defines;
+		String defines;
 		Vector<CodeProjectReference> assemblyReferences;
 		Vector<CodeProjectReference> projectReferences;
 	};
@@ -35,7 +35,7 @@ namespace bs
 	/**	Contains data about an external editor solution, including all projects contained. */
 	struct BS_ED_EXPORT CodeSolutionData
 	{
-		WString name;
+		String name;
 		Vector<CodeProjectData> projects;
 	};
 

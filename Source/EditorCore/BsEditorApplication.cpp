@@ -35,9 +35,9 @@ namespace bs
 {
 	constexpr UINT32 SPLASH_SCREEN_DURATION_MS = 1000;
 
-	const Path EditorApplication::WIDGET_LAYOUT_PATH = PROJECT_INTERNAL_DIR + L"Layout.asset";
-	const Path EditorApplication::BUILD_DATA_PATH = PROJECT_INTERNAL_DIR + L"BuildData.asset";
-	const Path EditorApplication::PROJECT_SETTINGS_PATH = PROJECT_INTERNAL_DIR + L"Settings.asset";
+	const Path EditorApplication::WIDGET_LAYOUT_PATH = PROJECT_INTERNAL_DIR + "Layout.asset";
+	const Path EditorApplication::BUILD_DATA_PATH = PROJECT_INTERNAL_DIR + "BuildData.asset";
+	const Path EditorApplication::PROJECT_SETTINGS_PATH = PROJECT_INTERNAL_DIR + "Settings.asset";
 
 	START_UP_DESC createStartupDesc()
 	{
@@ -67,7 +67,7 @@ namespace bs
 
 	Path getEditorSettingsPath()
 	{
-		return gEditorApplication().getDataPath() + L"Settings.asset";
+		return gEditorApplication().getDataPath() + "Settings.asset";
 	}
 
 	EditorApplication::EditorApplication()
@@ -86,10 +86,10 @@ namespace bs
 	{
 		// Find the path to data files
 		//// First, look for EditorData folder in the direct descendant of the working directory 
-		if (FileSystem::exists(L"EditorData"))
+		if (FileSystem::exists("EditorData"))
 		{
 			mBuiltinDataPath = FileSystem::getWorkingDirectoryPath();
-			mBuiltinDataPath.append(L"EditorData/");
+			mBuiltinDataPath.append("EditorData/");
 		}
 		else
 		{
@@ -234,7 +234,7 @@ namespace bs
 	Path EditorApplication::getEditorAssemblyPath() const
 	{
 		Path assemblyPath = getBuiltinAssemblyFolder();
-		assemblyPath.append(toWString(EDITOR_ASSEMBLY) + L".dll");
+		assemblyPath.append(String(EDITOR_ASSEMBLY) + ".dll");
 
 		return assemblyPath;
 	}
@@ -242,7 +242,7 @@ namespace bs
 	Path EditorApplication::getEditorScriptAssemblyPath() const
 	{
 		Path assemblyPath = getScriptAssemblyFolder();
-		assemblyPath.append(toWString(SCRIPT_EDITOR_ASSEMBLY) + L".dll");
+		assemblyPath.append(String(SCRIPT_EDITOR_ASSEMBLY) + ".dll");
 
 		return assemblyPath;
 	}
@@ -291,7 +291,7 @@ namespace bs
 		gSceneManager().clearScene();
 
 		mProjectPath = Path::BLANK;
-		mProjectName = StringUtil::WBLANK;
+		mProjectName = StringUtil::BLANK;
 		mIsProjectLoaded = false;
 	}
 
@@ -300,7 +300,7 @@ namespace bs
 		unloadProject();
 
 		mProjectPath = projectPath;
-		mProjectName = projectPath.getWTail();
+		mProjectName = projectPath.getTail();
 		mIsProjectLoaded = true;
 
 		loadProjectSettings();

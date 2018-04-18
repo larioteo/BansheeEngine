@@ -28,7 +28,7 @@ namespace bs
 	public:
 		friend class BuildDataRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 	};
 
 	/**	Types of various folders used by the build manager. */
@@ -64,7 +64,7 @@ namespace bs
 		SPtr<PlatformInfo> getPlatformInfo(PlatformType type) const;
 
 		/**	Returns a list of file names (without extension) of all .NET assemblies required for a specific platform. */
-		Vector<WString> getFrameworkAssemblies(PlatformType type) const;
+		Vector<String> getFrameworkAssemblies(PlatformType type) const;
 
 		/**	Returns a list names of all native binaries required for a specific platform. */
 		Vector<Path> getNativeBinaries(PlatformType type) const;
@@ -79,7 +79,7 @@ namespace bs
 		Path getMainExecutable(PlatformType type) const;
 
 		/**	Returns a list of script defines for a specific platform. */
-		WString getDefines(PlatformType type) const;
+		String getDefines(PlatformType type) const;
 
 		/**	Stores build settings for all platforms in the specified file. */
 		void save(const Path& outFile);
@@ -91,7 +91,7 @@ namespace bs
 		void clear();
 
 	private:
-		static const WString BUILD_FOLDER_NAME;
+		static const char* BUILD_FOLDER_NAME;
 
 		SPtr<BuildData> mBuildData;
 	};

@@ -38,7 +38,7 @@ namespace bs
 		 * @return					True if the method has a MenuItem attribute. If false is returned output parameters
 		 *							from this method are undefined.
 		 */
-		bool parseMenuItemMethod(MonoMethod* method, WString& path, ShortcutKey& shortcut, INT32& priority, bool& separator) const;
+		bool parseMenuItemMethod(MonoMethod* method, String& path, ShortcutKey& shortcut, INT32& priority, bool& separator) const;
 
 		/**
 		 * Triggered when one of the managed menu items is clicked. 

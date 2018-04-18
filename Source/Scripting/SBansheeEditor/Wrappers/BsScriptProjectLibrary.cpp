@@ -61,7 +61,7 @@ namespace bs
 
 	MonoArray* ScriptProjectLibrary::internal_Refresh(MonoString* path, bool import)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 
 		if (!nativePath.isAbsolute())
 			nativePath.makeAbsolute(gProjectLibrary().getResourcesFolder());
@@ -69,10 +69,10 @@ namespace bs
 		Vector<Path> dirtyResources;
 		gProjectLibrary().checkForModifications(nativePath, import, dirtyResources);
 
-		ScriptArray output = ScriptArray::create<WString>((UINT32)dirtyResources.size());
+		ScriptArray output = ScriptArray::create<String>((UINT32)dirtyResources.size());
 		for (UINT32 i = 0; i < (UINT32)dirtyResources.size(); i++)
 		{
-			output.set(i, dirtyResources[i].toWString());
+			output.set(i, dirtyResources[i].toString());
 		}
 
 		return output.getInternal();
@@ -81,14 +81,14 @@ namespace bs
 	void ScriptProjectLibrary::internal_Create(MonoObject* resource, MonoString* path)
 	{
 		ScriptResource* scrResource = ScriptResource::toNative(resource);
-		Path resourcePath = MonoUtil::monoToWString(path);
+		Path resourcePath = MonoUtil::monoToString(path);
 
 		gProjectLibrary().createEntry(scrResource->getGenericHandle(), resourcePath);
 	}
 
 	MonoObject* ScriptProjectLibrary::internal_Load(MonoString* path)
 	{
-		Path resourcePath = MonoUtil::monoToWString(path);
+		Path resourcePath = MonoUtil::monoToString(path);
 		HResource resource = gProjectLibrary().load(resourcePath);
 
 		if (!resource)
@@ -113,7 +113,7 @@ namespace bs
 
 	void ScriptProjectLibrary::internal_Reimport(MonoString* path, MonoObject* options, bool force)
 	{
-		Path assetPath = MonoUtil::monoToWString(path);
+		Path assetPath = MonoUtil::monoToString(path);
 
 		SPtr<ImportOptions> nativeOptions;
 		if (options != nullptr)
@@ -127,7 +127,7 @@ namespace bs
 
 	MonoObject* ScriptProjectLibrary::internal_GetEntry(MonoString* path)
 	{
-		Path assetPath = MonoUtil::monoToWString(path);
+		Path assetPath = MonoUtil::monoToString(path);
 
 		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(assetPath);
 		if (entry == nullptr)
@@ -141,14 +141,14 @@ namespace bs
 
 	bool ScriptProjectLibrary::internal_IsSubresource(MonoString* path)
 	{
-		Path assetPath = MonoUtil::monoToWString(path);
+		Path assetPath = MonoUtil::monoToString(path);
 
 		return gProjectLibrary().isSubresource(assetPath);
 	}
 
 	MonoObject* ScriptProjectLibrary::internal_GetMeta(MonoString* path)
 	{
-		Path assetPath = MonoUtil::monoToWString(path);
+		Path assetPath = MonoUtil::monoToString(path);
 
 		SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(assetPath);
 		if (meta == nullptr)
@@ -161,7 +161,7 @@ namespace bs
 	{
 		Path nativePath = gProjectLibrary().uuidToPath(*uuid);
 
-		return MonoUtil::wstringToMono(nativePath.toWString());
+		return MonoUtil::stringToMono(nativePath.toString());
 	}
 
 	MonoString* ScriptProjectLibrary::internal_GetPath(MonoObject* resource)
@@ -173,7 +173,7 @@ namespace bs
 			Path nativePath = gProjectLibrary().uuidToPath(srcResource->getGenericHandle().getUUID());
 			nativePath.getRelative(gProjectLibrary().getResourcesFolder());
 
-			return MonoUtil::wstringToMono(nativePath.toWString());
+			return MonoUtil::stringToMono(nativePath.toString());
 		}
 
 		return nullptr;
@@ -181,7 +181,7 @@ namespace bs
 
 	MonoArray* ScriptProjectLibrary::internal_Search(MonoString* pattern, MonoArray* types)
 	{
-		WString strPattern = MonoUtil::monoToWString(pattern);
+		String strPattern = MonoUtil::monoToString(pattern);
 
 		Vector<UINT32> typeIds;
 		if (types != nullptr)
@@ -219,57 +219,57 @@ namespace bs
 
 	void ScriptProjectLibrary::internal_Delete(MonoString* path)
 	{
-		Path pathToDelete = MonoUtil::monoToWString(path);
+		Path pathToDelete = MonoUtil::monoToString(path);
 		gProjectLibrary().deleteEntry(pathToDelete);
 	}
 
 	void ScriptProjectLibrary::internal_CreateFolder(MonoString* path)
 	{
-		Path folderToCreate = MonoUtil::monoToWString(path);
+		Path folderToCreate = MonoUtil::monoToString(path);
 		gProjectLibrary().createFolderEntry(folderToCreate);
 	}
 
 	void ScriptProjectLibrary::internal_Rename(MonoString* path, MonoString* name, bool overwrite)
 	{
-		Path oldPath = MonoUtil::monoToWString(path);
-		Path newPath = oldPath.getParent().append(MonoUtil::monoToWString(name));
+		Path oldPath = MonoUtil::monoToString(path);
+		Path newPath = oldPath.getParent().append(MonoUtil::monoToString(name));
 
 		gProjectLibrary().moveEntry(oldPath, newPath, overwrite);
 	}
 
 	void ScriptProjectLibrary::internal_Move(MonoString* oldPath, MonoString* newPath, bool overwrite)
 	{
-		Path oldPathNative = MonoUtil::monoToWString(oldPath);
-		Path newPathNative = MonoUtil::monoToWString(newPath);
+		Path oldPathNative = MonoUtil::monoToString(oldPath);
+		Path newPathNative = MonoUtil::monoToString(newPath);
 
 		gProjectLibrary().moveEntry(oldPathNative, newPathNative, overwrite);
 	}
 
 	void ScriptProjectLibrary::internal_Copy(MonoString* source, MonoString* destination, bool overwrite)
 	{
-		Path oldPathNative = MonoUtil::monoToWString(source);
-		Path newPathNative = MonoUtil::monoToWString(destination);
+		Path oldPathNative = MonoUtil::monoToString(source);
+		Path newPathNative = MonoUtil::monoToString(destination);
 
 		gProjectLibrary().copyEntry(oldPathNative, newPathNative, overwrite);
 	}
 
 	MonoString* ScriptProjectLibrary::internal_GetResourceFolder()
 	{
-		WString resFolder = gProjectLibrary().getResourcesFolder().toWString();
+		String resFolder = gProjectLibrary().getResourcesFolder().toString();
 
-		return MonoUtil::wstringToMono(resFolder);
+		return MonoUtil::stringToMono(resFolder);
 	}
 
 	void ScriptProjectLibrary::internal_SetIncludeInBuild(MonoString* path, bool include)
 	{
-		Path pathNative = MonoUtil::monoToWString(path);
+		Path pathNative = MonoUtil::monoToString(path);
 
 		gProjectLibrary().setIncludeInBuild(pathNative, include);
 	}
 
 	void ScriptProjectLibrary::internal_SetEditorData(MonoString* path, MonoObject* userData)
 	{
-		Path pathNative = MonoUtil::monoToWString(path);
+		Path pathNative = MonoUtil::monoToString(path);
 
 		if(userData == nullptr)
 		{
@@ -303,7 +303,7 @@ namespace bs
 		if (relativePath.isAbsolute())
 			relativePath.makeRelative(gProjectLibrary().getResourcesFolder());
 
-		MonoString* pathStr = MonoUtil::wstringToMono(relativePath.toWString());
+		MonoString* pathStr = MonoUtil::stringToMono(relativePath.toString());
 		MonoUtil::invokeThunk(OnEntryAddedThunk, pathStr);
 	}
 
@@ -313,7 +313,7 @@ namespace bs
 		if (relativePath.isAbsolute())
 			relativePath.makeRelative(gProjectLibrary().getResourcesFolder());
 
-		MonoString* pathStr = MonoUtil::wstringToMono(relativePath.toWString());
+		MonoString* pathStr = MonoUtil::stringToMono(relativePath.toString());
 		MonoUtil::invokeThunk(OnEntryRemovedThunk, pathStr);
 	}
 
@@ -323,7 +323,7 @@ namespace bs
 		if (relativePath.isAbsolute())
 			relativePath.makeRelative(gProjectLibrary().getResourcesFolder());
 
-		MonoString* pathStr = MonoUtil::wstringToMono(relativePath.toWString());
+		MonoString* pathStr = MonoUtil::stringToMono(relativePath.toString());
 		MonoUtil::invokeThunk(OnEntryImportedThunk, pathStr);
 	}
 
@@ -352,7 +352,7 @@ namespace bs
 		Path relativePath = entry->path;
 		relativePath.makeRelative(gProjectLibrary().getResourcesFolder());
 
-		return MonoUtil::wstringToMono(relativePath.toWString());
+		return MonoUtil::stringToMono(relativePath.toString());
 	}
 
 	MonoString* ScriptLibraryEntry::internal_GetName(ScriptLibraryEntryBase* thisPtr)
@@ -361,7 +361,7 @@ namespace bs
 		if (entry == nullptr)
 			return nullptr;
 
-		return MonoUtil::wstringToMono(entry->elementName);
+		return MonoUtil::stringToMono(entry->elementName);
 	}
 
 	ProjectLibrary::LibraryEntryType ScriptLibraryEntry::internal_GetType(ScriptLibraryEntryBase* thisPtr)
@@ -525,7 +525,7 @@ namespace bs
 
 	MonoString* ScriptResourceMeta::internal_GetSubresourceName(ScriptResourceMeta* thisPtr)
 	{
-		return MonoUtil::wstringToMono(thisPtr->mMeta->getUniqueName());
+		return MonoUtil::stringToMono(thisPtr->mMeta->getUniqueName());
 	}
 
 	MonoObject* ScriptResourceMeta::internal_GetIcon(ScriptResourceMeta* thisPtr)

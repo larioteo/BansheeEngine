@@ -1,6 +1,6 @@
 #include "$EDITOR$/PickingCull.bslinc"
 
-technique PickingCullCW
+shader PickingCullCW
 {
 	mixin PickingCull;
 	

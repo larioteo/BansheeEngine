@@ -22,7 +22,7 @@ namespace bs
 		ScriptGUIInputBox(MonoObject* instance, GUIInputBox* inputBox);
 
 		/**	Triggered when the value in the native input box changes. */
-		void onChanged(const WString& newValue);
+		void onChanged(const String& newValue);
 
 		/**	Triggered when the user confirms input in the native input box. */
 		void onConfirmed();

@@ -153,10 +153,10 @@ namespace bs
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value currently input in the text field. */
-		WString getValue() const { return mValue; }
+		String getValue() const { return mValue; }
 
 		/**	Sets a new value in the text field. */
-		void setValue(const WString& value);
+		void setValue(const String& value);
 
 		/**	Checks whether the element currently has keyboard focus. */
 		bool hasInputFocus() const { return mHasInputFocus; }
@@ -164,7 +164,7 @@ namespace bs
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 		
-		Event<void(const WString&)> onValueChanged; /** Triggered when the value in the field changes. */
+		Event<void(const String&)> onValueChanged; /** Triggered when the value in the field changes. */
 		Event<void()> onConfirm; /**< Triggered when the user hits the Enter key with the input box in focus. */
 
 		/** @name Internal
@@ -175,7 +175,7 @@ namespace bs
 		 * Sets a new value in the input field, and also allows you to choose should the field trigger an onValueChanged
 		 * event.
 		 */
-		void _setValue(const WString& value, bool triggerEvent);
+		void _setValue(const String& value, bool triggerEvent);
 
 		/** @} */
 	protected:
@@ -193,7 +193,7 @@ namespace bs
 		Vector2I _getOptimalSize() const override;
 
 		/**	Triggered when the value in the internal input box changes. */
-		void valueChanged(const WString& newValue);
+		void valueChanged(const String& newValue);
 
 		/**	Triggers when the input box receives or loses keyboard focus. */
 		void focusChanged(bool focus);
@@ -205,7 +205,7 @@ namespace bs
 		GUILayout* mLayout;
 		GUILabel* mLabel;
 		bool mHasInputFocus;
-		WString mValue;
+		String mValue;
 	};
 
 	/** @} */

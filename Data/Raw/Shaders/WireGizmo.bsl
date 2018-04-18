@@ -1,4 +1,4 @@
-technique WireGizmo
+shader WireGizmo
 {
 	raster
 	{

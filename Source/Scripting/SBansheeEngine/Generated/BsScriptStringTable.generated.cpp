@@ -35,8 +35,8 @@ namespace bs
 	bool ScriptStringTable::Internal_contains(ScriptStringTable* thisPtr, MonoString* identifier)
 	{
 		bool tmp__output;
-		WString tmpidentifier;
-		tmpidentifier = MonoUtil::monoToWString(identifier);
+		String tmpidentifier;
+		tmpidentifier = MonoUtil::monoToString(identifier);
 		tmp__output = thisPtr->getHandle()->contains(tmpidentifier);
 
 		bool __output;
@@ -58,12 +58,12 @@ namespace bs
 
 	MonoArray* ScriptStringTable::Internal_getIdentifiers(ScriptStringTable* thisPtr)
 	{
-		Vector<WString> vec__output;
+		Vector<String> vec__output;
 		vec__output = thisPtr->getHandle()->getIdentifiers();
 
 		MonoArray* __output;
 		int arraySize__output = (int)vec__output.size();
-		ScriptArray array__output = ScriptArray::create<WString>(arraySize__output);
+		ScriptArray array__output = ScriptArray::create<String>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
 			array__output.set(i, vec__output[i]);
@@ -75,30 +75,30 @@ namespace bs
 
 	void ScriptStringTable::Internal_setString(ScriptStringTable* thisPtr, MonoString* identifier, Language language, MonoString* value)
 	{
-		WString tmpidentifier;
-		tmpidentifier = MonoUtil::monoToWString(identifier);
-		WString tmpvalue;
-		tmpvalue = MonoUtil::monoToWString(value);
+		String tmpidentifier;
+		tmpidentifier = MonoUtil::monoToString(identifier);
+		String tmpvalue;
+		tmpvalue = MonoUtil::monoToString(value);
 		thisPtr->getHandle()->setString(tmpidentifier, language, tmpvalue);
 	}
 
 	MonoString* ScriptStringTable::Internal_getString(ScriptStringTable* thisPtr, MonoString* identifier, Language language)
 	{
-		WString tmp__output;
-		WString tmpidentifier;
-		tmpidentifier = MonoUtil::monoToWString(identifier);
+		String tmp__output;
+		String tmpidentifier;
+		tmpidentifier = MonoUtil::monoToString(identifier);
 		tmp__output = thisPtr->getHandle()->getString(tmpidentifier, language);
 
 		MonoString* __output;
-		__output = MonoUtil::wstringToMono(tmp__output);
+		__output = MonoUtil::stringToMono(tmp__output);
 
 		return __output;
 	}
 
 	void ScriptStringTable::Internal_removeString(ScriptStringTable* thisPtr, MonoString* identifier)
 	{
-		WString tmpidentifier;
-		tmpidentifier = MonoUtil::monoToWString(identifier);
+		String tmpidentifier;
+		tmpidentifier = MonoUtil::monoToString(identifier);
 		thisPtr->getHandle()->removeString(tmpidentifier);
 	}
 

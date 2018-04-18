@@ -29,7 +29,7 @@ namespace bs
 		 * @param[in]	description	Optional description of what exactly the command does.
 		 */
 		static void execute(InputFieldType* inputField, const ValueType& value, 
-			const WString& description = StringUtil::WBLANK)
+			const String& description = StringUtil::BLANK)
 		{
 			CmdInputFieldValueChange* command = 
 				new (bs_alloc<CmdInputFieldValueChange>()) CmdInputFieldValueChange(description, inputField, value);
@@ -54,7 +54,7 @@ namespace bs
 	private:
 		friend class UndoRedo;
 
-		CmdInputFieldValueChange(const WString& description, InputFieldType* inputField, const ValueType& value)
+		CmdInputFieldValueChange(const String& description, InputFieldType* inputField, const ValueType& value)
 			:EditorCommand(description), mOldValue(inputField->getValue()), mNewValue(value), mInputField(inputField)
 		{ }
 

@@ -52,7 +52,7 @@ namespace bs
 
 	MonoString* ScriptResource::internal_getName(ScriptResourceBase* nativeInstance)
 	{
-		return MonoUtil::wstringToMono(nativeInstance->getGenericHandle()->getName());
+		return MonoUtil::stringToMono(nativeInstance->getGenericHandle()->getName());
 	}
 
 	void ScriptResource::internal_getUUID(ScriptResourceBase* nativeInstance, UUID* uuid)

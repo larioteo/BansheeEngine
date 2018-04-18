@@ -1,6 +1,6 @@
 #include "$EDITOR$/LineGizmo.bslinc"
 
-technique LineHandle
+shader LineHandle
 {
 	mixin LineGizmoBase;
 

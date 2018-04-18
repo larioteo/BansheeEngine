@@ -34,8 +34,8 @@ namespace bs
 
 		updateAreas();
 
-		mMenuBar->addMenuItemSeparator(L"File", 10000);
-		mMenuBar->addMenuItem(L"File/Exit", 
+		mMenuBar->addMenuItemSeparator("File", 10000);
+		mMenuBar->addMenuItem("File/Exit", 
 			[]()
 		{
 			gCoreApplication().quitRequested();

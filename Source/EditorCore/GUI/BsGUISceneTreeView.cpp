@@ -40,14 +40,14 @@ namespace bs
 
 		SPtr<GUIContextMenu> contextMenu = bs_shared_ptr_new<GUIContextMenu>();
 
-		contextMenu->addMenuItem(L"New scene object", std::bind(&GUISceneTreeView::createNewSO, this), 50);
-		contextMenu->addMenuItem(L"Rename", std::bind(&GUISceneTreeView::renameSelected, this), 49, ShortcutKey(ButtonModifier::None, BC_F2));
-		contextMenu->addMenuItem(L"Delete", std::bind(&GUISceneTreeView::deleteSelection, this), 48, ShortcutKey(ButtonModifier::None, BC_DELETE));
-		contextMenu->addSeparator(L"", 40);
-		contextMenu->addMenuItem(L"Duplicate", std::bind(&GUISceneTreeView::duplicateSelection, this), 39, ShortcutKey(ButtonModifier::Ctrl, BC_D));
-		contextMenu->addMenuItem(L"Copy", std::bind(&GUISceneTreeView::copySelection, this), 38, ShortcutKey(ButtonModifier::Ctrl, BC_C));
-		contextMenu->addMenuItem(L"Cut", std::bind(&GUISceneTreeView::cutSelection, this), 37, ShortcutKey(ButtonModifier::Ctrl, BC_X));
-		contextMenu->addMenuItem(L"Paste", std::bind(&GUISceneTreeView::paste, this), 36, ShortcutKey(ButtonModifier::Ctrl, BC_V));
+		contextMenu->addMenuItem("New scene object", std::bind(&GUISceneTreeView::createNewSO, this), 50);
+		contextMenu->addMenuItem("Rename", std::bind(&GUISceneTreeView::renameSelected, this), 49, ShortcutKey(ButtonModifier::None, BC_F2));
+		contextMenu->addMenuItem("Delete", std::bind(&GUISceneTreeView::deleteSelection, this), 48, ShortcutKey(ButtonModifier::None, BC_DELETE));
+		contextMenu->addSeparator("", 40);
+		contextMenu->addMenuItem("Duplicate", std::bind(&GUISceneTreeView::duplicateSelection, this), 39, ShortcutKey(ButtonModifier::Ctrl, BC_D));
+		contextMenu->addMenuItem("Copy", std::bind(&GUISceneTreeView::copySelection, this), 38, ShortcutKey(ButtonModifier::Ctrl, BC_C));
+		contextMenu->addMenuItem("Cut", std::bind(&GUISceneTreeView::cutSelection, this), 37, ShortcutKey(ButtonModifier::Ctrl, BC_X));
+		contextMenu->addMenuItem("Paste", std::bind(&GUISceneTreeView::paste, this), 36, ShortcutKey(ButtonModifier::Ctrl, BC_V));
 
 		setContextMenu(contextMenu);
 	}
@@ -261,13 +261,13 @@ namespace bs
 		updateTreeElement(&mRootElement);
 	}
 
-	void GUISceneTreeView::renameTreeElement(GUITreeView::TreeElement* element, const WString& name)
+	void GUISceneTreeView::renameTreeElement(GUITreeView::TreeElement* element, const String& name)
 	{
 		SceneTreeElement* sceneTreeElement = static_cast<SceneTreeElement*>(element);
 
 		HSceneObject so = sceneTreeElement->mSceneObject;
-		CmdRecordSO::execute(so, false, L"Renamed \"" + toWString(so->getName()) + L"\"");
-		so->setName(toString(name));
+		CmdRecordSO::execute(so, false, "Renamed \"" + so->getName() + "\"");
+		so->setName(name);
 
 		onModified();
 	}
@@ -277,7 +277,7 @@ namespace bs
 		SceneTreeElement* sceneTreeElement = static_cast<SceneTreeElement*>(element);
 
 		HSceneObject so = sceneTreeElement->mSceneObject;
-		CmdDeleteSO::execute(so, L"Deleted \"" + toWString(so->getName()) + L"\"");
+		CmdDeleteSO::execute(so, "Deleted \"" + so->getName() + "\"");
 
 		onModified();
 	}
@@ -485,11 +485,11 @@ namespace bs
 		if (duplicateList.size() == 0)
 			return;
 
-		WString message;
+		String message;
 		if (duplicateList.size() == 1)
-			message = L"Duplicated " + toWString(duplicateList[0]->getName());
+			message = "Duplicated " + duplicateList[0]->getName();
 		else
-			message = L"Duplicated " + toWString((UINT32)duplicateList.size()) + L" elements";
+			message = "Duplicated " + toString((UINT32)duplicateList.size()) + " elements";
 
 		Vector<Transform> savedTransforms(duplicateList.size());
 		for(UINT32 i = 0; i < (UINT32)duplicateList.size(); i++)
@@ -554,22 +554,22 @@ namespace bs
 
 		if (mCutFlag)
 		{
-			WString message;
+			String message;
 			if (mCopyList.size() == 1)
-				message = L"Moved " + toWString(mCopyList[0]->getName());
+				message = "Moved " + mCopyList[0]->getName();
 			else
-				message = L"Moved " + toWString((UINT32)mCopyList.size()) + L" elements";
+				message = "Moved " + toString((UINT32)mCopyList.size()) + " elements";
 
 			CmdReparentSO::execute(mCopyList, parent, message);
 			clearCopyList();
 		}
 		else
 		{
-			WString message;
+			String message;
 			if (mCopyList.size() == 1)
-				message = L"Copied " + toWString(mCopyList[0]->getName());
+				message = "Copied " + mCopyList[0]->getName();
 			else
-				message = L"Copied " + toWString((UINT32)mCopyList.size()) + L" elements";
+				message = "Copied " + toString((UINT32)mCopyList.size()) + " elements";
 
 			Vector<HSceneObject> clones = CmdCloneSO::execute(mCopyList, message);
 			for (auto& clone : clones)
@@ -601,9 +601,9 @@ namespace bs
 
 	void GUISceneTreeView::createNewSO()
 	{
-		HSceneObject newSO = CmdCreateSO::execute("New", 0, L"Created a new SceneObject");
+		HSceneObject newSO = CmdCreateSO::execute("New", 0, "Created a new SceneObject");
 
-		if (mSelectedElements.size() > 0)
+		if (!mSelectedElements.empty())
 		{
 			SceneTreeElement* sceneElement = static_cast<SceneTreeElement*>(mSelectedElements[0].element);
 			newSO->setParent(sceneElement->mSceneObject);

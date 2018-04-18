@@ -29,7 +29,7 @@ namespace bs
 		const Path& getProjectPath() const { return mProjectPath; }
 
 		/**	Returns the name of the currently loaded project. */
-		const WString& getProjectName() const { return mProjectName; }
+		const String& getProjectName() const { return mProjectName; }
 
 		/**	Returns the absolute path where the builtin editor assets are located. */
 		Path getDataPath() const { return mBuiltinDataPath; }
@@ -146,7 +146,7 @@ namespace bs
 
 		bool mIsProjectLoaded;
 		Path mProjectPath;
-		WString mProjectName;
+		String mProjectName;
 
 		Timer mSplashScreenTimer;
 		bool mSplashScreenShown = true;

@@ -55,8 +55,8 @@ namespace bs
 	MonoObject* ScriptDropDownWindow::internal_CreateInstance(MonoString* ns, MonoString* typeName, 
 		ScriptEditorWindow* parentWindow, Vector2I* position)
 	{
-		String strTypeName = toString(MonoUtil::monoToWString(typeName));
-		String strNamespace = toString(MonoUtil::monoToWString(ns));
+		String strTypeName = MonoUtil::monoToString(typeName);
+		String strNamespace = MonoUtil::monoToString(ns);
 		String fullName = strNamespace + "." + strTypeName;
 
 		MonoClass* windowClass = MonoManager::instance().findClass(strNamespace, strTypeName);

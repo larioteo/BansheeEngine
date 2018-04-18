@@ -110,7 +110,7 @@ namespace bs
 
 	void ScriptHandleDrawing::internal_DrawText(Vector3* position, MonoString* text, ScriptFont* font, int fontSize, float size)
 	{
-		WString nativeText = MonoUtil::monoToWString(text);
+		String nativeText = MonoUtil::monoToString(text);
 
 		HFont fontHandle;
 		if (font != nullptr)

@@ -98,7 +98,7 @@ namespace bs
 				const Vector<MonoMethod*>& methods = curClass->getAllMethods();
 				for (auto& curMethod : methods)
 				{
-					WString path;
+					String path;
 					ShortcutKey shortcutKey = ShortcutKey::NONE;
 					INT32 priority = 0;
 					bool separator = false;
@@ -108,11 +108,11 @@ namespace bs
 
 						if (separator)
 						{
-							Vector<WString> pathElements = StringUtil::split(path, L"/");
-							WString separatorPath;
+							Vector<String> pathElements = StringUtil::split(path, "/");
+							String separatorPath;
 							if (pathElements.size() > 1)
 							{
-								const WString& lastElem = pathElements[pathElements.size() - 1];
+								const String& lastElem = pathElements[pathElements.size() - 1];
 								separatorPath = path;
 								separatorPath.erase(path.size() - lastElem.size() - 1, lastElem.size() + 1);
 							}
@@ -129,7 +129,7 @@ namespace bs
 		}
 	}
 
-	bool MenuItemManager::parseMenuItemMethod(MonoMethod* method, WString& path, ShortcutKey& shortcut, INT32& priority, bool& separator) const
+	bool MenuItemManager::parseMenuItemMethod(MonoMethod* method, String& path, ShortcutKey& shortcut, INT32& priority, bool& separator) const
 	{
 		if (!method->hasAttribute(mMenuItemAttribute))
 			return false;
@@ -146,7 +146,7 @@ namespace bs
 		mPathField->get(menuItemAttrib, &monoPath);
 
 		mShortcutField->get(menuItemAttrib, &shortcut);
-		path = MonoUtil::monoToWString(monoPath);
+		path = MonoUtil::monoToString(monoPath);
 		mPriorityField->get(menuItemAttrib, &priority);
 		mSeparatorField->get(menuItemAttrib, &separator);
 

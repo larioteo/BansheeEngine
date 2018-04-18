@@ -26,7 +26,7 @@ namespace bs
 		virtual ~PlatformInfo();
 
 		PlatformType type; /**< Type of platform this object contains data for. */
-		WString defines; /**< A set of semicolon separated defines to use when compiling scripts for this platform. */
+		String defines; /**< A set of semicolon separated defines to use when compiling scripts for this platform. */
 		WeakResourceHandle<Prefab> mainScene; /**< Default scene that is loaded when the application is started. */
 		bool fullscreen; /**< If true the application will be started in fullscreen using user's desktop resolution. */
 		UINT32 windowedWidth; /**< Width of the window if not starting the application in fullscreen. */
@@ -39,7 +39,7 @@ namespace bs
 	public:
 		friend class PlatformInfoRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 	};
 
 	/** Contains Windows specific per-platform information used primarily for build purposes. */
@@ -56,7 +56,7 @@ namespace bs
 	public:
 		friend class WinPlatformInfoRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 	};
 
 	/** @} */

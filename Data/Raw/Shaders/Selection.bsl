@@ -10,26 +10,26 @@
 #define USE_SKELETON
 #include "$EDITOR$\SelectionBase.bslinc"
 
-technique Selection1
+shader Selection1
 { 
 	mixin Selection;
 };
 
-technique Selection2
+shader Selection2
 {
 	mixin SelectionSkinned;
 
 	tags = { "Skinned" };
 };
 
-technique Selection3
+shader Selection3
 {
 	mixin SelectionMorph;
 
 	tags = { "Morph" };
 };
 
-technique Selection4
+shader Selection4
 {
 	mixin SelectionSkinnedMorph;
 

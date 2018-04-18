@@ -1,6 +1,6 @@
 #include "$EDITOR$/SolidGizmo.bslinc"
 
-technique SolidGizmo
+shader SolidGizmo
 { 
 	mixin SolidGizmoBase;
 };

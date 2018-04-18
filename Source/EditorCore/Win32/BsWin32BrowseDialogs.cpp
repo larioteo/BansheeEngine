@@ -39,7 +39,7 @@ namespace bs
 
 	void setDefaultPath(IFileDialog* dialog, const Path& defaultPath)
 	{
-		WString pathStr = defaultPath.toWString();
+		WString pathStr = UTF8::toWide(defaultPath.toString());
 		const wchar_t* defaultPathW = pathStr.c_str();
 
 		IShellItem* folder;
@@ -74,7 +74,7 @@ namespace bs
 
 			LPWSTR name;
 			shellItem->GetDisplayName(SIGDN_FILESYSPATH, &name);
-			paths.push_back((Path)name);
+			paths.push_back((Path)UTF8::fromWide(WString(name)));
 			CoTaskMemFree(name);
 		}
 	}
@@ -151,7 +151,7 @@ namespace bs
 				LPWSTR filePath = nullptr;
 				shellItem->GetDisplayName(SIGDN_FILESYSPATH, &filePath);
 
-				paths.push_back((Path)filePath);
+				paths.push_back((Path)UTF8::fromWide(WString(filePath)));
 				CoTaskMemFree(filePath);
 
 				shellItem->Release();

@@ -154,10 +154,10 @@ namespace bs
 		HSpriteTexture getLogMessageIcon(LogMessageIcon icon, UINT32 size, bool dark) const;
 
 		/**	Returns text contained in the default "empty" shader. */
-		WString getEmptyShaderCode() const;
+		String getEmptyShaderCode() const;
 
 		/**	Returns text contained in the default "empty" C# script. */
-		WString getEmptyCSScriptCode() const;
+		String getEmptyCSScriptCode() const;
 
 		/**	Returns image data the Banshee Engine splash screen. */
 		static SPtr<PixelData> getSplashScreen();
@@ -191,13 +191,13 @@ namespace bs
 		SPtr<GUISkin> generateGUISkin();
 
 		/**	Loads a GUI skin texture with the specified filename. */
-		HSpriteTexture getGUITexture(const WString& name) const;
+		HSpriteTexture getGUITexture(const String& name) const;
 
 		/**	Loads a GUI icon with the specified filename. */
-		HSpriteTexture getGUIIcon(const WString& name) const;
+		HSpriteTexture getGUIIcon(const String& name) const;
 
 		/**	Loads a shader with the specified filename */
-		HShader getShader(const WString& name) const;
+		HShader getShader(const String& name) const;
 
 		HShader mShaderDockOverlay;
 		HShader mShaderSceneGrid;
@@ -244,243 +244,243 @@ namespace bs
 
 		Path ResourceManifestPath;
 
-		static const WString DefaultFontFilename;
-		static const WString DefaultAAFontFilename;
+		static const String DefaultFontFilename;
+		static const String DefaultAAFontFilename;
 		static const UINT32 DefaultFontSize;
 		static const UINT32 TitleFontSize;
 
 		static const Color TextNormalColor;
 		static const Color TextActiveColor;
 
-		static const WString GUISkinFile;
+		static const String GUISkinFile;
 
-		static const WString FolderIconTex;
-		static const WString MeshIconTex;
-		static const WString TextureIconTex;
-		static const WString FontIconTex;
-		static const WString PlainTextIconTex;
-		static const WString ScriptCodeIconTex;
-		static const WString ShaderIconTex;
-		static const WString ShaderIncludeIconTex;
-		static const WString MaterialIconTex;
-		static const WString SpriteTextureIconTex;
-		static const WString PrefabIconTex;
-		static const WString GUISkinIconTex;
-		static const WString PhysicsMaterialIconTex;
-		static const WString PhysicsMeshIconTex;
-		static const WString AudioClipIconTex;
-		static const WString AnimationClipIconTex;
+		static const String FolderIconTex;
+		static const String MeshIconTex;
+		static const String TextureIconTex;
+		static const String FontIconTex;
+		static const String PlainTextIconTex;
+		static const String ScriptCodeIconTex;
+		static const String ShaderIconTex;
+		static const String ShaderIncludeIconTex;
+		static const String MaterialIconTex;
+		static const String SpriteTextureIconTex;
+		static const String PrefabIconTex;
+		static const String GUISkinIconTex;
+		static const String PhysicsMaterialIconTex;
+		static const String PhysicsMeshIconTex;
+		static const String AudioClipIconTex;
+		static const String AnimationClipIconTex;
 
-		static const WString WindowBackgroundTex;
+		static const String WindowBackgroundTex;
 
-		static const WString WindowFrameNormal;
-		static const WString WindowFrameFocused;
+		static const String WindowFrameNormal;
+		static const String WindowFrameFocused;
 
-		static const WString TabBarBackgroundTex;
-		static const WString TitleBarBackgroundTex;
+		static const String TabBarBackgroundTex;
+		static const String TitleBarBackgroundTex;
 
-		static const WString CloseButtonNormalTex;
-		static const WString CloseButtonHoverTex;
-		static const WString CloseButtonActiveTex;
+		static const String CloseButtonNormalTex;
+		static const String CloseButtonHoverTex;
+		static const String CloseButtonActiveTex;
 
-		static const WString MinButtonNormalTex;
-		static const WString MinButtonHoverTex;
-		static const WString MinButtonActiveTex;
+		static const String MinButtonNormalTex;
+		static const String MinButtonHoverTex;
+		static const String MinButtonActiveTex;
 
-		static const WString MaxButtonNormalTex;
-		static const WString MaxButtonHoverTex;
-		static const WString MaxButtonActiveTex;
+		static const String MaxButtonNormalTex;
+		static const String MaxButtonHoverTex;
+		static const String MaxButtonActiveTex;
 
-		static const WString TabButtonNormalTex;
-		static const WString TabButtonFocusedTex;
+		static const String TabButtonNormalTex;
+		static const String TabButtonFocusedTex;
 
-		static const WString ButtonNormalTex;
-		static const WString ButtonHoverTex;
-		static const WString ButtonActiveTex;
+		static const String ButtonNormalTex;
+		static const String ButtonHoverTex;
+		static const String ButtonActiveTex;
 
-		static const WString ButtonLeftNormalTex;
-		static const WString ButtonLeftHoverTex;
-		static const WString ButtonLeftActiveTex;
+		static const String ButtonLeftNormalTex;
+		static const String ButtonLeftHoverTex;
+		static const String ButtonLeftActiveTex;
 
-		static const WString ButtonRightNormalTex;
-		static const WString ButtonRightHoverTex;
-		static const WString ButtonRightActiveTex;
+		static const String ButtonRightNormalTex;
+		static const String ButtonRightHoverTex;
+		static const String ButtonRightActiveTex;
 
-		static const WString ToggleNormalTex;
-		static const WString ToggleHoverTex;
-		static const WString ToggleNormalOnTex;
-		static const WString ToggleHoverOnTex;
+		static const String ToggleNormalTex;
+		static const String ToggleHoverTex;
+		static const String ToggleNormalOnTex;
+		static const String ToggleHoverOnTex;
 
-		static const WString ObjectDropBtnNormalTex;
-		static const WString ObjectDropBtnNormalOnTex;
-		static const WString ObjectClearBtnNormalTex;
-		static const WString ObjectClearBtnHoverTex;
-		static const WString ObjectClearBtnActiveTex;
+		static const String ObjectDropBtnNormalTex;
+		static const String ObjectDropBtnNormalOnTex;
+		static const String ObjectClearBtnNormalTex;
+		static const String ObjectClearBtnHoverTex;
+		static const String ObjectClearBtnActiveTex;
 
-		static const WString SliderHBackgroundTex;
-		static const WString SliderHFillTex;
-		static const WString SliderVBackgroundTex;
-		static const WString SliderVFillTex;
-		static const WString SliderHandleNormalTex;
-		static const WString SliderHandleHoverTex;
-		static const WString SliderHandleActiveTex;
+		static const String SliderHBackgroundTex;
+		static const String SliderHFillTex;
+		static const String SliderVBackgroundTex;
+		static const String SliderVFillTex;
+		static const String SliderHandleNormalTex;
+		static const String SliderHandleHoverTex;
+		static const String SliderHandleActiveTex;
 
-		static const WString FoldoutOpenNormalTex;
-		static const WString FoldoutOpenHoverTex;
-		static const WString FoldoutOpenActiveTex;
-		static const WString FoldoutClosedNormalTex;
-		static const WString FoldoutClosedHoverTex;
-		static const WString FoldoutClosedActiveTex;
+		static const String FoldoutOpenNormalTex;
+		static const String FoldoutOpenHoverTex;
+		static const String FoldoutOpenActiveTex;
+		static const String FoldoutClosedNormalTex;
+		static const String FoldoutClosedHoverTex;
+		static const String FoldoutClosedActiveTex;
 
-		static const WString InputBoxNormalTex;
-		static const WString InputBoxHoverTex;
-		static const WString InputBoxFocusedTex;
+		static const String InputBoxNormalTex;
+		static const String InputBoxHoverTex;
+		static const String InputBoxFocusedTex;
 
-		static const WString ScrollBarUpNormalTex;
-		static const WString ScrollBarUpHoverTex;
-		static const WString ScrollBarUpActiveTex;
+		static const String ScrollBarUpNormalTex;
+		static const String ScrollBarUpHoverTex;
+		static const String ScrollBarUpActiveTex;
 
-		static const WString ScrollBarDownNormalTex;
-		static const WString ScrollBarDownHoverTex;
-		static const WString ScrollBarDownActiveTex;
+		static const String ScrollBarDownNormalTex;
+		static const String ScrollBarDownHoverTex;
+		static const String ScrollBarDownActiveTex;
 
-		static const WString ScrollBarLeftNormalTex;
-		static const WString ScrollBarLeftHoverTex;
-		static const WString ScrollBarLeftActiveTex;
+		static const String ScrollBarLeftNormalTex;
+		static const String ScrollBarLeftHoverTex;
+		static const String ScrollBarLeftActiveTex;
 
-		static const WString ScrollBarRightNormalTex;
-		static const WString ScrollBarRightHoverTex;
-		static const WString ScrollBarRightActiveTex;
+		static const String ScrollBarRightNormalTex;
+		static const String ScrollBarRightHoverTex;
+		static const String ScrollBarRightActiveTex;
 
-		static const WString ScrollBarHandleHorzNormalTex;
-		static const WString ScrollBarHandleHorzHoverTex;
-		static const WString ScrollBarHandleHorzActiveTex;
+		static const String ScrollBarHandleHorzNormalTex;
+		static const String ScrollBarHandleHorzHoverTex;
+		static const String ScrollBarHandleHorzActiveTex;
 
-		static const WString ScrollBarHandleVertNormalTex;
-		static const WString ScrollBarHandleVertHoverTex;
-		static const WString ScrollBarHandleVertActiveTex;
+		static const String ScrollBarHandleVertNormalTex;
+		static const String ScrollBarHandleVertHoverTex;
+		static const String ScrollBarHandleVertActiveTex;
 
-		static const WString ScrollBarResizeableHandleHorzNormalTex;
-		static const WString ScrollBarResizeableHandleHorzHoverTex;
-		static const WString ScrollBarResizeableHandleHorzActiveTex;
+		static const String ScrollBarResizeableHandleHorzNormalTex;
+		static const String ScrollBarResizeableHandleHorzHoverTex;
+		static const String ScrollBarResizeableHandleHorzActiveTex;
 
-		static const WString ScrollBarResizeableHandleVertNormalTex;
-		static const WString ScrollBarResizeableHandleVertHoverTex;
-		static const WString ScrollBarResizeableHandleVertActiveTex;
+		static const String ScrollBarResizeableHandleVertNormalTex;
+		static const String ScrollBarResizeableHandleVertHoverTex;
+		static const String ScrollBarResizeableHandleVertActiveTex;
 
-		static const WString ScrollBarHBgTex;
-		static const WString ScrollBarVBgTex;
+		static const String ScrollBarHBgTex;
+		static const String ScrollBarVBgTex;
 
-		static const WString DropDownBtnNormalTex;
-		static const WString DropDownBtnHoverTex;
-		static const WString DropDownBtnActiveTex;
+		static const String DropDownBtnNormalTex;
+		static const String DropDownBtnHoverTex;
+		static const String DropDownBtnActiveTex;
 
-		static const WString DropDownBoxBgTex;
-		static const WString DropDownBoxSideBgTex;
-		static const WString DropDownBoxHandleTex;
+		static const String DropDownBoxBgTex;
+		static const String DropDownBoxSideBgTex;
+		static const String DropDownBoxHandleTex;
 
-		static const WString DropDownBoxEntryNormalTex;
-		static const WString DropDownBoxEntryHoverTex;
+		static const String DropDownBoxEntryNormalTex;
+		static const String DropDownBoxEntryHoverTex;
 
-		static const WString DropDownBoxEntryToggleNormalTex;
-		static const WString DropDownBoxEntryToggleHoverTex;
-		static const WString DropDownBoxEntryToggleNormalOnTex;
-		static const WString DropDownBoxEntryToggleHoverOnTex;
+		static const String DropDownBoxEntryToggleNormalTex;
+		static const String DropDownBoxEntryToggleHoverTex;
+		static const String DropDownBoxEntryToggleNormalOnTex;
+		static const String DropDownBoxEntryToggleHoverOnTex;
 
-		static const WString DropDownBoxBtnUpNormalTex;
-		static const WString DropDownBoxBtnUpHoverTex;
+		static const String DropDownBoxBtnUpNormalTex;
+		static const String DropDownBoxBtnUpHoverTex;
 
-		static const WString DropDownBoxBtnDownNormalTex;
-		static const WString DropDownBoxBtnDownHoverTex;
+		static const String DropDownBoxBtnDownNormalTex;
+		static const String DropDownBoxBtnDownHoverTex;
 
-		static const WString DropDownBoxEntryExpNormalTex;
-		static const WString DropDownBoxEntryExpHoverTex;
+		static const String DropDownBoxEntryExpNormalTex;
+		static const String DropDownBoxEntryExpHoverTex;
 
-		static const WString DropDownSeparatorTex;
+		static const String DropDownSeparatorTex;
 
-		static const WString MenuBarBgTex;
-		static const WString MenuBarBansheeLogoTex;
+		static const String MenuBarBgTex;
+		static const String MenuBarBansheeLogoTex;
 
-		static const WString MenuBarBtnNormalTex;
-		static const WString MenuBarBtnHoverTex;
-		static const WString MenuBarBtnActiveTex;
+		static const String MenuBarBtnNormalTex;
+		static const String MenuBarBtnHoverTex;
+		static const String MenuBarBtnActiveTex;
 
-		static const WString MenuBarLineNormalTex;
-		static const WString MenuBarLineActiveTex;
+		static const String MenuBarLineNormalTex;
+		static const String MenuBarLineActiveTex;
 
-		static const WString ToolBarBtnNormalTex;
-		static const WString ToolBarBtnHoverTex;
-		static const WString ToolBarBtnActiveTex;
+		static const String ToolBarBtnNormalTex;
+		static const String ToolBarBtnHoverTex;
+		static const String ToolBarBtnActiveTex;
 
-		static const WString ToolBarSeparatorTex;
+		static const String ToolBarSeparatorTex;
 
-		static const WString TreeViewExpandButtonOffNormal;
-		static const WString TreeViewExpandButtonOffHover;
-		static const WString TreeViewExpandButtonOnNormal;
-		static const WString TreeViewExpandButtonOnHover;
+		static const String TreeViewExpandButtonOffNormal;
+		static const String TreeViewExpandButtonOffHover;
+		static const String TreeViewExpandButtonOnNormal;
+		static const String TreeViewExpandButtonOnHover;
 
-		static const WString TreeViewHighlightBackground;
-		static const WString TreeViewEditBox;
+		static const String TreeViewHighlightBackground;
+		static const String TreeViewEditBox;
 
-		static const WString TreeViewElementHighlight;
-		static const WString TreeViewElementSepHighlight;
+		static const String TreeViewElementHighlight;
+		static const String TreeViewElementSepHighlight;
 
-		static const WString ColorPickerSliderHorzHandleTex;
-		static const WString ColorPickerSliderVertHandleTex;
-		static const WString ColorPickerSlider2DHandleTex;
+		static const String ColorPickerSliderHorzHandleTex;
+		static const String ColorPickerSliderVertHandleTex;
+		static const String ColorPickerSlider2DHandleTex;
 
-		static const WString ProgressBarFillTex;
-		static const WString ProgressBarBgTex;
+		static const String ProgressBarFillTex;
+		static const String ProgressBarBgTex;
 
-		static const WString SelectionAreaTex;
-		static const WString SelectionBgTex;
+		static const String SelectionAreaTex;
+		static const String SelectionBgTex;
 
-		static const WString TextureDropTex;
-		static const WString TextureDropOnTex;
+		static const String TextureDropTex;
+		static const String TextureDropOnTex;
 
-		static const WString XButtonNormalTex;
-		static const WString XButtonHoverTex;
-		static const WString XButtonActiveTex;
+		static const String XButtonNormalTex;
+		static const String XButtonHoverTex;
+		static const String XButtonActiveTex;
 
-		static const WString StatusBarBgTex;
-		static const WString ScrollAreaBgTex;
+		static const String StatusBarBgTex;
+		static const String ScrollAreaBgTex;
 
-		static const WString InspectorTitleBgTex;
-		static const WString InspectorContentBgTex;
-		static const WString InspectorContentBgAlternateTex;
+		static const String InspectorTitleBgTex;
+		static const String InspectorContentBgTex;
+		static const String InspectorContentBgAlternateTex;
 
-		static const WString LibraryEntryFirstBgTex;
-		static const WString LibraryEntryBgTex;
-		static const WString LibraryEntryLastBgTex;
+		static const String LibraryEntryFirstBgTex;
+		static const String LibraryEntryBgTex;
+		static const String LibraryEntryLastBgTex;
 
-		static const WString LibraryEntryVertFirstBgTex;
-		static const WString LibraryEntryVertBgTex;
-		static const WString LibraryEntryVertLastBgTex;
+		static const String LibraryEntryVertFirstBgTex;
+		static const String LibraryEntryVertBgTex;
+		static const String LibraryEntryVertLastBgTex;
 
-		static const WString ShaderDockOverlayFile;
-		static const WString ShaderSceneGridFile;
-		static const WString ShaderPickingCullNoneFile;
-		static const WString ShaderPickingCullCWFile;
-		static const WString ShaderPickingCullCCWFile;
-		static const WString ShaderPickingAlphaCullNoneFile;
-		static const WString ShaderPickingAlphaCullCWFile;
-		static const WString ShaderPickingAlphaCullCCWFile;
-		static const WString ShaderLineGizmoFile;
-		static const WString ShaderSolidGizmoFile;
-		static const WString ShaderWireGizmoFile;
-		static const WString ShaderLineHandleFile;
-		static const WString ShaderSolidHandleFile;
-		static const WString ShaderHandleClearAlphaFile;
-		static const WString ShaderIconGizmoFile;
-		static const WString ShaderGizmoPickingFile;
-		static const WString ShaderGizmoPickingAlphaFile;
-		static const WString ShaderTextGizmoFile;
-		static const WString ShaderSelectionFile;
+		static const String ShaderDockOverlayFile;
+		static const String ShaderSceneGridFile;
+		static const String ShaderPickingCullNoneFile;
+		static const String ShaderPickingCullCWFile;
+		static const String ShaderPickingCullCCWFile;
+		static const String ShaderPickingAlphaCullNoneFile;
+		static const String ShaderPickingAlphaCullCWFile;
+		static const String ShaderPickingAlphaCullCCWFile;
+		static const String ShaderLineGizmoFile;
+		static const String ShaderSolidGizmoFile;
+		static const String ShaderWireGizmoFile;
+		static const String ShaderLineHandleFile;
+		static const String ShaderSolidHandleFile;
+		static const String ShaderHandleClearAlphaFile;
+		static const String ShaderIconGizmoFile;
+		static const String ShaderGizmoPickingFile;
+		static const String ShaderGizmoPickingAlphaFile;
+		static const String ShaderTextGizmoFile;
+		static const String ShaderSelectionFile;
 
-		static const WString EmptyShaderCodeFile;
-		static const WString EmptyCSScriptCodeFile;
+		static const String EmptyShaderCodeFile;
+		static const String EmptyCSScriptCodeFile;
 
-		static const wchar_t* SplashScreenName;
+		static const char* SplashScreenName;
 	};
 
 	/** @} */

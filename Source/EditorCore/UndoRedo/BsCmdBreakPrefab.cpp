@@ -5,7 +5,7 @@
 
 namespace bs
 {
-	CmdBreakPrefab::CmdBreakPrefab(const WString& description, const HSceneObject& sceneObject)
+	CmdBreakPrefab::CmdBreakPrefab(const String& description, const HSceneObject& sceneObject)
 		:EditorCommand(description), mSceneObject(sceneObject)
 	{
 
@@ -17,7 +17,7 @@ namespace bs
 
 	}
 	
-	void CmdBreakPrefab::execute(const HSceneObject& sceneObject, const WString& description)
+	void CmdBreakPrefab::execute(const HSceneObject& sceneObject, const String& description)
 	{
 		// Register command and commit it
 		CmdBreakPrefab* command = new (bs_alloc<CmdBreakPrefab>()) CmdBreakPrefab(description, sceneObject);

@@ -40,7 +40,7 @@ namespace bs
 			options.addOption(scriptArray.get<GUIOption>(i));
 
 		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
-		GUILabel* guiLabel = GUILabel::create(nativeContent, options, toString(MonoUtil::monoToWString(style)));
+		GUILabel* guiLabel = GUILabel::create(nativeContent, options, MonoUtil::monoToString(style));
 
 		new (bs_alloc<ScriptGUILabel>()) ScriptGUILabel(instance, guiLabel);
 	}

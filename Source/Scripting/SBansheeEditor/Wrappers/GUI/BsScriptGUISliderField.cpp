@@ -48,7 +48,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		String styleName = toString(MonoUtil::monoToWString(style));
+		String styleName = MonoUtil::monoToString(style);
 
 		GUISliderField* guiSliderField = nullptr;
 		if (withTitle)

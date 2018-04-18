@@ -61,7 +61,7 @@ namespace bs
 
 		for (auto& assemblyPair : assemblies)
 		{
-			MonoManager::instance().loadAssembly(assemblyPair.second.toWString(), assemblyPair.first);
+			MonoManager::instance().loadAssembly(assemblyPair.second.toString(), assemblyPair.first);
 			ScriptAssemblyManager::instance().loadAssemblyInfo(assemblyPair.first);
 		}
 

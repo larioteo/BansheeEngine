@@ -1,4 +1,4 @@
-technique ClearHandleAlpha
+shader ClearHandleAlpha
 {
 	blend
 	{

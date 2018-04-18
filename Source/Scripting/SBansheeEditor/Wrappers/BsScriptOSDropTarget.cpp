@@ -94,12 +94,12 @@ namespace bs
 			return ScriptArray::create<String>(0).getInternal();
 
 		Vector<Path> fileList = dropTarget->getFileList();
-		ScriptArray output = ScriptArray::create<WString>((UINT32)fileList.size());
+		ScriptArray output = ScriptArray::create<String>((UINT32)fileList.size());
 
 		UINT32 idx = 0;
 		for (auto& path : fileList)
 		{
-			output.set(idx, path.toWString());
+			output.set(idx, path.toString());
 			idx++;
 		}
 

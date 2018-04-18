@@ -17,7 +17,7 @@ namespace bs
 	class BS_ED_EXPORT EditorCommand
 	{
 	public:
-		EditorCommand(const WString& description);
+		EditorCommand(const String& description);
 		virtual ~EditorCommand() { }
 
 		/**	Applies the command, committing the change. */
@@ -35,7 +35,7 @@ namespace bs
 		/** Triggers when a command is removed from an undo/redo stack. */
 		virtual void onCommandRemoved() {}
 
-		WString mDescription;
+		String mDescription;
 		UINT32 mId;
 	};
 

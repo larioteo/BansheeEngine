@@ -2,6 +2,7 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "Library/BsProjectResourceMeta.h"
 #include "RTTI/BsProjectResourceMetaRTTI.h"
+#include "String/BsUnicode.h"
 
 namespace bs
 {
@@ -11,11 +12,16 @@ namespace bs
 
 	}
 
-	SPtr<ProjectResourceMeta> ProjectResourceMeta::create(const WString& name, const UUID& uuid, UINT32 typeId,
+	String ProjectResourceMeta::getUniqueName() const
+	{
+		return UTF8::fromWide(mName);
+	}
+
+	SPtr<ProjectResourceMeta> ProjectResourceMeta::create(const String& name, const UUID& uuid, UINT32 typeId,
 		const SPtr<ResourceMetaData>& resourceMetaData)
 	{
 		SPtr<ProjectResourceMeta> meta = bs_shared_ptr_new<ProjectResourceMeta>(ConstructPrivately());
-		meta->mName = name;
+		meta->mName = UTF8::toWide(name); // Using wide string internally to keep compatibility with older versions
 		meta->mUUID = uuid;
 		meta->mTypeId = typeId;
 		meta->mResourceMeta = resourceMetaData;

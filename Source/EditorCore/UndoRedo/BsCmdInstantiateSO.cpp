@@ -6,7 +6,7 @@
 
 namespace bs
 {
-	CmdInstantiateSO::CmdInstantiateSO(const WString& description, const HPrefab& prefab)
+	CmdInstantiateSO::CmdInstantiateSO(const String& description, const HPrefab& prefab)
 		:EditorCommand(description), mPrefab(prefab)
 	{
 
@@ -17,7 +17,7 @@ namespace bs
 
 	}
 
-	HSceneObject CmdInstantiateSO::execute(const HPrefab& prefab, const WString& description)
+	HSceneObject CmdInstantiateSO::execute(const HPrefab& prefab, const String& description)
 	{
 		// Register command and commit it
 		CmdInstantiateSO* command = new (bs_alloc<CmdInstantiateSO>()) CmdInstantiateSO(description, prefab);

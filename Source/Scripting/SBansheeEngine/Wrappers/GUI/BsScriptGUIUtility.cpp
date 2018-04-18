@@ -50,7 +50,7 @@ namespace bs
 
 	void ScriptGUILayoutUtility::internal_CalculateTextBounds(MonoString* text, ScriptFont* fontPtr, int fontSize, Vector2I* output)
 	{
-		WString nativeText = MonoUtil::monoToWString(text);
+		String nativeText = MonoUtil::monoToString(text);
 		HFont nativeFont = fontPtr->getHandle();
 
 		*output = GUIHelper::calcTextSize(nativeText, nativeFont, fontSize);

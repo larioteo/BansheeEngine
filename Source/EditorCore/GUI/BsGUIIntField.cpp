@@ -27,14 +27,14 @@ namespace bs
 		mInputBox = GUIInputBox::create(false, GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getInputStyleType()));
 		mInputBox->setFilter(&GUIIntField::intFilter);
 
-		mInputBox->onValueChanged.connect(std::bind((void(GUIIntField::*)(const WString&))&GUIIntField::valueChanged, this, _1));
+		mInputBox->onValueChanged.connect(std::bind((void(GUIIntField::*)(const String&))&GUIIntField::valueChanged, this, _1));
 		mInputBox->onFocusChanged.connect(std::bind(&GUIIntField::focusChanged, this, _1));
 		mInputBox->onConfirm.connect(std::bind(&GUIIntField::inputConfirmed, this));
 
 		mLayout->addElement(mInputBox);
 
 		setValue(0);
-		mInputBox->setText(L"0");
+		mInputBox->setText("0");
 	}
 
 	GUIIntField::~GUIIntField()
@@ -218,7 +218,7 @@ namespace bs
 		return LABEL_STYLE_TYPE;
 	}
 
-	void GUIIntField::valueChanged(const WString& newValue)
+	void GUIIntField::valueChanged(const String& newValue)
 	{
 		valueChanged(parseINT32(newValue));
 	}
@@ -260,7 +260,7 @@ namespace bs
 		// updates back to "0" effectively making "." unusable
 		float curValue = parseFloat(mInputBox->getText());
 		if (value != curValue)
-			mInputBox->setText(toWString(value));
+			mInputBox->setText(toString(value));
 	}
 
 	INT32 GUIIntField::applyRangeAndStep(INT32 value) const
@@ -271,8 +271,8 @@ namespace bs
 		return Math::clamp(value, mMinValue, mMaxValue);
 	}
 
-	bool GUIIntField::intFilter(const WString& str)
+	bool GUIIntField::intFilter(const String& str)
 	{
-		return std::regex_match(str, std::wregex(L"-?(\\d+)?"));
+		return std::regex_match(str, std::regex("-?(\\d+)?"));
 	}
 }

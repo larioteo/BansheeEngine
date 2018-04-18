@@ -34,11 +34,11 @@ namespace bs
 		struct LibraryEntry
 		{
 			LibraryEntry();
-			LibraryEntry(const Path& path, const WString& name, DirectoryEntry* parent, LibraryEntryType type);
+			LibraryEntry(const Path& path, const String& name, DirectoryEntry* parent, LibraryEntryType type);
 
 			LibraryEntryType type; /**< Specific type of this entry. */
 			Path path; /**< Absolute path to the entry. */
-			WString elementName; /**< Name of the entry. */
+			String elementName; /**< Name of the entry. */
 
 			DirectoryEntry* parent; /**< Folder this entry is located in. */
 		};
@@ -47,7 +47,7 @@ namespace bs
 		struct FileEntry : public LibraryEntry
 		{
 			FileEntry();
-			FileEntry(const Path& path, const WString& name, DirectoryEntry* parent);
+			FileEntry(const Path& path, const String& name, DirectoryEntry* parent);
 
 			SPtr<ProjectFileMeta> meta; /**< Meta file containing various information about the resource(s). */
 			std::time_t lastUpdateTime; /**< Timestamp of when we last imported the resource. */
@@ -57,7 +57,7 @@ namespace bs
 		struct DirectoryEntry : public LibraryEntry
 		{
 			DirectoryEntry();
-			DirectoryEntry(const Path& path, const WString& name, DirectoryEntry* parent);
+			DirectoryEntry(const Path& path, const String& name, DirectoryEntry* parent);
 
 			Vector<LibraryEntry*> mChildren; /**< Child files or folders. */
 		};
@@ -121,7 +121,7 @@ namespace bs
 		 * @return		A list of entries matching the pattern. Values returned by this method are transient, they may be
 		 *				destroyed on any following ProjectLibrary call.
 		 */
-		Vector<LibraryEntry*> search(const WString& pattern);
+		Vector<LibraryEntry*> search(const String& pattern);
 
 		/**
 		 * Searches the library for a pattern, but only among specific resource types.
@@ -131,7 +131,7 @@ namespace bs
 		 * @return		A list of entries matching the pattern. Values returned by this method are transient, they may be
 		 *				destroyed on any following ProjectLibrary call.
 		 */
-		Vector<LibraryEntry*> search(const WString& pattern, const Vector<UINT32>& typeIds);
+		Vector<LibraryEntry*> search(const String& pattern, const Vector<UINT32>& typeIds);
 
 		/**
 		 * Returns resource path based on its UUID.
@@ -380,8 +380,8 @@ namespace bs
 		/** Deletes all library entries. */
 		void clearEntries();
 
-		static const WString LIBRARY_ENTRIES_FILENAME;
-		static const WString RESOURCE_MANIFEST_FILENAME;
+		static const char* LIBRARY_ENTRIES_FILENAME;
+		static const char* RESOURCE_MANIFEST_FILENAME;
 
 		SPtr<ResourceManifest> mResourceManifest;
 		DirectoryEntry* mRootEntry;

@@ -95,31 +95,31 @@ namespace bs
 			TID_ScriptCode, TID_PlainText, TID_Shader, TID_ShaderInclude
 		};
 
-		Vector<ProjectLibrary::LibraryEntry*> libraryEntries = gProjectLibrary().search(L"*", scriptTypeIds);
+		Vector<ProjectLibrary::LibraryEntry*> libraryEntries = gProjectLibrary().search("*", scriptTypeIds);
 		
 		PlatformType activePlatform = BuildManager::instance().getActivePlatform();
-		Vector<WString> frameworkAssemblies = BuildManager::instance().getFrameworkAssemblies(activePlatform);
+		Vector<String> frameworkAssemblies = BuildManager::instance().getFrameworkAssemblies(activePlatform);
 
 		slnData.projects.push_back(CodeProjectData());
 		slnData.projects.push_back(CodeProjectData());
 
 		// Game project
 		CodeProjectData& gameProject = slnData.projects[0];
-		gameProject.name = toWString(SCRIPT_GAME_ASSEMBLY);
+		gameProject.name = String(SCRIPT_GAME_ASSEMBLY);
 		gameProject.defines = BuildManager::instance().getDefines(activePlatform);
 		
 		//// Add references
-		gameProject.assemblyReferences.push_back(CodeProjectReference{ toWString(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
+		gameProject.assemblyReferences.push_back(CodeProjectReference{ String(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
 		for (auto& assemblyName : frameworkAssemblies)
 			gameProject.assemblyReferences.push_back(CodeProjectReference{ assemblyName, Path::BLANK });
 
 		// Editor project
 		CodeProjectData& editorProject = slnData.projects[1];
-		editorProject.name = toWString(SCRIPT_EDITOR_ASSEMBLY);
+		editorProject.name = String(SCRIPT_EDITOR_ASSEMBLY);
 
 		//// Add references
-		editorProject.assemblyReferences.push_back(CodeProjectReference{ toWString(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
-		editorProject.assemblyReferences.push_back(CodeProjectReference{ toWString(EDITOR_ASSEMBLY), gEditorApplication().getEditorAssemblyPath() });
+		editorProject.assemblyReferences.push_back(CodeProjectReference{ String(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
+		editorProject.assemblyReferences.push_back(CodeProjectReference{ String(EDITOR_ASSEMBLY), gEditorApplication().getEditorAssemblyPath() });
 		for (auto& assemblyName : frameworkAssemblies)
 			gameProject.assemblyReferences.push_back(CodeProjectReference{ assemblyName, Path::BLANK });
 
@@ -155,7 +155,7 @@ namespace bs
 	Path CodeEditorManager::getSolutionPath() const
 	{
 		Path path = gEditorApplication().getProjectPath();
-		path.append(gEditorApplication().getProjectName() + L".sln");
+		path.append(gEditorApplication().getProjectName() + ".sln");
 
 		return path;
 	}
@@ -263,7 +263,7 @@ EndProject)";
 	<None Include="{0}"/>)";
 
 	/**	Generates a C# project GUID from the project name. */
-	String getProjectGUID(const WString& projectName)
+	String getProjectGUID(const String& projectName)
 	{
 		static const String guidTemplate = "{0}-{1}-{2}-{3}-{4}";
 		String hash = md5(projectName);
@@ -298,7 +298,7 @@ EndProject)";
 		for (auto& project : data.projects)
 		{
 			String guid = getProjectGUID(project.name);
-			String projectName = toString(project.name);
+			String projectName = project.name;
 
 			projectEntriesStream << StringUtil::format(PROJ_ENTRY_TEMPLATE, projectName, projectName + ".csproj", guid);
 			projectPlatformsStream << StringUtil::format(PROJ_PLATFORM_TEMPLATE, guid);
@@ -345,7 +345,7 @@ EndProject)";
 
 		for (auto& referenceEntry : projectData.assemblyReferences)
 		{
-			String referenceName = toString(referenceEntry.name);
+			String referenceName = referenceEntry.name;
 
 			if (referenceEntry.path.isEmpty())
 				tempStream << StringUtil::format(REFERENCE_ENTRY_TEMPLATE, referenceName);
@@ -359,7 +359,7 @@ EndProject)";
 
 		for (auto& referenceEntry : projectData.projectReferences)
 		{
-			String referenceName = toString(referenceEntry.name);
+			String referenceName = referenceEntry.name;
 			String projectGUID = getProjectGUID(referenceEntry.name);
 
 			tempStream << StringUtil::format(REFERENCE_PROJECT_ENTRY_TEMPLATE, referenceName, projectGUID);
@@ -369,12 +369,12 @@ EndProject)";
 		tempStream.str("");
 		tempStream.clear();
 
-		tempStream << toString(projectData.defines);
+		tempStream << projectData.defines;
 
 		String defines = tempStream.str();
 		String projectGUID = getProjectGUID(projectData.name);
 
 		return StringUtil::format(PROJ_TEMPLATE, versionData[version].toolsVersion, projectGUID, 
-			toString(projectData.name), defines, referenceEntries, projectReferenceEntries, codeEntries, nonCodeEntries);
+			projectData.name, defines, referenceEntries, projectReferenceEntries, codeEntries, nonCodeEntries);
 	}
 }

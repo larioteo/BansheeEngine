@@ -67,7 +67,7 @@ namespace bs
 
 	void ScriptSceneObject::internal_createInstance(MonoObject* instance, MonoString* name, UINT32 flags)
 	{
-		HSceneObject sceneObject = SceneObject::create(toString(MonoUtil::monoToWString(name)), flags);
+		HSceneObject sceneObject = SceneObject::create(MonoUtil::monoToString(name), flags);
 
 		ScriptGameObjectManager::instance().createScriptSceneObject(instance, sceneObject);
 	}

@@ -19,8 +19,7 @@ namespace bs
 	const Color GUIStatusBar::COLOR_WARNING = Color(192 / 255.0f, 176 / 255.0f, 0.0f);
 	const Color GUIStatusBar::COLOR_ERROR = Color(192 / 255.0f, 36 / 255.0f, 0.0f);
 
-	GUIStatusBar::GUIStatusBar(const PrivatelyConstruct& dummy,
-		const String& style, const GUIDimensions& dimensions)
+	GUIStatusBar::GUIStatusBar(const PrivatelyConstruct& dummy, const String& style, const GUIDimensions& dimensions)
 		:GUIElementContainer(dimensions, style)
 	{
 		mPanel = GUIPanel::create();
@@ -29,10 +28,10 @@ namespace bs
 		_registerChildElement(mBgPanel);
 
 		mBackground = GUITexture::create(GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIBackgroundTypeName()));
-		mMessage = GUIButton::create(HString(L""), GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIMessageTypeName()));
-		mScene = GUILabel::create(HString(L"Scene: Unnamed"), GUIOptions(GUIOption::fixedWidth(150)));
-		mProject = GUILabel::create(HString(L"Project: None"), GUIOptions(GUIOption::fixedWidth(200)));
-		mCompiling = GUILabel::create(HString(L"Compiling..."), GUIOptions(GUIOption::fixedWidth(100)));
+		mMessage = GUIButton::create(HString(""), GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIMessageTypeName()));
+		mScene = GUILabel::create(HString("Scene: Unnamed"), GUIOptions(GUIOption::fixedWidth(150)));
+		mProject = GUILabel::create(HString("Project: None"), GUIOptions(GUIOption::fixedWidth(200)));
+		mCompiling = GUILabel::create(HString("Compiling..."), GUIOptions(GUIOption::fixedWidth(100)));
 
 		GUILayoutY* vertLayout = mPanel->addNewElement<GUILayoutY>();
 		vertLayout->addNewElement<GUIFixedSpace>(3);
@@ -79,29 +78,29 @@ namespace bs
 		return bs_new<GUIStatusBar>(PrivatelyConstruct(), *curStyle, GUIDimensions::create());
 	}
 
-	void GUIStatusBar::setProject(const WString& name, bool modified)
+	void GUIStatusBar::setProject(const String& name, bool modified)
 	{
-		WStringStream content;
-		content << L"Project: ";
+		StringStream content;
+		content << "Project: ";
 
 		if (name.size() > 20)
-			content << name.substr(0, 20) << L"...";
+			content << name.substr(0, 20) << "...";
 		else
 			content << name;
 
 		if (modified)
-			content << L"*";
+			content << "*";
 
 		mProject->setContent(HString(content.str()));
 	}
 
-	void GUIStatusBar::setScene(const WString& name, bool modified)
+	void GUIStatusBar::setScene(const String& name, bool modified)
 	{
-		WStringStream content;
-		content << L"Scene: ";
+		StringStream content;
+		content << "Scene: ";
 
 		if (name.size() > 15)
-			content << name.substr(0, 15) << L"...";
+			content << name.substr(0, 15) << "...";
 		else
 			content << name;
 
@@ -147,7 +146,7 @@ namespace bs
 		LogEntry entry;
 		if(!gDebug().getLog().getLastEntry(entry))
 		{
-			GUIContent messageContent(HString(L""));
+			GUIContent messageContent(HString(""));
 			mMessage->setContent(messageContent);
 
 			return;
@@ -174,19 +173,19 @@ namespace bs
 			break;
 		}
 
-		WString message = toWString(entry.getMessage());
+		String message = entry.getMessage();
 		size_t lfPos = message.find_first_of('\n');
 		size_t crPos = message.find_first_of('\r');
 		size_t newlinePos;
 
-		if (lfPos != WString::npos)
+		if (lfPos != String::npos)
 		{
-			if (crPos != WString::npos)
+			if (crPos != String::npos)
 				newlinePos = std::min(lfPos, crPos);
 			else
 				newlinePos = lfPos;
 		}
-		else if (crPos != WString::npos)
+		else if (crPos != String::npos)
 			newlinePos = crPos;
 		else
 			newlinePos = -1;
@@ -199,7 +198,7 @@ namespace bs
 		}
 		else
 		{
-			WString firstLine = message.substr(0, newlinePos);
+			String firstLine = message.substr(0, newlinePos);
 
 			GUIContent messageContent(HString(firstLine), iconTexture);
 			mMessage->setContent(messageContent);

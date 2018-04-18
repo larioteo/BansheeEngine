@@ -3,7 +3,7 @@ options
 	priority = -10000;
 };
 
-technique SceneGrid
+shader SceneGrid
 {
 	depth
 	{

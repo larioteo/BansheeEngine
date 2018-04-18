@@ -59,7 +59,7 @@ namespace bs
 	void ScriptContextMenu::internal_AddItem(ScriptContextMenu* instance, MonoString* path, UINT32 callbackIdx,
 		ShortcutKey* shortcut)
 	{
-		WString nativePath = MonoUtil::monoToWString(path);
+		String nativePath = MonoUtil::monoToString(path);
 
 		SPtr<GUIContextMenu> contextMenu = instance->getInternal();
 		contextMenu->addMenuItem(nativePath, std::bind(&ScriptContextMenu::onContextMenuItemTriggered,
@@ -68,7 +68,7 @@ namespace bs
 
 	void ScriptContextMenu::internal_AddSeparator(ScriptContextMenu* instance, MonoString* path)
 	{
-		WString nativePath = MonoUtil::monoToWString(path);
+		String nativePath = MonoUtil::monoToString(path);
 
 		SPtr<GUIContextMenu> contextMenu = instance->getInternal();
 		contextMenu->addSeparator(nativePath, 0);
@@ -79,7 +79,7 @@ namespace bs
 		if (label == nullptr || name == nullptr)
 			return;
 
-		WString nativeLabel = MonoUtil::monoToWString(label);
+		String nativeLabel = MonoUtil::monoToString(label);
 		SPtr<GUIContextMenu> contextMenu = instance->getInternal();
 		contextMenu->setLocalizedName(nativeLabel, name->getInternalValue());
 	}

@@ -39,7 +39,7 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUICanvas* guiCanvas = GUICanvas::create(options, toString(MonoUtil::monoToWString(style)));
+		GUICanvas* guiCanvas = GUICanvas::create(options, MonoUtil::monoToString(style));
 
 		new (bs_alloc<ScriptGUICanvas>()) ScriptGUICanvas(instance, guiCanvas);
 	}
@@ -109,7 +109,7 @@ namespace bs
 		ScriptFont* font, UINT32 size, Color* color, UINT8 depth)
 	{
 		GUICanvas* canvas = (GUICanvas*)nativeInstance->getGUIElement();
-		WString nativeText = MonoUtil::monoToWString(text);
+		String nativeText = MonoUtil::monoToString(text);
 
 		HFont nativeFont;
 		if (font != nullptr)

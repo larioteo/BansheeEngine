@@ -24,7 +24,7 @@ namespace bs
 	HEvent ScriptScene::OnRefreshStartedConn;
 
 	UUID ScriptScene::ActiveSceneUUID;
-	WString ScriptScene::ActiveSceneName;
+	String ScriptScene::ActiveSceneName;
 	bool ScriptScene::IsGenericPrefab;
 
 	ScriptScene::ScriptScene(MonoObject* instance)
@@ -53,7 +53,7 @@ namespace bs
 
 	MonoObject* ScriptScene::internal_LoadScene(MonoString* path)
 	{
-		Path nativePath = MonoUtil::monoToWString(path);
+		Path nativePath = MonoUtil::monoToString(path);
 
 		HPrefab prefab = GameResourceManager::instance().load<Prefab>(nativePath, true);
 		if (prefab.isLoaded(false))
@@ -88,7 +88,7 @@ namespace bs
 
 		MonoMethod* nameMethod = metaData.scriptClass->getMethod("GetSceneName");
 		if (nameMethod != nullptr)
-			ActiveSceneName = MonoUtil::monoToWString((MonoString*)nameMethod->invoke(nullptr, nullptr));
+			ActiveSceneName = MonoUtil::monoToString((MonoString*)nameMethod->invoke(nullptr, nullptr));
 
 		MonoMethod* genericPrefabMethod = metaData.scriptClass->getMethod("GetIsGenericPrefab");
 		if (genericPrefabMethod != nullptr)
@@ -110,7 +110,7 @@ namespace bs
 		if (nameMethod != nullptr)
 		{
 			void* params[1];
-			params[0] = MonoUtil::wstringToMono(ActiveSceneName);
+			params[0] = MonoUtil::stringToMono(ActiveSceneName);
 
 			nameMethod->invoke(nullptr, params);
 		}

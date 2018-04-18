@@ -395,7 +395,7 @@ namespace bs
 		mIdxToSceneObjectMap[iconData.idx] = mActiveSO;
 	}
 
-	void GizmoManager::drawText(const Vector3& position, const WString& text, const HFont& font, UINT32 fontSize)
+	void GizmoManager::drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize)
 	{
 		HFont myFont = font;
 		if (myFont == nullptr)

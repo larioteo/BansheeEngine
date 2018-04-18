@@ -1,6 +1,6 @@
 #include "$EDITOR$/LineGizmo.bslinc"
 
-technique LineGizmo
+shader LineGizmo
 {
 	mixin LineGizmoBase;
 

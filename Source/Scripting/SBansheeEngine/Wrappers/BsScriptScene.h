@@ -36,7 +36,7 @@ namespace bs
 		static HEvent OnRefreshStartedConn;
 
 		static UUID ActiveSceneUUID;
-		static WString ActiveSceneName;
+		static String ActiveSceneName;
 		static bool IsGenericPrefab;
 
 		/************************************************************************/
