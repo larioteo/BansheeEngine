@@ -340,8 +340,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptCCollider>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptComponentBase* script__output;
-			script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+			ScriptComponentBase* script__output = nullptr;
+			if(vec__output[i])
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -362,8 +363,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptCCollider>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptComponentBase* script__output;
-			script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+			ScriptComponentBase* script__output = nullptr;
+			if(vec__output[i])
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -384,8 +386,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptCCollider>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptComponentBase* script__output;
-			script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+			ScriptComponentBase* script__output = nullptr;
+			if(vec__output[i])
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -411,8 +414,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptCCollider>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptComponentBase* script__output;
-			script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+			ScriptComponentBase* script__output = nullptr;
+			if(vec__output[i])
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else

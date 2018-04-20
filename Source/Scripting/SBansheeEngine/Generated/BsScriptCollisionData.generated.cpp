@@ -67,8 +67,9 @@ namespace bs
 		ScriptArray arraycollider = ScriptArray::create<ScriptCCollider>(arraySizecollider);
 		for(int i = 0; i < arraySizecollider; i++)
 		{
-			ScriptComponentBase* scriptcollider;
-			scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider[i]);
+			ScriptComponentBase* scriptcollider = nullptr;
+			if(value.collider[i])
+						scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider[i]);
 				if(scriptcollider != nullptr)
 				arraycollider.set(i, scriptcollider->getManagedInstance());
 			else

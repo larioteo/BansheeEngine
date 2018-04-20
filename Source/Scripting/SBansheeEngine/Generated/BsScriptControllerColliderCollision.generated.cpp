@@ -47,8 +47,9 @@ namespace bs
 	__ControllerColliderCollisionInterop ScriptControllerColliderCollision::toInterop(const ControllerColliderCollision& value)
 	{
 		__ControllerColliderCollisionInterop output;
-		ScriptComponentBase* scriptcollider;
-		scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider);
+		ScriptComponentBase* scriptcollider = nullptr;
+		if(value.collider)
+				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider);
 		MonoObject* tmpcollider;
 		if(scriptcollider != nullptr)
 			tmpcollider = scriptcollider->getManagedInstance();

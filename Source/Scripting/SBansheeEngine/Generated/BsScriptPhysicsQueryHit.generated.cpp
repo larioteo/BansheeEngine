@@ -54,8 +54,9 @@ namespace bs
 		output.uv = value.uv;
 		output.distance = value.distance;
 		output.triangleIdx = value.triangleIdx;
-		ScriptComponentBase* scriptcollider;
-		scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider);
+		ScriptComponentBase* scriptcollider = nullptr;
+		if(value.collider)
+				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider);
 		MonoObject* tmpcollider;
 		if(scriptcollider != nullptr)
 			tmpcollider = scriptcollider->getManagedInstance();
