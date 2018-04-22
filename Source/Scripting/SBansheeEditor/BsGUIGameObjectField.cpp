@@ -46,6 +46,7 @@ namespace bs
 
 		mDropButton->onDataDropped.connect(std::bind(&GUIGameObjectField::dataDropped, this, _1));
 		mDropButton->onClick.connect(std::bind(&GUIGameObjectField::onDropButtonClicked, this));
+		mDropButton->setContent(GUIContent(HString("None (" + mType + ")")));
 	}
 
 	GUIGameObjectField::~GUIGameObjectField()
@@ -184,7 +185,14 @@ namespace bs
 				return;
 
 			mInstanceId = value->getInstanceId();
-			mDropButton->setContent(GUIContent(HString(value->getName() + " (" + mType + ")")));
+
+			if(rtti_is_of_type<SceneObject>(value.get()))
+				mDropButton->setContent(GUIContent(HString(value->getName() + " (" + mType + ")")));
+			else
+			{
+				HComponent component = static_object_cast<Component>(value);
+				mDropButton->setContent(GUIContent(HString(component->SO()->getName() + " (" + mType + ")")));
+			}
 		}
 		else
 		{
@@ -257,6 +265,10 @@ namespace bs
 		}
 		else // A component
 		{
+			MonoClass* acceptedClass = MonoManager::instance().findClass(mNamespace, mType);
+
+			ScriptAssemblyManager& sam = ScriptAssemblyManager::instance();
+
 			for (UINT32 i = 0; i < draggedSceneObjects->numObjects; i++)
 			{
 				HSceneObject so = draggedSceneObjects->objects[i];
@@ -264,11 +276,10 @@ namespace bs
 				const Vector<HComponent>& components = so->getComponents();
 				for (auto& component : components)
 				{
-					if (component->getTypeId() == TID_ManagedComponent) // We only care about managed components
+					if (component->getTypeId() == TID_ManagedComponent)
 					{
 						HManagedComponent managedComponent = static_object_cast<ManagedComponent>(component);
 
-						MonoClass* acceptedClass = MonoManager::instance().findClass(mNamespace, mType);
 						MonoClass* providedClass = MonoManager::instance().findClass(managedComponent->getManagedNamespace(), managedComponent->getManagedTypeName());
 
 						if (acceptedClass != nullptr && providedClass != nullptr)
@@ -278,6 +289,15 @@ namespace bs
 								setValue(managedComponent, true);
 							}
 						}
+					}
+					else
+					{
+						BuiltinComponentInfo* info = sam.getBuiltinComponentInfo(component->getRTTI()->getRTTIId());
+						if (info == nullptr)
+							continue;
+
+						if (info->monoClass->isSubClassOf(acceptedClass))
+							setValue(component, true);
 					}
 				}
 			}

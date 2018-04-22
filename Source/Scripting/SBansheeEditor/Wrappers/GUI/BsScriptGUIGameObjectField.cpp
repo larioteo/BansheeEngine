@@ -10,7 +10,13 @@
 #include "GUI/BsGUIContent.h"
 #include "Wrappers/GUI/BsScriptGUIContent.h"
 #include "Wrappers/BsScriptGameObject.h"
+#include "Wrappers/BsScriptSceneObject.h"
+#include "Wrappers/BsScriptComponent.h"
+#include "Wrappers/BsScriptManagedComponent.h"
+#include "Scene/BsComponent.h"
+#include "Scene/BsSceneObject.h"
 #include "BsScriptGameObjectManager.h"
+#include "Reflection/BsRTTIType.h"
 
 using namespace std::placeholders;
 
@@ -103,12 +109,22 @@ namespace bs
 	MonoObject* ScriptGUIGameObjectField::nativeToManagedGO(const HGameObject& instance)
 	{
 		if (instance == nullptr)
-		{
 			return nullptr;
-		}
 		else
 		{
-			ScriptGameObjectBase* scriptGO = ScriptGameObjectManager::instance().getScriptGameObject(instance->getInstanceId());
+			ScriptGameObjectManager& sgom = ScriptGameObjectManager::instance();
+			ScriptGameObjectBase* scriptGO = nullptr;
+			if(rtti_is_of_type<SceneObject>(instance.get()))
+				scriptGO = sgom.getOrCreateScriptSceneObject(static_object_cast<SceneObject>(instance));
+			else // Component
+			{
+				HComponent component = static_object_cast<Component>(instance);
+				if (component->getTypeId() == TID_ManagedComponent)
+					scriptGO = sgom.getManagedScriptComponent(static_object_cast<ManagedComponent>(component));
+				else
+					scriptGO = sgom.getBuiltinScriptComponent(component);
+			}
+
 			if (scriptGO == nullptr)
 				return nullptr;
 			else
