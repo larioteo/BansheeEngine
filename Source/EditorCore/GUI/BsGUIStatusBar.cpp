@@ -105,7 +105,7 @@ namespace bs
 			content << name;
 
 		if (modified)
-			content << L"*";
+			content << "*";
 
 		mScene->setContent(HString(content.str()));
 	}
