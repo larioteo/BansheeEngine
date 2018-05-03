@@ -12,7 +12,11 @@ namespace BansheeEngine
 	public partial class ShadowSettings : ScriptObject
 	{
 		private ShadowSettings(bool __dummy0) { }
-		protected ShadowSettings() { }
+
+		public ShadowSettings()
+		{
+			Internal_ShadowSettings(this);
+		}
 
 		/// <summary>
 		/// Maximum distance that directional light shadows are allowed to render at. Decreasing the distance can yield higher 
@@ -59,6 +63,8 @@ namespace BansheeEngine
 			set { Internal_setshadowFilteringQuality(mCachedPtr, value); }
 		}
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_ShadowSettings(ShadowSettings managedInstance);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getdirectionalShadowDistance(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

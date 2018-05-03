@@ -20,6 +20,7 @@ namespace bs
 	private:
 		SPtr<ShadowSettings> mInternal;
 
+		static void Internal_ShadowSettings(MonoObject* managedInstance);
 		static float Internal_getdirectionalShadowDistance(ScriptShadowSettings* thisPtr);
 		static void Internal_setdirectionalShadowDistance(ScriptShadowSettings* thisPtr, float value);
 		static uint32_t Internal_getnumCascades(ScriptShadowSettings* thisPtr);

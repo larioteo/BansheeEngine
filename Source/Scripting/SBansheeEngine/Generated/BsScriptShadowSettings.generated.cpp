@@ -13,6 +13,7 @@ namespace bs
 
 	void ScriptShadowSettings::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_ShadowSettings", (void*)&ScriptShadowSettings::Internal_ShadowSettings);
 		metaData.scriptClass->addInternalCall("Internal_getdirectionalShadowDistance", (void*)&ScriptShadowSettings::Internal_getdirectionalShadowDistance);
 		metaData.scriptClass->addInternalCall("Internal_setdirectionalShadowDistance", (void*)&ScriptShadowSettings::Internal_setdirectionalShadowDistance);
 		metaData.scriptClass->addInternalCall("Internal_getnumCascades", (void*)&ScriptShadowSettings::Internal_getnumCascades);
@@ -35,6 +36,12 @@ namespace bs
 		new (bs_alloc<ScriptShadowSettings>()) ScriptShadowSettings(managedInstance, value);
 		return managedInstance;
 	}
+	void ScriptShadowSettings::Internal_ShadowSettings(MonoObject* managedInstance)
+	{
+		SPtr<ShadowSettings> instance = bs_shared_ptr_new<ShadowSettings>();
+		new (bs_alloc<ScriptShadowSettings>())ScriptShadowSettings(managedInstance, instance);
+	}
+
 	float ScriptShadowSettings::Internal_getdirectionalShadowDistance(ScriptShadowSettings* thisPtr)
 	{
 		float tmp__output;
