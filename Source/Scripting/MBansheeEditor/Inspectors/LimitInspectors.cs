@@ -46,11 +46,11 @@ namespace BansheeEditor
         {
             this.spring = spring;
 
-            stiffnessField.OnChanged += x => { spring.stiffness = x; MarkAsModified(); };
+            stiffnessField.OnChanged += x => { this.spring.stiffness = x; MarkAsModified(); };
             stiffnessField.OnFocusLost += ConfirmModify;
             stiffnessField.OnConfirmed += ConfirmModify;
 
-            dampingField.OnChanged += x => { spring.damping = x; MarkAsModified(); };
+            dampingField.OnChanged += x => { this.spring.damping = x; MarkAsModified(); };
             dampingField.OnFocusLost += ConfirmModify;
             dampingField.OnConfirmed += ConfirmModify;
 
