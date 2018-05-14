@@ -15,14 +15,14 @@ namespace BansheeEngine
 	public enum MeshUsage
 	{
 		/// <summary>Specify for a mesh that is not often updated from the CPU.</summary>
-		Static = 0,
+		Static = 1,
+		/// <summary>Specify for a mesh that is often updated from the CPU.</summary>
+		Dynamic = 2,
 		/// <summary>
 		/// All mesh data will also be cached in CPU memory, making it available for fast read access from the CPU. Can be  
 		/// combined with other usage flags.
 		/// </summary>
-		CPUCached = 4096,
-		/// <summary>Specify for a mesh that is often updated from the CPU.</summary>
-		Dynamic = 1
+		CPUCached = 4096
 	}
 
 	/** @} */
