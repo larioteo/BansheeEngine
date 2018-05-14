@@ -51,16 +51,20 @@ namespace bs
 
 	void ScriptCCharacterController::onColliderHit(const ControllerColliderCollision& p0)
 	{
-		__ControllerColliderCollisionInterop tmpp0;
-		tmpp0 = ScriptControllerColliderCollision::toInterop(p0);
-		MonoUtil::invokeThunk(onColliderHitThunk, getManagedInstance(), &tmpp0);
+		MonoObject* tmpp0;
+		__ControllerColliderCollisionInterop interopp0;
+		interopp0 = ScriptControllerColliderCollision::toInterop(p0);
+		tmpp0 = ScriptControllerColliderCollision::box(interopp0);
+		MonoUtil::invokeThunk(onColliderHitThunk, getManagedInstance(), tmpp0);
 	}
 
 	void ScriptCCharacterController::onControllerHit(const ControllerControllerCollision& p0)
 	{
-		__ControllerControllerCollisionInterop tmpp0;
-		tmpp0 = ScriptControllerControllerCollision::toInterop(p0);
-		MonoUtil::invokeThunk(onControllerHitThunk, getManagedInstance(), &tmpp0);
+		MonoObject* tmpp0;
+		__ControllerControllerCollisionInterop interopp0;
+		interopp0 = ScriptControllerControllerCollision::toInterop(p0);
+		tmpp0 = ScriptControllerControllerCollision::box(interopp0);
+		MonoUtil::invokeThunk(onControllerHitThunk, getManagedInstance(), tmpp0);
 	}
 	CharacterCollisionFlag ScriptCCharacterController::Internal_move(ScriptCCharacterController* thisPtr, Vector3* displacement)
 	{

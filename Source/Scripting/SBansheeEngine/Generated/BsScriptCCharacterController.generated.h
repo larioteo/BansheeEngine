@@ -24,9 +24,9 @@ namespace bs
 		void onColliderHit(const ControllerColliderCollision& p0);
 		void onControllerHit(const ControllerControllerCollision& p0);
 
-		typedef void(BS_THUNKCALL *onColliderHitThunkDef) (MonoObject*, __ControllerColliderCollisionInterop* p0, MonoException**);
+		typedef void(BS_THUNKCALL *onColliderHitThunkDef) (MonoObject*, MonoObject* p0, MonoException**);
 		static onColliderHitThunkDef onColliderHitThunk;
-		typedef void(BS_THUNKCALL *onControllerHitThunkDef) (MonoObject*, __ControllerControllerCollisionInterop* p0, MonoException**);
+		typedef void(BS_THUNKCALL *onControllerHitThunkDef) (MonoObject*, MonoObject* p0, MonoException**);
 		static onControllerHitThunkDef onControllerHitThunk;
 
 		static CharacterCollisionFlag Internal_move(ScriptCCharacterController* thisPtr, Vector3* displacement);

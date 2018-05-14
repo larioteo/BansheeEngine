@@ -72,23 +72,29 @@ namespace bs
 
 	void ScriptCRigidbody::onCollisionBegin(const CollisionData& p0)
 	{
-		__CollisionDataInterop tmpp0;
-		tmpp0 = ScriptCollisionData::toInterop(p0);
-		MonoUtil::invokeThunk(onCollisionBeginThunk, getManagedInstance(), &tmpp0);
+		MonoObject* tmpp0;
+		__CollisionDataInterop interopp0;
+		interopp0 = ScriptCollisionData::toInterop(p0);
+		tmpp0 = ScriptCollisionData::box(interopp0);
+		MonoUtil::invokeThunk(onCollisionBeginThunk, getManagedInstance(), tmpp0);
 	}
 
 	void ScriptCRigidbody::onCollisionStay(const CollisionData& p0)
 	{
-		__CollisionDataInterop tmpp0;
-		tmpp0 = ScriptCollisionData::toInterop(p0);
-		MonoUtil::invokeThunk(onCollisionStayThunk, getManagedInstance(), &tmpp0);
+		MonoObject* tmpp0;
+		__CollisionDataInterop interopp0;
+		interopp0 = ScriptCollisionData::toInterop(p0);
+		tmpp0 = ScriptCollisionData::box(interopp0);
+		MonoUtil::invokeThunk(onCollisionStayThunk, getManagedInstance(), tmpp0);
 	}
 
 	void ScriptCRigidbody::onCollisionEnd(const CollisionData& p0)
 	{
-		__CollisionDataInterop tmpp0;
-		tmpp0 = ScriptCollisionData::toInterop(p0);
-		MonoUtil::invokeThunk(onCollisionEndThunk, getManagedInstance(), &tmpp0);
+		MonoObject* tmpp0;
+		__CollisionDataInterop interopp0;
+		interopp0 = ScriptCollisionData::toInterop(p0);
+		tmpp0 = ScriptCollisionData::box(interopp0);
+		MonoUtil::invokeThunk(onCollisionEndThunk, getManagedInstance(), tmpp0);
 	}
 	void ScriptCRigidbody::Internal_move(ScriptCRigidbody* thisPtr, Vector3* position)
 	{
