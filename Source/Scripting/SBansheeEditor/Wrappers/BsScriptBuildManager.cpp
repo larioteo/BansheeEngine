@@ -187,14 +187,14 @@ namespace bs
 
 			IconData textures[] =
 			{ 
-				{ 16 },
-				{ 32 },
-				{ 48 },
-				{ 64 },
-				{ 96 },
-				{ 128 },
-				{ 192 }, 
-				{ 256 } 
+				{ 16, nullptr },
+				{ 32, nullptr },
+				{ 48, nullptr },
+				{ 64, nullptr },
+				{ 96, nullptr },
+				{ 128, nullptr },
+				{ 192, nullptr },
+				{ 256, nullptr }
 			};
 
 			HTexture icon = gResources().load(winPlatformInfo->icon);
