@@ -4,6 +4,8 @@ set(BS_BANSHEE3D_INC_NOFILTER
 
 set(BS_BANSHEE3D_SRC_NOFILTER
 	"BsEditorExec.cpp"
+	"BansheeEditorExec.rc"
+	"BansheeIcon.ico"	
 )
 
 source_group("Header Files" FILES ${BS_BANSHEE3D_INC_NOFILTER})
