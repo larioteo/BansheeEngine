@@ -70,7 +70,6 @@ namespace bs
 	{
 	public:
 		BuiltinEditorResources();
-		~BuiltinEditorResources();
 
 		/**	Returns the default editor GUI skin. */
 		const HGUISkin& getSkin() const { return mSkin; }
@@ -190,9 +189,6 @@ namespace bs
 		/**	Generates the default editor skin and all GUI element styles. */
 		SPtr<GUISkin> generateGUISkin();
 
-		/**	Loads a GUI skin texture with the specified filename. */
-		HSpriteTexture getGUITexture(const String& name) const;
-
 		/**	Loads a GUI icon with the specified filename. */
 		HSpriteTexture getGUIIcon(const String& name) const;
 
@@ -221,12 +217,14 @@ namespace bs
 
 		SPtr<ResourceManifest> mResourceManifest;
 
-		static const char* DataListFile;
 		static const char* ShaderFolder;
 		static const char* SkinFolder;
 		static const char* IconFolder;
 		static const char* ShaderIncludeFolder;
 		static const char* SpriteSubFolder;
+
+		static constexpr const char* DATA_LIST_JSON = "DataList.json";
+		static constexpr const char* GUI_SKIN_JSON = "GUISkin.json";
 
 		Path BuiltinDataFolder;
 		Path EditorSkinFolder;
@@ -253,6 +251,7 @@ namespace bs
 		static const Color TextActiveColor;
 
 		static const String GUISkinFile;
+		static const String XButtonNormalTex;
 
 		static const String FolderIconTex;
 		static const String MeshIconTex;
@@ -270,192 +269,6 @@ namespace bs
 		static const String PhysicsMeshIconTex;
 		static const String AudioClipIconTex;
 		static const String AnimationClipIconTex;
-
-		static const String WindowBackgroundTex;
-
-		static const String WindowFrameNormal;
-		static const String WindowFrameFocused;
-
-		static const String TabBarBackgroundTex;
-		static const String TitleBarBackgroundTex;
-
-		static const String CloseButtonNormalTex;
-		static const String CloseButtonHoverTex;
-		static const String CloseButtonActiveTex;
-
-		static const String MinButtonNormalTex;
-		static const String MinButtonHoverTex;
-		static const String MinButtonActiveTex;
-
-		static const String MaxButtonNormalTex;
-		static const String MaxButtonHoverTex;
-		static const String MaxButtonActiveTex;
-
-		static const String TabButtonNormalTex;
-		static const String TabButtonFocusedTex;
-
-		static const String ButtonNormalTex;
-		static const String ButtonHoverTex;
-		static const String ButtonActiveTex;
-
-		static const String ButtonLeftNormalTex;
-		static const String ButtonLeftHoverTex;
-		static const String ButtonLeftActiveTex;
-
-		static const String ButtonRightNormalTex;
-		static const String ButtonRightHoverTex;
-		static const String ButtonRightActiveTex;
-
-		static const String ToggleNormalTex;
-		static const String ToggleHoverTex;
-		static const String ToggleNormalOnTex;
-		static const String ToggleHoverOnTex;
-
-		static const String ObjectDropBtnNormalTex;
-		static const String ObjectDropBtnNormalOnTex;
-		static const String ObjectClearBtnNormalTex;
-		static const String ObjectClearBtnHoverTex;
-		static const String ObjectClearBtnActiveTex;
-
-		static const String SliderHBackgroundTex;
-		static const String SliderHFillTex;
-		static const String SliderVBackgroundTex;
-		static const String SliderVFillTex;
-		static const String SliderHandleNormalTex;
-		static const String SliderHandleHoverTex;
-		static const String SliderHandleActiveTex;
-
-		static const String FoldoutOpenNormalTex;
-		static const String FoldoutOpenHoverTex;
-		static const String FoldoutOpenActiveTex;
-		static const String FoldoutClosedNormalTex;
-		static const String FoldoutClosedHoverTex;
-		static const String FoldoutClosedActiveTex;
-
-		static const String InputBoxNormalTex;
-		static const String InputBoxHoverTex;
-		static const String InputBoxFocusedTex;
-
-		static const String ScrollBarUpNormalTex;
-		static const String ScrollBarUpHoverTex;
-		static const String ScrollBarUpActiveTex;
-
-		static const String ScrollBarDownNormalTex;
-		static const String ScrollBarDownHoverTex;
-		static const String ScrollBarDownActiveTex;
-
-		static const String ScrollBarLeftNormalTex;
-		static const String ScrollBarLeftHoverTex;
-		static const String ScrollBarLeftActiveTex;
-
-		static const String ScrollBarRightNormalTex;
-		static const String ScrollBarRightHoverTex;
-		static const String ScrollBarRightActiveTex;
-
-		static const String ScrollBarHandleHorzNormalTex;
-		static const String ScrollBarHandleHorzHoverTex;
-		static const String ScrollBarHandleHorzActiveTex;
-
-		static const String ScrollBarHandleVertNormalTex;
-		static const String ScrollBarHandleVertHoverTex;
-		static const String ScrollBarHandleVertActiveTex;
-
-		static const String ScrollBarResizeableHandleHorzNormalTex;
-		static const String ScrollBarResizeableHandleHorzHoverTex;
-		static const String ScrollBarResizeableHandleHorzActiveTex;
-
-		static const String ScrollBarResizeableHandleVertNormalTex;
-		static const String ScrollBarResizeableHandleVertHoverTex;
-		static const String ScrollBarResizeableHandleVertActiveTex;
-
-		static const String ScrollBarHBgTex;
-		static const String ScrollBarVBgTex;
-
-		static const String DropDownBtnNormalTex;
-		static const String DropDownBtnHoverTex;
-		static const String DropDownBtnActiveTex;
-
-		static const String DropDownBoxBgTex;
-		static const String DropDownBoxSideBgTex;
-		static const String DropDownBoxHandleTex;
-
-		static const String DropDownBoxEntryNormalTex;
-		static const String DropDownBoxEntryHoverTex;
-
-		static const String DropDownBoxEntryToggleNormalTex;
-		static const String DropDownBoxEntryToggleHoverTex;
-		static const String DropDownBoxEntryToggleNormalOnTex;
-		static const String DropDownBoxEntryToggleHoverOnTex;
-
-		static const String DropDownBoxBtnUpNormalTex;
-		static const String DropDownBoxBtnUpHoverTex;
-
-		static const String DropDownBoxBtnDownNormalTex;
-		static const String DropDownBoxBtnDownHoverTex;
-
-		static const String DropDownBoxEntryExpNormalTex;
-		static const String DropDownBoxEntryExpHoverTex;
-
-		static const String DropDownSeparatorTex;
-
-		static const String MenuBarBgTex;
-		static const String MenuBarBansheeLogoTex;
-
-		static const String MenuBarBtnNormalTex;
-		static const String MenuBarBtnHoverTex;
-		static const String MenuBarBtnActiveTex;
-
-		static const String MenuBarLineNormalTex;
-		static const String MenuBarLineActiveTex;
-
-		static const String ToolBarBtnNormalTex;
-		static const String ToolBarBtnHoverTex;
-		static const String ToolBarBtnActiveTex;
-
-		static const String ToolBarSeparatorTex;
-
-		static const String TreeViewExpandButtonOffNormal;
-		static const String TreeViewExpandButtonOffHover;
-		static const String TreeViewExpandButtonOnNormal;
-		static const String TreeViewExpandButtonOnHover;
-
-		static const String TreeViewHighlightBackground;
-		static const String TreeViewEditBox;
-
-		static const String TreeViewElementHighlight;
-		static const String TreeViewElementSepHighlight;
-
-		static const String ColorPickerSliderHorzHandleTex;
-		static const String ColorPickerSliderVertHandleTex;
-		static const String ColorPickerSlider2DHandleTex;
-
-		static const String ProgressBarFillTex;
-		static const String ProgressBarBgTex;
-
-		static const String SelectionAreaTex;
-		static const String SelectionBgTex;
-
-		static const String TextureDropTex;
-		static const String TextureDropOnTex;
-
-		static const String XButtonNormalTex;
-		static const String XButtonHoverTex;
-		static const String XButtonActiveTex;
-
-		static const String StatusBarBgTex;
-		static const String ScrollAreaBgTex;
-
-		static const String InspectorTitleBgTex;
-		static const String InspectorContentBgTex;
-		static const String InspectorContentBgAlternateTex;
-
-		static const String LibraryEntryFirstBgTex;
-		static const String LibraryEntryBgTex;
-		static const String LibraryEntryLastBgTex;
-
-		static const String LibraryEntryVertFirstBgTex;
-		static const String LibraryEntryVertBgTex;
-		static const String LibraryEntryVertLastBgTex;
 
 		static const String ShaderDockOverlayFile;
 		static const String ShaderSceneGridFile;

@@ -18,6 +18,8 @@ Data/*
 !Data/Layout.asset
 !Data/Shaders
 Data/Raw/*
+!Data/Raw/DataList.json
+!Data/Raw/GUISkin.json
 !Data/Raw/Shaders
 Documentation/html
 /Build

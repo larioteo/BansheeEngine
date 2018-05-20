@@ -375,7 +375,7 @@ namespace bs
 		Path destRoot = BuildManager::instance().getBuildFolder(BuildFolder::DestinationRoot, platformInfo->type);
 		Path destIconFile = destRoot;
 		destIconFile.append(iconFolder);
-		destIconFile.setFilename(BuiltinResources::IconTextureName + ".asset");
+		destIconFile.setFilename(String(BuiltinResources::IconTextureName) + ".asset");
 
 		switch (platformInfo->type)
 		{
