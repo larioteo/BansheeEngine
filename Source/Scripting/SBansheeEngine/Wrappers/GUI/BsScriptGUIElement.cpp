@@ -107,6 +107,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_SetFocus", (void*)&ScriptGUIElement::internal_setFocus);
 		metaData.scriptClass->addInternalCall("Internal_GetBlocking", (void*)&ScriptGUIElement::internal_getBlocking);
 		metaData.scriptClass->addInternalCall("Internal_SetBlocking", (void*)&ScriptGUIElement::internal_setBlocking);
+		metaData.scriptClass->addInternalCall("Internal_GetAcceptsKeyFocus", (void*)&ScriptGUIElement::internal_getAcceptsKeyFocus);
+		metaData.scriptClass->addInternalCall("Internal_SetAcceptsKeyFocus", (void*)&ScriptGUIElement::internal_setAcceptsKeyFocus);
 		metaData.scriptClass->addInternalCall("Internal_GetBounds", (void*)&ScriptGUIElement::internal_getBounds);
 		metaData.scriptClass->addInternalCall("Internal_SetBounds", (void*)&ScriptGUIElement::internal_setBounds);
 		metaData.scriptClass->addInternalCall("Internal_GetVisibleBounds", (void*)&ScriptGUIElement::internal_getVisibleBounds);
@@ -203,7 +205,7 @@ namespace bs
 		if (guiElemBase->_getType() == GUIElementBase::Type::Element)
 		{
 			GUIElement* guiElem = static_cast<GUIElement*>(guiElemBase);
-			return guiElem->getBlockPointerEvents();
+			return !guiElem->getOptionFlags().isSet(GUIElementOption::ClickThrough);
 		}
 
 		return false;
@@ -218,7 +220,49 @@ namespace bs
 		if (guiElemBase->_getType() == GUIElementBase::Type::Element)
 		{
 			GUIElement* guiElem = static_cast<GUIElement*>(guiElemBase);
-			guiElem->setBlockPointerEvents(blocking);
+
+			GUIElementOptions options = guiElem->getOptionFlags();
+			if(blocking)
+				options.unset(GUIElementOption::ClickThrough);
+			else
+				options.set(GUIElementOption::ClickThrough);
+
+			guiElem->setOptionFlags(options);
+		}
+	}
+
+	bool ScriptGUIElement::internal_getAcceptsKeyFocus(ScriptGUIElementBaseTBase* nativeInstance)
+	{
+		if (nativeInstance->isDestroyed())
+			return false;
+
+		GUIElementBase* guiElemBase = nativeInstance->getGUIElement();
+		if (guiElemBase->_getType() == GUIElementBase::Type::Element)
+		{
+			GUIElement* guiElem = static_cast<GUIElement*>(guiElemBase);
+			return guiElem->getOptionFlags().isSet(GUIElementOption::AcceptsKeyFocus);
+		}
+
+		return false;
+	}
+
+	void ScriptGUIElement::internal_setAcceptsKeyFocus(ScriptGUIElementBaseTBase* nativeInstance, bool accepts)
+	{
+		if (nativeInstance->isDestroyed())
+			return;
+
+		GUIElementBase* guiElemBase = nativeInstance->getGUIElement();
+		if (guiElemBase->_getType() == GUIElementBase::Type::Element)
+		{
+			GUIElement* guiElem = static_cast<GUIElement*>(guiElemBase);
+
+			GUIElementOptions options = guiElem->getOptionFlags();
+			if(accepts)
+				options.set(GUIElementOption::AcceptsKeyFocus);
+			else
+				options.unset(GUIElementOption::AcceptsKeyFocus);
+
+			guiElem->setOptionFlags(options);
 		}
 	}
 

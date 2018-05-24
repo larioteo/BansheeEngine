@@ -45,16 +45,15 @@ namespace bs
 		mClearButton = GUIButton::create(HString(""), getSubStyleName(BuiltinEditorResources::ObjectFieldClearBtnStyleName));
 		mClearButton->onClick.connect(std::bind(&GUIResourceField::onClearButtonClicked, this));
 
+		GUIElementOptions clearBtnOptions = mClearButton->getOptionFlags();
+		clearBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mClearButton->setOptionFlags(clearBtnOptions);
+
 		mLayout->addElement(mDropButton);
 		mLayout->addElement(mClearButton);
 
 		mDropButton->onDataDropped.connect(std::bind(&GUIResourceField::dataDropped, this, _1));
 		mDropButton->onClick.connect(std::bind(&GUIResourceField::onDropButtonClicked, this));
-	}
-
-	GUIResourceField::~GUIResourceField()
-	{
-
 	}
 
 	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,

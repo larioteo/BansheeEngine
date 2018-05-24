@@ -804,6 +804,7 @@ namespace BansheeEditor
             enableShadowsField.OnChanged += x => { this.settings.EnableShadows = x; MarkAsModified(); ConfirmModify(); };
             layout.AddElement(enableShadowsField);
 
+            shadowsFoldout.AcceptsKeyFocus = false;
             shadowsFoldout.OnToggled += x =>
             {
                 properties.SetBool("shadows_Expanded", x);
@@ -825,6 +826,7 @@ namespace BansheeEditor
             enableAutoExposureField.OnChanged += x => { this.settings.EnableAutoExposure = x; MarkAsModified(); ConfirmModify(); };
             layout.AddElement(enableAutoExposureField);
 
+            autoExposureFoldout.AcceptsKeyFocus = false;
             autoExposureFoldout.OnToggled += x =>
             {
                 properties.SetBool("autoExposure_Expanded", x);
@@ -847,6 +849,7 @@ namespace BansheeEditor
             layout.AddElement(enableToneMappingField);
 
             //// Tonemapping settings
+            toneMappingFoldout.AcceptsKeyFocus = false;
             toneMappingFoldout.OnToggled += x =>
             {
                 properties.SetBool("toneMapping_Expanded", x);
@@ -865,6 +868,7 @@ namespace BansheeEditor
             }
 
             //// White balance settings
+            whiteBalanceFoldout.AcceptsKeyFocus = false;
             whiteBalanceFoldout.OnToggled += x =>
             {
                 properties.SetBool("whiteBalance_Expanded", x);
@@ -883,6 +887,7 @@ namespace BansheeEditor
             }
 
             //// Color grading settings
+            colorGradingFoldout.AcceptsKeyFocus = false;
             colorGradingFoldout.OnToggled += x =>
             {
                 properties.SetBool("colorGrading_Expanded", x);
@@ -909,6 +914,7 @@ namespace BansheeEditor
             layout.AddElement(exposureScaleField);
 
             //// Depth of field settings
+            depthOfFieldFoldout.AcceptsKeyFocus = false;
             depthOfFieldFoldout.OnToggled += x =>
             {
                 properties.SetBool("depthOfField_Expanded", x);
@@ -927,6 +933,7 @@ namespace BansheeEditor
             }
 
             //// Ambient occlusion settings
+            ambientOcclusionFoldout.AcceptsKeyFocus = false;
             ambientOcclusionFoldout.OnToggled += x =>
             {
                 properties.SetBool("ambientOcclusion_Expanded", x);
@@ -945,6 +952,7 @@ namespace BansheeEditor
             }
 
             //// Screen space reflections settings
+            screenSpaceReflectionsFoldout.AcceptsKeyFocus = false;
             screenSpaceReflectionsFoldout.OnToggled += x =>
             {
                 properties.SetBool("screenSpaceReflections_Expanded", x);

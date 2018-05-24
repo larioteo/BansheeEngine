@@ -252,6 +252,7 @@ namespace BansheeEditor
                     Persistent.SetBool("renderSettings_Expanded", x);
                     renderSettingsLayout.Active = x;
                 };
+                renderSettingsFoldout.AcceptsKeyFocus = false;
                 Layout.AddElement(renderSettingsFoldout);
 
                 renderSettingsLayout = Layout.AddLayoutX();

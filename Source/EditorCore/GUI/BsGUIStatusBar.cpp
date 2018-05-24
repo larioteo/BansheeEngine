@@ -33,6 +33,10 @@ namespace bs
 		mProject = GUILabel::create(HString("Project: None"), GUIOptions(GUIOption::fixedWidth(200)));
 		mCompiling = GUILabel::create(HString("Compiling..."), GUIOptions(GUIOption::fixedWidth(100)));
 
+		GUIElementOptions msgBtnOptions = mMessage->getOptionFlags();
+		msgBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mMessage->setOptionFlags(msgBtnOptions);
+
 		GUILayoutY* vertLayout = mPanel->addNewElement<GUILayoutY>();
 		vertLayout->addNewElement<GUIFixedSpace>(3);
 		GUILayoutX* horzLayout = vertLayout->addNewElement<GUILayoutX>();

@@ -830,6 +830,7 @@ namespace BansheeEditor
             catchAll.Bounds = contentBounds;
             catchAll.OnClick += OnCatchAllClicked;
             catchAll.SetContextMenu(entryContextMenu);
+            catchAll.AcceptsKeyFocus = false;
 
             content.Underlay.AddElement(catchAll);
 
@@ -847,6 +848,7 @@ namespace BansheeEditor
             focusCatcher.OnFocusGained += () => hasContentFocus = true;
             focusCatcher.OnFocusLost += () => hasContentFocus = false;
             focusCatcher.Bounds = focusBounds;
+            focusCatcher.AcceptsKeyFocus = false;
 
             GUIPanel focusPanel = GUI.AddPanel(-3);
             focusPanel.AddElement(focusCatcher);

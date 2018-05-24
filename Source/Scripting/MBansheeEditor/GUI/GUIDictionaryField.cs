@@ -140,6 +140,7 @@ namespace BansheeEditor
 
                 guiFoldout = new GUIToggle(title, EditorStyles.Foldout);
                 guiFoldout.Value = isExpanded;
+                guiFoldout.AcceptsKeyFocus = false;
                 guiFoldout.OnToggled += x => ToggleFoldout(x, false);
 
                 GUIContent clearIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear), 

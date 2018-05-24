@@ -179,6 +179,7 @@ namespace BansheeEditor
             overlayBtn.OnClick += () => OnEntryClicked(hoistedPath);
             overlayBtn.OnDoubleClick += () => OnEntryDoubleClicked(hoistedPath);
             overlayBtn.SetContextMenu(owner.Window.ContextMenu);
+            overlayBtn.AcceptsKeyFocus = false;
 
             owner.Overlay.AddElement(overlayBtn);
 

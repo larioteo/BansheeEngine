@@ -236,6 +236,7 @@ namespace BansheeEditor
                 string projectPath = recentProjects[i].path;
 
                 GUIToggle entryBtn = new GUIToggle(projectPath, grp, EditorStylesInternal.SelectableLabel);
+                entryBtn.AcceptsKeyFocus = false;
                 entryBtn.OnClick += () => OnEntryClicked(projectPath);
                 entryBtn.OnDoubleClick += () => OnEntryDoubleClicked(projectPath);
 

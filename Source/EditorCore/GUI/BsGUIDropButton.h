@@ -51,16 +51,16 @@ namespace bs
 		/** Triggered when drag and drop operation finishes while over the button and is of the correct type. */
 		Event<void(void*)> onDataDropped; 
 	protected:
-		virtual ~GUIDropButton();
+		virtual ~GUIDropButton() = default;
 
 	protected:
 		GUIDropButton(UINT32 dragType, const String& styleName, const GUIDimensions& dimensions);
 
 		/** @copydoc GUIButtonBase::_mouseEvent */
-		virtual bool _mouseEvent(const GUIMouseEvent& ev) override;
+		bool _mouseEvent(const GUIMouseEvent& ev) override;
 
 		/** @copydoc GUIButtonBase::_acceptDragAndDrop */
-		virtual bool _acceptDragAndDrop(const Vector2I position, UINT32 typeId) const override;
+		bool _acceptDragAndDrop(const Vector2I position, UINT32 typeId) const override;
 
 		UINT32 mDragType;
 	};

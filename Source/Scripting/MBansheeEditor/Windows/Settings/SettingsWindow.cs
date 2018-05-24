@@ -43,6 +43,9 @@ namespace BansheeEditor
             GUIToggle projectFoldout = new GUIToggle(new LocEdString("Project"), EditorStyles.Foldout);
             GUIToggle editorFoldout = new GUIToggle(new LocEdString("Editor"), EditorStyles.Foldout);
 
+            projectFoldout.AcceptsKeyFocus = false;
+            editorFoldout.AcceptsKeyFocus = false;
+
             defaultHandleSizeField = new GUIFloatField(new LocEdString("Handle size"), 200);
             defaultHandleSizeField.OnChanged += (x) => { EditorSettings.DefaultHandleSize = x; };
 

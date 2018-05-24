@@ -81,24 +81,28 @@ namespace BansheeEditor
                 };
             }
 
+            linearLimitFoldout.AcceptsKeyFocus = false;
             linearLimitFoldout.OnToggled += x =>
             {
                 linearLimitLayout.Active = x;
                 Persistent.SetBool("linearLimit_Expanded", x);
             };
 
+            twistLimitFoldout.AcceptsKeyFocus = false;
             twistLimitFoldout.OnToggled += x =>
             {
                 twistLimitLayout.Active = x;
                 Persistent.SetBool("twistLimit_Expanded", x);
             };
 
+            swingLimitFoldout.AcceptsKeyFocus = false;
             swingLimitFoldout.OnToggled += x =>
             {
                 swingLimitLayout.Active = x;
                 Persistent.SetBool("swingLimit_Expanded", x);
             };
 
+            driveFoldout.AcceptsKeyFocus = false;
             driveFoldout.OnToggled += x =>
             {
                 driveLayout.Active = x;

@@ -218,6 +218,8 @@ namespace BansheeEditor
                     : EditorStylesInternal.InspectorContentBg;
 
                 GUIToggle foldout = new GUIToggle(new LocEdString("Style"), EditorStyles.Foldout);
+                foldout.AcceptsKeyFocus = false;
+
                 GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
 
                 layout.AddElement(foldout);
@@ -476,6 +478,7 @@ namespace BansheeEditor
                     textureField = new GUIResourceField(typeof(SpriteTexture), new LocEdString("Texture"));
                     textColorField = new GUIColorField(new LocEdString("Text color"));
 
+                    foldout.AcceptsKeyFocus = false;
                     foldout.OnToggled += x =>
                     {
                         textureField.Active = x;

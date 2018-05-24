@@ -118,6 +118,15 @@ namespace BansheeEngine
         }
 
         /// <summary>
+        /// Determines if the element can be navigated to by using keys/buttons (e.g. the 'Tab' button on the keyboard.
+        /// </summary>
+        public bool AcceptsKeyFocus
+        {
+            get { return Internal_GetAcceptsKeyFocus(mCachedPtr); }
+            set { Internal_SetAcceptsKeyFocus(mCachedPtr, value); }
+        }
+
+        /// <summary>
         /// Destroys this element and all its children. Removes the element from parent layout/panel.
         /// </summary>
         /// <remarks>
@@ -250,6 +259,12 @@ namespace BansheeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetBlocking(IntPtr nativeInstance, bool blocking);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool Internal_GetAcceptsKeyFocus(IntPtr nativeInstance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetAcceptsKeyFocus(IntPtr nativeInstance, bool accepts);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern GUILayout Internal_GetParent(IntPtr nativeInstance);

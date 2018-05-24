@@ -83,6 +83,18 @@ namespace bs
 		mCloseBtn = GUIButton::create(HString(""), "WinCloseBtn");
 		mSplitterLine = GUITexture::create(TextureScaleMode::StretchToFit, getLineStyleType());
 
+		GUIElementOptions minBtnOptions = mMinBtn->getOptionFlags();
+		minBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mMinBtn->setOptionFlags(minBtnOptions);
+
+		GUIElementOptions maxBtnOptions = mMaxBtn->getOptionFlags();
+		maxBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mMaxBtn->setOptionFlags(maxBtnOptions);
+
+		GUIElementOptions closeBtnOptions = mCloseBtn->getOptionFlags();
+		closeBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mCloseBtn->setOptionFlags(closeBtnOptions);
+
 		GUILayout* mainLayout = mMainPanel->addNewElement<GUILayoutX>();
 		mainLayout->addElement(mLogoTexture);
 		mainLayout->addNewElement<GUIFixedSpace>(5);
@@ -206,6 +218,10 @@ namespace bs
 		GUIButton* newButton = GUIButton::create(HString(name), getMenuItemButtonStyleType());
 		newButton->onClick.connect(std::bind(&GUIMenuBar::openSubMenu, this, name));
 		newButton->onHover.connect(std::bind(&GUIMenuBar::onSubMenuHover, this, name));
+
+		GUIElementOptions btnOptions = newButton->getOptionFlags();
+		btnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		newButton->setOptionFlags(btnOptions);
 
 		UINT32 layoutPosition = mMenuItemLayout->getNumChildren() - NUM_ELEMENTS_AFTER_CONTENT - (numElements - position) * 2;
 

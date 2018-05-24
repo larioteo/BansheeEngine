@@ -231,7 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBansheeEngine\MBansheeEngine.csproj">
-      <Project>{876eb338-489e-4727-84da-8cbbf0da5b5e}</Project>
+      <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>
       <Name>MBansheeEngine</Name>
     </ProjectReference>
   </ItemGroup>

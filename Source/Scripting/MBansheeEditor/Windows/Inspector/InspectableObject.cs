@@ -116,6 +116,7 @@ namespace BansheeEditor
 
                GUIToggle guiFoldout = new GUIToggle(title, EditorStyles.Foldout);
                guiFoldout.Value = isExpanded;
+               guiFoldout.AcceptsKeyFocus = false;
                guiFoldout.OnToggled += OnFoldoutToggled;
                guiInternalTitleLayout.AddElement(guiFoldout);
 

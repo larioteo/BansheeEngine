@@ -134,7 +134,9 @@ namespace BansheeEditor
 
                 guiFoldout = new GUIToggle(title, EditorStyles.Foldout);
                 guiFoldout.Value = isExpanded;
+                guiFoldout.AcceptsKeyFocus = false;
                 guiFoldout.OnToggled += x => ToggleFoldout(x, false);
+
                 guiSizeField = new GUIIntField("", GUIOption.FixedWidth(50));
                 guiSizeField.SetRange(0, int.MaxValue);
 

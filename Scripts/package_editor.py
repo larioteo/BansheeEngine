@@ -5,13 +5,13 @@
 # been built before executing this script.
 
 # Usage: "package_editor $Configuration"
-# Where: $Configuration - e.g. Debug, OptimizedDebug
+# Where: $Configuration - e.g. Debug, OptimizedDebug, Release
 
 import os
 import sys
 import shutil
 
-configuration = 'OptimizedDebug' #sys.argv[1]
+configuration = 'Release' #sys.argv[1]
 dataEntriesToIgnore = ['Raw', 'Settings.asset']
 binEntriesToIgnore = ['Game.exe', 'Game.pdb']
 

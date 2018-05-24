@@ -39,6 +39,10 @@ namespace bs
 		mClearButton = GUIButton::create(HString(""), getSubStyleName(BuiltinEditorResources::TextureFieldClearBtnStyleName));
 		mClearButton->onClick.connect(std::bind(&GUITextureField::onClearButtonClicked, this));
 
+		GUIElementOptions clearBtnOptions = mClearButton->getOptionFlags();
+		clearBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mClearButton->setOptionFlags(clearBtnOptions);
+
 		GUIPanel* dropTargetPanel = mLayout->addNewElement<GUIPanel>();
 		dropTargetPanel->addElement(mDropButton);
 

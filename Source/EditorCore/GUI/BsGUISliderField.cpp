@@ -73,7 +73,7 @@ namespace bs
 
 	void GUISliderField::setStep(float step)
 	{
-		mSlider->setStep(step / (mSlider->getRangeMaximum() - mSlider->getRangeMinimum()));
+		mSlider->setStep(step);
 	}
 
 	void GUISliderField::setTint(const Color& color)

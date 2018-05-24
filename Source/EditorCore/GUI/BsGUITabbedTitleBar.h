@@ -114,7 +114,7 @@ namespace bs
 		GUITabbedTitleBar(const String& backgroundStyle, const String& tabBtnStyle, 
 			const String& minBtnStyle, const String& closeBtnStyle, const GUIDimensions& dimensions);
 
-		virtual ~GUITabbedTitleBar();
+		virtual ~GUITabbedTitleBar() = default;
 
 		/** @copydoc GUIElementContainer::updateClippedBounds */
 		void updateClippedBounds() override;

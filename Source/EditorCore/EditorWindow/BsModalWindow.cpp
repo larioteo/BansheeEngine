@@ -54,6 +54,10 @@ namespace bs
 			contentLayoutX->addElement(mCloseButton);
 			
 			mCloseButton->onClick.connect(std::bind(&ModalWindow::close, this));
+
+			GUIElementOptions options = mCloseButton->getOptionFlags();
+			options.unset(GUIElementOption::AcceptsKeyFocus);
+			mCloseButton->setOptionFlags(options);
 		}
 
 		contentLayoutX->addNewElement<GUIFixedSpace>(1);

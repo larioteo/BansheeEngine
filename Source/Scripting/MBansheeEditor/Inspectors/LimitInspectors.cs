@@ -130,6 +130,7 @@ namespace BansheeEditor
             this.properties = properties;
             this.prefix = prefix;
 
+            hardFoldout.AcceptsKeyFocus = false;
             hardFoldout.OnToggled += x =>
             {
                 properties.SetBool(prefix + "_hardLimit_Expanded", x);
@@ -140,6 +141,7 @@ namespace BansheeEditor
             contactDistanceField.OnFocusLost += ConfirmModify;
             contactDistanceField.OnConfirmed += ConfirmModify;
 
+            softFoldout.AcceptsKeyFocus = false;
             softFoldout.OnToggled += x =>
             {
                 properties.SetBool(prefix + "_softLimit_Expanded", x);
@@ -149,6 +151,7 @@ namespace BansheeEditor
             restitutionField.OnChanged += x => { this.limitData.restitution = x; MarkAsModified(); };
             restitutionField.OnFocusLost += ConfirmModify;
 
+            springFoldout.AcceptsKeyFocus = false;
             springFoldout.OnToggled += x =>
             {
                 properties.SetBool(prefix + "_spring_Expanded", x);

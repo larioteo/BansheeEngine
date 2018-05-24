@@ -42,9 +42,17 @@ namespace bs
 		mMaxBtn->_setElementDepth(1);
 		_registerChildElement(mMaxBtn);
 
+		GUIElementOptions maxBtnOptions = mMaxBtn->getOptionFlags();
+		maxBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mMaxBtn->setOptionFlags(maxBtnOptions);
+
 		mCloseBtn = GUIButton::create(HString(""), mCloseBtnStyle);
 		mCloseBtn->_setElementDepth(1);
 		_registerChildElement(mCloseBtn);
+
+		GUIElementOptions closeBtnOptions = mCloseBtn->getOptionFlags();
+		closeBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		mCloseBtn->setOptionFlags(closeBtnOptions);
 
 		mBackgroundImage = GUITexture::create(mBackgroundStyle);
 		mBackgroundImage->_setElementDepth(mMaxBtn->_getRenderElementDepthRange() + 3);
@@ -54,11 +62,6 @@ namespace bs
 		mMaxBtn->onClick.connect(std::bind(&GUITabbedTitleBar::tabMaximize, this));
 
 		mTabToggleGroup = GUIToggle::createToggleGroup();
-	}
-
-	GUITabbedTitleBar::~GUITabbedTitleBar()
-	{
-
 	}
 
 	GUITabbedTitleBar* GUITabbedTitleBar::create(const String& backgroundStyle, const String& tabBtnStyle, 
@@ -85,6 +88,10 @@ namespace bs
 		GUITabButton* newTabToggle = GUITabButton::create(mTabToggleGroup, mUniqueTabIdx, name, mTabBtnStyle);
 		newTabToggle->_setElementDepth(1);
 		_registerChildElement(newTabToggle);
+
+		GUIElementOptions tabOptions = newTabToggle->getOptionFlags();
+		tabOptions.unset(GUIElementOption::AcceptsKeyFocus);
+		newTabToggle->setOptionFlags(tabOptions);
 
 		position = Math::clamp(position, 0U, (UINT32)mTabButtons.size());
 

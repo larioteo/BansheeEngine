@@ -27,7 +27,7 @@ add_subdirectory(${BSF_SOURCE_DIR})
 
 set (BS_PREBUILT_DEPENDENCIES_VERSION 24)
 set (BS_SRC_DEPENDENCIES_VERSION 15)
-set (BS_BUILTIN_ASSETS_VERSION 4)
+set (BS_BUILTIN_ASSETS_VERSION 5)
 
 # Options
 set(GENERATE_SCRIPT_BINDINGS OFF CACHE BOOL "If true, script binding files will be generated. Script bindings are required for the project to build properly, however they take a while to generate. If you are sure the script bindings are up to date, you can turn off their generation (temporarily) to speed up the build.")

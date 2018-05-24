@@ -134,10 +134,12 @@ namespace bs
 		static void internal_setDisabled(ScriptGUIElementBaseTBase* nativeInstance, bool disabled);
 		static void internal_setFocus(ScriptGUIElementBaseTBase* nativeInstance, bool focus);
 		static void internal_setBlocking(ScriptGUIElementBaseTBase* nativeInstance, bool blocking);
+		static void internal_setAcceptsKeyFocus(ScriptGUIElementBaseTBase* nativeInstance, bool accepts);
 		static bool internal_getVisible(ScriptGUIElementBaseTBase* nativeInstance);
 		static bool internal_getActive(ScriptGUIElementBaseTBase* nativeInstance);
 		static bool internal_getDisabled(ScriptGUIElementBaseTBase* nativeInstance);
 		static bool internal_getBlocking(ScriptGUIElementBaseTBase* nativeInstance);
+		static bool internal_getAcceptsKeyFocus(ScriptGUIElementBaseTBase* nativeInstance);
 		static MonoObject* internal_getParent(ScriptGUIElementBaseTBase* nativeInstance);
 		static void internal_getBounds(ScriptGUIElementBaseTBase* nativeInstance, Rect2I* bounds);
 		static void internal_setBounds(ScriptGUIElementBaseTBase* nativeInstance, Rect2I* bounds);

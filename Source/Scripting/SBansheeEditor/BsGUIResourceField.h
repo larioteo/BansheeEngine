@@ -192,7 +192,7 @@ namespace bs
 
 		/** @} */
 	private:
-		virtual ~GUIResourceField();
+		virtual ~GUIResourceField() = default;
 
 		/**
 		 * Sets the resource referenced by the field by finding the resource with the provided UUID.

@@ -57,6 +57,11 @@ namespace BansheeEditor
             GUIToggle noticesFoldout = new GUIToggle(new LocEdString("Third party notices"), foldoutGroup, EditorStyles.Foldout);
             GUIToggle collaboratorsFoldout = new GUIToggle(new LocEdString("Collaborators"), foldoutGroup, EditorStyles.Foldout);
 
+            contactFoldout.AcceptsKeyFocus = false;
+            thirdPartyFoldout.AcceptsKeyFocus = false;
+            noticesFoldout.AcceptsKeyFocus = false;
+            collaboratorsFoldout.AcceptsKeyFocus = false;
+
             GUILabel freeTypeNotice = new GUILabel(new LocEdString(
                         "Portions of this software are copyright (C) 2015 The FreeType Project (www.freetype.org). " +
                         "All rights reserved."), EditorStyles.MultiLineLabelCentered, 
