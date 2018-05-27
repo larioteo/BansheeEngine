@@ -1640,6 +1640,42 @@
             },
             "texture": "MenuBarButtonActive.png"
         },
+		"focused": {
+            "textColor": {
+                "a": 1.0,
+                "b": 0.699999988079071,
+                "g": 0.699999988079071,
+                "r": 0.699999988079071
+            },
+            "texture": "MenuBarButtonNormal.png"
+        },
+        "focusedOn": {
+            "textColor": {
+                "a": 1.0,
+                "b": 0.0,
+                "g": 0.0,
+                "r": 0.0
+            },
+            "texture": "MenuBarButtonActive.png"
+        },
+		"focusedHover": {
+            "textColor": {
+                "a": 1.0,
+                "b": 0.699999988079071,
+                "g": 0.699999988079071,
+                "r": 0.699999988079071
+            },
+            "texture": "MenuBarButtonNormal.png"
+        },
+        "focusedHoverOn": {
+            "textColor": {
+                "a": 1.0,
+                "b": 0.0,
+                "g": 0.0,
+                "r": 0.0
+            },
+            "texture": "MenuBarButtonActive.png"
+        },
         "margins": {
             "bottom": 2,
             "left": 2,
