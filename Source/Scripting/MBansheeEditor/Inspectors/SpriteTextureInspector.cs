@@ -22,6 +22,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            LoadResource();
+
             SpriteTexture spriteTexture = InspectedObject as SpriteTexture;
             if (spriteTexture == null)
                 return;

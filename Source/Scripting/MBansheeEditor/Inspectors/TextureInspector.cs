@@ -31,33 +31,30 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            if (InspectedObject != null)
-            {
-                importOptions = GetImportOptions();
+            importOptions = GetImportOptions();
 
-                formatField.OnSelectionChanged += x => importOptions.Format = (PixelFormat)x;
-                generateMipsField.OnChanged += x => importOptions.GenerateMipmaps = x;
-                maximumMipsField.OnChanged += x => importOptions.MaxMipmapLevel = x;
-                srgbField.OnChanged += x => importOptions.IsSRGB = x;
-                cpuCachedField.OnChanged += x => importOptions.CPUCached = x;
-                isCubemapField.OnChanged += x => importOptions.IsCubemap = x;
-                cubemapSourceTypeField.OnSelectionChanged += x => importOptions.CubemapSourceType = (CubemapSourceType)x;
-                reimportButton.OnClick += TriggerReimport;
+            formatField.OnSelectionChanged += x => importOptions.Format = (PixelFormat)x;
+            generateMipsField.OnChanged += x => importOptions.GenerateMipmaps = x;
+            maximumMipsField.OnChanged += x => importOptions.MaxMipmapLevel = x;
+            srgbField.OnChanged += x => importOptions.IsSRGB = x;
+            cpuCachedField.OnChanged += x => importOptions.CPUCached = x;
+            isCubemapField.OnChanged += x => importOptions.IsCubemap = x;
+            cubemapSourceTypeField.OnSelectionChanged += x => importOptions.CubemapSourceType = (CubemapSourceType)x;
+            reimportButton.OnClick += TriggerReimport;
 
-                Layout.AddElement(formatField);
-                Layout.AddElement(generateMipsField);
-                Layout.AddElement(maximumMipsField);
-                Layout.AddElement(srgbField);
-                Layout.AddElement(cpuCachedField);
-                Layout.AddElement(isCubemapField);
-                Layout.AddElement(cubemapSourceTypeField);
-                Layout.AddSpace(10);
+            Layout.AddElement(formatField);
+            Layout.AddElement(generateMipsField);
+            Layout.AddElement(maximumMipsField);
+            Layout.AddElement(srgbField);
+            Layout.AddElement(cpuCachedField);
+            Layout.AddElement(isCubemapField);
+            Layout.AddElement(cubemapSourceTypeField);
+            Layout.AddSpace(10);
 
-                GUILayout reimportButtonLayout = Layout.AddLayoutX();
-                reimportButtonLayout.AddFlexibleSpace();
-                reimportButtonLayout.AddElement(reimportButton);
-            }
-        }
+            GUILayout reimportButtonLayout = Layout.AddLayoutX();
+            reimportButtonLayout.AddFlexibleSpace();
+            reimportButtonLayout.AddElement(reimportButton);
+    }
 
         /// <inheritdoc/>
         protected internal override InspectableState Refresh()
@@ -85,17 +82,13 @@ namespace BansheeEditor
         /// <returns>Texture import options object.</returns>
         private TextureImportOptions GetImportOptions()
         {
-            Texture texture = InspectedObject as Texture;
             TextureImportOptions output = null;
 
-            if (texture != null)
+            LibraryEntry texEntry = ProjectLibrary.GetEntry(InspectedResourcePath);
+            if (texEntry != null && texEntry.Type == LibraryEntryType.File)
             {
-                LibraryEntry texEntry = ProjectLibrary.GetEntry(ProjectLibrary.GetPath(texture));
-                if (texEntry != null && texEntry.Type == LibraryEntryType.File)
-                {
-                    FileEntry texFileEntry = (FileEntry)texEntry;
-                    output = texFileEntry.Options as TextureImportOptions;
-                }
+                FileEntry texFileEntry = (FileEntry)texEntry;
+                output = texFileEntry.Options as TextureImportOptions;
             }
 
             if (output == null)
@@ -114,10 +107,7 @@ namespace BansheeEditor
         /// </summary>
         private void TriggerReimport()
         {
-            Texture texture = (Texture)InspectedObject;
-            string resourcePath = ProjectLibrary.GetPath(texture);
-
-            ProjectLibrary.Reimport(resourcePath, importOptions, true);
+            ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
     }
 

@@ -29,11 +29,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            if (InspectedObject != null)
-            {
-                importOptions = GetImportOptions();
-                BuildGUI();
-            }
+            importOptions = GetImportOptions();
+            BuildGUI();
         }
 
         /// <inheritdoc/>
@@ -131,17 +128,13 @@ namespace BansheeEditor
         /// <returns>Font import options object.</returns>
         private FontImportOptions GetImportOptions()
         {
-            Font font = InspectedObject as Font;
             FontImportOptions output = null;
 
-            if (font != null)
+            LibraryEntry texEntry = ProjectLibrary.GetEntry(InspectedResourcePath);
+            if (texEntry != null && texEntry.Type == LibraryEntryType.File)
             {
-                LibraryEntry texEntry = ProjectLibrary.GetEntry(ProjectLibrary.GetPath(font));
-                if (texEntry != null && texEntry.Type == LibraryEntryType.File)
-                {
-                    FileEntry texFileEntry = (FileEntry)texEntry;
-                    output = texFileEntry.Options as FontImportOptions;
-                }
+                FileEntry texFileEntry = (FileEntry)texEntry;
+                output = texFileEntry.Options as FontImportOptions;
             }
 
             if (output == null)

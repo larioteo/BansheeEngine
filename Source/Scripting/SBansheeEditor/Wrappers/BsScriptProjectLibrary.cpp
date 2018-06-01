@@ -14,6 +14,7 @@
 #include "BsEditorApplication.h"
 #include "Serialization/BsManagedSerializableObject.h"
 #include "Reflection/BsRTTIType.h"
+#include "BsManagedResourceMetaData.h"
 
 using namespace std::placeholders;
 
@@ -515,6 +516,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_GetSubresourceName", (void*)&ScriptResourceMeta::internal_GetSubresourceName);
 		metaData.scriptClass->addInternalCall("Internal_GetIcon", (void*)&ScriptResourceMeta::internal_GetIcon);
 		metaData.scriptClass->addInternalCall("Internal_GetResourceType", (void*)&ScriptResourceMeta::internal_GetResourceType);
+		metaData.scriptClass->addInternalCall("Internal_GetType", (void*)&ScriptResourceMeta::internal_GetType);
 		metaData.scriptClass->addInternalCall("Internal_GetEditorData", (void*)&ScriptResourceMeta::internal_GetEditorData);
 	}
 
@@ -541,6 +543,32 @@ namespace bs
 			return ScriptResourceType::Undefined;
 
 		return resInfo->resType;
+	}
+
+	MonoReflectionType* ScriptResourceMeta::internal_GetType(ScriptResourceMeta* thisPtr)
+	{
+		const UINT32 typeId = thisPtr->mMeta->getTypeID();
+		if(typeId == TID_ManagedResource)
+		{
+			const auto metaData = std::static_pointer_cast<ManagedResourceMetaData>(thisPtr->mMeta->getResourceMetaData());
+
+			if(metaData)
+			{
+				MonoClass* providedClass = MonoManager::instance().findClass(metaData->typeNamespace, metaData->typeName);
+
+				if(providedClass)
+					return MonoUtil::getType(providedClass->_getInternalClass());
+			}
+		}
+		else
+		{
+			BuiltinResourceInfo* resInfo = ScriptAssemblyManager::instance().getBuiltinResourceInfo(thisPtr->mMeta->getTypeID());
+
+			if (resInfo)
+				return MonoUtil::getType(resInfo->metaData->scriptClass->_getInternalClass());
+		}
+
+		return nullptr;
 	}
 
 	MonoObject* ScriptResourceMeta::internal_GetEditorData(ScriptResourceMeta* thisPtr)

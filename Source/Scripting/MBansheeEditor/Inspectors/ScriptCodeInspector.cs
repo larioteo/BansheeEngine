@@ -27,6 +27,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            LoadResource();
+
             ScriptCode scriptCode = InspectedObject as ScriptCode;
             if (scriptCode == null)
                 return;

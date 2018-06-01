@@ -85,7 +85,7 @@ namespace BansheeEditor
         private Rect2I[] dropAreas = new Rect2I[0];
 
         private InspectorType currentType = InspectorType.None;
-        private Resource activeResource;
+        private string activeResourcePath;
 
         /// <summary>
         /// Opens the inspector window from the menu bar.
@@ -111,10 +111,12 @@ namespace BansheeEditor
         /// <param name="resourcePath">Resource path relative to the project of the resource to inspect.</param>
         private void SetObjectToInspect(String resourcePath)
         {
-            activeResource = ProjectLibrary.Load<Resource>(resourcePath);
-
-            if (activeResource == null)
+            activeResourcePath = resourcePath;
+            if (!ProjectLibrary.Exists(resourcePath))
                 return;
+
+            ResourceMeta meta = ProjectLibrary.GetMeta(resourcePath);
+            Type resourceType = meta.Type;
 
             currentType = InspectorType.Resource;
 
@@ -129,7 +131,7 @@ namespace BansheeEditor
             titleLayout.SetPosition(PADDING, PADDING);
 
             string name = Path.GetFileNameWithoutExtension(resourcePath);
-            string type = activeResource.GetType().Name;
+            string type = resourceType.Name;
 
             LocString title = new LocEdString(name + " (" + type + ")");
             GUILabel titleLabel = new GUILabel(title);
@@ -149,10 +151,10 @@ namespace BansheeEditor
             inspectorResource = new InspectorResource();
             inspectorResource.panel = inspectorLayout.AddPanel();
 
-            var persistentProperties = persistentData.GetProperties(activeResource.UUID.ToString());
+            var persistentProperties = persistentData.GetProperties(meta.UUID.ToString());
 
-            inspectorResource.inspector = InspectorUtility.GetInspector(activeResource.GetType());
-            inspectorResource.inspector.Initialize(inspectorResource.panel, activeResource, persistentProperties);
+            inspectorResource.inspector = InspectorUtility.GetInspector(resourceType);
+            inspectorResource.inspector.Initialize(inspectorResource.panel, activeResourcePath, persistentProperties);
 
             inspectorLayout.AddFlexibleSpace();
         }
@@ -753,7 +755,7 @@ namespace BansheeEditor
             soScaleZ = null;
             dropAreas = new Rect2I[0];
 
-            activeResource = null;
+            activeResourcePath = null;
             currentType = InspectorType.None;
         }
 

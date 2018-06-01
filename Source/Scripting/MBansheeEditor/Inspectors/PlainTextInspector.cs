@@ -25,6 +25,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            LoadResource();
+
             PlainText plainText = InspectedObject as PlainText;
             if (plainText == null)
                 return;

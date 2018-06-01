@@ -585,6 +585,11 @@ namespace BansheeEditor
         public ResourceType ResType { get { return Internal_GetResourceType(mCachedPtr); } }
 
         /// <summary>
+        /// Type information of the resource referenced by this entry.
+        /// </summary>
+        public Type Type { get { return Internal_GetType(mCachedPtr); } }
+
+        /// <summary>
         /// Non-specific data assigned to the resource, available in editor only.
         /// </summary>
         public object EditorData { get { return Internal_GetEditorData(mCachedPtr); } }
@@ -600,6 +605,9 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern ResourceType Internal_GetResourceType(IntPtr thisPtr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Type Internal_GetType(IntPtr thisPtr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern object Internal_GetEditorData(IntPtr thisPtr);

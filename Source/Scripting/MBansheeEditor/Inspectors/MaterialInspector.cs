@@ -22,6 +22,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            LoadResource();
+
             Material material = InspectedObject as Material;
             if (material == null)
                 return;

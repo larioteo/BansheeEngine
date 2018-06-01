@@ -33,11 +33,20 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Returns the object the inspector is currently displaying.
+        /// Returns the object the inspector is currently displaying. If the current object is a resource use
+        /// <see cref="InspectedResourcePath"/> instead;
         /// </summary>
         protected object InspectedObject
         {
             get { return inspectedObject; }
+        }
+
+        /// <summary>
+        /// Returns the path to the resource the inspector is currently displaying.
+        /// </summary>
+        protected string InspectedResourcePath
+        {
+            get { return inspectedResourcePath; }
         }
 
         /// <summary>
@@ -53,16 +62,16 @@ namespace BansheeEditor
         private GUIPanel mainPanel;
         private GUILayoutY layout;
         private object inspectedObject;
+        private string inspectedResourcePath;
         private SerializableProperties persistent;
 
         /// <summary>
-        /// Initializes the inspector. Must be called after construction.
+        /// Common code called by both Initialize() overloads.
         /// </summary>
         /// <param name="gui">GUI panel to add the GUI elements to.</param>
-        /// <param name="instance">Instance of the object whose fields to display GUI for.</param>
         /// <param name="persistent">A set of properties that the inspector can read/write. They will be persisted even 
         ///                          after the inspector is closed and restored when it is re-opened.</param>
-        internal virtual void Initialize(GUIPanel gui, object instance, SerializableProperties persistent)
+        private void InitializeBase(GUIPanel gui, SerializableProperties persistent)
         {
             rootGUI = gui;
             this.persistent = persistent;
@@ -81,10 +90,50 @@ namespace BansheeEditor
 
             mainPanel = contentPanel;
             layout = GUI.AddLayoutY();
+        }
+
+        /// <summary>
+        /// Initializes the inspector using an object instance. Must be called after construction.
+        /// </summary>
+        /// <param name="gui">GUI panel to add the GUI elements to.</param>
+        /// <param name="instance">Instance of the object whose fields to display GUI for.</param>
+        /// <param name="persistent">A set of properties that the inspector can read/write. They will be persisted even 
+        ///                          after the inspector is closed and restored when it is re-opened.</param>
+        internal virtual void Initialize(GUIPanel gui, object instance, SerializableProperties persistent)
+        {
+            InitializeBase(gui, persistent);
+
             inspectedObject = instance;
 
             Initialize();
             Refresh();
+        }
+
+        /// <summary>
+        /// Initializes the inspector using a resource path. Must be called after construction.
+        /// </summary>
+        /// <param name="gui">GUI panel to add the GUI elements to.</param>
+        /// <param name="path">Path to the resource for which to display GUI for.</param>
+        /// <param name="persistent">A set of properties that the inspector can read/write. They will be persisted even 
+        ///                          after the inspector is closed and restored when it is re-opened.</param>
+        internal virtual void Initialize(GUIPanel gui, string path, SerializableProperties persistent)
+        {
+            InitializeBase(gui, persistent);
+
+            inspectedResourcePath = path;
+
+            Initialize();
+            Refresh();
+        }
+
+        /// <summary>
+        /// Loads the currently inspected resource into the <see cref="InspectedObject"/> field. By default resources
+        /// are not loaded and you can only retrieve their path through <see cref="InspectedResourcePath"/>.
+        /// </summary>
+        protected void LoadResource()
+        {
+            if(!string.IsNullOrEmpty(inspectedResourcePath))
+                inspectedObject = ProjectLibrary.Load<Resource>(inspectedResourcePath);
         }
 
         /// <summary>

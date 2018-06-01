@@ -175,6 +175,7 @@ namespace bs
 		static MonoString* internal_GetSubresourceName(ScriptResourceMeta* thisPtr);
 		static MonoObject* internal_GetIcon(ScriptResourceMeta* thisPtr);
 		static ScriptResourceType internal_GetResourceType(ScriptResourceMeta* thisPtr);
+		static MonoReflectionType* internal_GetType(ScriptResourceMeta* thisPtr);
 		static MonoObject* internal_GetEditorData(ScriptResourceMeta* thisPtr);
 	};
 

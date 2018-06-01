@@ -21,6 +21,9 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            if (InspectedObject == null)
+                LoadResource();
+
             if (InspectedObject != null)
             {
                 int currentIndex = 0;

@@ -26,27 +26,24 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            if (InspectedObject != null)
-            {
-                importOptions = GetImportOptions();
+            importOptions = GetImportOptions();
 
-                formatField.OnSelectionChanged += x => importOptions.Format = (AudioFormat)x;
-                readModeField.OnSelectionChanged += x => importOptions.ReadMode = (AudioReadMode)x;
-                bitDepthField.OnSelectionChanged += x => importOptions.BitDepth = (AudioBitDepth)x;
-                is3DField.OnChanged += x => importOptions.Is3D = x;
+            formatField.OnSelectionChanged += x => importOptions.Format = (AudioFormat)x;
+            readModeField.OnSelectionChanged += x => importOptions.ReadMode = (AudioReadMode)x;
+            bitDepthField.OnSelectionChanged += x => importOptions.BitDepth = (AudioBitDepth)x;
+            is3DField.OnChanged += x => importOptions.Is3D = x;
 
-                reimportButton.OnClick += TriggerReimport;
+            reimportButton.OnClick += TriggerReimport;
 
-                Layout.AddElement(formatField);
-                Layout.AddElement(readModeField);
-                Layout.AddElement(bitDepthField);
-                Layout.AddElement(is3DField);
-                Layout.AddSpace(10);
+            Layout.AddElement(formatField);
+            Layout.AddElement(readModeField);
+            Layout.AddElement(bitDepthField);
+            Layout.AddElement(is3DField);
+            Layout.AddSpace(10);
 
-                GUILayout reimportButtonLayout = Layout.AddLayoutX();
-                reimportButtonLayout.AddFlexibleSpace();
-                reimportButtonLayout.AddElement(reimportButton);
-            }
+            GUILayout reimportButtonLayout = Layout.AddLayoutX();
+            reimportButtonLayout.AddFlexibleSpace();
+            reimportButtonLayout.AddElement(reimportButton);
         }
 
         /// <inheritdoc/>
@@ -70,17 +67,13 @@ namespace BansheeEditor
         /// <returns>Audio clip import options object.</returns>
         private AudioClipImportOptions GetImportOptions()
         {
-            AudioClip audioClip = InspectedObject as AudioClip;
             AudioClipImportOptions output = null;
 
-            if (audioClip != null)
+            LibraryEntry meshEntry = ProjectLibrary.GetEntry(InspectedResourcePath);
+            if (meshEntry != null && meshEntry.Type == LibraryEntryType.File)
             {
-                LibraryEntry meshEntry = ProjectLibrary.GetEntry(ProjectLibrary.GetPath(audioClip));
-                if (meshEntry != null && meshEntry.Type == LibraryEntryType.File)
-                {
-                    FileEntry meshFileEntry = (FileEntry)meshEntry;
-                    output = meshFileEntry.Options as AudioClipImportOptions;
-                }
+                FileEntry meshFileEntry = (FileEntry)meshEntry;
+                output = meshFileEntry.Options as AudioClipImportOptions;
             }
 
             if (output == null)
@@ -99,10 +92,7 @@ namespace BansheeEditor
         /// </summary>
         private void TriggerReimport()
         {
-            AudioClip audioClip = (AudioClip)InspectedObject;
-            string resourcePath = ProjectLibrary.GetPath(audioClip);
-
-            ProjectLibrary.Reimport(resourcePath, importOptions, true);
+            ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
     }
 

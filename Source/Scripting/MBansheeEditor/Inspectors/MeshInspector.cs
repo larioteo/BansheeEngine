@@ -34,11 +34,8 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            if (InspectedObject != null)
-            {
-                importOptions = GetImportOptions();
-                BuildGUI();
-            }
+            importOptions = GetImportOptions();
+            BuildGUI();
         }
 
         /// <inheritdoc/>
@@ -128,17 +125,13 @@ namespace BansheeEditor
         /// <returns>Mesh import options object.</returns>
         private MeshImportOptions GetImportOptions()
         {
-            Mesh mesh = InspectedObject as Mesh;
             MeshImportOptions output = null;
 
-            if (mesh != null)
+            LibraryEntry meshEntry = ProjectLibrary.GetEntry(InspectedResourcePath);
+            if (meshEntry != null && meshEntry.Type == LibraryEntryType.File)
             {
-                LibraryEntry meshEntry = ProjectLibrary.GetEntry(ProjectLibrary.GetPath(mesh));
-                if (meshEntry != null && meshEntry.Type == LibraryEntryType.File)
-                {
-                    FileEntry meshFileEntry = (FileEntry)meshEntry;
-                    output = meshFileEntry.Options as MeshImportOptions;
-                }
+                FileEntry meshFileEntry = (FileEntry)meshEntry;
+                output = meshFileEntry.Options as MeshImportOptions;
             }
 
             if (output == null)
@@ -157,12 +150,9 @@ namespace BansheeEditor
         /// </summary>
         private void TriggerReimport()
         {
-            Mesh mesh = (Mesh)InspectedObject;
-            string resourcePath = ProjectLibrary.GetPath(mesh);
-
             importOptions.AnimationClipSplits = splitInfos;
 
-            ProjectLibrary.Reimport(resourcePath, importOptions, true);
+            ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
 
         /// <summary>

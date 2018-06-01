@@ -23,6 +23,7 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
+            LoadResource();
             BuildGUI();
         }
 
