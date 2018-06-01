@@ -16,6 +16,8 @@
 #include "Reflection/BsRTTIType.h"
 #include "BsManagedResourceMetaData.h"
 
+#include "BsScriptProjectResourceIcons.generated.h"
+
 using namespace std::placeholders;
 
 namespace bs
@@ -514,7 +516,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_GetUUID", (void*)&ScriptResourceMeta::internal_GetUUID);
 		metaData.scriptClass->addInternalCall("Internal_GetSubresourceName", (void*)&ScriptResourceMeta::internal_GetSubresourceName);
-		metaData.scriptClass->addInternalCall("Internal_GetIcon", (void*)&ScriptResourceMeta::internal_GetIcon);
+		metaData.scriptClass->addInternalCall("Internal_GetPreviewIcons", (void*)&ScriptResourceMeta::internal_GetPreviewIcons);
 		metaData.scriptClass->addInternalCall("Internal_GetResourceType", (void*)&ScriptResourceMeta::internal_GetResourceType);
 		metaData.scriptClass->addInternalCall("Internal_GetType", (void*)&ScriptResourceMeta::internal_GetType);
 		metaData.scriptClass->addInternalCall("Internal_GetEditorData", (void*)&ScriptResourceMeta::internal_GetEditorData);
@@ -530,10 +532,9 @@ namespace bs
 		return MonoUtil::stringToMono(thisPtr->mMeta->getUniqueName());
 	}
 
-	MonoObject* ScriptResourceMeta::internal_GetIcon(ScriptResourceMeta* thisPtr)
+	void ScriptResourceMeta::internal_GetPreviewIcons(ScriptResourceMeta* thisPtr, __ProjectResourceIconsInterop* output)
 	{
-		// TODO - Icons not supported yet
-		return nullptr;
+		*output = ScriptProjectResourceIcons::toInterop(thisPtr->mMeta->getPreviewIcons());
 	}
 
 	ScriptResourceType ScriptResourceMeta::internal_GetResourceType(ScriptResourceMeta* thisPtr)

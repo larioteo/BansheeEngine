@@ -16,13 +16,75 @@
 #include "Resources/BsResource.h"
 #include "BsEditorApplication.h"
 #include "Material/BsShader.h"
+#include "Image/BsTexture.h"
 #include "String/BsUnicode.h"
+#include "CoreThread/BsCoreThread.h"
 #include <regex>
 
 using namespace std::placeholders;
 
 namespace bs
 {
+	ProjectResourceIcons generatePreviewIcons(Resource& resource)
+	{
+		ProjectResourceIcons icons;
+
+		const UINT32 typeId = resource.getTypeId();
+		if(typeId == TID_Texture)
+		{
+			Texture& texture = static_cast<Texture&>(resource);
+
+			const TextureProperties& props = texture.getProperties();
+
+			const SPtr<PixelData> srcData = props.allocBuffer(0, 0);
+			AsyncOp readOp = texture.readData(srcData);
+			gCoreThread().submitAll(true);
+
+			// 256
+			const SPtr<PixelData> data256 = PixelData::create(256, 256, 1, props.getFormat());
+			PixelUtil::scale(*srcData, *data256);
+
+			// 192
+			const SPtr<PixelData> data192 = PixelData::create(192, 192, 1, props.getFormat());
+			PixelUtil::scale(*data256, *data192);
+
+			// 128
+			const SPtr<PixelData> data128 = PixelData::create(128, 128, 1, props.getFormat());
+			PixelUtil::scale(*data192, *data128);
+
+			// 96
+			const SPtr<PixelData> data96 = PixelData::create(96, 96, 1, props.getFormat());
+			PixelUtil::scale(*data128, *data96);
+
+			// 64
+			const SPtr<PixelData> data64 = PixelData::create(64, 64, 1, props.getFormat());
+			PixelUtil::scale(*data96, *data64);
+
+			// 48
+			const SPtr<PixelData> data48 = PixelData::create(48, 48, 1, props.getFormat());
+			PixelUtil::scale(*data64, *data48);
+
+			// 32
+			const SPtr<PixelData> data32 = PixelData::create(32, 32, 1, props.getFormat());
+			PixelUtil::scale(*data48, *data32);
+
+			// 16
+			const SPtr<PixelData> data16 = PixelData::create(16, 16, 1, props.getFormat());
+			PixelUtil::scale(*data32, *data16);
+
+			icons.icon16 = Texture::create(data16);
+			icons.icon32 = Texture::create(data32);
+			icons.icon48 = Texture::create(data48);
+			icons.icon64 = Texture::create(data64);
+			icons.icon96 = Texture::create(data96);
+			icons.icon128 = Texture::create(data128);
+			icons.icon192 = Texture::create(data192);
+			icons.icon256 = Texture::create(data256);
+		}
+
+		return icons;
+	}
+
 	const Path ProjectLibrary::RESOURCES_DIR = "Resources/";
 	const Path ProjectLibrary::INTERNAL_RESOURCES_DIR = PROJECT_INTERNAL_DIR + GAME_RESOURCES_FOLDER_NAME;
 	const char* ProjectLibrary::LIBRARY_ENTRIES_FILENAME = "ProjectLibrary.asset";
@@ -441,11 +503,14 @@ namespace bs
 					const UUID& UUID = entry.value.getUUID();
 					Path::stripInvalid(entry.name);
 
-					SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(entry.name, UUID, typeId, subMeta);
+					const ProjectResourceIcons icons = generatePreviewIcons(*entry.value);
+
+					SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(entry.name, UUID, typeId, icons, 
+						subMeta);
 					fileEntry->meta->add(resMeta);
 				}
 
-				if(importedResources.size() > 0)
+				if(!importedResources.empty())
 				{
 					HResource primary = importedResources[0].value;
 
@@ -476,6 +541,8 @@ namespace bs
 					{
 						Path::stripInvalid(resEntry.name);
 
+						const ProjectResourceIcons icons = generatePreviewIcons(*resEntry.value);
+
 						bool foundMeta = false;
 						for (auto iter = existingResourceMetas.begin(); iter != existingResourceMetas.end(); ++iter)
 						{
@@ -487,6 +554,8 @@ namespace bs
 								gResources().update(importedResource, resEntry.value);
 
 								importedResources.push_back({ resEntry.name, importedResource });
+
+								metaEntry->setPreviewIcons(icons);
 								fileEntry->meta->add(metaEntry);
 
 								existingResourceMetas.erase(iter);
@@ -504,7 +573,8 @@ namespace bs
 							UINT32 typeId = resEntry.value->getTypeId();
 							const UUID& UUID = importedResource.getUUID();
 
-							SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(resEntry.name, UUID, typeId, subMeta);
+							SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(resEntry.name, UUID, typeId, 
+								icons, subMeta);
 							fileEntry->meta->add(resMeta);
 						}
 					}

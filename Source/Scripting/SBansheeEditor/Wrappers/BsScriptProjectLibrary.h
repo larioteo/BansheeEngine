@@ -9,6 +9,8 @@
 
 namespace bs
 {
+	struct __ProjectResourceIconsInterop;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -173,7 +175,7 @@ namespace bs
 		/************************************************************************/
 		static void internal_GetUUID(ScriptResourceMeta* thisPtr, UUID* uuid);
 		static MonoString* internal_GetSubresourceName(ScriptResourceMeta* thisPtr);
-		static MonoObject* internal_GetIcon(ScriptResourceMeta* thisPtr);
+		static void internal_GetPreviewIcons(ScriptResourceMeta* thisPtr, __ProjectResourceIconsInterop* output);
 		static ScriptResourceType internal_GetResourceType(ScriptResourceMeta* thisPtr);
 		static MonoReflectionType* internal_GetType(ScriptResourceMeta* thisPtr);
 		static MonoObject* internal_GetEditorData(ScriptResourceMeta* thisPtr);

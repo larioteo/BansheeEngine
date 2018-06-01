@@ -7,6 +7,8 @@
 #include "Library/BsProjectResourceMeta.h"
 #include "Resources/BsResourceMetaData.h"
 #include "Importer/BsImportOptions.h"
+#include "Resources/BsResources.h"
+#include "Image/BsTexture.h"
 
 namespace bs
 {
@@ -25,10 +27,52 @@ namespace bs
 			BS_RTTI_MEMBER_REFLPTR(mResourceMeta, 3)
 			BS_RTTI_MEMBER_REFLPTR(mUserData, 4)
 		BS_END_RTTI_MEMBERS
+
+		// We want to store textures directly in this object rather than referencing them externally, so we need to strip
+		// away resource handles before saving them, and restore afterwards
+#define GETTER_SETTER_ICON(icon)																						\
+		SPtr<Texture> get##icon(ProjectResourceMeta* obj)																\
+		{																												\
+			if(obj->mPreviewIcons.icon.isLoaded(false))																	\
+				return obj->mPreviewIcons.icon.getInternalPtr();														\
+																														\
+			return nullptr;																								\
+		}																												\
+																														\
+			void set##icon(ProjectResourceMeta* obj, SPtr<Texture> data)												\
+		{																												\
+			obj->mPreviewIcons.icon = static_resource_cast<Texture>(gResources()._createResourceHandle(data));			\
+		}																												\
+
+		GETTER_SETTER_ICON(icon16)
+		GETTER_SETTER_ICON(icon32)
+		GETTER_SETTER_ICON(icon48)
+		GETTER_SETTER_ICON(icon64)
+		GETTER_SETTER_ICON(icon96)
+		GETTER_SETTER_ICON(icon128)
+		GETTER_SETTER_ICON(icon192)
+		GETTER_SETTER_ICON(icon256)
+
 	public:
 		ProjectResourceMetaRTTI()
-			:mInitMembers(this)
-		{ }
+		{
+			addReflectablePtrField("mPreviewIcon16", 5, 
+				&ProjectResourceMetaRTTI::geticon16, &ProjectResourceMetaRTTI::seticon16, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon32", 6, 
+				&ProjectResourceMetaRTTI::geticon32, &ProjectResourceMetaRTTI::seticon32, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon48", 7, 
+				&ProjectResourceMetaRTTI::geticon48, &ProjectResourceMetaRTTI::seticon48, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon64", 8, 
+				&ProjectResourceMetaRTTI::geticon64, &ProjectResourceMetaRTTI::seticon64, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon96", 9, 
+				&ProjectResourceMetaRTTI::geticon96, &ProjectResourceMetaRTTI::seticon96, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon128", 10, 
+				&ProjectResourceMetaRTTI::geticon128, &ProjectResourceMetaRTTI::seticon128, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon192", 11, 
+				&ProjectResourceMetaRTTI::geticon192, &ProjectResourceMetaRTTI::seticon192, RTTI_Flag_SkipInReferenceSearch);
+			addReflectablePtrField("mPreviewIcon256", 12, 
+				&ProjectResourceMetaRTTI::geticon256, &ProjectResourceMetaRTTI::seticon256, RTTI_Flag_SkipInReferenceSearch);
+		}
 
 		const String& getRTTIName() override
 		{
@@ -58,10 +102,6 @@ namespace bs
 		BS_END_RTTI_MEMBERS
 
 	public:
-		ProjectFileMetaRTTI()
-			:mInitMembers(this)
-		{ }
-
 		const String& getRTTIName() override
 		{
 			static String name = "ProjectFileMeta";

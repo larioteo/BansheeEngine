@@ -575,9 +575,18 @@ namespace BansheeEditor
         public string SubresourceName { get { return Internal_GetSubresourceName(mCachedPtr); } }
 
         /// <summary>
-        /// Custom icon for the resource to display in the editor, if the resource has one.
+        /// Custom icons for the resource to display in the editor, if the resource has them.
         /// </summary>
-        public Texture Icon { get { return Internal_GetIcon(mCachedPtr); } }
+        public ProjectResourceIcons Icons
+        {
+            get
+            {
+                ProjectResourceIcons output;
+                Internal_GetPreviewIcons(mCachedPtr, out output);
+
+                return output;
+            }
+        }
 
         /// <summary>
         /// Type of the resource referenced by this entry.
@@ -601,7 +610,7 @@ namespace BansheeEditor
         private static extern string Internal_GetSubresourceName(IntPtr thisPtr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Texture Internal_GetIcon(IntPtr thisPtr);
+        private static extern void Internal_GetPreviewIcons(IntPtr thisPtr, out ProjectResourceIcons icons);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern ResourceType Internal_GetResourceType(IntPtr thisPtr);

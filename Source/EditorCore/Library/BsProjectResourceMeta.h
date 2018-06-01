@@ -11,6 +11,19 @@ namespace bs
 	 *  @{
 	 */
 
+	/** Different icon sizes for project resource preview icons. */
+	struct BS_SCRIPT_EXPORT(pl:true,ed:true) ProjectResourceIcons
+	{
+		HTexture icon16;
+		HTexture icon32;
+		HTexture icon48;
+		HTexture icon64;
+		HTexture icon96;
+		HTexture icon128; 
+		HTexture icon192;
+		HTexture icon256;
+	};
+
 	/**	Contains meta-data for a resource stored in the ProjectLibrary. */
 	class BS_ED_EXPORT ProjectResourceMeta : public IReflectable
 	{
@@ -26,11 +39,12 @@ namespace bs
 		 * @param[in]	name				Name of the resource, unique within the file containing the resource.
 		 * @param[in]	uuid				UUID of the resource.
 		 * @param[in]	typeId				RTTI type id of the resource.
+		 * @param[in]	previewIcons		A set of icons used for displaying a preview of the resource's contents.
 		 * @param[in]	resourceMetaData	Non-project library specific meta-data.
 		 * @return							New project library resource meta data instance.
 		 */
 		static SPtr<ProjectResourceMeta> create(const String& name, const UUID& uuid, UINT32 typeId, 
-			const SPtr<ResourceMetaData>& resourceMetaData);
+			const ProjectResourceIcons& previewIcons, const SPtr<ResourceMetaData>& resourceMetaData);
 
 		/** Returns the name of the resource, unique within the file containing the resource. */
 		String getUniqueName() const;
@@ -44,6 +58,12 @@ namespace bs
 		/**	Returns the RTTI type ID of the resource this object is referencing. */
 		UINT32 getTypeID() const { return mTypeId; }
 
+		/** @copydoc setPreviewIcons() */
+		const ProjectResourceIcons& getPreviewIcons() const { return mPreviewIcons; }
+
+		/* A set of icons used for displaying a preview of the resource's contents. */
+		void setPreviewIcons(const ProjectResourceIcons& icons) { mPreviewIcons = icons; }
+
 		/** 
 		 * Returns additional data attached to the resource meta by the user. This is non-specific data and can contain
 		 * anything the user requires. 
@@ -56,7 +76,8 @@ namespace bs
 		WString mName;
 		UUID mUUID;
 		SPtr<ResourceMetaData> mResourceMeta;
-		UINT32 mTypeId;
+		UINT32 mTypeId = 0;
+		ProjectResourceIcons mPreviewIcons;
 		SPtr<IReflectable> mUserData;
 
 		/************************************************************************/
