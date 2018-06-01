@@ -26,3 +26,6 @@ add_dependencies(Banshee3D bsfFBXImporter bsfFontImporter bsfFreeImgImporter SBa
 if(MSVC)
 	target_compile_options(Banshee3D PUBLIC /wd4509)
 endif()
+
+# Make sure `bsf` dlls are copied to our folders
+copyBsfBinaries(Banshee3D ${BSF_DIRECTORY})

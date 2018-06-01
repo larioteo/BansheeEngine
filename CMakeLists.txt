@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.9.0)
 project (Banshee3D)
 
-set (BSF_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Source/bsf/Source)
+set (BSF_DIRECTORY ${PROJECT_SOURCE_DIR}/Source/bsf)
+set (BSF_SOURCE_DIR ${BSF_DIRECTORY}/Source)
 set (APP_ROOT_DIR ${PROJECT_SOURCE_DIR})
 set (BS_IS_BANSHEE3D 1)
 
@@ -38,7 +39,7 @@ check_and_update_binary_deps(Banshee ${PROJECT_SOURCE_DIR}/Dependencies/ ${BS_PR
 
 ## Check data dependencies
 check_and_update_builtin_assets(Banshee ${PROJECT_SOURCE_DIR}/Data ${BS_BUILTIN_ASSETS_VERSION} YES)
-	
+		
 # Generate script bindings
 include(${BSF_SOURCE_DIR}/CMake/GenerateScriptBindings.cmake)
 	
