@@ -8,6 +8,7 @@
 #include "BsMonoManager.h"
 #include "Serialization/BsScriptAssemblyManager.h"
 #include "BsMonoAssembly.h"
+#include "Scene/BsGameObjectManager.h"
 
 namespace bs
 {
@@ -81,6 +82,8 @@ namespace bs
 
 	void EditorScriptLibrary::destroy()
 	{
+		GameObjectManager::instance().destroyQueuedObjects();
+
 		unloadAssemblies();
 		EditorScriptManager::shutDown();
 		shutdownModules();
