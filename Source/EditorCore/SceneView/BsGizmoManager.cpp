@@ -883,12 +883,12 @@ namespace bs
 
 			if (iconToScreenRatio > 0.3f)
 			{
-				float alpha = 1.0f - Math::lerp01(iconToScreenRatio, 0.3f, 1.0f);
+				float alpha = 1.0f - Math::invLerp(iconToScreenRatio, 0.3f, 1.0f);
 				normalColor.a *= alpha;
 			}
 			else if (iconToScreenRatio < 0.1f)
 			{
-				float alpha = Math::lerp01(iconToScreenRatio, 0.0f, 0.1f);
+				float alpha = Math::invLerp(iconToScreenRatio, 0.0f, 0.1f);
 				normalColor.a *= alpha;
 			}
 		}
