@@ -65,5 +65,7 @@ namespace bs
 		static void Internal_setenableIndirectLighting(ScriptRenderSettings* thisPtr, bool value);
 		static bool Internal_getoverlayOnly(ScriptRenderSettings* thisPtr);
 		static void Internal_setoverlayOnly(ScriptRenderSettings* thisPtr, bool value);
+		static bool Internal_getenableSkybox(ScriptRenderSettings* thisPtr);
+		static void Internal_setenableSkybox(ScriptRenderSettings* thisPtr, bool value);
 	};
 }

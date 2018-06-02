@@ -58,6 +58,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setenableIndirectLighting", (void*)&ScriptRenderSettings::Internal_setenableIndirectLighting);
 		metaData.scriptClass->addInternalCall("Internal_getoverlayOnly", (void*)&ScriptRenderSettings::Internal_getoverlayOnly);
 		metaData.scriptClass->addInternalCall("Internal_setoverlayOnly", (void*)&ScriptRenderSettings::Internal_setoverlayOnly);
+		metaData.scriptClass->addInternalCall("Internal_getenableSkybox", (void*)&ScriptRenderSettings::Internal_getenableSkybox);
+		metaData.scriptClass->addInternalCall("Internal_setenableSkybox", (void*)&ScriptRenderSettings::Internal_setenableSkybox);
 
 	}
 
@@ -396,5 +398,21 @@ namespace bs
 	void ScriptRenderSettings::Internal_setoverlayOnly(ScriptRenderSettings* thisPtr, bool value)
 	{
 		thisPtr->getInternal()->overlayOnly = value;
+	}
+
+	bool ScriptRenderSettings::Internal_getenableSkybox(ScriptRenderSettings* thisPtr)
+	{
+		bool tmp__output;
+		tmp__output = thisPtr->getInternal()->enableSkybox;
+
+		bool __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	void ScriptRenderSettings::Internal_setenableSkybox(ScriptRenderSettings* thisPtr, bool value)
+	{
+		thisPtr->getInternal()->enableSkybox = value;
 	}
 }

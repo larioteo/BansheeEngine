@@ -179,6 +179,16 @@ namespace BansheeEngine
 			set { Internal_setoverlayOnly(mCachedPtr, value); }
 		}
 
+		/// <summary>
+		/// If enabled the camera will use the skybox for rendering the background. A skybox has to be present in the scene. When 
+		/// disabled the camera will use the clear color for rendering the background.
+		/// </summary>
+		public bool EnableSkybox
+		{
+			get { return Internal_getenableSkybox(mCachedPtr); }
+			set { Internal_setenableSkybox(mCachedPtr, value); }
+		}
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_RenderSettings(RenderSettings managedInstance);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -253,6 +263,10 @@ namespace BansheeEngine
 		private static extern bool Internal_getoverlayOnly(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setoverlayOnly(IntPtr thisPtr, bool value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool Internal_getenableSkybox(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setenableSkybox(IntPtr thisPtr, bool value);
 	}
 
 	/** @} */

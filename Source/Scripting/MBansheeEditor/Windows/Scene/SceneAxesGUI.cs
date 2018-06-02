@@ -60,6 +60,7 @@ namespace BansheeEditor
             camera.AspectRatio = 1.0f;
             camera.OrthoHeight = 2.0f;
             camera.RenderSettings.EnableHDR = false;
+            camera.RenderSettings.EnableSkybox = false;
 
             renderTextureGUI = new GUIRenderTexture(renderTexture, true);
 
