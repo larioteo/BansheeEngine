@@ -54,6 +54,11 @@ namespace bs
 	{
 		clearDropTarget();
 
+		for(auto& child : mRootElement.mChildren)
+			deleteTreeElement((ResourceTreeElement*)&child);
+
+		mRootElement.mChildren.clear();
+
 		ResourceTreeViewLocator::_provide(nullptr);
 	}
 
@@ -163,6 +168,11 @@ namespace bs
 	void GUIResourceTreeView::deleteTreeElement(ResourceTreeElement* element)
 	{
 		closeTemporarilyExpandedElements(); // In case this element is one of them
+
+		for(auto& child : element->mChildren)
+			deleteTreeElement((ResourceTreeElement*)child);
+
+		element->mChildren.clear();
 
 		if (element->mIsHighlighted)
 			clearPing();

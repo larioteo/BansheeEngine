@@ -54,6 +54,11 @@ namespace bs
 
 	GUISceneTreeView::~GUISceneTreeView()
 	{
+		for(auto& child : mRootElement.mChildren)
+			deleteTreeElementInternal(child);
+
+		mRootElement.mChildren.clear();
+
 		SceneTreeViewLocator::_remove(this);
 	}
 
@@ -285,6 +290,11 @@ namespace bs
 	void GUISceneTreeView::deleteTreeElementInternal(GUITreeView::TreeElement* element)
 	{
 		closeTemporarilyExpandedElements(); // In case this element is one of them
+
+		for(auto& child : element->mChildren)
+			deleteTreeElementInternal(child);
+
+		element->mChildren.clear();
 
 		if (element->mIsHighlighted)
 			clearPing();

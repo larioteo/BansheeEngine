@@ -38,16 +38,13 @@ namespace bs
 
 	GUITreeView::TreeElement::~TreeElement()
 	{
-		for(auto& child : mChildren)
-			bs_delete(child);
+		assert(mChildren.empty());
 
 		if(mFoldoutBtn != nullptr)
 			GUIElement::destroy(mFoldoutBtn);
 
 		if(mElement != nullptr)
 			GUIElement::destroy(mElement);
-
-		mChildren.clear();
 	}
 
 	bool GUITreeView::TreeElement::isParentRec(TreeElement* element) const

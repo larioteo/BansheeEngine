@@ -124,8 +124,6 @@ namespace bs
 		virtual ~GUISceneTreeView();
 
 	protected:
-		SceneTreeElement mRootElement;
-
 		GUISceneTreeView(const String& backgroundStyle, const String& elementBtnStyle, 
 			const String& foldoutBtnStyle, const String& highlightBackgroundStyle, const String& selectionBackgroundStyle, 
 			const String& editBoxStyle, const String& dragHighlightStyle, const String& dragSepHighlightStyle, const GUIDimensions& dimensions);
@@ -189,6 +187,8 @@ namespace bs
 		 * parents are already part of the list.
 		 */
 		static void cleanDuplicates(Vector<HSceneObject>& objects);
+
+		SceneTreeElement mRootElement;
 
 		Vector<HSceneObject> mCopyList;
 		bool mCutFlag;
