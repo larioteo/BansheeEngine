@@ -11,18 +11,13 @@
 #include "Material/BsGpuParamsSet.h"
 #include "RenderAPI/BsRenderAPI.h"
 #include "Renderer/BsRenderer.h"
-#include "Renderer/BsRendererManager.h"
 #include "Scene/BsSelection.h"
 #include "Scene/BsSceneObject.h"
 #include "Components/BsCRenderable.h"
 #include "Renderer/BsRenderable.h"
 #include "Scene/BsSceneManager.h"
 #include "Renderer/BsRendererUtility.h"
-#include "Animation/BsAnimationManager.h"
-#include "Animation/BsSkeleton.h"
 #include "RenderAPI/BsGpuBuffer.h"
-#include "Renderer/BsRenderer.h"
-#include "Renderer/BsRenderableElement.h"
 
 using namespace std::placeholders;
 

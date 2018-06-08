@@ -18,7 +18,7 @@ namespace BansheeEngine
 		protected AnimationCurve() { }
 
 		/// <summary>Creates a new animation curve.</summary>
-		/// <param name="keyframes">Keyframes to initialize the curve with</param>
+		/// <param name="keyframes">Keyframes to initialize the curve with. They must be sorted by time.</param>
 		public AnimationCurve(KeyFrame[] keyframes)
 		{
 			Internal_TAnimationCurve(this, keyframes);
@@ -68,7 +68,7 @@ namespace BansheeEngine
 		protected Vector3Curve() { }
 
 		/// <summary>Creates a new animation curve.</summary>
-		/// <param name="keyframes">Keyframes to initialize the curve with</param>
+		/// <param name="keyframes">Keyframes to initialize the curve with. They must be sorted by time.</param>
 		public Vector3Curve(KeyFrameVec3[] keyframes)
 		{
 			Internal_TAnimationCurve(this, keyframes);
@@ -120,7 +120,7 @@ namespace BansheeEngine
 		protected QuaternionCurve() { }
 
 		/// <summary>Creates a new animation curve.</summary>
-		/// <param name="keyframes">Keyframes to initialize the curve with</param>
+		/// <param name="keyframes">Keyframes to initialize the curve with. They must be sorted by time.</param>
 		public QuaternionCurve(KeyFrameQuat[] keyframes)
 		{
 			Internal_TAnimationCurve(this, keyframes);
