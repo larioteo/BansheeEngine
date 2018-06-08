@@ -25,8 +25,10 @@ namespace BansheeEditor
             Gizmos.Color = Color.Green;
             Gizmos.Transform = Matrix4.TRS(so.Position, so.Rotation, Vector3.One);
 
-            Vector3 scaledExtents = collider.Extents*so.Scale;
-            Gizmos.DrawWireCube(collider.Center, scaledExtents);
+            Vector3 scale = so.Scale;
+            Vector3 scaledExtents = collider.Extents*scale;
+
+            Gizmos.DrawWireCube(collider.Center * scale, scaledExtents);
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace BansheeEditor
             Vector3 scale = so.Scale;
             float scaledRadius = collider.Radius * MathEx.Max(scale.x, scale.y, scale.z);
 
-            Gizmos.DrawWireSphere(collider.Center, scaledRadius);
+            Gizmos.DrawWireSphere(collider.Center * scale, scaledRadius);
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace BansheeEditor
             float scaledHeight = collider.HalfHeight*2.0f*scale.y;
             float scaledRadius = collider.Radius*MathEx.Max(scale.x, scale.z);
 
-            Gizmos.DrawWireCapsule(offset, scaledHeight, scaledRadius);
+            Gizmos.DrawWireCapsule(offset * scale, scaledHeight, scaledRadius);
         }
 
         /// <summary>
@@ -132,7 +134,8 @@ namespace BansheeEditor
             Gizmos.DrawLine(bottomRight, bottomLeft);
 
             // Draw normal
-            Gizmos.DrawLine(center, center + Vector3.XAxis*0.5f);
+            Vector3 scale = so.Scale;
+            Gizmos.DrawLine(center * scale, (center + Vector3.XAxis*0.5f) * scale);
         }
     }
 
