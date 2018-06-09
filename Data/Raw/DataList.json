@@ -1532,6 +1532,16 @@
             "Path": "ToggleFocusedOn.png",
             "SpriteUUID": "59ff14bf-4abc-b36f-f5bb-4abcc827fec5",
             "TextureUUID": "f0a8ca91-49be-4f00-b698-49befb932383"
+        },
+        {
+            "Path": "ProgressBarSmallBg.png",
+            "SpriteUUID": "176b92ed-494c-01a4-7cbb-494c34e8925a",
+            "TextureUUID": "14b4b816-475e-ae1c-39b2-475e744e49d9"
+        },
+        {
+            "Path": "ProgressBarSmallFill.png",
+            "SpriteUUID": "808b9443-46a8-1a63-b194-46a8ee5e8f25",
+            "TextureUUID": "067a1430-4bfd-8c01-2284-4bfd42b28159"
         }
     ]
 }

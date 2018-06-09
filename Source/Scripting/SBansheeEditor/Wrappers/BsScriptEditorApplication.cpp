@@ -44,6 +44,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_SetStatusScene", (void*)&ScriptEditorApplication::internal_SetStatusScene);
 		metaData.scriptClass->addInternalCall("Internal_SetStatusProject", (void*)&ScriptEditorApplication::internal_SetStatusProject);
 		metaData.scriptClass->addInternalCall("Internal_SetStatusCompiling", (void*)&ScriptEditorApplication::internal_SetStatusCompiling);
+		metaData.scriptClass->addInternalCall("Internal_SetStatusImporting", (void*)&ScriptEditorApplication::internal_SetStatusImporting);
 		metaData.scriptClass->addInternalCall("Internal_GetProjectPath", (void*)&ScriptEditorApplication::internal_GetProjectPath);
 		metaData.scriptClass->addInternalCall("Internal_GetProjectName", (void*)&ScriptEditorApplication::internal_GetProjectName);
 		metaData.scriptClass->addInternalCall("Internal_GetProjectLoaded", (void*)&ScriptEditorApplication::internal_GetProjectLoaded);
@@ -138,6 +139,12 @@ namespace bs
 	{
 		MainEditorWindow* mainWindow = EditorWindowManager::instance().getMainWindow();
 		mainWindow->getStatusBar().setIsCompiling(compiling);
+	}
+
+	void ScriptEditorApplication::internal_SetStatusImporting(bool importing, float percent)
+	{
+		MainEditorWindow* mainWindow = EditorWindowManager::instance().getMainWindow();
+		mainWindow->getStatusBar().setIsImporting(importing, percent);
 	}
 
 	MonoString* ScriptEditorApplication::internal_GetProjectPath()

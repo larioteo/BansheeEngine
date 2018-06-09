@@ -43,6 +43,7 @@ namespace bs
 		static void internal_SetStatusScene(MonoString* name, bool modified);
 		static void internal_SetStatusProject(bool modified);
 		static void internal_SetStatusCompiling(bool compiling);
+		static void internal_SetStatusImporting(bool importing, float percent);
 		static MonoString* internal_GetProjectPath();
 		static MonoString* internal_GetProjectName();
 		static bool internal_GetProjectLoaded();

@@ -64,7 +64,8 @@ namespace bs
 		static OnEntryChangedThunkDef OnEntryRemovedThunk;
 		static OnEntryChangedThunkDef OnEntryImportedThunk;
 
-		static MonoArray* internal_Refresh(MonoString* path, bool import);
+		static UINT32 internal_Refresh(MonoString* path, bool synchronous);
+		static void internal_FinalizeImports();
 		static void internal_Create(MonoObject* resource, MonoString* path);
 		static MonoObject* internal_Load(MonoString* path);
 		static void internal_Save(MonoObject* resource);
@@ -84,6 +85,7 @@ namespace bs
 		static MonoString* internal_GetResourceFolder();
 		static void internal_SetIncludeInBuild(MonoString* path, bool include);
 		static void internal_SetEditorData(MonoString* path, MonoObject* userData);
+		static UINT32 internal_GetInProgressImportCount();
 	};
 
 	/**	Base class for C++/CLR interop objects used for wrapping LibraryEntry implementations. */

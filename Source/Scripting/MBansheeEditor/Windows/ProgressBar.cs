@@ -92,7 +92,7 @@ namespace BansheeEditor
             : base(false)
         {
             Width = 350;
-            Height = 75;
+            Height = 100;
 
             Title = title;
 

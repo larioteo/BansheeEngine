@@ -65,6 +65,12 @@ namespace bs
 		/**	Activates or deactivates the "compilation in progress" visuals on the status bar. */
 		void setIsCompiling(bool compiling);
 
+		/** 
+		 * Activates or deactives the "import in progress" visuals on the status bar, as well as updates the related 
+		 * progress bar to the specified percentage (if active).
+		 */
+		void setIsImporting(bool importing, float percentage);
+
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
@@ -97,7 +103,14 @@ namespace bs
 		GUIButton* mMessage;
 		GUILabel* mScene;
 		GUILabel* mProject;
+
+		GUIFixedSpace* mCompilingSpace;
 		GUILabel* mCompiling;
+
+		GUILayout* mImportLayout;
+		GUIFixedSpace* mImportSpace;
+		GUILabel* mImporting;
+		GUIProgressBar* mImportProgressBar;
 		GUITexture* mBackground;
 
 		HEvent mLogEntryAddedConn;

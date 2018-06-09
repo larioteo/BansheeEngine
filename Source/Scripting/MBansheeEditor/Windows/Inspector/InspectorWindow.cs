@@ -116,6 +116,9 @@ namespace BansheeEditor
                 return;
 
             ResourceMeta meta = ProjectLibrary.GetMeta(resourcePath);
+            if (meta == null)
+                return;
+
             Type resourceType = meta.Type;
 
             currentType = InspectorType.Resource;

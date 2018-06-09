@@ -4,6 +4,7 @@
 
 #include "BsEditorPrerequisites.h"
 #include "Utility/BsModule.h"
+#include "Threading/BsAsyncOp.h"
 
 namespace bs
 {
@@ -72,19 +73,9 @@ namespace bs
 		 *
 		 * @param[in]	path	Absolute path of the file or folder to check. If a folder is provided all its children will
 		 *						be checked recursively.
+		 * @return				Returns the number of resources that were queued for import during this call.
 		 */
-		void checkForModifications(const Path& path);
-
-		/**
-		 * Checks if any resources at the specified path have been modified, added or deleted, and updates the internal
-		 * hierarchy accordingly. 
-		 *
-		 * @param[in]	path			Absolute path of the file or folder to check. If a folder is provided all its 
-		 *								children will be checked recursively.
-		 * @param[in]	import			Should the dirty resources be automatically reimported.
-		 * @param[in]	dirtyResources	A list of resources that should be reimported.
-		 */
-		void checkForModifications(const Path& path, bool import, Vector<Path>& dirtyResources);
+		UINT32 checkForModifications(const Path& path);
 
 		/**	Returns the root library entry that references the entire library hierarchy. */
 		const LibraryEntry* getRootEntry() const { return mRootEntry; }
@@ -233,6 +224,9 @@ namespace bs
 		/** Returns the path to the project's resource folder where all the assets are stored. */
 		const Path& getResourcesFolder() const { return mResourcesFolder; }
 
+		/** Returns the number of resources currently queued for import. */
+		UINT32 getInProgressImportCount() const { return (UINT32)mQueuedImports.size(); }
+
 		/**
 		 * Saves all the project library data so it may be restored later, at the default save location in the project
 		 * folder. Project must be loaded when calling this.
@@ -264,11 +258,36 @@ namespace bs
 		/**	Returns the resource manifest managed by the project library. */
 		const SPtr<ResourceManifest>& _getManifest() const { return mResourceManifest; }
 
+		/** 
+		 * Iterates over any queued import operations, checks if they have finished and finalizes them. This should be
+		 * called on a regular basis (e.g. every frame).
+		 *
+		 * @param[in]	wait	If true the method will block until all imports finish.
+		 */
+		void _finishQueuedImports(bool wait = false);
+
 		/** @} */
 
 		static const Path RESOURCES_DIR;
 		static const Path INTERNAL_RESOURCES_DIR;
 	private:
+		/** Name/resource pair for a single imported resource. */
+		struct QueuedImportResource
+		{
+			String name;
+			SPtr<Resource> resource;
+		};
+
+		/** Information about an asynchronously queued import. */
+		struct QueuedImport
+		{
+			Path filePath;
+			AsyncOp importOp;
+			SPtr<ImportOptions> importOptions;
+			Vector<QueuedImportResource> resources;
+			bool pruneMetas = false;
+		};
+
 		/**
 		 * Common code for adding a new resource entry to the library.
 		 *
@@ -323,8 +342,9 @@ namespace bs
 		 *									resources are eventually restored, references to them will remain valid. If you
 		 *									feel that you need to clear this data, set this to true but be aware that you
 		 *									might need to re-apply those references.
+		 * @return							Returns true if the resource was queued for import, false otherwise.
 		 */
-		void reimportResourceInternal(FileEntry* file, const SPtr<ImportOptions>& importOptions = nullptr, 
+		bool reimportResourceInternal(FileEntry* file, const SPtr<ImportOptions>& importOptions = nullptr, 
 			bool forceReimport = false, bool pruneResourceMetas = false);
 
 		/**
@@ -388,6 +408,8 @@ namespace bs
 		Path mProjectFolder;
 		Path mResourcesFolder;
 		bool mIsLoaded;
+
+		UnorderedMap<FileEntry*, QueuedImport> mQueuedImports;
 
 		UnorderedMap<Path, Vector<Path>> mDependencies;
 		UnorderedMap<UUID, Path> mUUIDToPath;

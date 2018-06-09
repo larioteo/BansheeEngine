@@ -866,6 +866,16 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Displays or hides the "import in progress" visuals on the status bar and updates the related progress bar.
+        /// </summary>
+        /// <param name="importing">True to display the visual, false otherwise.</param>
+        /// <param name="percent">Percent in range [0, 1] to display on the progress bar.</param>
+        internal static void SetStatusImporting(bool importing, float percent)
+        {
+            Internal_SetStatusImporting(importing, percent);
+        }
+
+        /// <summary>
         /// Checks did we make any modifications to the scene since it was last saved.
         /// </summary>
         /// <returns>True if the scene was never saved, or was modified after last save.</returns>
@@ -992,6 +1002,9 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetStatusCompiling(bool compiling);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetStatusImporting(bool importing, float percent);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string Internal_GetProjectPath();

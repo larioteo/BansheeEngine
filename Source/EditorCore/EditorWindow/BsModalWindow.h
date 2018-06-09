@@ -22,10 +22,10 @@ namespace bs
 		virtual ~ModalWindow();
 
 		/** @copydoc EditorWindowBase::update */
-		virtual void update() override;
+		void update() override;
 
 		/** @copydoc EditorWindowBase::close */
-		virtual void close() override;
+		void close() override;
 
 		/**	Changes the text in the modal window title bar. */
 		void setTitle(const HString& title);
@@ -48,7 +48,7 @@ namespace bs
 		Rect2I getContentArea() const;
 
 		/** @copydoc EditorWindowBase::resized */
-		virtual void resized() override;
+		void resized() override;
 
 	private:
 		/**

@@ -37,6 +37,7 @@ namespace bs
 	void ScriptProjectLibrary::initRuntimeData()
 	{
 		metaData.scriptClass->addInternalCall("Internal_Refresh", (void*)&ScriptProjectLibrary::internal_Refresh);
+		metaData.scriptClass->addInternalCall("Internal_FinalizeImports", (void*)&ScriptProjectLibrary::internal_FinalizeImports);
 		metaData.scriptClass->addInternalCall("Internal_Create", (void*)&ScriptProjectLibrary::internal_Create);
 		metaData.scriptClass->addInternalCall("Internal_Load", (void*)&ScriptProjectLibrary::internal_Load);
 		metaData.scriptClass->addInternalCall("Internal_Save", (void*)&ScriptProjectLibrary::internal_Save);
@@ -56,29 +57,36 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_GetResourceFolder", (void*)&ScriptProjectLibrary::internal_GetResourceFolder);
 		metaData.scriptClass->addInternalCall("Internal_SetIncludeInBuild", (void*)&ScriptProjectLibrary::internal_SetIncludeInBuild);
 		metaData.scriptClass->addInternalCall("Internal_SetEditorData", (void*)&ScriptProjectLibrary::internal_SetEditorData);
+		metaData.scriptClass->addInternalCall("Internal_GetInProgressImportCount", (void*)&ScriptProjectLibrary::internal_GetInProgressImportCount);
 
 		OnEntryAddedThunk = (OnEntryChangedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnEntryAdded", 1)->getThunk();
 		OnEntryRemovedThunk = (OnEntryChangedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnEntryRemoved", 1)->getThunk();
 		OnEntryImportedThunk = (OnEntryChangedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnEntryImported", 1)->getThunk();
 	}
 
-	MonoArray* ScriptProjectLibrary::internal_Refresh(MonoString* path, bool import)
+	UINT32 ScriptProjectLibrary::internal_Refresh(MonoString* path, bool synchronous)
 	{
 		Path nativePath = MonoUtil::monoToString(path);
 
 		if (!nativePath.isAbsolute())
 			nativePath.makeAbsolute(gProjectLibrary().getResourcesFolder());
 
-		Vector<Path> dirtyResources;
-		gProjectLibrary().checkForModifications(nativePath, import, dirtyResources);
+		const UINT32 importCount = gProjectLibrary().checkForModifications(nativePath);
 
-		ScriptArray output = ScriptArray::create<String>((UINT32)dirtyResources.size());
-		for (UINT32 i = 0; i < (UINT32)dirtyResources.size(); i++)
-		{
-			output.set(i, dirtyResources[i].toString());
-		}
+		if(synchronous)
+			gProjectLibrary()._finishQueuedImports(true);
 
-		return output.getInternal();
+		return importCount;
+	}
+
+	void ScriptProjectLibrary::internal_FinalizeImports()
+	{
+		gProjectLibrary()._finishQueuedImports();
+	}
+		
+	UINT32 ScriptProjectLibrary::internal_GetInProgressImportCount()
+	{
+		return gProjectLibrary().getInProgressImportCount();		
 	}
 
 	void ScriptProjectLibrary::internal_Create(MonoObject* resource, MonoString* path)

@@ -49,14 +49,14 @@ namespace BansheeEditor
         /// <summary>
         /// Checks wheher an asset import is currently in progress.
         /// </summary>
-        internal static bool ImportInProgress { get { return importInProgress; } }
+        internal static bool ImportInProgress { get { return InProgressImportCount > 0; } }
 
-        private static HashSet<string> queuedForImport = new HashSet<string>();
-        private static int numImportedFiles;
+        /// <summary>
+        /// Returns the number of resources currently being imported.
+        /// </summary>
+        internal static int InProgressImportCount { get { return Internal_GetInProgressImportCount(); } }
+
         private static int totalFilesToImport;
-        private static bool importInProgress;
-
-        private const float TIME_SLICE_SECONDS = 0.030f;
 
         /// <summary>
         /// Checks the project library folder for any modifications and reimports the required resources.
@@ -65,25 +65,10 @@ namespace BansheeEditor
         ///                           otherwise the refresh will happen over the course of this and next frames.</param>
         public static void Refresh(bool synchronous = false)
         {
-            string[] modifiedPaths = Internal_Refresh(ResourceFolder, synchronous);
+            totalFilesToImport += Internal_Refresh(ResourceFolder, synchronous);
 
-            if (!synchronous)
-            {
-                foreach (var modifiedPath in modifiedPaths)
-                {
-                    if (queuedForImport.Add(modifiedPath))
-                        totalFilesToImport++;
-                }
-            }
-            else
-            {
-                foreach (var path in queuedForImport)
-                    Internal_Refresh(path, true);
-
-                queuedForImport.Clear();
-                numImportedFiles = 0;
+            if (synchronous)
                 totalFilesToImport = 0;
-            }
         }
 
         /// <summary>
@@ -93,12 +78,7 @@ namespace BansheeEditor
         ///                    absolute.</param>
         public static void Refresh(string path)
         {
-            string[] modifiedPaths = Internal_Refresh(path, false);
-            foreach (var modifiedPath in modifiedPaths)
-            {
-                if (queuedForImport.Add(modifiedPath))
-                    totalFilesToImport++;
-            }
+            totalFilesToImport += Internal_Refresh(path, false);
         }
 
         /// <summary>
@@ -305,59 +285,22 @@ namespace BansheeEditor
         /// </summary>
         internal static void Update()
         {
-            if (queuedForImport.Count > 0)
+            Internal_FinalizeImports();
+
+            int inProgressImports = InProgressImportCount;
+
+            if (inProgressImports > 0)
             {
-                // Skip first frame to get the progress bar a chance to show up
-                if (importInProgress)
-                {
-                    UInt64 start = Time.Precise;
-                    List<string> toRemove = new List<string>();
+                int numRemaining = totalFilesToImport - inProgressImports;
 
-                    foreach (var entry in queuedForImport)
-                    {
-                        Internal_Refresh(entry, true);
-                        toRemove.Add(entry);
-                        numImportedFiles++;
-
-                        UInt64 end = Time.Precise;
-                        UInt64 elapsed = end - start;
-
-                        float elapsedSeconds = elapsed * Time.MicroToSecond;
-                        if (elapsedSeconds > TIME_SLICE_SECONDS)
-                            break;
-                    }
-
-                    foreach (var entry in toRemove)
-                        queuedForImport.Remove(entry);
-                }
-
-                if (queuedForImport.Count == 0)
-                {
-                    numImportedFiles = 0;
-                    totalFilesToImport = 0;
-
-                    ProgressBar.Hide();
-                }
-                else
-                {
-                    IEnumerator<string> enumerator = queuedForImport.GetEnumerator();
-                    enumerator.MoveNext();
-
-                    string displayName = enumerator.Current;
-                    if (displayName.Length > 60)
-                    {
-                        displayName = displayName.Remove(0, displayName.Length - 60);
-                        displayName = "..." + displayName;
-                    }
-
-                    float pct = numImportedFiles / (float)totalFilesToImport;
-                    ProgressBar.Show("Importing (" + numImportedFiles + "/" + totalFilesToImport + ")", displayName, pct);
-                }
-
-                importInProgress = true;
+                float pct = numRemaining / (float)totalFilesToImport;
+                EditorApplication.SetStatusImporting(true, pct);
             }
             else
-                importInProgress = false;
+            {
+                totalFilesToImport = 0;
+                EditorApplication.SetStatusImporting(false, 0.0f);
+            }
         }
 
         /// <summary>
@@ -391,7 +334,13 @@ namespace BansheeEditor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern string[] Internal_Refresh(string path, bool import);
+        private static extern int Internal_Refresh(string path, bool synchronous);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_FinalizeImports();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_GetInProgressImportCount();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Create(Resource resource, string path);

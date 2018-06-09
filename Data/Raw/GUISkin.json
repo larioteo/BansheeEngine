@@ -129,7 +129,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonFocused.png"
+            "texture": "ButtonActive.png"
         },		
 		"focusedHover": {
             "textColor": {
@@ -147,7 +147,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonFocusedHover.png"
+            "texture": "ButtonActive.png"
         },
         "textHorzAlign": 1,
         "textVertAlign": 1
@@ -246,7 +246,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonLeftFocused.png"
+            "texture": "ButtonLeftActive.png"
         },		
 		"focusedHover": {
             "textColor": {
@@ -264,7 +264,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonLeftFocusedHover.png"
+            "texture": "ButtonLeftActive.png"
         },
         "textHorzAlign": 1,
         "textVertAlign": 1
@@ -363,7 +363,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonRightFocused.png"
+            "texture": "ButtonRightActive.png"
         },		
 		"focusedHover": {
             "textColor": {
@@ -381,7 +381,7 @@
                 "g": 0.0,
                 "r": 0.0
             },
-            "texture": "ButtonRightFocusedHover.png"
+            "texture": "ButtonRightActive.png"
         },
         "textHorzAlign": 1,
         "textVertAlign": 1
@@ -2495,13 +2495,13 @@
     },
     {
         "border": {
-            "bottom": 0,
-            "left": 8,
-            "right": 8,
-            "top": 0
+            "bottom": 2,
+            "left": 2,
+            "right": 2,
+            "top": 2
         },
         "fixedHeight": true,
-        "height": 17,
+        "height": 27,
         "name": "ProgressBarBackground",
         "normal": {
             "texture": "ProgressBarBg.png"
@@ -2509,13 +2509,13 @@
     },
     {
         "border": {
-            "bottom": 0,
-            "left": 9,
-            "right": 10,
-            "top": 0
+            "bottom": 3,
+            "left": 3,
+            "right": 3,
+            "top": 3
         },
         "fixedHeight": true,
-        "height": 16,
+        "height": 27,
         "name": "ProgressBarFill",
         "normal": {
             "texture": "ProgressBarFill.png"
@@ -2523,7 +2523,7 @@
     },
     {
         "fixedHeight": true,
-        "height": 17,
+        "height": 27,
         "minWidth": 100,
         "name": "ProgressBar",
         "subStyles": [
@@ -2534,6 +2534,50 @@
             {
                 "name": "ProgressBarFill",
                 "style": "ProgressBarFill"
+            }
+        ]
+    },
+    {
+        "border": {
+            "bottom": 2,
+            "left": 2,
+            "right": 2,
+            "top": 2
+        },
+        "fixedHeight": true,
+        "height": 12,
+        "name": "ProgressBarSmallBackground",
+        "normal": {
+            "texture": "ProgressBarSmallBg.png"
+        }
+    },
+    {
+        "border": {
+            "bottom": 3,
+            "left": 3,
+            "right": 3,
+            "top": 3
+        },
+        "fixedHeight": true,
+        "height": 12,
+        "name": "ProgressBarSmallFill",
+        "normal": {
+            "texture": "ProgressBarSmallFill.png"
+        }
+    },
+    {
+        "fixedHeight": true,
+        "height": 12,
+        "minWidth": 500,
+        "name": "ProgressBarSmall",
+        "subStyles": [
+            {
+                "name": "ProgressBarBackground",
+                "style": "ProgressBarSmallBackground"
+            },
+            {
+                "name": "ProgressBarFill",
+                "style": "ProgressBarSmallFill"
             }
         ]
     },

@@ -121,19 +121,16 @@ namespace bs
 
 	ProjectLibrary::~ProjectLibrary()
 	{
+		_finishQueuedImports(true);
 		clearEntries();
 	}
 
-	void ProjectLibrary::checkForModifications(const Path& fullPath)
+	UINT32 ProjectLibrary::checkForModifications(const Path& fullPath)
 	{
-		Vector<Path> dirtyResources;
-		checkForModifications(fullPath, true, dirtyResources);
-	}
+		UINT32 resourcesToImport = 0;
 
-	void ProjectLibrary::checkForModifications(const Path& fullPath, bool import, Vector<Path>& dirtyResources)
-	{
 		if (!mResourcesFolder.includes(fullPath))
-			return; // Folder not part of our resources path, so no modifications
+			return resourcesToImport; // Folder not part of our resources path, so no modifications
 
 		if(mRootEntry == nullptr)
 		{
@@ -172,17 +169,11 @@ namespace bs
 						entryParent = static_cast<DirectoryEntry*>(entry);
 
 					if (FileSystem::isFile(pathToSearch))
-					{
-						if (import)
-							addResourceInternal(entryParent, pathToSearch);
-
-						dirtyResources.push_back(pathToSearch);
-					}
+						addResourceInternal(entryParent, pathToSearch);
 					else if (FileSystem::isDirectory(pathToSearch))
 					{
 						addDirectoryInternal(entryParent, pathToSearch);
-
-						checkForModifications(pathToSearch, import, dirtyResources);
+						resourcesToImport += checkForModifications(pathToSearch);
 					}
 				}
 			}
@@ -192,17 +183,11 @@ namespace bs
 			if(FileSystem::isFile(entry->path))
 			{
 				FileEntry* resEntry = static_cast<FileEntry*>(entry);
-
-				if (import)
-					reimportResourceInternal(resEntry);
-
-				if (!isUpToDate(resEntry))
-					dirtyResources.push_back(entry->path);
+				if(reimportResourceInternal(resEntry))
+					resourcesToImport++;
 			}
 			else
-			{
 				deleteResourceInternal(static_cast<FileEntry*>(entry));
-			}
 		}
 		else if(entry->type == LibraryEntryType::Directory) // Check folder and all subfolders for modifications
 		{
@@ -267,18 +252,13 @@ namespace bs
 
 							if(existingEntry != nullptr)
 							{
-								if (import)
-									reimportResourceInternal(existingEntry);
-
-								if (!isUpToDate(existingEntry))
-									dirtyResources.push_back(existingEntry->path);
+								if(reimportResourceInternal(existingEntry))
+									resourcesToImport++;
 							}
 							else
 							{
-								if (import)
-									addResourceInternal(currentDir, filePath);
-
-								dirtyResources.push_back(filePath);
+								addResourceInternal(currentDir, filePath);
+								resourcesToImport++;
 							}
 						}
 					}
@@ -331,6 +311,8 @@ namespace bs
 				}
 			}
 		}
+
+		return resourcesToImport;
 	}
 
 	ProjectLibrary::FileEntry* ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
@@ -389,6 +371,8 @@ namespace bs
 		Path originalPath = resource->path;
 		onEntryRemoved(originalPath);
 
+		mQueuedImports.erase(resource);
+
 		removeDependencies(resource);
 		bs_delete(resource);
 
@@ -422,12 +406,14 @@ namespace bs
 		bs_delete(directory);
 	}
 
-	void ProjectLibrary::reimportResourceInternal(FileEntry* fileEntry, const SPtr<ImportOptions>& importOptions,
+	bool ProjectLibrary::reimportResourceInternal(FileEntry* fileEntry, const SPtr<ImportOptions>& importOptions,
 		bool forceReimport, bool pruneResourceMetas)
 	{
 		Path metaPath = fileEntry->path;
 		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
+		// If the file doesn't have meta-data, attempt to read it from a meta-file, if one exists. This can only happen
+		// if library data is obsolete (e.g. when adding files from another copy of the project)
 		if(fileEntry->meta == nullptr)
 		{
 			if(FileSystem::isFile(metaPath))
@@ -437,18 +423,18 @@ namespace bs
 
 				if(loadedMeta != nullptr && loadedMeta->isDerivedFrom(ProjectFileMeta::getRTTIStatic()))
 				{
-					SPtr<ProjectFileMeta> fileMeta = std::static_pointer_cast<ProjectFileMeta>(loadedMeta);
+					const SPtr<ProjectFileMeta>& fileMeta = std::static_pointer_cast<ProjectFileMeta>(loadedMeta);
 					fileEntry->meta = fileMeta;
 
 					auto& resourceMetas = fileEntry->meta->getResourceMetaData();
 
-					if (resourceMetas.size() > 0)
+					if (!resourceMetas.empty())
 					{
 						mUUIDToPath[resourceMetas[0]->getUUID()] = fileEntry->path;
 
 						for (UINT32 i = 1; i < (UINT32)resourceMetas.size(); i++)
 						{
-							SPtr<ProjectResourceMeta> entry = resourceMetas[i];
+							const SPtr<ProjectResourceMeta>& entry = resourceMetas[i];
 							mUUIDToPath[entry->getUUID()] = fileEntry->path + entry->getUniqueName();
 						}
 					}
@@ -460,7 +446,7 @@ namespace bs
 		{
 			// Note: If resource is native we just copy it to the internal folder. We could avoid the copy and 
 			// load the resource directly from the Resources folder but that requires complicating library code.
-			bool isNativeResource = isNative(fileEntry->path);
+			const bool isNativeResource = isNative(fileEntry->path);
 
 			SPtr<ImportOptions> curImportOptions = nullptr;
 			if (importOptions == nullptr && !isNativeResource)
@@ -473,8 +459,16 @@ namespace bs
 			else
 				curImportOptions = importOptions;
 
-			Vector<SubResource> importedResources;
-			if (isNativeResource)
+			QueuedImport queuedImport;
+			queuedImport.filePath = fileEntry->path;
+			queuedImport.importOptions = curImportOptions;
+			queuedImport.pruneMetas = pruneResourceMetas;
+
+			if(!isNativeResource)
+			{
+				queuedImport.importOp = gImporter().importAllAsync(fileEntry->path, curImportOptions, false);
+			}
+			else
 			{
 				// If meta exists make sure it is registered in the manifest before load, otherwise it will get assigned a new UUID.
 				// This can happen if library isn't properly saved before exiting the application.
@@ -486,40 +480,81 @@ namespace bs
 
 				// Don't load dependencies because we don't need them, but also because they might not be in the manifest
 				// which would screw up their UUIDs.
-				importedResources.push_back({ "primary", gResources().load(fileEntry->path, ResourceLoadFlag::KeepSourceData) });
+				HResource resource = gResources().load(fileEntry->path, ResourceLoadFlag::KeepSourceData);
+				queuedImport.resources.push_back({ "primary", resource.getInternalPtr() });
 			}
 
+			mQueuedImports[fileEntry] = queuedImport;
+
+			fileEntry->lastUpdateTime = std::time(nullptr);
+			return true;
+		}
+
+		return false;
+	}
+
+	void ProjectLibrary::_finishQueuedImports(bool wait)
+	{
+		for(auto iter = mQueuedImports.begin(); iter != mQueuedImports.end();)
+		{
+			QueuedImport& queuedImport = iter->second;
+
+			if(queuedImport.importOp != nullptr)
+			{
+				if(!queuedImport.importOp.hasCompleted())
+				{
+					if(wait)
+						queuedImport.importOp.blockUntilComplete();
+					else
+					{
+						++iter;
+						continue;
+					}
+				}
+
+				Vector<SubResourceRaw> subresources = queuedImport.importOp.getReturnValue<Vector<SubResourceRaw>>();
+				for(auto& entry : subresources)
+					queuedImport.resources.push_back({entry.name, entry.value});
+			}
+
+			FileEntry* fileEntry = iter->first;
+
+			Path metaPath = fileEntry->path;
+			metaPath.setFilename(metaPath.getFilename() + ".meta");
+
+			Vector<HResource> newResources;
 			if(fileEntry->meta == nullptr)
 			{
-				if (!isNativeResource)
-					importedResources = Importer::instance().importAll(fileEntry->path, curImportOptions);
+				// Generate new resource handles and build the meta-file
+				fileEntry->meta = ProjectFileMeta::create(queuedImport.importOptions);
 
-				fileEntry->meta = ProjectFileMeta::create(curImportOptions);
-
-				for(auto& entry : importedResources)
+				for(auto& entry : queuedImport.resources)
 				{
-					SPtr<ResourceMetaData> subMeta = entry.value->getMetaData();
-					UINT32 typeId = entry.value->getTypeId();
-					const UUID& UUID = entry.value.getUUID();
+					HResource handle = gResources()._createResourceHandle(entry.resource);
+					newResources.push_back(handle);
+
+					SPtr<ResourceMetaData> subMeta = handle->getMetaData();
+					const UINT32 typeId = handle->getTypeId();
+					const UUID& UUID = handle.getUUID();
 					Path::stripInvalid(entry.name);
 
-					const ProjectResourceIcons icons = generatePreviewIcons(*entry.value);
+					const ProjectResourceIcons icons = generatePreviewIcons(*handle);
 
-					SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(entry.name, UUID, typeId, icons, 
-						subMeta);
+					const SPtr<ProjectResourceMeta> resMeta = 
+						ProjectResourceMeta::create(entry.name, UUID, typeId, icons, subMeta);
 					fileEntry->meta->add(resMeta);
 				}
 
-				if(!importedResources.empty())
+				if(!queuedImport.resources.empty())
 				{
-					HResource primary = importedResources[0].value;
+					HResource primary = newResources[0];
 
 					mUUIDToPath[primary.getUUID()] = fileEntry->path;
-					for (UINT32 i = 1; i < (UINT32)importedResources.size(); i++)
+					for (UINT32 i = 1; i < (UINT32)queuedImport.resources.size(); i++)
 					{
-						SubResource& entry = importedResources[i];
+						const QueuedImportResource& entry = queuedImport.resources[i];
 
-						const UUID& UUID = entry.value.getUUID();
+						const UUID& UUID = newResources[i].getUUID();
 						mUUIDToPath[UUID] = fileEntry->path + entry.name;
 					}
 				}
@@ -531,77 +566,73 @@ namespace bs
 			{
 				removeDependencies(fileEntry);
 
-				if (!isNativeResource)
+				Vector<SPtr<ProjectResourceMeta>> existingResourceMetas = fileEntry->meta->getAllResourceMetaData();
+				fileEntry->meta->clearResourceMetaData();
+
+				for (auto& entry : queuedImport.resources)
 				{
-					Vector<SubResourceRaw> importedResourcesRaw = gImporter()._importAll(fileEntry->path, curImportOptions);
-					Vector<SPtr<ProjectResourceMeta>> existingResourceMetas = fileEntry->meta->getAllResourceMetaData();
-					fileEntry->meta->clearResourceMetaData();
+					Path::stripInvalid(entry.name);
 
-					for(auto& resEntry : importedResourcesRaw)
+					const ProjectResourceIcons icons = generatePreviewIcons(*entry.resource);
+
+					bool foundMeta = false;
+					for (auto iterMeta = existingResourceMetas.begin(); iterMeta != existingResourceMetas.end(); ++iterMeta)
 					{
-						Path::stripInvalid(resEntry.name);
+						const SPtr<ProjectResourceMeta>& metaEntry = *iterMeta;
 
-						const ProjectResourceIcons icons = generatePreviewIcons(*resEntry.value);
-
-						bool foundMeta = false;
-						for (auto iter = existingResourceMetas.begin(); iter != existingResourceMetas.end(); ++iter)
+						if (entry.name == metaEntry->getUniqueName())
 						{
-							SPtr<ProjectResourceMeta> metaEntry = *iter;
+							HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
+							gResources().update(importedResource, entry.resource);
 
-							if(resEntry.name == metaEntry->getUniqueName())
-							{
-								HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
-								gResources().update(importedResource, resEntry.value);
+							newResources.push_back(importedResource);
 
-								importedResources.push_back({ resEntry.name, importedResource });
+							metaEntry->setPreviewIcons(icons);
+							fileEntry->meta->add(metaEntry);
 
-								metaEntry->setPreviewIcons(icons);
-								fileEntry->meta->add(metaEntry);
-
-								existingResourceMetas.erase(iter);
-								foundMeta = true;
-								break;
-							}
+							iterMeta = existingResourceMetas.erase(iterMeta);
+							foundMeta = true;
+							break;
 						}
+					}
 
-						if(!foundMeta)
-						{
-							HResource importedResource = gResources()._createResourceHandle(resEntry.value);
-							importedResources.push_back({ resEntry.name, importedResource });
+					if (!foundMeta)
+					{
+						HResource importedResource = gResources()._createResourceHandle(entry.resource);
+						newResources.push_back(importedResource);
 
-							SPtr<ResourceMetaData> subMeta = resEntry.value->getMetaData();
-							UINT32 typeId = resEntry.value->getTypeId();
-							const UUID& UUID = importedResource.getUUID();
+						SPtr<ResourceMetaData> subMeta = entry.resource->getMetaData();
+						const UINT32 typeId = entry.resource->getTypeId();
+						const UUID& UUID = importedResource.getUUID();
 
-							SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(resEntry.name, UUID, typeId, 
-								icons, subMeta);
-							fileEntry->meta->add(resMeta);
-						}
+						SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(entry.name, UUID, typeId,
+							icons, subMeta);
+						fileEntry->meta->add(resMeta);
 					}
 
 					// Keep resource metas that we are not currently using, in case they get restored so their references
 					// don't get broken
-					if(!pruneResourceMetas)
+					if(!queuedImport.pruneMetas)
 					{
-						for (auto& entry : existingResourceMetas)
-							fileEntry->meta->addInactive(entry);
+						for (auto& metaEntry : existingResourceMetas)
+							fileEntry->meta->addInactive(metaEntry);
 					}
 
 					// Update UUID to path mapping
 					auto& resourceMetas = fileEntry->meta->getResourceMetaData();
-					if (resourceMetas.size() > 0)
+					if (!resourceMetas.empty())
 					{
 						mUUIDToPath[resourceMetas[0]->getUUID()] = fileEntry->path;
 
 						for (UINT32 i = 1; i < (UINT32)resourceMetas.size(); i++)
 						{
-							SPtr<ProjectResourceMeta> entry = resourceMetas[i];
-							mUUIDToPath[entry->getUUID()] = fileEntry->path + entry->getUniqueName();
+							const SPtr<ProjectResourceMeta>& meta = resourceMetas[i];
+							mUUIDToPath[meta->getUUID()] = fileEntry->path + meta->getUniqueName();
 						}
 					}
 				}
 
-				fileEntry->meta->mImportOptions = curImportOptions;
+				fileEntry->meta->mImportOptions = queuedImport.importOptions;
 
 				FileEncoder fs(metaPath);
 				fs.encode(fileEntry->meta.get());
@@ -609,7 +640,7 @@ namespace bs
 
 			addDependencies(fileEntry);
 
-			if (importedResources.size() > 0)
+			if (!newResources.empty())
 			{
 				Path internalResourcesPath = mProjectFolder;
 				internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
@@ -617,42 +648,49 @@ namespace bs
 				if (!FileSystem::isDirectory(internalResourcesPath))
 					FileSystem::createDir(internalResourcesPath);
 
-				for (auto& entry : importedResources)
+				for (auto& entry : newResources)
 				{
-					String uuidStr = entry.value.getUUID().toString();
+					String uuidStr = entry.getUUID().toString();
 
 					internalResourcesPath.setFilename(uuidStr + ".asset");
-					gResources().save(entry.value, internalResourcesPath, true);
+					gResources().save(entry, internalResourcesPath, true);
 
-					const UUID& uuid = entry.value.getUUID();
+					const UUID& uuid = entry.getUUID();
 					mResourceManifest->registerResource(uuid, internalResourcesPath);
 				}
 			}
 
-			fileEntry->lastUpdateTime = std::time(nullptr);
-
 			onEntryImported(fileEntry->path);
 			reimportDependants(fileEntry->path);
+
+			iter = mQueuedImports.erase(iter);
 		}
 	}
 
 	bool ProjectLibrary::isUpToDate(FileEntry* resource) const
 	{
 		if(resource->meta == nullptr)
-			return false;
-
-		auto& resourceMetas = resource->meta->getResourceMetaData();
-		for (auto& resMeta : resourceMetas)
 		{
-			Path internalPath;
-			if (!mResourceManifest->uuidToFilePath(resMeta->getUUID(), internalPath))
-				return false;
-
-			if (!FileSystem::isFile(internalPath))
+			// Allow no meta if import in progress
+			const auto iterFind = mQueuedImports.find(resource);
+			if(iterFind == mQueuedImports.end())
 				return false;
 		}
+		else
+		{
+			auto& resourceMetas = resource->meta->getResourceMetaData();
+			for (auto& resMeta : resourceMetas)
+			{
+				Path internalPath;
+				if (!mResourceManifest->uuidToFilePath(resMeta->getUUID(), internalPath))
+					return false;
 
-		std::time_t lastModifiedTime = FileSystem::getLastModifiedTime(resource->path);
+				if (!FileSystem::isFile(internalPath))
+					return false;
+			}
+		}
+
+		const std::time_t lastModifiedTime = FileSystem::getLastModifiedTime(resource->path);
 		return lastModifiedTime <= resource->lastUpdateTime;
 	}
 
@@ -1367,6 +1405,8 @@ namespace bs
 		if (!mIsLoaded)
 			return;
 
+		_finishQueuedImports(true);
+
 		mProjectFolder = Path::BLANK;
 		mResourcesFolder = Path::BLANK;
 
@@ -1614,6 +1654,8 @@ namespace bs
 
 			bs_delete(entry);
 		};
+
+		assert(mQueuedImports.empty());
 
 		deleteRecursive(mRootEntry);
 		mRootEntry = nullptr;

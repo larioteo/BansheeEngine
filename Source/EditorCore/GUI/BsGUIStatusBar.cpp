@@ -10,6 +10,7 @@
 #include "GUI/BsGUISpace.h"
 #include "Debug/BsDebug.h"
 #include "Utility/BsBuiltinEditorResources.h"
+#include "GUI/BsGUIProgressBar.h"
 
 using namespace std::placeholders;
 
@@ -28,10 +29,12 @@ namespace bs
 		_registerChildElement(mBgPanel);
 
 		mBackground = GUITexture::create(GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIBackgroundTypeName()));
-		mMessage = GUIButton::create(HString(""), GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIMessageTypeName()));
-		mScene = GUILabel::create(HString("Scene: Unnamed"), GUIOptions(GUIOption::fixedWidth(150)));
-		mProject = GUILabel::create(HString("Project: None"), GUIOptions(GUIOption::fixedWidth(200)));
-		mCompiling = GUILabel::create(HString("Compiling..."), GUIOptions(GUIOption::fixedWidth(100)));
+		mMessage = GUIButton::create(HEString(""), GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getGUIMessageTypeName()));
+		mScene = GUILabel::create(HEString("Scene: Unnamed"), GUIOptions(GUIOption::fixedWidth(150)));
+		mProject = GUILabel::create(HEString("Project: None"), GUIOptions(GUIOption::fixedWidth(200)));
+		mCompiling = GUILabel::create(HEString("Compiling..."), GUIOptions(GUIOption::fixedWidth(60)));
+		mImporting = GUILabel::create(HEString("Importing..."), GUIOptions(GUIOption::fixedWidth(60)));
+		mImportProgressBar = GUIProgressBar::create(GUIOptions(GUIOption::fixedWidth(100)), "ProgressBarSmall");
 
 		GUIElementOptions msgBtnOptions = mMessage->getOptionFlags();
 		msgBtnOptions.unset(GUIElementOption::AcceptsKeyFocus);
@@ -49,10 +52,19 @@ namespace bs
 		horzLayout->addElement(mProject);
 		horzLayout->addNewElement<GUIFixedSpace>(10);
 		horzLayout->addElement(mCompiling);
-		horzLayout->addNewElement<GUIFixedSpace>(10);
+		mCompilingSpace = horzLayout->addNewElement<GUIFixedSpace>(10);
+
+		horzLayout->addElement(mImporting);
+		mImportLayout = horzLayout->addNewElement<GUILayoutY>();
+		mImportLayout->addNewElement<GUIFixedSpace>(2);
+		mImportLayout->addElement(mImportProgressBar);
+
+		mImportSpace = horzLayout->addNewElement<GUIFixedSpace>(10);
 
 		mBgPanel->addElement(mBackground);
-		mCompiling->setActive(false);
+
+		setIsCompiling(false);
+		setIsImporting(false, 0.0f);
 
 		mLogEntryAddedConn = gDebug().onLogModified.connect(std::bind(&GUIStatusBar::logModified, this));
 		mMessageBtnPressedConn = mMessage->onClick.connect(std::bind(&GUIStatusBar::messageBtnClicked, this));
@@ -117,6 +129,15 @@ namespace bs
 	void GUIStatusBar::setIsCompiling(bool compiling)
 	{
 		mCompiling->setActive(compiling);
+		mCompilingSpace->setActive(compiling);
+	}
+
+	void GUIStatusBar::setIsImporting(bool importing, float percentage)
+	{
+		mImporting->setActive(importing);
+		mImportLayout->setActive(importing);
+		mImportSpace->setActive(importing);
+		mImportProgressBar->setPercent(percentage);
 	}
 	
 	void GUIStatusBar::setTint(const Color& color)
