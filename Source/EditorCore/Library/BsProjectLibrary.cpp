@@ -487,6 +487,30 @@ namespace bs
 			mQueuedImports[fileEntry] = queuedImport;
 
 			fileEntry->lastUpdateTime = std::time(nullptr);
+
+			// TODO - Copy native resource directly
+			if (!newResources.empty())
+			{
+				Path internalResourcesPath = mProjectFolder;
+				internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
+
+				if (!FileSystem::isDirectory(internalResourcesPath))
+					FileSystem::createDir(internalResourcesPath);
+
+				for (auto& entry : newResources)
+				{
+					String uuidStr = entry.getUUID().toString();
+
+					internalResourcesPath.setFilename(uuidStr + ".asset");
+					gResources().save(entry, internalResourcesPath, true);
+
+					const UUID& uuid = entry.getUUID();
+
+					// TODO - Not thread safe
+					mResourceManifest->registerResource(uuid, internalResourcesPath);
+				}
+			}
+
 			return true;
 		}
 
@@ -639,26 +663,6 @@ namespace bs
 			}
 
 			addDependencies(fileEntry);
-
-			if (!newResources.empty())
-			{
-				Path internalResourcesPath = mProjectFolder;
-				internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
-
-				if (!FileSystem::isDirectory(internalResourcesPath))
-					FileSystem::createDir(internalResourcesPath);
-
-				for (auto& entry : newResources)
-				{
-					String uuidStr = entry.getUUID().toString();
-
-					internalResourcesPath.setFilename(uuidStr + ".asset");
-					gResources().save(entry, internalResourcesPath, true);
-
-					const UUID& uuid = entry.getUUID();
-					mResourceManifest->registerResource(uuid, internalResourcesPath);
-				}
-			}
 
 			onEntryImported(fileEntry->path);
 			reimportDependants(fileEntry->path);
