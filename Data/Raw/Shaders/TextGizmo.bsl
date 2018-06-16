@@ -1,5 +1,9 @@
+#include "$EDITOR$/GizmoCommon.bslinc"
+
 shader TextGizmo
 {
+	mixin GizmoCommon;
+
 	blend
 	{
 		target 
@@ -16,12 +20,6 @@ shader TextGizmo
 	
 	code
 	{
-		cbuffer Uniforms
-		{
-			float4x4 	gMatViewProj;
-			float4		gViewDir;
-		}
-
 		void vsmain(
 			in float3 inPos : POSITION,
 			in float2 uv : TEXCOORD0,
@@ -30,13 +28,20 @@ shader TextGizmo
 			out float2 oUv : TEXCOORD0,
 			out float4 oColor : COLOR0)
 		{
-			oPosition = mul(gMatViewProj, float4(inPos.xyz, 1));
+			float tfrmdX = -1.0f + (inPos.x * gInvViewportWidth);
+			float tfrmdY = (1.0f - (inPos.y * gInvViewportHeight)) * gViewportYFlip;
+
+			oPosition = float4(tfrmdX, tfrmdY, inPos.z, 1);
 			oUv = uv;
 			oColor = color;
 		}		
 
-		SamplerState gMainTexSamp : register(s0);
-		Texture2D gMainTexture : register(t0);
+		SamplerState gMainTexSamp
+		{
+			Filter = MIN_MAG_MIP_POINT;
+		};
+		
+		Texture2D gMainTexture;
 
 		float4 fsmain(
 			in float4 inPos : SV_Position, 

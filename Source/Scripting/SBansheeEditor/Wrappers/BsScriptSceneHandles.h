@@ -21,7 +21,7 @@ namespace bs
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneHandles")
 
 	private:
-		ScriptSceneHandles(MonoObject* object, EditorWidgetBase* parentWidget, const SPtr<Camera>& camera);
+		ScriptSceneHandles(MonoObject* object, EditorWidgetBase* parentWidget, const HCamera& camera);
 		~ScriptSceneHandles();
 
 		/**
@@ -34,7 +34,7 @@ namespace bs
 		Vector2I wrapCursorToWindow() const;
 
 		EditorWidgetBase* mParentWidget;
-		SPtr<Camera> mCamera;
+		HCamera mCamera;
 		Vector2I mMouseDeltaCompensate;
 
 		/************************************************************************/

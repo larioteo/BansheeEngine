@@ -1,13 +1,11 @@
+#include "$EDITOR$/GizmoCommon.bslinc"
+
 mixin SolidGizmoBase
 {
+	mixin GizmoCommon;
+
 	code
 	{
-		cbuffer Uniforms
-		{
-			float4x4 	gMatViewProj;
-			float4		gViewDir;
-		}
-
 		void vsmain(
 			in float3 inPos : POSITION,
 			in float3 inNormal : NORMAL,

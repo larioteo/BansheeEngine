@@ -1,5 +1,9 @@
+#include "$EDITOR$/GizmoCommon.bslinc"
+
 shader WireGizmo
 {
+	mixin GizmoCommon;
+
 	raster
 	{
 		fill = wire;
@@ -7,12 +11,6 @@ shader WireGizmo
 
 	code
 	{
-		cbuffer Uniforms
-		{
-			float4x4 	gMatViewProj;
-			float4		gViewDir;
-		}
-		
 		void vsmain(
 			in float3 inPos : POSITION,
 			in float4 color : COLOR0,

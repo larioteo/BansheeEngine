@@ -512,6 +512,9 @@ namespace bs
 	BS_PARAM_BLOCK_BEGIN(GizmoParamBlockDef)
 		BS_PARAM_BLOCK_ENTRY(Matrix4, gMatViewProj)
 		BS_PARAM_BLOCK_ENTRY(Vector4, gViewDir)
+		BS_PARAM_BLOCK_ENTRY(float, gInvViewportWidth)
+		BS_PARAM_BLOCK_ENTRY(float, gInvViewportHeight)
+		BS_PARAM_BLOCK_ENTRY(float, gViewportYFlip)
 	BS_PARAM_BLOCK_END
 
 	extern GizmoParamBlockDef gGizmoParamBlockDef;

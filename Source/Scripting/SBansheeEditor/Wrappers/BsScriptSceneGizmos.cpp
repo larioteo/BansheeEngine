@@ -9,7 +9,7 @@
 
 namespace bs
 {
-	ScriptSceneGizmos::ScriptSceneGizmos(MonoObject* object, const SPtr<Camera>& camera)
+	ScriptSceneGizmos::ScriptSceneGizmos(MonoObject* object, const HCamera& camera)
 		:ScriptObject(object), mCamera(camera)
 	{
 
@@ -29,12 +29,17 @@ namespace bs
 
 	void ScriptSceneGizmos::internal_Create(MonoObject* managedInstance, ScriptCCamera* camera)
 	{
-		new (bs_alloc<ScriptSceneGizmos>()) ScriptSceneGizmos(managedInstance, camera->getHandle()->_getCamera());
+		new (bs_alloc<ScriptSceneGizmos>()) ScriptSceneGizmos(managedInstance, camera->getHandle());
 	}
 
 	void ScriptSceneGizmos::internal_Draw(ScriptSceneGizmos* thisPtr)
 	{
 		ScriptGizmoManager::instance().update();
-		GizmoManager::instance().update(thisPtr->mCamera);
+
+		// Make sure camera's transform is up-to-date
+		const SPtr<Camera>& cameraPtr = thisPtr->mCamera->_getCamera();
+		cameraPtr->_updateState(*thisPtr->mCamera->SO());
+
+		GizmoManager::instance().update(cameraPtr);
 	}
 }

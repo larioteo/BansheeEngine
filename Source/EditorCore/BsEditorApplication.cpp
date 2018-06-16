@@ -108,6 +108,12 @@ namespace bs
 		loadEditorSettings();
 		mProjectSettings = bs_shared_ptr_new<ProjectSettings>();
 
+		ScriptCodeImporter* scriptCodeImporter = bs_new<ScriptCodeImporter>();
+		Importer::instance()._registerAssetImporter(scriptCodeImporter);
+
+		// Hidden dependency: Needs to be done before BuiltinEditorResources import as shader include lookup requires it
+		ProjectLibrary::startUp();
+
 		BuiltinEditorResources::startUp();
 
 		{
@@ -117,11 +123,6 @@ namespace bs
 			inputConfig->registerButton("Cut", BC_X, ButtonModifier::Ctrl);
 			inputConfig->registerButton("Paste", BC_V, ButtonModifier::Ctrl);
 		}
-
-		ScriptCodeImporter* scriptCodeImporter = bs_new<ScriptCodeImporter>();
-		Importer::instance()._registerAssetImporter(scriptCodeImporter);
-
-		ProjectLibrary::startUp();
 
 		UndoRedo::startUp();
 		EditorWindowManager::startUp();

@@ -154,9 +154,8 @@ namespace bs
 		 * @param[in]	text		Text to draw.
 		 * @param[in]	font		Font to use for rendering the text's characters.
 		 * @param[in]	fontSize	Size of the characters, in points.
-		 * @param[in]	size		Uniform scale of the rendered mesh.
 		 */
-		void drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize = 16, float size = 1.0f);
+		void drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize = 16);
 
 		/**	Queues all the handle draw commands queued since the last call to clear() for rendering. */
 		void draw(const SPtr<Camera>& camera);
@@ -193,6 +192,9 @@ namespace bs
 	BS_PARAM_BLOCK_BEGIN(HandleParamBlockDef)
 		BS_PARAM_BLOCK_ENTRY(Matrix4, gMatViewProj)
 		BS_PARAM_BLOCK_ENTRY(Vector4, gViewDir)
+		BS_PARAM_BLOCK_ENTRY(float, gInvViewportWidth)
+		BS_PARAM_BLOCK_ENTRY(float, gInvViewportHeight)
+		BS_PARAM_BLOCK_ENTRY(float, gViewportYFlip)
 	BS_PARAM_BLOCK_END
 
 	extern HandleParamBlockDef gHandleParamBlockDef;

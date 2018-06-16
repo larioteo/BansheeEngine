@@ -14,7 +14,7 @@
 
 namespace bs
 {
-	ScriptSceneHandles::ScriptSceneHandles(MonoObject* object, EditorWidgetBase* parentWidget, const SPtr<Camera>& camera)
+	ScriptSceneHandles::ScriptSceneHandles(MonoObject* object, EditorWidgetBase* parentWidget, const HCamera& camera)
 		:ScriptObject(object), mParentWidget(parentWidget), mCamera(camera)
 	{
 		HandleManager::instance().setSettings(gEditorApplication().getEditorSettings());
@@ -76,12 +76,16 @@ namespace bs
 		if (parentWindow != nullptr && !parentWindow->isDestroyed())
 			widget = parentWindow->getEditorWidget();
 
-		new (bs_alloc<ScriptSceneHandles>()) ScriptSceneHandles(managedInstance, widget, camera->getHandle()->_getCamera());
+		new (bs_alloc<ScriptSceneHandles>()) ScriptSceneHandles(managedInstance, widget, camera->getHandle());
 	}
 
 	void ScriptSceneHandles::internal_Draw(ScriptSceneHandles* thisPtr)
 	{
-		HandleManager::instance().draw(thisPtr->mCamera);
+		// Make sure camera's transform is up-to-date
+		const SPtr<Camera>& cameraPtr = thisPtr->mCamera->_getCamera();
+		cameraPtr->_updateState(*thisPtr->mCamera->SO());
+
+		HandleManager::instance().draw(cameraPtr);
 	}
 
 	void ScriptSceneHandles::internal_BeginInput()
@@ -100,24 +104,24 @@ namespace bs
 		Vector2I realDelta = *inputDelta - thisPtr->mMouseDeltaCompensate;
 		thisPtr->mMouseDeltaCompensate = Vector2I::ZERO;
 
-		if (HandleManager::instance().isHandleActive(thisPtr->mCamera))
+		if (HandleManager::instance().isHandleActive(thisPtr->mCamera->_getCamera()))
 			thisPtr->mMouseDeltaCompensate = thisPtr->wrapCursorToWindow();
 
-		HandleManager::instance().updateInput(thisPtr->mCamera, *inputPos, realDelta);
+		HandleManager::instance().updateInput(thisPtr->mCamera->_getCamera(), *inputPos, realDelta);
 	}
 
 	void ScriptSceneHandles::internal_TrySelect(ScriptSceneHandles* thisPtr, Vector2I* inputPos)
 	{
-		HandleManager::instance().trySelect(thisPtr->mCamera, *inputPos);
+		HandleManager::instance().trySelect(thisPtr->mCamera->_getCamera(), *inputPos);
 	}
 
 	bool ScriptSceneHandles::internal_IsActive(ScriptSceneHandles* thisPtr)
 	{
-		return HandleManager::instance().isHandleActive(thisPtr->mCamera);
+		return HandleManager::instance().isHandleActive(thisPtr->mCamera->_getCamera());
 	}
 
 	void ScriptSceneHandles::internal_ClearSelection(ScriptSceneHandles* thisPtr)
 	{
-		HandleManager::instance().clearSelection(thisPtr->mCamera);
+		HandleManager::instance().clearSelection(thisPtr->mCamera->_getCamera());
 	}
 }

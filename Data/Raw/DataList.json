@@ -687,6 +687,10 @@
         {
             "Path": "SolidGizmo.bslinc",
             "UUID": "dea24fc4-7497-4d28-988b-88681582d7a5"
+        },
+        {
+            "Path": "GizmoCommon.bslinc",
+            "UUID": "92e9f047-49e5-203f-3280-49e5bc29ba54"
         }
     ],
     "Shaders": [

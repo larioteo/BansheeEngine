@@ -29,7 +29,7 @@ namespace BansheeEngine
         /// </summary>
         private enum BuiltinMesh // Note: Must match C++ enum BuiltinMesh
         {
-            Box, Sphere, Cone, Quad, Disc
+            Box, Sphere, Cone, Cylinder, Quad, Disc
         }
 
         /// <summary>
@@ -73,6 +73,14 @@ namespace BansheeEngine
         public static Mesh Cone
         {
             get { return Internal_GetMesh(BuiltinMesh.Cone); }
+        }
+
+        /// <summary>
+        /// Returns a cylinder mesh.
+        /// </summary>
+        public static Mesh Cylinder
+        {
+            get { return Internal_GetMesh(BuiltinMesh.Cylinder); }
         }
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace bs
 		HandleManager::instance().getDrawManager().drawRect(area, size);
 	}
 
-	void ScriptHandleDrawing::internal_DrawText(Vector3* position, MonoString* text, ScriptFont* font, int fontSize, float size)
+	void ScriptHandleDrawing::internal_DrawText(Vector3* position, MonoString* text, ScriptFont* font, int fontSize)
 	{
 		String nativeText = MonoUtil::monoToString(text);
 
@@ -116,6 +116,6 @@ namespace bs
 		if (font != nullptr)
 			fontHandle = font->getHandle();
 
-		HandleManager::instance().getDrawManager().drawText(*position, nativeText, fontHandle, fontSize, size);
+		HandleManager::instance().getDrawManager().drawText(*position, nativeText, fontHandle, fontSize);
 	}
 }

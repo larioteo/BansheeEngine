@@ -443,7 +443,7 @@ namespace bs
 	void GizmoManager::update(const SPtr<Camera>& camera)
 	{
 		mActiveMeshes.clear();
-		mActiveMeshes = mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera->getTransform().getPosition());
+		mActiveMeshes = mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get());
 
 		Vector<MeshRenderData> proxyData = createMeshProxyData(mActiveMeshes);
 		IconRenderDataVecPtr iconRenderData;
@@ -635,7 +635,7 @@ namespace bs
 		}
 
 		const Vector<DrawHelper::ShapeMeshData>& meshes = 
-			mPickingDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera->getTransform().getPosition());
+			mPickingDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get());
 
 		SPtr<Mesh> iconMesh = buildIconMesh(camera, iconData, true, iconRenderData);
 		
@@ -958,12 +958,26 @@ namespace bs
 
 			meshData.paramsIdx = paramsIdx;
 
+			SPtr<GpuParamsSet> paramsSet;
 			if (paramsIdx >= mMeshParamSets[typeIdx].size())
 			{
-				SPtr<GpuParamsSet> paramsSet = mMeshMaterials[typeIdx]->createParamsSet();
+				paramsSet = mMeshMaterials[typeIdx]->createParamsSet();
+				mMeshMaterials[typeIdx]->updateParamsSet(paramsSet, true);
+
 				paramsSet->setParamBlockBuffer("Uniforms", mMeshGizmoBuffer, true);
 
 				mMeshParamSets[typeIdx].push_back(paramsSet);
+			}
+			else
+				paramsSet = mMeshParamSets[typeIdx][paramsIdx];
+
+			if(meshData.type == GizmoMeshType::Text)
+			{
+				SPtr<GpuParams> params = paramsSet->getGpuParams();
+
+				GpuParamTexture textureParam;
+				params->getTextureParam(GPT_FRAGMENT_PROGRAM, "gMainTexture", textureParam);
+				textureParam.set(meshData.texture);
 			}
 
 			meshCounters[typeIdx]++;
@@ -1026,10 +1040,17 @@ namespace bs
 		Matrix4 projMatrix = camera->getProjectionMatrixRS();
 		Matrix4 viewProjMat = projMatrix * viewMatrix;
 
+		float invViewportWidth = 1.0f / (camera->getViewport()->getPixelArea().width * 0.5f);
+		float invViewportHeight = 1.0f / (camera->getViewport()->getPixelArea().height * 0.5f);
+		float viewportYFlip = bs::RenderAPI::getAPIInfo().isFlagSet(RenderAPIFeatureFlag::NDCYAxisDown) ? -1.0f : 1.0f;
+
 		if (!usePickingMaterial)
 		{
 			gGizmoParamBlockDef.gMatViewProj.set(mMeshGizmoBuffer, viewProjMat);
 			gGizmoParamBlockDef.gViewDir.set(mMeshGizmoBuffer, (Vector4)camera->getTransform().getForward());
+			gGizmoParamBlockDef.gInvViewportWidth.set(mMeshGizmoBuffer, invViewportWidth);
+			gGizmoParamBlockDef.gInvViewportHeight.set(mMeshGizmoBuffer, invViewportHeight);
+			gGizmoParamBlockDef.gViewportYFlip.set(mMeshGizmoBuffer, viewportYFlip);
 
 			for (auto& entry : meshes)
 			{

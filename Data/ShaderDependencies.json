@@ -7,11 +7,17 @@
     "LineGizmo.bsl": [
         {
             "Path": "LineGizmo.bslinc"
+        },
+        {
+            "Path": "GizmoCommon.bslinc"
         }
     ],
     "LineHandle.bsl": [
         {
             "Path": "LineGizmo.bslinc"
+        },
+        {
+            "Path": "GizmoCommon.bslinc"
         }
     ],
     "PickingAlphaCullCCW.bsl": [
@@ -53,13 +59,27 @@
     "SolidGizmo.bsl": [
         {
             "Path": "SolidGizmo.bslinc"
+        },
+        {
+            "Path": "GizmoCommon.bslinc"
         }
     ],
     "SolidHandle.bsl": [
         {
             "Path": "SolidGizmo.bslinc"
+        },
+        {
+            "Path": "GizmoCommon.bslinc"
         }
     ],
-    "TextGizmo.bsl": null,
-    "WireGizmo.bsl": null
+    "TextGizmo.bsl": [
+        {
+            "Path": "GizmoCommon.bslinc"
+        }
+    ],
+    "WireGizmo.bsl": [
+        {
+            "Path": "GizmoCommon.bslinc"
+        }
+    ]
 }

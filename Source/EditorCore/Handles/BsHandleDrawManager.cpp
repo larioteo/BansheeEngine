@@ -152,10 +152,9 @@ namespace bs
 		mDrawHelper->rectangle(area);
 	}
 
-	void HandleDrawManager::drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize, float size)
+	void HandleDrawManager::drawText(const Vector3& position, const String& text, const HFont& font, UINT32 fontSize)
 	{
-		Matrix4 scale = Matrix4::scaling(size);
-		mDrawHelper->setTransform(mTransform * scale);
+		mDrawHelper->setTransform(mTransform);
 
 		HFont myFont = font;
 		if (myFont == nullptr)
@@ -180,7 +179,7 @@ namespace bs
 
 		const Transform& tfrm = camera->getTransform();
 		const Vector<DrawHelper::ShapeMeshData>& meshes = 
-			mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, tfrm.getPosition(), camera->getLayers());
+			mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get(), camera->getLayers());
 
 		mActiveMeshes.push_back(meshes);
 
@@ -317,9 +316,15 @@ namespace bs
 			SPtr<RenderTarget> renderTarget = camera.getViewport()->getTarget();
 
 			Matrix4 viewProjMat = camera.getProjectionMatrixRS() * camera.getViewMatrix();
+			float invViewportWidth = 1.0f / (camera.getViewport()->getPixelArea().width * 0.5f);
+			float invViewportHeight = 1.0f / (camera.getViewport()->getPixelArea().height * 0.5f);
+			float viewportYFlip = bs::RenderAPI::getAPIInfo().isFlagSet(RenderAPIFeatureFlag::NDCYAxisDown) ? -1.0f : 1.0f;
 
 			gHandleParamBlockDef.gMatViewProj.set(mParamBuffer, viewProjMat);
 			gHandleParamBlockDef.gViewDir.set(mParamBuffer, (Vector4)camera.getTransform().getForward());
+			gHandleParamBlockDef.gInvViewportWidth.set(mParamBuffer, invViewportWidth);
+			gHandleParamBlockDef.gInvViewportHeight.set(mParamBuffer, invViewportHeight);
+			gHandleParamBlockDef.gViewportYFlip.set(mParamBuffer, viewportYFlip);
 
 			UINT32 currentType = -1;
 			for (auto& meshData : meshes)

@@ -195,15 +195,13 @@ namespace BansheeEditor
         /// <param name="text">String to draw.</param>
         /// <param name="font">Font used for drawing the characters.</param>
         /// <param name="fontSize">Size of the characters, in points.</param>
-        /// <param name="size">Uniform scale to apply on top of the existing transform. Primarily used for maintaining
-        ///                    handle size regardless of distance from camera.</param>
-        public static void DrawText(Vector3 position, string text, Font font = null, int fontSize = 16, float size = 1.0f)
+        public static void DrawText(Vector3 position, string text, Font font = null, int fontSize = 16)
         {
             IntPtr scriptFont = IntPtr.Zero;
             if (font != null)
                 scriptFont = font.GetCachedPtr();
 
-            Internal_DrawText(ref position, text, scriptFont, fontSize, size);
+            Internal_DrawText(ref position, text, scriptFont, fontSize);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -249,7 +247,7 @@ namespace BansheeEditor
         private static extern void Internal_DrawRect(ref Vector3 center, ref Vector3 axisH, ref Vector3 axisV, float extentH, float extentV, float size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_DrawText(ref Vector3 position, string text, IntPtr font, int fontSize, float size);
+        private static extern void Internal_DrawText(ref Vector3 position, string text, IntPtr font, int fontSize);
     }
 
     /** @} */

@@ -20,10 +20,10 @@ namespace bs
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneGizmos")
 
 	private:
-		ScriptSceneGizmos(MonoObject* object, const SPtr<Camera>& camera);
+		ScriptSceneGizmos(MonoObject* object, const HCamera& camera);
 		~ScriptSceneGizmos();
 
-		SPtr<Camera> mCamera;
+		HCamera mCamera;
 
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
