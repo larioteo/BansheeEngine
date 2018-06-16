@@ -17,10 +17,13 @@ Data/*
 !Data/EmptyShaderText.txt
 !Data/Layout.asset
 !Data/Shaders
+!Data/Shaders/Includes/
+!Data/Raw/
 Data/Raw/*
 !Data/Raw/DataList.json
 !Data/Raw/GUISkin.json
-!Data/Raw/Shaders
+!Data/Raw/Shaders/
+!Data/Raw/Shaders/Includes/
 Documentation/html
 /Build
 *.aps
