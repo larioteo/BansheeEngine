@@ -481,6 +481,10 @@ namespace bs
 				// running task doesn't actually stop it). Yet there is currently no good wait to check if task
 				// is currently running. 
 			}
+				
+			// Needs to be pass a weak pointer to worker methods since internally it holds a reference to the task itself, 
+			// and we can't have the task closure holding a reference back, otherwise it leaks
+			std::weak_ptr<QueuedImport> queuedImportWeak = queuedImport;
 
 			if(!isNativeResource)
 			{
@@ -494,8 +498,10 @@ namespace bs
 
 				// Perform import, register the resources and their UUID in the QueuedImport structure and save the
 				// resource on disk
-				const auto importAsync = [queuedImport, &projectFolder = mProjectFolder, &mutex = mQueuedImportMutex]()
+				const auto importAsync = [queuedImportWeak, &projectFolder = mProjectFolder, &mutex = mQueuedImportMutex]()
 				{
+					SPtr<QueuedImport> queuedImport = queuedImportWeak.lock();
+
 					Vector<SubResourceRaw> importedResources = gImporter()._importAll(queuedImport->filePath, 
 						queuedImport->importOptions);
 
@@ -560,10 +566,11 @@ namespace bs
 					mResourceManifest->registerResource(resourceMetas[0]->getUUID(), fileEntry->path);
 				}
 
-				const auto importAsync = [queuedImport, &projectFolder = mProjectFolder, &mutex = mQueuedImportMutex]()
+				const auto importAsync = [queuedImportWeak, &projectFolder = mProjectFolder, &mutex = mQueuedImportMutex]()
 				{
 					// Don't load dependencies because we don't need them, but also because they might not be in the
 					// manifest which would screw up their UUIDs.
+					SPtr<QueuedImport> queuedImport = queuedImportWeak.lock();
 					HResource resource = gResources().load(queuedImport->filePath, ResourceLoadFlag::KeepSourceData);
 
 					if (resource)
