@@ -274,18 +274,24 @@ namespace bs
 		/** Name/resource pair for a single imported resource. */
 		struct QueuedImportResource
 		{
+			QueuedImportResource(String name, SPtr<Resource> resource, const UUID& uuid)
+				:name(std::move(name)), resource(std::move(resource)), uuid(uuid)
+			{ }
+
 			String name;
 			SPtr<Resource> resource;
+			UUID uuid;
 		};
 
 		/** Information about an asynchronously queued import. */
 		struct QueuedImport
 		{
 			Path filePath;
-			AsyncOp importOp;
+			SPtr<Task> importTask;
 			SPtr<ImportOptions> importOptions;
 			Vector<QueuedImportResource> resources;
 			bool pruneMetas = false;
+			bool canceled = false;
 		};
 
 		/**
@@ -409,7 +415,8 @@ namespace bs
 		Path mResourcesFolder;
 		bool mIsLoaded;
 
-		UnorderedMap<FileEntry*, QueuedImport> mQueuedImports;
+		Mutex mQueuedImportMutex;
+		UnorderedMap<FileEntry*, SPtr<QueuedImport>> mQueuedImports;
 
 		UnorderedMap<Path, Vector<Path>> mDependencies;
 		UnorderedMap<UUID, Path> mUUIDToPath;
