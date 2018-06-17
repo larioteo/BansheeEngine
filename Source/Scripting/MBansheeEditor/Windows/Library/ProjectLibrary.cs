@@ -293,7 +293,10 @@ namespace BansheeEditor
             {
                 int numRemaining = totalFilesToImport - inProgressImports;
 
-                float pct = numRemaining / (float)totalFilesToImport;
+                float pct = 1.0f;
+                if(totalFilesToImport > 0)
+                    pct = numRemaining / (float)totalFilesToImport;
+
                 EditorApplication.SetStatusImporting(true, pct);
             }
             else
