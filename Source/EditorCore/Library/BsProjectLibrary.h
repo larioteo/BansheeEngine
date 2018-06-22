@@ -292,6 +292,7 @@ namespace bs
 			Vector<QueuedImportResource> resources;
 			bool pruneMetas = false;
 			bool canceled = false;
+			bool native = false;
 		};
 
 		/**

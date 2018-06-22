@@ -466,6 +466,7 @@ namespace bs
 			queuedImport->filePath = fileEntry->path;
 			queuedImport->importOptions = curImportOptions;
 			queuedImport->pruneMetas = pruneResourceMetas;
+			queuedImport->native = isNativeResource;
 
 			// If import is already queued for this file make the tasks dependant so they don't execute at the same time, 
 			// and so they execute in the proper order
@@ -698,7 +699,17 @@ namespace bs
 
 				if (!foundMeta)
 				{
-					HResource importedResource = gResources()._createResourceHandle(entry.resource, entry.uuid);
+					HResource importedResource;
+
+					// Native resources are always expected to have a handle since Resources::load was called during
+					// the 'import' step
+					if(queuedImport->native)
+					{
+						importedResource = gResources()._getResourceHandle(entry.uuid);
+						gResources().update(importedResource, entry.resource);
+					}
+					else
+						importedResource = gResources()._createResourceHandle(entry.resource, entry.uuid);
 
 					SPtr<ResourceMetaData> subMeta = entry.resource->getMetaData();
 					const UINT32 typeId = entry.resource->getTypeId();
