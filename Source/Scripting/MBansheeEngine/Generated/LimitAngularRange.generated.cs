@@ -28,8 +28,8 @@ namespace BansheeEngine
 		/// <summary>
 		/// Constructs a hard limit. Once the limit is reached the movement of the attached bodies will come to a stop.
 		/// </summary>
-		/// <param name="lower">Lower angle of the limit. Must be less than</param>
-		/// <param name="upper">Upper angle of the limit. Must be more than</param>
+		/// <param name="lower">Lower angle of the limit. Must be less than <paramref name="upper"/>.</param>
+		/// <param name="upper">Upper angle of the limit. Must be more than <paramref name="lower"/>.</param>
 		/// <param name="contactDist">
 		/// Distance from the limit at which it becomes active. Allows the solver to activate earlier than the limit is reached 
 		/// to avoid breaking the limit. Specify -1 for the default.
@@ -47,8 +47,8 @@ namespace BansheeEngine
 		/// Constructs a soft limit. Once the limit is reached the bodies will bounce back according to the resitution parameter 
 		/// and will be pulled back towards the limit by the provided spring.
 		/// </summary>
-		/// <param name="lower">Lower angle of the limit. Must be less than</param>
-		/// <param name="upper">Upper angle of the limit. Must be more than</param>
+		/// <param name="lower">Lower angle of the limit. Must be less than <paramref name="upper"/>.</param>
+		/// <param name="upper">Upper angle of the limit. Must be more than <paramref name="lower"/>.</param>
 		/// <param name="spring">
 		/// Spring that controls how are the bodies pulled back towards the limit when they breach it.
 		/// </param>

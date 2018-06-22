@@ -6,7 +6,7 @@
 #include "BsMonoClass.h"
 #include "BsMonoManager.h"
 #include "BsMonoMethod.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "BsMonoUtil.h"
 #include "GUI/BsGUILayout.h"
 #include "GUI/BsGUIButton.h"

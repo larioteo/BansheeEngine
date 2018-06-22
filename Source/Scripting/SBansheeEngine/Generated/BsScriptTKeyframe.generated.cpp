@@ -9,6 +9,24 @@
 
 namespace bs
 {
+	ScriptTKeyframeint32_t::ScriptTKeyframeint32_t(MonoObject* managedInstance)
+		:ScriptObject(managedInstance)
+	{ }
+
+	void ScriptTKeyframeint32_t::initRuntimeData()
+	{ }
+
+	MonoObject*ScriptTKeyframeint32_t::box(const TKeyframe<int32_t>& value)
+	{
+		return MonoUtil::box(metaData.scriptClass->_getInternalClass(), (void*)&value);
+	}
+
+	TKeyframe<int32_t> ScriptTKeyframeint32_t::unbox(MonoObject* value)
+	{
+		return *(TKeyframe<int32_t>*)MonoUtil::unbox(value);
+	}
+
+
 	ScriptTKeyframefloat::ScriptTKeyframefloat(MonoObject* managedInstance)
 		:ScriptObject(managedInstance)
 	{ }

@@ -6,7 +6,7 @@
 #include "GUI/BsGUIMouseEvent.h"
 #include "GUI/BsGUIHelper.h"
 #include "Resources/BsBuiltinResources.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 
 namespace bs
 {

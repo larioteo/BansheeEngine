@@ -13,7 +13,7 @@
 #include "GUI/BsGUIResourceTreeView.h"
 #include "GUI/BsGUISpace.h"
 #include "Library/BsProjectResourceMeta.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "Scene/BsSelection.h"
 
 using namespace std::placeholders;

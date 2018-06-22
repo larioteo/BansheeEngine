@@ -54,6 +54,11 @@ namespace BansheeEngine
 			Internal_setFloat(mCachedPtr, name, value, arrayIdx);
 		}
 
+		public void SetFloatCurve(string name, AnimationCurve value, uint arrayIdx = 0)
+		{
+			Internal_setFloatCurve(mCachedPtr, name, value, arrayIdx);
+		}
+
 		/// <summary>
 		/// Assigns a color to the shader parameter with the specified name.
 		///
@@ -62,6 +67,17 @@ namespace BansheeEngine
 		public void SetColor(string name, Color value, uint arrayIdx = 0)
 		{
 			Internal_setColor(mCachedPtr, name, ref value, arrayIdx);
+		}
+
+		/// <summary>
+		/// Assigns a color gradient to the shader parameter with the specified name. The system will automatically evaluate the 
+		/// gradient with the passage of time and apply the evaluated value to the parameter.
+		///
+		/// Optionally if the parameter is an array you may provide an array index to assign the value to.
+		/// </summary>
+		public void SetColorGradient(string name, ColorGradient value, uint arrayIdx = 0)
+		{
+			Internal_setColorGradient(mCachedPtr, name, value, arrayIdx);
 		}
 
 		/// <summary>
@@ -115,7 +131,8 @@ namespace BansheeEngine
 		}
 
 		/// <summary>
-		/// Returns a float value assigned with the parameter with the specified name.
+		/// Returns a float value assigned with the parameter with the specified name. If a curve is assigned to this parameter, 
+		/// returns the curve value evaluated at time 0. Use getBoundParamType() to determine the type of the parameter.
 		///
 		/// Optionally if the parameter is an array you may provide an array index you which to retrieve.
 		/// </summary>
@@ -125,7 +142,21 @@ namespace BansheeEngine
 		}
 
 		/// <summary>
-		/// Returns a color assigned with the parameter with the specified name.
+		/// Returns a curve value assigned to the parameter with the specified name. If the parameter has a constant value bound 
+		/// instead of a curve then this method returns an empty curve. Use getBoundParamType() to determine the type of the 
+		/// parameter.
+		///
+		/// Optionally if the parameter is an array you may provide an array index you which to retrieve.
+		/// </summary>
+		public AnimationCurve GetFloatCurve(string name, uint arrayIdx = 0)
+		{
+			return Internal_getFloatCurve(mCachedPtr, name, arrayIdx);
+		}
+
+		/// <summary>
+		/// Returns a color assigned with the parameter with the specified name. If a color gradient is assigned to this 
+		/// parameter, returns the gradient color evaluated at time 0. Use getBoundParamType() to determine the type of the 
+		/// parameter.
 		///
 		/// Optionally if the parameter is an array you may provide an array index you which to retrieve.
 		/// </summary>
@@ -134,6 +165,18 @@ namespace BansheeEngine
 			Color temp;
 			Internal_getColor(mCachedPtr, name, arrayIdx, out temp);
 			return temp;
+		}
+
+		/// <summary>
+		/// Returns a color gradient assigned with the parameter with the specified name. If the parameter has a constant value 
+		/// bound instead of a gradient then this method returns an empty gradient. Use getBoundParamType() to determine the type 
+		/// of the parameter.
+		///
+		/// Optionally if the parameter is an array you may provide an array index you which to retrieve.
+		/// </summary>
+		public ColorGradient GetColorGradient(string name, uint arrayIdx = 0)
+		{
+			return Internal_getColorGradient(mCachedPtr, name, arrayIdx);
 		}
 
 		/// <summary>
@@ -205,7 +248,11 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setFloat(IntPtr thisPtr, string name, float value, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setFloatCurve(IntPtr thisPtr, string name, AnimationCurve value, uint arrayIdx);
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setColor(IntPtr thisPtr, string name, ref Color value, uint arrayIdx);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setColorGradient(IntPtr thisPtr, string name, ColorGradient value, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setVec2(IntPtr thisPtr, string name, ref Vector2 value, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -219,7 +266,11 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getFloat(IntPtr thisPtr, string name, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimationCurve Internal_getFloatCurve(IntPtr thisPtr, string name, uint arrayIdx);
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getColor(IntPtr thisPtr, string name, uint arrayIdx, out Color __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern ColorGradient Internal_getColorGradient(IntPtr thisPtr, string name, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getVec2(IntPtr thisPtr, string name, uint arrayIdx, out Vector2 __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -238,6 +289,10 @@ namespace BansheeEngine
 		private static extern void Internal_setTexture(IntPtr thisPtr, string name, Texture value, uint mipLevel, uint numMipLevels, uint arraySlice, uint numArraySlices);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Texture Internal_getTexture(IntPtr thisPtr, string name);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setSpriteTexture(IntPtr thisPtr, string name, SpriteTexture value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern SpriteTexture Internal_getSpriteTexture(IntPtr thisPtr, string name);
 	}
 
 	/** @} */

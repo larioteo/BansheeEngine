@@ -15,4 +15,14 @@ namespace bs
 	{
 		return thisPtr->getTexture(name);
 	}
+
+	void MaterialEx::setSpriteTexture(const HMaterial& thisPtr, const String& name, const HSpriteTexture& value)
+	{
+		thisPtr->setSpriteTexture(name, value);
+	}
+
+	HSpriteTexture MaterialEx::getSpriteTexture(const HMaterial& thisPtr, const String& name)
+	{
+		return thisPtr->getSpriteTexture(name);
+	}
 }

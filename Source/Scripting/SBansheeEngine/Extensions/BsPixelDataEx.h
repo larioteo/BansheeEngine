@@ -67,7 +67,7 @@ namespace bs
 		 * Returns all pixels in the buffer as raw bytes.
 		 *
 		 * @return	Raw pixel bytes. It is up to the caller to interpret the pixel format and account for potential 
-         *			row and slice pitch values.
+		 *			row and slice pitch values.
 		 */
 		BS_SCRIPT_EXPORT(e:PixelData,n:GetRawPixels)
 		static Vector<char> getRawPixels(const SPtr<PixelData>& thisPtr);

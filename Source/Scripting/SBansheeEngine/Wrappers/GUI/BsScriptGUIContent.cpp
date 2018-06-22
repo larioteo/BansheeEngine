@@ -7,7 +7,7 @@
 #include "BsMonoManager.h"
 #include "BsMonoUtil.h"
 #include "Wrappers/BsScriptHString.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "Wrappers/BsScriptGUIContentImages.h"
 
 namespace bs

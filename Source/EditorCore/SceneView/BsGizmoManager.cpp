@@ -7,7 +7,7 @@
 #include "RenderAPI/BsVertexDataDesc.h"
 #include "Utility/BsShapeMeshes3D.h"
 #include "Components/BsCCamera.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "CoreThread/BsCoreThread.h"
 #include "Utility/BsBuiltinEditorResources.h"
 #include "Material/BsMaterial.h"

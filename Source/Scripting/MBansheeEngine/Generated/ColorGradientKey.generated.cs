@@ -1,0 +1,30 @@
+using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+namespace BansheeEngine
+{
+	/** @addtogroup Image
+	 *  @{
+	 */
+
+	/// <summary>Single key in a ColorGradient.</summary>
+	[StructLayout(LayoutKind.Sequential), SerializeObject]
+	public partial struct ColorGradientKey
+	{
+		/// <summary>Initializes the struct with default values.</summary>
+		public static ColorGradientKey Default()
+		{
+			ColorGradientKey value = new ColorGradientKey();
+			value.color = new Color();
+			value.time = 0f;
+
+			return value;
+		}
+
+		public Color color;
+		public float time;
+	}
+
+	/** @} */
+}

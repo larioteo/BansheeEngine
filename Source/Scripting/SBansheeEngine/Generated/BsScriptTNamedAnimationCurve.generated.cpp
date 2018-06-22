@@ -8,6 +8,8 @@
 #include "BsScriptTAnimationCurve.generated.h"
 #include "BsScriptTAnimationCurve.generated.h"
 #include "BsScriptTAnimationCurve.generated.h"
+#include "BsScriptTAnimationCurve.generated.h"
+#include "BsScriptTAnimationCurve.generated.h"
 
 namespace bs
 {
@@ -158,6 +160,57 @@ namespace bs
 		SPtr<TAnimationCurve<Quaternion>> tmpcurvecopy;
 		tmpcurvecopy = bs_shared_ptr_new<TAnimationCurve<Quaternion>>(value.curve);
 		tmpcurve = ScriptTAnimationCurveQuaternion::create(tmpcurvecopy);
+		output.curve = tmpcurve;
+
+		return output;
+	}
+
+
+	ScriptTNamedAnimationCurveint32_t::ScriptTNamedAnimationCurveint32_t(MonoObject* managedInstance)
+		:ScriptObject(managedInstance)
+	{ }
+
+	void ScriptTNamedAnimationCurveint32_t::initRuntimeData()
+	{ }
+
+	MonoObject*ScriptTNamedAnimationCurveint32_t::box(const __TNamedAnimationCurveint32_tInterop& value)
+	{
+		return MonoUtil::box(metaData.scriptClass->_getInternalClass(), (void*)&value);
+	}
+
+	__TNamedAnimationCurveint32_tInterop ScriptTNamedAnimationCurveint32_t::unbox(MonoObject* value)
+	{
+		return *(__TNamedAnimationCurveint32_tInterop*)MonoUtil::unbox(value);
+	}
+
+	TNamedAnimationCurve<int32_t> ScriptTNamedAnimationCurveint32_t::fromInterop(const __TNamedAnimationCurveint32_tInterop& value)
+	{
+		TNamedAnimationCurve<int32_t> output;
+		String tmpname;
+		tmpname = MonoUtil::monoToString(value.name);
+		output.name = tmpname;
+		output.flags = value.flags;
+		SPtr<TAnimationCurve<int32_t>> tmpcurve;
+		ScriptTAnimationCurveint32_t* scriptcurve;
+		scriptcurve = ScriptTAnimationCurveint32_t::toNative(value.curve);
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
+		output.curve = *tmpcurve;
+
+		return output;
+	}
+
+	__TNamedAnimationCurveint32_tInterop ScriptTNamedAnimationCurveint32_t::toInterop(const TNamedAnimationCurve<int32_t>& value)
+	{
+		__TNamedAnimationCurveint32_tInterop output;
+		MonoString* tmpname;
+		tmpname = MonoUtil::stringToMono(value.name);
+		output.name = tmpname;
+		output.flags = value.flags;
+		MonoObject* tmpcurve;
+		SPtr<TAnimationCurve<int32_t>> tmpcurvecopy;
+		tmpcurvecopy = bs_shared_ptr_new<TAnimationCurve<int32_t>>(value.curve);
+		tmpcurve = ScriptTAnimationCurveint32_t::create(tmpcurvecopy);
 		output.curve = tmpcurve;
 
 		return output;

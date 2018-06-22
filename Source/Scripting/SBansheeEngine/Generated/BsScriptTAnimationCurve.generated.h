@@ -7,6 +7,8 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "BsScriptObject.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "Math/BsVector3.h"
 #include "Math/BsQuaternion.h"
 
@@ -68,5 +70,23 @@ namespace bs
 		static void Internal_TAnimationCurve(MonoObject* managedInstance, MonoArray* keyframes);
 		static void Internal_evaluate(ScriptTAnimationCurveQuaternion* thisPtr, float time, bool loop, Quaternion* __output);
 		static MonoArray* Internal_getKeyFrames(ScriptTAnimationCurveQuaternion* thisPtr);
+	};
+
+	class BS_SCR_BE_EXPORT ScriptTAnimationCurveint32_t : public ScriptObject<ScriptTAnimationCurveint32_t>
+	{
+	public:
+		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "IntegerCurve")
+
+		ScriptTAnimationCurveint32_t(MonoObject* managedInstance, const SPtr<TAnimationCurve<int32_t>>& value);
+
+		SPtr<TAnimationCurve<int32_t>> getInternal() const { return mInternal; }
+		static MonoObject* create(const SPtr<TAnimationCurve<int32_t>>& value);
+
+	private:
+		SPtr<TAnimationCurve<int32_t>> mInternal;
+
+		static void Internal_TAnimationCurve(MonoObject* managedInstance, MonoArray* keyframes);
+		static int32_t Internal_evaluate(ScriptTAnimationCurveint32_t* thisPtr, float time, bool loop);
+		static MonoArray* Internal_getKeyFrames(ScriptTAnimationCurveint32_t* thisPtr);
 	};
 }

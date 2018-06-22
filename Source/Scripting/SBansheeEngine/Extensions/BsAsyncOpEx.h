@@ -1,4 +1,4 @@
-//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
+//********************************** Banshee Engine (www.banshee4d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #pragma once
 

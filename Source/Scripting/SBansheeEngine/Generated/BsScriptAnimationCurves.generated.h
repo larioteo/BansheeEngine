@@ -5,6 +5,9 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 
 namespace bs
 {

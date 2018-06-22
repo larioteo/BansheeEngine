@@ -29,6 +29,9 @@ namespace BansheeEditor
             Vector3 scaledExtents = collider.Extents*scale;
 
             Gizmos.DrawWireCube(collider.Center * scale, scaledExtents);
+
+            Gizmos.DrawText(Vector3.Zero, "Test test test");
+            Gizmos.DrawText(new Vector3(0, 1, 0), "WTest Wtest Wtest");
         }
 
         /// <summary>

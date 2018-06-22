@@ -12,7 +12,7 @@ namespace bs
 	 */
 	/** @cond SCRIPT_EXTENSIONS */
 
-	 /** Extension class for RenderTarget, for adding additional functionality for the script interface. */
+	/** Extension class for RenderTarget, for adding additional functionality for the script interface. */
 	class BS_SCRIPT_EXPORT(e:RenderTarget) RenderTargetEx
 	{
 	public:

@@ -7,11 +7,26 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "BsScriptObject.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "Math/BsVector3.h"
 #include "Math/BsQuaternion.h"
 
 namespace bs
 {
+	class BS_SCR_BE_EXPORT ScriptTKeyframeint32_t : public ScriptObject<ScriptTKeyframeint32_t>
+	{
+	public:
+		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "KeyFrameInt")
+
+		static MonoObject* box(const TKeyframe<int32_t>& value);
+		static TKeyframe<int32_t> unbox(MonoObject* value);
+
+	private:
+		ScriptTKeyframeint32_t(MonoObject* managedInstance);
+
+	};
+
 	class BS_SCR_BE_EXPORT ScriptTKeyframefloat : public ScriptObject<ScriptTKeyframefloat>
 	{
 	public:

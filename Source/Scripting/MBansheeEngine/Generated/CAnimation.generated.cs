@@ -139,8 +139,8 @@ namespace BansheeEngine
 
 		/// <summary>
 		/// Blend multiple animation clips between each other using linear interpolation. Unlike normal animations these 
-		/// animations are not advanced with the progress of time, and is instead expected the user manually changes the  
-		/// parameter.
+		/// animations are not advanced with the progress of time, and is instead expected the user manually changes the 
+		/// <paramref name="t"/> parameter.
 		/// </summary>
 		/// <param name="info">
 		/// Information about the clips to blend. Clip positions must be sorted from lowest to highest.
@@ -155,7 +155,8 @@ namespace BansheeEngine
 
 		/// <summary>
 		/// Blend four animation clips between each other using bilinear interpolation. Unlike normal animations these animations 
-		/// are not advanced with the progress of time, and is instead expected the user manually changes the  parameter.
+		/// are not advanced with the progress of time, and is instead expected the user manually changes the <paramref 
+		/// name="t"/> parameter.
 		/// </summary>
 		/// <param name="info">Information about the clips to blend.</param>
 		/// <param name="t">

@@ -153,4 +153,54 @@ namespace BansheeEngine
 	}
 
 	/** @} */
+
+	/** @addtogroup Animation
+	 *  @{
+	 */
+
+	/// <summary>An animation curve and its name.</summary>
+	[StructLayout(LayoutKind.Sequential), SerializeObject]
+	public partial struct NamedIntegerCurve
+	{
+		/// <summary>Initializes the struct with default values.</summary>
+		public static NamedIntegerCurve Default()
+		{
+			NamedIntegerCurve value = new NamedIntegerCurve();
+			value.name = "";
+			value.flags = (AnimationCurveFlags)0;
+			value.curve = null;
+
+			return value;
+		}
+
+		/// <summary>Constructs a new named animation curve.</summary>
+		/// <param name="name">Name of the curve.</param>
+		/// <param name="curve">Curve containing the animation data.</param>
+		public NamedIntegerCurve(string name, IntegerCurve curve)
+		{
+			this.name = name;
+			this.flags = (AnimationCurveFlags)0;
+			this.curve = curve;
+		}
+
+		/// <summary>Constructs a new named animation curve.</summary>
+		/// <param name="name">Name of the curve.</param>
+		/// <param name="flags">Flags that describe the animation curve.</param>
+		/// <param name="curve">Curve containing the animation data.</param>
+		public NamedIntegerCurve(string name, AnimationCurveFlags flags, IntegerCurve curve)
+		{
+			this.name = name;
+			this.flags = (AnimationCurveFlags)0;
+			this.curve = curve;
+		}
+
+		/// <summary>Name of the curve.</summary>
+		public string name;
+		/// <summary>Flags that describe the animation curve.</summary>
+		public AnimationCurveFlags flags;
+		/// <summary>Actual curve containing animation data.</summary>
+		public IntegerCurve curve;
+	}
+
+	/** @} */
 }

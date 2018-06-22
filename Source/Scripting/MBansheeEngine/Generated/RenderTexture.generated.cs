@@ -25,7 +25,8 @@ namespace BansheeEngine
 		/// <param name="gammaCorrection">Determines should the pixels written on the texture be gamma corrected.</param>
 		/// <param name="createDepth">Should the render texture also contain a depth/stencil buffer.</param>
 		/// <param name="depthStencilFormat">
-		/// Format of the depth/stencil buffer, if  is enabled. Format must be a valid depth/stencil format.
+		/// Format of the depth/stencil buffer, if <paramref name="createDepth"/> is enabled. Format must be a valid 
+		/// depth/stencil format.
 		/// </param>
 		public RenderTexture(PixelFormat format, int width, int height, int numSamples = 1, bool gammaCorrection = false, bool createDepth = false, PixelFormat depthStencilFormat = PixelFormat.D32)
 		{

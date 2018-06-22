@@ -23,6 +23,12 @@ namespace bs
 
 		BS_SCRIPT_EXPORT(e:Material,in:true)
 		static HTexture getTexture(const HMaterial& thisPtr, const String& name);
+
+		BS_SCRIPT_EXPORT(e:Material,in:true)
+		static void setSpriteTexture(const HMaterial& thisPtr, const String& name, const HSpriteTexture& value);
+
+		BS_SCRIPT_EXPORT(e:Material,in:true)
+		static HSpriteTexture getSpriteTexture(const HMaterial& thisPtr, const String& name);
 	};
 
 	/** @endcond */

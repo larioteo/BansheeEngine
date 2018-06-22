@@ -50,7 +50,7 @@ namespace BansheeEngine
 
 		/// <summary>
 		/// Distance (in view space, in meters) after which AO starts fading out. The fade process will happen over the range as 
-		/// specified by
+		/// specified by <see cref="fadeRange"/>.
 		/// </summary>
 		public float FadeDistance
 		{
@@ -60,7 +60,7 @@ namespace BansheeEngine
 
 		/// <summary>
 		/// Range (in view space, in meters) in which AO fades out from 100% to 0%. AO starts fading out after the distance 
-		/// specified in
+		/// specified in <see cref="fadeDistance"/>.
 		/// </summary>
 		public float FadeRange
 		{

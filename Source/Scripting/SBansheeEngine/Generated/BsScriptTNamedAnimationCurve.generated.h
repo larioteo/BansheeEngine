@@ -7,6 +7,9 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "BsScriptObject.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
@@ -77,6 +80,28 @@ namespace bs
 
 	private:
 		ScriptTNamedAnimationCurveQuaternion(MonoObject* managedInstance);
+
+	};
+
+	struct __TNamedAnimationCurveint32_tInterop
+	{
+		MonoString* name;
+		Flags<AnimationCurveFlag> flags;
+		MonoObject* curve;
+	};
+
+	class BS_SCR_BE_EXPORT ScriptTNamedAnimationCurveint32_t : public ScriptObject<ScriptTNamedAnimationCurveint32_t>
+	{
+	public:
+		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "NamedIntegerCurve")
+
+		static MonoObject* box(const __TNamedAnimationCurveint32_tInterop& value);
+		static __TNamedAnimationCurveint32_tInterop unbox(MonoObject* value);
+		static TNamedAnimationCurve<int32_t> fromInterop(const __TNamedAnimationCurveint32_tInterop& value);
+		static __TNamedAnimationCurveint32_tInterop toInterop(const TNamedAnimationCurve<int32_t>& value);
+
+	private:
+		ScriptTNamedAnimationCurveint32_t(MonoObject* managedInstance);
 
 	};
 }

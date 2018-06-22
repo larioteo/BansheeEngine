@@ -5,7 +5,7 @@
 #include "BsMonoField.h"
 #include "BsMonoClass.h"
 #include "BsMonoManager.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "BsMonoUtil.h"
 #include "GUI/BsGUIToggle.h"
 

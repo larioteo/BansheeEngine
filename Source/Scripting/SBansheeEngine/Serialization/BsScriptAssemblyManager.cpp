@@ -13,7 +13,7 @@
 #include "BsBuiltinComponentLookup.generated.h"
 
 // Note: This resource registration code is only here because resource lookup auto-generation isn't yet hooked up
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "Mesh/BsMesh.h"
 #include "Text/BsFont.h"
 #include "Material/BsShader.h"

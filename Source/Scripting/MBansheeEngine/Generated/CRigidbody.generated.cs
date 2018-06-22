@@ -258,7 +258,7 @@ namespace BansheeEngine
 
 		/// <summary>Applies a force to the center of the mass of the rigidbody. This will produce linear momentum.</summary>
 		/// <param name="force">Force to apply.</param>
-		/// <param name="mode">Determines what is the type of</param>
+		/// <param name="mode">Determines what is the type of <paramref name="force"/>.</param>
 		public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
 		{
 			Internal_addForce(mCachedPtr, ref force, mode);
@@ -266,7 +266,7 @@ namespace BansheeEngine
 
 		/// <summary>Applies a torque to the rigidbody. This will produce angular momentum.</summary>
 		/// <param name="torque">Torque to apply.</param>
-		/// <param name="mode">Determines what is the type of</param>
+		/// <param name="mode">Determines what is the type of <paramref name="torque"/>.</param>
 		public void AddTorque(Vector3 torque, ForceMode mode = ForceMode.Force)
 		{
 			Internal_addTorque(mCachedPtr, ref torque, mode);
@@ -278,7 +278,7 @@ namespace BansheeEngine
 		/// </summary>
 		/// <param name="force">Force to apply.</param>
 		/// <param name="position">World position to apply the force at.</param>
-		/// <param name="mode">Determines what is the type of</param>
+		/// <param name="mode">Determines what is the type of <paramref name="force"/>.</param>
 		public void AddForceAtPoint(Vector3 force, Vector3 position, PointForceMode mode = PointForceMode.Force)
 		{
 			Internal_addForceAtPoint(mCachedPtr, ref force, ref position, mode);

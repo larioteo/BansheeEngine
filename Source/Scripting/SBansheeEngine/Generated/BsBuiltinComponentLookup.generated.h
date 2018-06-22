@@ -2,12 +2,12 @@
 
 #include "Serialization/BsBuiltinComponentLookup.h"
 #include "Reflection/BsRTTIType.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCD6Joint.h"
+#include "BsScriptCD6Joint.generated.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCamera.h"
 #include "BsScriptCCamera.generated.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCJoint.h"
 #include "BsScriptCJoint.generated.h"
-#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCD6Joint.h"
-#include "BsScriptCD6Joint.generated.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCBoxCollider.h"
 #include "BsScriptCBoxCollider.generated.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCAudioListener.h"
@@ -56,9 +56,9 @@
 namespace bs
 {
 	LOOKUP_BEGIN
+		ADD_ENTRY(CD6Joint, ScriptCD6Joint)
 		ADD_ENTRY(CCamera, ScriptCCamera)
 		ADD_ENTRY(CJoint, ScriptCJoint)
-		ADD_ENTRY(CD6Joint, ScriptCD6Joint)
 		ADD_ENTRY(CBoxCollider, ScriptCBoxCollider)
 		ADD_ENTRY(CAudioListener, ScriptCAudioListener)
 		ADD_ENTRY(CReflectionProbe, ScriptCReflectionProbe)

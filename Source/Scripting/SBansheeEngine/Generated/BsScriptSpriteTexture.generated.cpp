@@ -2,10 +2,11 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "../../../bsf/Source/Foundation/bsfEngine/2D/BsSpriteTexture.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsSpriteTexture.h"
 #include "BsScriptResourceManager.h"
 #include "BsScriptTexture.generated.h"
 #include "Wrappers/BsScriptVector.h"
+#include "BsScriptSpriteSheetGridAnimation.generated.h"
 #include "BsScriptSpriteTexture.generated.h"
 
 namespace bs
@@ -19,12 +20,16 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setTexture", (void*)&ScriptSpriteTexture::Internal_setTexture);
 		metaData.scriptClass->addInternalCall("Internal_getTexture", (void*)&ScriptSpriteTexture::Internal_getTexture);
+		metaData.scriptClass->addInternalCall("Internal_getWidth", (void*)&ScriptSpriteTexture::Internal_getWidth);
+		metaData.scriptClass->addInternalCall("Internal_getHeight", (void*)&ScriptSpriteTexture::Internal_getHeight);
 		metaData.scriptClass->addInternalCall("Internal_setOffset", (void*)&ScriptSpriteTexture::Internal_setOffset);
 		metaData.scriptClass->addInternalCall("Internal_getOffset", (void*)&ScriptSpriteTexture::Internal_getOffset);
 		metaData.scriptClass->addInternalCall("Internal_setScale", (void*)&ScriptSpriteTexture::Internal_setScale);
 		metaData.scriptClass->addInternalCall("Internal_getScale", (void*)&ScriptSpriteTexture::Internal_getScale);
-		metaData.scriptClass->addInternalCall("Internal_getWidth", (void*)&ScriptSpriteTexture::Internal_getWidth);
-		metaData.scriptClass->addInternalCall("Internal_getHeight", (void*)&ScriptSpriteTexture::Internal_getHeight);
+		metaData.scriptClass->addInternalCall("Internal_setAnimation", (void*)&ScriptSpriteTexture::Internal_setAnimation);
+		metaData.scriptClass->addInternalCall("Internal_getAnimation", (void*)&ScriptSpriteTexture::Internal_getAnimation);
+		metaData.scriptClass->addInternalCall("Internal_setAnimationPlayback", (void*)&ScriptSpriteTexture::Internal_setAnimationPlayback);
+		metaData.scriptClass->addInternalCall("Internal_getAnimationPlayback", (void*)&ScriptSpriteTexture::Internal_getAnimationPlayback);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptSpriteTexture::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptSpriteTexture::Internal_create0);
 
@@ -63,6 +68,28 @@ namespace bs
 		return __output;
 	}
 
+	uint32_t ScriptSpriteTexture::Internal_getWidth(ScriptSpriteTexture* thisPtr)
+	{
+		uint32_t tmp__output;
+		tmp__output = thisPtr->getHandle()->getWidth();
+
+		uint32_t __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	uint32_t ScriptSpriteTexture::Internal_getHeight(ScriptSpriteTexture* thisPtr)
+	{
+		uint32_t tmp__output;
+		tmp__output = thisPtr->getHandle()->getHeight();
+
+		uint32_t __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
 	void ScriptSpriteTexture::Internal_setOffset(ScriptSpriteTexture* thisPtr, Vector2* offset)
 	{
 		thisPtr->getHandle()->setOffset(*offset);
@@ -89,23 +116,30 @@ namespace bs
 		*__output = tmp__output;
 	}
 
-	uint32_t ScriptSpriteTexture::Internal_getWidth(ScriptSpriteTexture* thisPtr)
+	void ScriptSpriteTexture::Internal_setAnimation(ScriptSpriteTexture* thisPtr, SpriteSheetGridAnimation* anim)
 	{
-		uint32_t tmp__output;
-		tmp__output = thisPtr->getHandle()->getWidth();
-
-		uint32_t __output;
-		__output = tmp__output;
-
-		return __output;
+		thisPtr->getHandle()->setAnimation(*anim);
 	}
 
-	uint32_t ScriptSpriteTexture::Internal_getHeight(ScriptSpriteTexture* thisPtr)
+	void ScriptSpriteTexture::Internal_getAnimation(ScriptSpriteTexture* thisPtr, SpriteSheetGridAnimation* __output)
 	{
-		uint32_t tmp__output;
-		tmp__output = thisPtr->getHandle()->getHeight();
+		SpriteSheetGridAnimation tmp__output;
+		tmp__output = thisPtr->getHandle()->getAnimation();
 
-		uint32_t __output;
+		*__output = tmp__output;
+	}
+
+	void ScriptSpriteTexture::Internal_setAnimationPlayback(ScriptSpriteTexture* thisPtr, SpriteAnimationPlayback playback)
+	{
+		thisPtr->getHandle()->setAnimationPlayback(playback);
+	}
+
+	SpriteAnimationPlayback ScriptSpriteTexture::Internal_getAnimationPlayback(ScriptSpriteTexture* thisPtr)
+	{
+		SpriteAnimationPlayback tmp__output;
+		tmp__output = thisPtr->getHandle()->getAnimationPlayback();
+
+		SpriteAnimationPlayback __output;
 		__output = tmp__output;
 
 		return __output;

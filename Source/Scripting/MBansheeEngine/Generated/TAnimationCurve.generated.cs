@@ -157,4 +157,54 @@ namespace BansheeEngine
 	}
 
 	/** @} */
+
+	/** @addtogroup Animation
+	 *  @{
+	 */
+
+	/// <summary>
+	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
+	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
+	/// </summary>
+	public partial class IntegerCurve : ScriptObject
+	{
+		private IntegerCurve(bool __dummy0) { }
+		protected IntegerCurve() { }
+
+		/// <summary>Creates a new animation curve.</summary>
+		/// <param name="keyframes">Keyframes to initialize the curve with. They must be sorted by time.</param>
+		public IntegerCurve(KeyFrameInt[] keyframes)
+		{
+			Internal_TAnimationCurve(this, keyframes);
+		}
+
+		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		public KeyFrameInt[] KeyFrames
+		{
+			get { return Internal_getKeyFrames(mCachedPtr); }
+		}
+
+		/// <summary>
+		/// Evaluate the animation curve at the specified time. If evaluating multiple values in a sequential order consider 
+		/// using the cached version of evaluate() for better performance.
+		/// </summary>
+		/// <param name="time">%Time to evaluate the curve at.</param>
+		/// <param name="loop">
+		/// If true the curve will loop when it goes past the end or beggining. Otherwise the curve  value will be clamped.
+		/// </param>
+		/// <returns>Interpolated value from the curve at provided time.</returns>
+		public int Evaluate(float time, bool loop = true)
+		{
+			return Internal_evaluate(mCachedPtr, time, loop);
+		}
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_TAnimationCurve(IntegerCurve managedInstance, KeyFrameInt[] keyframes);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_evaluate(IntPtr thisPtr, float time, bool loop);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern KeyFrameInt[] Internal_getKeyFrames(IntPtr thisPtr);
+	}
+
+	/** @} */
 }
