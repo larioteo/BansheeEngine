@@ -804,18 +804,7 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Initializes the currently selected scene object. This should be called whenever the selected scene object 
-        /// changes.
-        /// </summary>
-        private void InitializeSO()
-        {
-            if (selectedSO != null)
-                soState = new SerializedSceneObject(selectedSO, true);
-        }
-
-        /// <summary>
-        /// Clears a selected scene object. This must be called on every scene object <see cref="InitializeSO"/> has been called
-        /// on, after operations on it are done.
+        /// Stops animation preview on the selected object and resets it back to its non-animated state.
         /// </summary>
         private void ClearSO()
         {
@@ -824,12 +813,6 @@ namespace BansheeEditor
                 Animation animation = selectedSO.GetComponent<Animation>();
                 if (animation != null)
                     animation.EditorStop();
-            }
-
-            if (soState != null)
-            {
-                soState.Restore();
-                soState = null;
             }
         }
 
@@ -968,7 +951,6 @@ namespace BansheeEditor
         }
 
         private State state = State.Empty;
-        private SerializedSceneObject soState;
         private bool delayRecord = false;
 
         /// <summary>
@@ -1038,15 +1020,12 @@ namespace BansheeEditor
                     switch (state)
                     {
                         case State.Normal:
-                            InitializeSO();
                             PreviewFrame(currentFrameIdx);
                             break;
                         case State.Playback:
-                            InitializeSO();
                             StartPlayback();
                             break;
                         case State.Recording:
-                            InitializeSO();
                             StartRecord();
                             break;
                     }
@@ -1134,6 +1113,25 @@ namespace BansheeEditor
         /// <returns>True if any changes were recorded, false otherwise.</returns>
         private bool RecordState(float time)
         {
+            bool changesMade = false;
+            foreach (var KVP in clipInfo.curves)
+            {
+                if (RecordState(KVP.Key, time))
+                    changesMade = true;
+            }
+
+            return changesMade;
+        }
+
+        /// <summary>
+        /// Records the state of the provided property and adds it as a keyframe to the related animation curve (or updates
+        /// an existing keyframe if the value is different).
+        /// </summary>
+        /// <param name="path">Path to the property whose state to record.</param>
+        /// <param name="time">Time for which to record the state, in seconds.</param>
+        /// <returns>True if any changes were recorded, false otherwise.</returns>
+        private bool RecordState(string path, float time)
+        {
             Action<EdAnimationCurve, float, float> addOrUpdateKeyframe = (curve, keyTime, keyValue) =>
             {
                 KeyFrame[] keyframes = curve.KeyFrames;
@@ -1155,131 +1153,132 @@ namespace BansheeEditor
                 curve.Apply();
             };
 
+            FieldAnimCurves curves;
+            if (!clipInfo.curves.TryGetValue(path, out curves))
+                return false;
+
+            string suffix;
+            SerializableProperty property = Animation.FindProperty(selectedSO, path, out suffix);
+
+            if (property == null)
+                return false;
+
             bool changesMade = false;
-            foreach (var KVP in clipInfo.curves)
+            switch (curves.type)
             {
-                string suffix;
-                SerializableProperty property = Animation.FindProperty(selectedSO, KVP.Key, out suffix);
+                case SerializableProperty.FieldType.Vector2:
+                    {
+                        Vector2 value = property.GetValue<Vector2>();
 
-                if (property == null)
-                    continue;
-
-                switch (KVP.Value.type)
-                {
-                    case SerializableProperty.FieldType.Vector2:
+                        for (int i = 0; i < 2; i++)
                         {
-                            Vector2 value = property.GetValue<Vector2>();
-
-                            for (int i = 0; i < 2; i++)
+                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
+                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
                             {
-                                float curveVal = KVP.Value.curveInfos[i].curve.Evaluate(time);
-                                if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                {
-                                    addOrUpdateKeyframe(KVP.Value.curveInfos[i].curve, time, value[i]);
-                                    changesMade = true;
-                                }
+                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
+                                changesMade = true;
                             }
                         }
-                        break;
-                    case SerializableProperty.FieldType.Vector3:
-                        {
-                            Vector3 value = property.GetValue<Vector3>();
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector3:
+                    {
+                        Vector3 value = property.GetValue<Vector3>();
 
-                            for (int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3; i++)
+                        {
+                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
+                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
                             {
-                                float curveVal = KVP.Value.curveInfos[i].curve.Evaluate(time);
-                                if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                { 
-                                    addOrUpdateKeyframe(KVP.Value.curveInfos[i].curve, time, value[i]);
-                                    changesMade = true;
-                                }
+                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
+                                changesMade = true;
                             }
                         }
-                        break;
-                    case SerializableProperty.FieldType.Vector4:
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector4:
+                    {
+                        if (property.InternalType == typeof(Vector4))
                         {
-                            if (property.InternalType == typeof(Vector4))
-                            {
-                                Vector4 value = property.GetValue<Vector4>();
-
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    float curveVal = KVP.Value.curveInfos[i].curve.Evaluate(time);
-                                    if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                    { 
-                                        addOrUpdateKeyframe(KVP.Value.curveInfos[i].curve, time, value[i]);
-                                        changesMade = true;
-                                    }
-                                }
-                            }
-                            else if (property.InternalType == typeof(Quaternion))
-                            {
-                                Quaternion value = property.GetValue<Quaternion>();
-
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    float curveVal = KVP.Value.curveInfos[i].curve.Evaluate(time);
-                                    if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                    { 
-                                        addOrUpdateKeyframe(KVP.Value.curveInfos[i].curve, time, value[i]);
-                                        changesMade = true;
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case SerializableProperty.FieldType.Color:
-                        {
-                            Color value = property.GetValue<Color>();
+                            Vector4 value = property.GetValue<Vector4>();
 
                             for (int i = 0; i < 4; i++)
                             {
-                                float curveVal = KVP.Value.curveInfos[i].curve.Evaluate(time);
+                                float curveVal = curves.curveInfos[i].curve.Evaluate(time);
                                 if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                { 
-                                    addOrUpdateKeyframe(KVP.Value.curveInfos[i].curve, time, value[i]);
+                                {
+                                    addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
                                     changesMade = true;
                                 }
                             }
                         }
-                        break;
-                    case SerializableProperty.FieldType.Bool:
+                        else if (property.InternalType == typeof(Quaternion))
                         {
-                            bool value = property.GetValue<bool>();
+                            Quaternion value = property.GetValue<Quaternion>();
 
-                            bool curveVal = KVP.Value.curveInfos[0].curve.Evaluate(time) > 0.0f;
-                            if (value != curveVal)
-                            { 
-                                addOrUpdateKeyframe(KVP.Value.curveInfos[0].curve, time, value ? 1.0f : -1.0f);
+                            for (int i = 0; i < 4; i++)
+                            {
+                                float curveVal = curves.curveInfos[i].curve.Evaluate(time);
+                                if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
+                                {
+                                    addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
+                                    changesMade = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case SerializableProperty.FieldType.Color:
+                    {
+                        Color value = property.GetValue<Color>();
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
+                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
+                            {
+                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
                                 changesMade = true;
                             }
                         }
-                        break;
-                    case SerializableProperty.FieldType.Int:
-                        {
-                            int value = property.GetValue<int>();
+                    }
+                    break;
+                case SerializableProperty.FieldType.Bool:
+                    {
+                        bool value = property.GetValue<bool>();
 
-                            int curveVal = (int)KVP.Value.curveInfos[0].curve.Evaluate(time);
-                            if (value != curveVal)
-                            { 
-                                addOrUpdateKeyframe(KVP.Value.curveInfos[0].curve, time, value);
-                                changesMade = true;
-                            }
-                        }
-                        break;
-                    case SerializableProperty.FieldType.Float:
+                        bool curveVal = curves.curveInfos[0].curve.Evaluate(time) > 0.0f;
+                        if (value != curveVal)
                         {
-                            float value = property.GetValue<float>();
-
-                            float curveVal = KVP.Value.curveInfos[0].curve.Evaluate(time);
-                            if (!MathEx.ApproxEquals(value, curveVal, 0.001f))
-                            { 
-                                addOrUpdateKeyframe(KVP.Value.curveInfos[0].curve, time, value);
-                                changesMade = true;
-                            }
+                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value ? 1.0f : -1.0f);
+                            changesMade = true;
                         }
-                        break;
-                }
+                    }
+                    break;
+                case SerializableProperty.FieldType.Int:
+                    {
+                        int value = property.GetValue<int>();
+
+                        int curveVal = (int)curves.curveInfos[0].curve.Evaluate(time);
+                        if (value != curveVal)
+                        {
+                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value);
+                            changesMade = true;
+                        }
+                    }
+                    break;
+                case SerializableProperty.FieldType.Float:
+                    {
+                        float value = property.GetValue<float>();
+
+                        float curveVal = curves.curveInfos[0].curve.Evaluate(time);
+                        if (!MathEx.ApproxEquals(value, curveVal, 0.001f))
+                        {
+                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value);
+                            changesMade = true;
+                        }
+                    }
+                    break;
             }
 
             return changesMade;
@@ -1855,6 +1854,7 @@ namespace BansheeEditor
             pathNoRoot = pathNoRoot.Substring(separatorIdx + 1, pathNoRoot.Length - separatorIdx - 1);
 
             AddNewField(pathNoRoot, type);
+            RecordState(pathNoRoot, 0.0f);
             ApplyClipChanges();
         }
 
