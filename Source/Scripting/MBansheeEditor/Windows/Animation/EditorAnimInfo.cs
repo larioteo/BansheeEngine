@@ -386,7 +386,7 @@ namespace BansheeEditor
                     {
                         new AnimationCurve(kvp.Value.curveInfos[0].curve.KeyFrames),
                         new AnimationCurve(kvp.Value.curveInfos[1].curve.KeyFrames),
-                        new AnimationCurve(kvp.Value.curveInfos[1].curve.KeyFrames)
+                        new AnimationCurve(kvp.Value.curveInfos[2].curve.KeyFrames)
                     });
 
                     EditorVector3CurveTangents curveTangents = new EditorVector3CurveTangents();
