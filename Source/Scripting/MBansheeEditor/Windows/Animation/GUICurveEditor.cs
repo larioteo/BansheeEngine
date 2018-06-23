@@ -695,7 +695,7 @@ namespace BansheeEditor
             this.height = height;
 
             guiTimeline.SetSize(width, TIMELINE_HEIGHT);
-            guiEvents.SetSize(height, EVENTS_HEIGHT);
+            guiEvents.SetSize(width, EVENTS_HEIGHT);
             guiCurveDrawing.SetSize(width, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
             guiSidebar.SetSize(SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
 
