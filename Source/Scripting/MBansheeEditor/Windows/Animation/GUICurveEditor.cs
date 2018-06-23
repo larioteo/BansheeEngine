@@ -69,6 +69,9 @@ namespace BansheeEditor
         private GUIPanel drawingPanel;
         private GUIPanel eventsPanel;
 
+        private GUITexture timelineBackground;
+        private GUITexture eventsBackground;
+
         private GUIGraphTime guiTimeline;
         private GUIAnimEvents guiEvents;
         private GUICurveDrawing guiCurveDrawing;
@@ -276,7 +279,7 @@ namespace BansheeEditor
 
             GUIPanel timelineBgPanel = gui.AddPanel(1);
 
-            GUITexture timelineBackground = new GUITexture(null, EditorStyles.Header);
+            timelineBackground = new GUITexture(null, EditorStyles.Header);
             timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
             timelineBgPanel.AddElement(timelineBackground);
 
@@ -286,7 +289,7 @@ namespace BansheeEditor
 
             GUIPanel eventsBgPanel = eventsPanel.AddPanel(1);
 
-            GUITexture eventsBackground = new GUITexture(null, EditorStyles.Header);
+            eventsBackground = new GUITexture(null, EditorStyles.Header);
             eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
             eventsBgPanel.AddElement(eventsBackground);
 
@@ -695,6 +698,9 @@ namespace BansheeEditor
             guiEvents.SetSize(height, EVENTS_HEIGHT);
             guiCurveDrawing.SetSize(width, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
             guiSidebar.SetSize(SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
+
+            timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
+            eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
 
             Redraw();
         }
