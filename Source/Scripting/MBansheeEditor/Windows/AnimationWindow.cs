@@ -813,6 +813,9 @@ namespace BansheeEditor
                 Animation animation = selectedSO.GetComponent<Animation>();
                 if (animation != null)
                     animation.EditorStop();
+
+                // Reset generic curves to their initial values
+                UpdateGenericCurves(0.0f);
             }
         }
 
@@ -1073,13 +1076,13 @@ namespace BansheeEditor
             if (selectedSO == null)
                 return;
 
+            float time = guiCurveEditor.GetTimeForFrame(frameIdx);
+
             Animation animation = selectedSO.GetComponent<Animation>();
             if (animation != null && clipInfo.clip != null)
-            {
-                float time = guiCurveEditor.GetTimeForFrame(frameIdx);
-
                 animation.EditorPlay(clipInfo.clip, time, true);
-            }
+
+            UpdateGenericCurves(time);
         }
 
         /// <summary>
@@ -1103,6 +1106,35 @@ namespace BansheeEditor
         private void EndRecord()
         {
             recordButton.Value = false;
+        }
+
+
+        /// <summary>
+        /// Updates the states of all properties controlled by curves to the value of the curves at the provided time.
+        /// </summary>
+        /// <param name="time">Time at which to evaluate the curves controlling the properties.</param>
+        private void UpdateGenericCurves(float time)
+        {
+            foreach (var KVP in clipInfo.curves)
+            {
+                FieldAnimCurves curves;
+                if (!clipInfo.curves.TryGetValue(KVP.Key, out curves))
+                    continue;
+
+                string suffix;
+                SerializableProperty property = Animation.FindProperty(selectedSO, KVP.Key, out suffix);
+
+                if (property == null)
+                    continue;
+
+                float DoOnComponent(int index)
+                {
+                    EdAnimationCurve curve = curves.curveInfos[index].curve;
+                    return curve.Evaluate(time);
+                }
+
+                ForEachPropertyComponentSet(property, DoOnComponent);
+            }
         }
 
         /// <summary>
@@ -1132,27 +1164,6 @@ namespace BansheeEditor
         /// <returns>True if any changes were recorded, false otherwise.</returns>
         private bool RecordState(string path, float time)
         {
-            Action<EdAnimationCurve, float, float> addOrUpdateKeyframe = (curve, keyTime, keyValue) =>
-            {
-                KeyFrame[] keyframes = curve.KeyFrames;
-                int keyframeIdx = -1;
-                for (int i = 0; i < keyframes.Length; i++)
-                {
-                    if (MathEx.ApproxEquals(keyframes[i].time, time))
-                    {
-                        keyframeIdx = i;
-                        break;
-                    }
-                }
-
-                if (keyframeIdx != -1)
-                    curve.UpdateKeyframe(keyframeIdx, keyTime, keyValue);
-                else
-                    curve.AddKeyframe(keyTime, keyValue);
-
-                curve.Apply();
-            };
-
             FieldAnimCurves curves;
             if (!clipInfo.curves.TryGetValue(path, out curves))
                 return false;
@@ -1164,125 +1175,39 @@ namespace BansheeEditor
                 return false;
 
             bool changesMade = false;
-            switch (curves.type)
+            void DoOnComponent(float value, int index)
             {
-                case SerializableProperty.FieldType.Vector2:
-                    {
-                        Vector2 value = property.GetValue<Vector2>();
+                EdAnimationCurve curve = curves.curveInfos[index].curve;
 
-                        for (int i = 0; i < 2; i++)
+                float curveVal = curve.Evaluate(time);
+                if (!MathEx.ApproxEquals(value, curveVal, 0.001f))
+                {
+                    KeyFrame[] keyframes = curve.KeyFrames;
+                    int keyframeIdx = -1;
+                    for (int i = 0; i < keyframes.Length; i++)
+                    {
+                        if (MathEx.ApproxEquals(keyframes[i].time, time))
                         {
-                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
-                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                            {
-                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
-                                changesMade = true;
-                            }
+                            keyframeIdx = i;
+                            break;
                         }
                     }
-                    break;
-                case SerializableProperty.FieldType.Vector3:
-                    {
-                        Vector3 value = property.GetValue<Vector3>();
 
-                        for (int i = 0; i < 3; i++)
-                        {
-                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
-                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                            {
-                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
-                                changesMade = true;
-                            }
-                        }
-                    }
-                    break;
-                case SerializableProperty.FieldType.Vector4:
-                    {
-                        if (property.InternalType == typeof(Vector4))
-                        {
-                            Vector4 value = property.GetValue<Vector4>();
+                    if (keyframeIdx != -1)
+                        curve.UpdateKeyframe(keyframeIdx, time, value);
+                    else
+                        curve.AddKeyframe(time, value);
 
-                            for (int i = 0; i < 4; i++)
-                            {
-                                float curveVal = curves.curveInfos[i].curve.Evaluate(time);
-                                if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                {
-                                    addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
-                                    changesMade = true;
-                                }
-                            }
-                        }
-                        else if (property.InternalType == typeof(Quaternion))
-                        {
-                            Quaternion value = property.GetValue<Quaternion>();
-
-                            for (int i = 0; i < 4; i++)
-                            {
-                                float curveVal = curves.curveInfos[i].curve.Evaluate(time);
-                                if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                                {
-                                    addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
-                                    changesMade = true;
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case SerializableProperty.FieldType.Color:
-                    {
-                        Color value = property.GetValue<Color>();
-
-                        for (int i = 0; i < 4; i++)
-                        {
-                            float curveVal = curves.curveInfos[i].curve.Evaluate(time);
-                            if (!MathEx.ApproxEquals(value[i], curveVal, 0.001f))
-                            {
-                                addOrUpdateKeyframe(curves.curveInfos[i].curve, time, value[i]);
-                                changesMade = true;
-                            }
-                        }
-                    }
-                    break;
-                case SerializableProperty.FieldType.Bool:
-                    {
-                        bool value = property.GetValue<bool>();
-
-                        bool curveVal = curves.curveInfos[0].curve.Evaluate(time) > 0.0f;
-                        if (value != curveVal)
-                        {
-                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value ? 1.0f : -1.0f);
-                            changesMade = true;
-                        }
-                    }
-                    break;
-                case SerializableProperty.FieldType.Int:
-                    {
-                        int value = property.GetValue<int>();
-
-                        int curveVal = (int)curves.curveInfos[0].curve.Evaluate(time);
-                        if (value != curveVal)
-                        {
-                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value);
-                            changesMade = true;
-                        }
-                    }
-                    break;
-                case SerializableProperty.FieldType.Float:
-                    {
-                        float value = property.GetValue<float>();
-
-                        float curveVal = curves.curveInfos[0].curve.Evaluate(time);
-                        if (!MathEx.ApproxEquals(value, curveVal, 0.001f))
-                        {
-                            addOrUpdateKeyframe(curves.curveInfos[0].curve, time, value);
-                            changesMade = true;
-                        }
-                    }
-                    break;
+                    curve.Apply();
+                    changesMade = true;
+                }
             }
+
+            ForEachPropertyComponentGet(property, DoOnComponent);
 
             return changesMade;
         }
+
         #endregion
 
         #region Curve display
@@ -1754,6 +1679,172 @@ namespace BansheeEditor
                 return path;
 
             return path.Substring(0, index);
+        }
+
+        /// <summary>
+        /// Iterates over all components of a property and calls the provided action for every component with the current
+        /// value of the property. Only works with floating point (any dimension), integer, color and boolean property
+        /// types. Since reported values are always floating point booleans are encoded as -1.0f for false and 1.0f for
+        /// true, and integers are converted to floating point.
+        /// </summary>
+        /// <param name="property">Property whose components to iterate over.</param>
+        /// <param name="action">
+        /// Callback to trigger for each component. The callback receives the current value of the property's component
+        /// and the sequential index of the component.
+        /// </param>
+        private void ForEachPropertyComponentGet(SerializableProperty property, Action<float, int> action)
+        {
+            switch (property.Type)
+            {
+                case SerializableProperty.FieldType.Vector2:
+                    {
+                        Vector2 value = property.GetValue<Vector2>();
+
+                        for (int i = 0; i < 2; i++)
+                            action(value[i], i);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector3:
+                    {
+                        Vector3 value = property.GetValue<Vector3>();
+
+                        for (int i = 0; i < 3; i++)
+                            action(value[i], i);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector4:
+                    {
+                        if (property.InternalType == typeof(Vector4))
+                        {
+                            Vector4 value = property.GetValue<Vector4>();
+
+                            for (int i = 0; i < 4; i++)
+                                action(value[i], i);
+                        }
+                        else if (property.InternalType == typeof(Quaternion))
+                        {
+                            Quaternion value = property.GetValue<Quaternion>();
+
+                            for (int i = 0; i < 4; i++)
+                                action(value[i], i);
+                        }
+                    }
+                    break;
+                case SerializableProperty.FieldType.Color:
+                    {
+                        Color value = property.GetValue<Color>();
+
+                        for (int i = 0; i < 4; i++)
+                            action(value[i], i);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Bool:
+                    {
+                        bool value = property.GetValue<bool>();
+                        action(value ? 1.0f : -1.0f, 0);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Int:
+                    {
+                        int value = property.GetValue<int>();
+                        action(value, 0);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Float:
+                    {
+                        float value = property.GetValue<float>();
+                        action(value, 0);
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Iterates over all components of a property, calls the provided action which returns a new value to be
+        /// assigned to the property component. Only works with floating point (any dimension), integer, color and boolean
+        /// property types. Since reported values are always floating point booleans are encoded as -1.0f for false and
+        /// 1.0f for true, and integers are converted to floating point.
+        /// </summary>
+        /// <param name="property">Property whose components to iterate over.</param>
+        /// <param name="action">
+        /// Callback to trigger for each component. The callback receives the current value of the property's component
+        /// and the sequential index of the component.
+        /// </param>
+        private void ForEachPropertyComponentSet(SerializableProperty property, Func<int, float> action)
+        {
+            switch (property.Type)
+            {
+                case SerializableProperty.FieldType.Vector2:
+                    {
+                        Vector2 value = new Vector2();
+
+                        for (int i = 0; i < 2; i++)
+                            value[i] = action(i);
+
+                        property.SetValue(value);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector3:
+                    {
+                        Vector3 value = new Vector3();
+
+                        for (int i = 0; i < 3; i++)
+                            value[i] = action(i);
+
+                        property.SetValue(value);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Vector4:
+                    {
+                        if (property.InternalType == typeof(Vector4))
+                        {
+                            Vector4 value = new Vector4();
+
+                            for (int i = 0; i < 4; i++)
+                                value[i] = action(i);
+
+                            property.SetValue(value);
+                        }
+                        else if (property.InternalType == typeof(Quaternion))
+                        {
+                            Quaternion value = new Quaternion();
+
+                            for (int i = 0; i < 4; i++)
+                                value[i] = action(i);
+
+                            property.SetValue(value);
+                        }
+                    }
+                    break;
+                case SerializableProperty.FieldType.Color:
+                    {
+                        Color value = new Color();
+
+                        for (int i = 0; i < 4; i++)
+                            value[i] = action(i);
+
+                        property.SetValue(value);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Bool:
+                    {
+                        bool value = action(0) > 0.0f ? true : false;
+                        property.SetValue(value);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Int:
+                    {
+                        int value = (int)action(0);
+                        property.SetValue(value);
+                    }
+                    break;
+                case SerializableProperty.FieldType.Float:
+                    {
+                        float value = action(0);
+                        property.SetValue(value);
+                    }
+                    break;
+            }
         }
 
         #endregion
