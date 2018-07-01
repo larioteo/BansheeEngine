@@ -560,28 +560,38 @@ namespace BansheeEditor
                 }
                 else // Draw normally
                 {
-                    float timeIncrement = LINE_SPLIT_WIDTH*lengthPerPixel;
+                    float splitIncrement = LINE_SPLIT_WIDTH*lengthPerPixel;
 
-                    int startPixel = (int)(start / lengthPerPixel);
-                    int endPixel = (int)(end / lengthPerPixel);
+                    float startValue = keyframes[i].value;
+                    float endValue = keyframes[i + 1].value;
+
+                    Vector2I startPixel = new Vector2I();
+                    startPixel.x = (int) (start / lengthPerPixel);
+                    startPixel.y = (int) (startValue / lengthPerPixel);
+
+                    Vector2I endPixel = new Vector2I();
+                    endPixel.x = (int) (end / lengthPerPixel);
+                    endPixel.y = (int) (endValue / lengthPerPixel);
+
+                    int distance = Vector2I.Distance(startPixel, endPixel);
 
                     int numSplits;
-                    if (startPixel != endPixel)
+                    if (distance > 0)
                     {
-                        float fNumSplits = (end - start) / timeIncrement;
+                        float fNumSplits = distance / splitIncrement;
 
                         numSplits = MathEx.CeilToInt(fNumSplits);
-                        timeIncrement = (end - start)/numSplits;
+                        splitIncrement = distance/(float)numSplits;
                     }
                     else
                     {
                         numSplits = 1;
-                        timeIncrement = 0.0f;
+                        splitIncrement = 0.0f;
                     }
 
                     for (int j = 0; j < numSplits; j++)
                     {
-                        float t = Math.Min(start + j * timeIncrement, end);
+                        float t = Math.Min(start + j * splitIncrement, end);
                         float value = curve.Evaluate(t, false);
 
                         linePoints.Add(CurveToPixelSpace(new Vector2(t, value)));
