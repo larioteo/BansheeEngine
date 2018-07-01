@@ -1323,14 +1323,17 @@ namespace BansheeEditor
         /// <summary>
         /// Returns width/height required to show the entire contents of the currently displayed curves.
         /// </summary>
-        /// <returns>Width/height of the curve area, in curve space (value, time).</returns>
+        /// <returns>Width/height of the curve area, in curve space (time, value).</returns>
         private Vector2 GetOptimalRange()
         {
             CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
 
-            float xRange;
-            float yRange;
-            CalculateRange(curvesToDisplay, out xRange, out yRange);
+            float xMin, xMax;
+            float yMin, yMax;
+            CalculateRange(curvesToDisplay, out xMin, out xMax, out yMin, out yMax);
+
+            float xRange = xMax;
+            float yRange = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
 
             // Add padding to y range
             yRange *= 1.05f;
@@ -1343,6 +1346,38 @@ namespace BansheeEditor
                 yRange = 10.0f;
 
             return new Vector2(xRange, yRange);
+        }
+
+        /// <summary>
+        /// Returns the offset and range required for fully displaying the currently selected set of curves. 
+        /// </summary>
+        /// <param name="offset">Offset used for centering the curves.</param>
+        /// <param name="range">Range representing the width/height in curve space (time, value). </param>
+        private void GetOptimalRangeAndOffset(out Vector2 offset, out Vector2 range)
+        {
+            CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
+
+            float xMin, xMax;
+            float yMin, yMax;
+            CalculateRange(curvesToDisplay, out xMin, out xMax, out yMin, out yMax);
+
+            float xRange = xMax - xMin;
+
+            float yRange = (yMax - yMin) * 0.5f;
+            float yOffset = yMin + yRange;
+
+            // Add padding to y range
+            yRange *= 1.05f;
+
+            // Don't allow zero range
+            if (xRange == 0.0f)
+                xRange = 60.0f;
+
+            if (yRange == 0.0f)
+                yRange = 10.0f;
+
+            offset = new Vector2(xMin, yOffset);
+            range = new Vector2(xRange, yRange);
         }
 
         /// <summary>
@@ -1359,26 +1394,39 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Updates the offset and range of the curve display to fully fit the currently selected set of curves.
+        /// </summary>
+        /// <param name="resetTime">If true the time offset/range will be recalculated, otherwise current time offset will
+        ///                         be kept as is.</param>
+        private void CenterAndResizeCurveDisplay(bool resetTime)
+        {
+            Vector2 offset, range;
+            GetOptimalRangeAndOffset(out offset, out range);
+
+            if (!resetTime)
+            {
+                offset.x = guiCurveEditor.Offset.x;
+                range.x = guiCurveEditor.Range.x;
+            }
+
+            guiCurveEditor.Range = range;
+            guiCurveEditor.Offset = offset;
+
+            UpdateScrollBarPosition();
+            UpdateScrollBarSize();
+        }
+
+        /// <summary>
         /// Updates the curve display with currently selected curves.
         /// </summary>
-        /// <param name="allowReduce">Normally the curve display will expand if newly selected curves cover a larger area
-        ///                           than currently available, but the area won't be reduced if the selected curves cover
-        ///                           a smaller area. Set this to true to allow the area to be reduced.</param>
-        private void UpdateDisplayedCurves(bool allowReduce = false)
+        /// <param name="resetTime">If true the time offset/range will be recalculated, otherwise current time offset will
+        ///                         be kept as is.</param>
+        private void UpdateDisplayedCurves(bool resetTime = false)
         {
             CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
             guiCurveEditor.SetCurves(curvesToDisplay);
 
-            Vector2 newRange = GetOptimalRange();
-            if (!allowReduce)
-            {
-                // Don't reduce visible range
-                newRange.x = Math.Max(newRange.x, guiCurveEditor.Range.x);
-                newRange.y = Math.Max(newRange.y, guiCurveEditor.Range.y);
-            }
-
-            guiCurveEditor.Range = newRange;
-            UpdateScrollBarSize();
+            CenterAndResizeCurveDisplay(resetTime);
         }
 
         #endregion 
@@ -1393,7 +1441,6 @@ namespace BansheeEditor
         /// <param name="type">Type of the field (float, vector, etc.)</param>
         private void AddNewField(string path, SerializableProperty.FieldType type)
         {
-            bool noSelection = selectedFields.Count == 0;
             bool isPropertyCurve = !clipInfo.isImported && !EditorAnimClipInfo.IsMorphShapeCurve(path);
 
             switch (type)
@@ -1489,7 +1536,7 @@ namespace BansheeEditor
             UpdateDisplayedFields();
 
             EditorApplication.SetProjectDirty();
-            UpdateDisplayedCurves(noSelection);
+            UpdateDisplayedCurves();
         }
 
         /// <summary>
@@ -1503,7 +1550,6 @@ namespace BansheeEditor
             if (!additive)
                 selectedFields.Clear();
 
-            bool noSelection = selectedFields.Count == 0;
             if (!string.IsNullOrEmpty(path))
             {
                 selectedFields.RemoveAll(x => { return x == path || IsPathParent(x, path); });
@@ -1511,8 +1557,7 @@ namespace BansheeEditor
             }
 
             guiFieldDisplay.SetSelection(selectedFields.ToArray());
-
-            UpdateDisplayedCurves(noSelection);
+            UpdateDisplayedCurves();
         }
 
         /// <summary>
@@ -1562,14 +1607,19 @@ namespace BansheeEditor
         /// Calculates the total range covered by a set of curves.
         /// </summary>
         /// <param name="curveInfos">Curves to calculate range for.</param>
-        /// <param name="xRange">Maximum time value present in the curves.</param>
-        /// <param name="yRange">Maximum absolute curve value present in the curves.</param>
-        private static void CalculateRange(CurveDrawInfo[] curveInfos, out float xRange, out float yRange)
+        /// <param name="xMin">Minimum time value present in the curves.</param>
+        /// <param name="xMax">Maximum time value present in the curves.</param>
+        /// <param name="yMin">Minimum curve value present in the curves.</param>
+        /// <param name="yMax">Maximum curve value present in the curves.</param>
+        private static void CalculateRange(CurveDrawInfo[] curveInfos, out float xMin, out float xMax, out float yMin, 
+            out float yMax)
         {
             // Note: This only evaluates at keyframes, we should also evaluate in-between in order to account for steep
             // tangents
-            xRange = 0.0f;
-            yRange = 0.0f;
+            xMin = float.PositiveInfinity;
+            xMax = float.NegativeInfinity;
+            yMin = float.PositiveInfinity;
+            yMax = float.NegativeInfinity;
 
             foreach (var curveInfo in curveInfos)
             {
@@ -1577,10 +1627,24 @@ namespace BansheeEditor
 
                 foreach (var key in keyframes)
                 {
-                    xRange = Math.Max(xRange, key.time);
-                    yRange = Math.Max(yRange, Math.Abs(key.value));
+                    xMin = Math.Min(xMin, key.time);
+                    xMax = Math.Max(xMax, key.time);
+                    yMin = Math.Min(yMin, key.value);
+                    yMax = Math.Max(yMax, key.value);
                 }
             }
+
+            if (xMin == float.PositiveInfinity)
+                xMin = 0.0f;
+
+            if (xMax == float.NegativeInfinity)
+                xMax = 0.0f;
+
+            if (yMin == float.PositiveInfinity)
+                yMin = 0.0f;
+
+            if (yMax == float.NegativeInfinity)
+                yMax = 0.0f;
         }
 
         /// <summary>

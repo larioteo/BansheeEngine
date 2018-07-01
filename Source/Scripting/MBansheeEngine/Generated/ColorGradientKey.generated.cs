@@ -22,6 +22,12 @@ namespace BansheeEngine
 			return value;
 		}
 
+		public ColorGradientKey(Color color, float time)
+		{
+			this.color = color;
+			this.time = time;
+		}
+
 		public Color color;
 		public float time;
 	}
