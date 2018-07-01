@@ -151,6 +151,30 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Adds a new keyframe to the animation curve, unless a keyframe with the same time already exists in which case
+        /// the existing keyframe is updated with the new value. Newly added keyframe will use the automatic tangent mode.
+        /// </summary>
+        /// <param name="time">Time at which to add/update the keyframe.</param>
+        /// <param name="value">Value of the keyframe.</param>
+        internal void AddOrUpdateKeyframe(float time, float value)
+        {
+            int keyframeIdx = -1;
+            for (int i = 0; i < keyFrames.Length; i++)
+            {
+                if (MathEx.ApproxEquals(keyFrames[i].time, time))
+                {
+                    keyframeIdx = i;
+                    break;
+                }
+            }
+
+            if (keyframeIdx != -1)
+                UpdateKeyframe(keyframeIdx, time, value);
+            else
+                AddKeyframe(time, value);
+        }
+
+        /// <summary>
         /// Adds a new keyframe to the animation curve. Keyframe will use the automatic tangent mode.
         /// </summary>
         /// <param name="time">Time at which to add the keyframe.</param>

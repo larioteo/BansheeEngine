@@ -757,7 +757,7 @@ namespace BansheeEditor
                     float t = guiCurveDrawing.GetTimeForFrame(markedFrameIdx);
                     float value = curveInfo.curve.Evaluate(t);
 
-                    curveInfo.curve.AddKeyframe(t, value);
+                    curveInfo.curve.AddOrUpdateKeyframe(t, value);
                     curveInfo.curve.Apply();
                 }
             }
@@ -894,7 +894,7 @@ namespace BansheeEditor
                         float t = curveCoord.x;
                         float value = curveCoord.y;
 
-                        curveInfo.curve.AddKeyframe(t, value);
+                        curveInfo.curve.AddOrUpdateKeyframe(t, value);
                         curveInfo.curve.Apply();
                     }
                 }

@@ -1182,23 +1182,9 @@ namespace BansheeEditor
                 float curveVal = curve.Evaluate(time);
                 if (!MathEx.ApproxEquals(value, curveVal, 0.001f))
                 {
-                    KeyFrame[] keyframes = curve.KeyFrames;
-                    int keyframeIdx = -1;
-                    for (int i = 0; i < keyframes.Length; i++)
-                    {
-                        if (MathEx.ApproxEquals(keyframes[i].time, time))
-                        {
-                            keyframeIdx = i;
-                            break;
-                        }
-                    }
-
-                    if (keyframeIdx != -1)
-                        curve.UpdateKeyframe(keyframeIdx, time, value);
-                    else
-                        curve.AddKeyframe(time, value);
-
+                    curve.AddOrUpdateKeyframe(time, value);
                     curve.Apply();
+
                     changesMade = true;
                 }
             }
