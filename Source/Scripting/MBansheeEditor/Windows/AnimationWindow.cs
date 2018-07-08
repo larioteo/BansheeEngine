@@ -26,14 +26,6 @@ namespace BansheeEditor
 
         private SceneObject selectedSO;
 
-        /// <summary>
-        /// Scene object for which are we currently changing the animation for.
-        /// </summary>
-        internal SceneObject SelectedSO
-        {
-            get { return selectedSO; }
-        }
-
         #region Overrides
 
         /// <summary>
@@ -446,13 +438,28 @@ namespace BansheeEditor
             scrollBarWidth = vertScrollBar.Bounds.width;
 
             Vector2I curveEditorSize = GetCurveEditorSize();
-            guiCurveEditor = new GUICurveEditor(this, editorPanel, curveEditorSize.x, curveEditorSize.y);
+            guiCurveEditor = new GUICurveEditor(this, editorPanel, curveEditorSize.x, curveEditorSize.y, true);
+            guiCurveEditor.SetEventSceneObject(selectedSO);
+
             guiCurveEditor.OnFrameSelected += OnFrameSelected;
-            guiCurveEditor.OnEventAdded += OnEventsChanged;
-            guiCurveEditor.OnEventModified += EditorApplication.SetProjectDirty;
-            guiCurveEditor.OnEventDeleted += OnEventsChanged;
+            guiCurveEditor.OnEventAdded += () =>
+            {
+                OnEventsChanged();
+                RecordClipState();
+            };
+            guiCurveEditor.OnEventModified += () =>
+            {
+                EditorApplication.SetProjectDirty();
+                RecordClipState();
+            };
+            guiCurveEditor.OnEventDeleted += () =>
+            {
+                OnEventsChanged();
+                RecordClipState();
+            };
             guiCurveEditor.OnCurveModified += () =>
             {
+                RecordClipState();
                 SwitchState(State.Normal);
 
                 ApplyClipChanges();
@@ -828,7 +835,7 @@ namespace BansheeEditor
         /// <summary>
         /// Records current clip state for undo/redo purposes.
         /// </summary>
-        internal void RecordClipState()
+        private void RecordClipState()
         {
             AnimationClipState clipState = CreateClipState();
 
@@ -841,7 +848,7 @@ namespace BansheeEditor
         /// <summary>
         /// Records current clip state for undo/redo purposes.
         /// </summary>
-        internal AnimationClipState CreateClipState()
+        private AnimationClipState CreateClipState()
         {
             AnimationClipState clipState = new AnimationClipState();
 

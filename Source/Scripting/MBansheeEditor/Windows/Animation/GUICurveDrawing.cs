@@ -28,6 +28,8 @@ namespace BansheeEditor
         private float yOffset;
 
         private GUIGraphTicks tickHandler;
+        private bool drawMarkers = true;
+        private bool drawRange = false;
 
         /// <summary>
         /// Creates a new curve drawing GUI element.
@@ -36,11 +38,15 @@ namespace BansheeEditor
         /// <param name="width">Width of the element in pixels.</param>
         /// <param name="height">Height of the element in pixels.</param>
         /// <param name="curveInfos">Initial set of curves to display. </param>
-        public GUICurveDrawing(GUILayout layout, int width, int height, CurveDrawInfo[] curveInfos)
+        /// <param name="drawMarkers">If enabled draw frame markers, or if disabled draw just the curve.</param>
+        public GUICurveDrawing(GUILayout layout, int width, int height, CurveDrawInfo[] curveInfos, bool drawMarkers = true)
             :base(layout, width, height)
         {
-            tickHandler = new GUIGraphTicks(GUITickStepType.Time);
+            if(drawMarkers)
+                tickHandler = new GUIGraphTicks(GUITickStepType.Time);
+
             this.curveInfos = curveInfos;
+            this.drawMarkers = drawMarkers;
             
             ClearSelectedKeyframes(); // Makes sure the array is initialized
         }
@@ -74,6 +80,17 @@ namespace BansheeEditor
         {
             SetOffset(offset.x);
             yOffset = offset.y;
+        }
+
+        /// <summary>
+        /// Changes curve rendering mode. Normally the curves are drawn individually, but when range rendering is enabled
+        /// the area between the first two curves is drawn instead. This setting is ignored if less than two curves are
+        /// present. More than two curves are also ignored.
+        /// </summary>
+        /// <param name="drawRange">True to enable range rendering mode, false to enable individual curve rendering.</param>
+        public void SetDrawRange(bool drawRange)
+        {
+            this.drawRange = drawRange;
         }
         
         /// <summary>
@@ -301,7 +318,7 @@ namespace BansheeEditor
             if (onTop)
                 depth = 110;
             else
-                depth = 128;
+                depth = 130;
 
             canvas.DrawLine(start, end, color, depth);
         }
@@ -316,7 +333,7 @@ namespace BansheeEditor
             Vector2I start = new Vector2I(0, center.y);
             Vector2I end = new Vector2I(width, center.y);
 
-            canvas.DrawLine(start, end, COLOR_DARK_GRAY);
+            canvas.DrawLine(start, end, COLOR_DARK_GRAY, 130);
         }
 
         /// <summary>
@@ -442,51 +459,61 @@ namespace BansheeEditor
             if (curveInfos == null)
                 return;
 
-            tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), drawableWidth + PADDING);
-
-            // Draw vertical frame markers
-            int numTickLevels = tickHandler.NumLevels;
-            for (int i = numTickLevels - 1; i >= 0; i--)
+            if (drawMarkers)
             {
-                float[] ticks = tickHandler.GetTicks(i);
-                float strength = tickHandler.GetLevelStrength(i);
+                tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), drawableWidth + PADDING);
 
-                for (int j = 0; j < ticks.Length; j++)
+                // Draw vertical frame markers
+                int numTickLevels = tickHandler.NumLevels;
+                for (int i = numTickLevels - 1; i >= 0; i--)
                 {
-                    Color color = COLOR_DARK_GRAY;
-                    color.a *= strength;
+                    float[] ticks = tickHandler.GetTicks(i);
+                    float strength = tickHandler.GetLevelStrength(i);
 
-                    DrawFrameMarker(ticks[j], color, false);
+                    for (int j = 0; j < ticks.Length; j++)
+                    {
+                        Color color = COLOR_DARK_GRAY;
+                        color.a *= strength;
+
+                        DrawFrameMarker(ticks[j], color, false);
+                    }
                 }
+
+                // Draw center line
+                DrawCenterLine();
             }
 
-            // Draw center line
-            DrawCenterLine();
+            // Draw range
+            int curvesToDraw = curveInfos.Length;
+            if (drawRange && curveInfos.Length >= 2)
+            {
+                EdAnimationCurve[] curves = {curveInfos[0].curve, curveInfos[1].curve};
+
+                DrawCurveRange(curves, new Color(1.0f, 0.0f, 0.0f, 0.7f));
+                curvesToDraw = 2;
+            }
 
             // Draw curves
-            int curveIdx = 0;
-            foreach (var curveInfo in curveInfos)
+            for (int i = 0; i < curvesToDraw; i++)
             {
-                DrawCurve(curveInfo.curve, curveInfo.color);
+                DrawCurve(curveInfos[i].curve, curveInfos[i].color);
 
                 // Draw keyframes
-                KeyFrame[] keyframes = curveInfo.curve.KeyFrames;
+                KeyFrame[] keyframes = curveInfos[i].curve.KeyFrames;
 
-                for (int i = 0; i < keyframes.Length; i++)
+                for (int j = 0; j < keyframes.Length; j++)
                 {
-                    bool isSelected = IsSelected(curveIdx, i);
+                    bool isSelected = IsSelected(i, j);
 
-                    DrawKeyframe(keyframes[i].time, keyframes[i].value, isSelected);
+                    DrawKeyframe(keyframes[j].time, keyframes[j].value, isSelected);
 
                     if (isSelected)
-                        DrawTangents(keyframes[i], curveInfo.curve.TangentModes[i]);
+                        DrawTangents(keyframes[j], curveInfos[i].curve.TangentModes[j]);
                 }
-
-                curveIdx++;
             }
 
             // Draw selected frame marker
-            if (markedFrameIdx != -1)
+            if (drawMarkers && markedFrameIdx != -1)
                 DrawFrameMarker(GetTimeForFrame(markedFrameIdx), Color.BansheeOrange, true);
         }
 
@@ -611,6 +638,208 @@ namespace BansheeEditor
 
                 canvas.DrawLine(start, end, COLOR_MID_GRAY);
             }
+        }
+
+        /// <summary>
+        /// Draws the area between two curves using the provided color.
+        /// </summary>
+        /// <param name="curves">Curves to draw within the currently set range.</param>
+        /// <param name="color">Color to draw the area with.</param>
+        private void DrawCurveRange(EdAnimationCurve[] curves, Color color)
+        {
+            float range = GetRange();
+
+            if(curves.Length != 2 || curves[0] == null || curves[1] == null)
+                return;
+
+            KeyFrame[][] keyframes = { curves[0].KeyFrames, curves[1].KeyFrames };
+            if (keyframes[0].Length <= 0 || keyframes[1].Length <= 0)
+                return;
+
+            int numSamples = (drawableWidth + LINE_SPLIT_WIDTH - 1) / LINE_SPLIT_WIDTH;
+            float timePerSample = range / numSamples;
+
+            float time = rangeOffset;
+            int[] keyframeIndices = {0, 0};
+
+            // Find first valid keyframe indices
+            for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+            {
+                keyframeIndices[curveIdx] = keyframes[curveIdx].Length;
+
+                for (int i = 0; i < keyframes[curveIdx].Length; i++)
+                {
+                    if (keyframes[curveIdx][i].time > time)
+                        keyframeIndices[curveIdx] = i;
+                }
+            }
+
+            List<float> times = new List<float>();
+            List<float>[] points = { new List<float>(), new List<float>() };
+
+            // Determine start points
+            for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+            {
+                float value = curves[curveIdx].Evaluate(time, false);
+                points[curveIdx].Add(value);
+            }
+
+            times.Add(time);
+
+            float rangeEnd = rangeOffset + range;
+            while (time < rangeEnd)
+            {
+                float nextTime = time + timePerSample;
+                bool hasStep = false;
+
+                // Determine time to sample at. Use fixed increments unless there's a step keyframe within our increment in
+                // which case we use its time so we can evaluate it directly
+                for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+                {
+                    int keyframeIdx = keyframeIndices[curveIdx];
+                    if (keyframeIdx < keyframes[curveIdx].Length)
+                    {
+                        KeyFrame keyframe = keyframes[curveIdx][keyframeIdx];
+
+                        bool isStep = keyframe.inTangent == float.PositiveInfinity ||
+                                      keyframe.outTangent == float.PositiveInfinity;
+
+                        if (isStep && keyframe.time <= nextTime)
+                        {
+                            nextTime = Math.Min(nextTime, keyframe.time);
+                            hasStep = true;
+                        }
+                    }
+                }
+
+                // Evaluate
+                if (hasStep)
+                {
+                    for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+                    {
+                        int keyframeIdx = keyframeIndices[curveIdx];
+                        if (keyframeIdx < keyframes[curveIdx].Length)
+                        {
+                            KeyFrame keyframe = keyframes[curveIdx][keyframeIdx];
+
+                            if (MathEx.ApproxEquals(keyframe.time, nextTime))
+                            {
+                                if (keyframeIdx > 0)
+                                {
+                                    KeyFrame prevKeyframe = keyframes[curveIdx][keyframeIdx - 1];
+                                    points[curveIdx].Add(prevKeyframe.value);
+                                }
+                                else
+                                    points[curveIdx].Add(keyframe.value);
+
+                                points[curveIdx].Add(keyframe.value);
+
+                            }
+                            else
+                            {
+                                // The other curve has step but this one doesn't, we just insert the same value twice
+                                float value = curves[curveIdx].Evaluate(nextTime, false);
+                                points[curveIdx].Add(value);
+                                points[curveIdx].Add(value);
+                            }
+
+                            times.Add(nextTime);
+                            times.Add(nextTime);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+                        points[curveIdx].Add(curves[curveIdx].Evaluate(nextTime, false));
+
+                    times.Add(nextTime);
+                }
+
+                // Advance keyframe indices
+                for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+                {
+                    int keyframeIdx = keyframeIndices[curveIdx];
+                    while (keyframeIdx < keyframes[curveIdx].Length)
+                    {
+                        KeyFrame keyframe = keyframes[curveIdx][keyframeIdx];
+                        if (keyframe.time > nextTime)
+                            break;
+
+                        keyframeIdx = ++keyframeIndices[curveIdx];
+                    }
+                }
+
+                time = nextTime;
+            }
+
+            // End points
+            for (int curveIdx = 0; curveIdx < 2; curveIdx++)
+            {
+                float value = curves[curveIdx].Evaluate(rangeEnd, false);
+                points[curveIdx].Add(value);
+            }
+
+            times.Add(rangeEnd);
+
+            int numQuads = times.Count - 1;
+            List<Vector2I> vertices = new List<Vector2I>();
+
+            for (int i = 0; i < numQuads; i++)
+            {
+                int idxLeft = points[0][i] < points[1][i] ? 0 : 1;
+                int idxRight = points[0][i + 1] < points[1][i + 1] ? 0 : 1;
+
+                Vector2[] left =
+                {
+                    new Vector2(times[i], points[0][i]),
+                    new Vector2(times[i], points[1][i])
+                };
+
+                Vector2[] right =
+                {
+                    new Vector2(times[i + 1], points[0][i + 1]),
+                    new Vector2(times[i + 1], points[1][i + 1])
+                };
+
+                if (idxLeft == idxRight)
+                {
+                    int idxA = idxLeft;
+                    int idxB = (idxLeft + 1) % 2;
+
+                    vertices.Add(CurveToPixelSpace(left[idxB]));
+                    vertices.Add(CurveToPixelSpace(right[idxB]));
+                    vertices.Add(CurveToPixelSpace(left[idxA]));
+
+                    vertices.Add(CurveToPixelSpace(right[idxB]));
+                    vertices.Add(CurveToPixelSpace(right[idxA]));
+                    vertices.Add(CurveToPixelSpace(left[idxA]));
+                }
+                // Lines intersects, can't represent them with a single quad
+                else if (idxLeft != idxRight)
+                {
+                    int idxA = idxLeft;
+                    int idxB = (idxLeft + 1) % 2;
+
+                    Line2 lineA = new Line2(left[idxB], right[idxA] - left[idxB]);
+                    Line2 lineB = new Line2(left[idxA], right[idxB] - left[idxA]);
+
+                    if (lineA.Intersects(lineB, out var t))
+                    {
+                        Vector2 intersection = left[idxB] + t * (right[idxA] - left[idxB]);
+
+                        vertices.Add(CurveToPixelSpace(left[idxB]));
+                        vertices.Add(CurveToPixelSpace(intersection));
+                        vertices.Add(CurveToPixelSpace(left[idxA]));
+
+                        vertices.Add(CurveToPixelSpace(intersection));
+                        vertices.Add(CurveToPixelSpace(right[idxB]));
+                        vertices.Add(CurveToPixelSpace(right[idxA]));
+                    }
+                }
+            }
+
+            canvas.DrawTriangleList(vertices.ToArray(), color, 129);
         }
     }
 

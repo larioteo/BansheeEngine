@@ -185,6 +185,17 @@ namespace BansheeEngine
         }
 
         /// <summary>
+        /// Calculates the cross product of the two vectors.
+        /// </summary>
+        /// <param name="lhs">First two dimensional vector.</param>
+        /// <param name="rhs">Second two dimensional vector.</param>
+        /// <returns>Cross product between the two vectors.</returns>
+        public static float Cross(Vector2 lhs, Vector2 rhs)
+        {
+            return lhs.x * rhs.y - lhs.y * rhs.x;
+        }
+
+        /// <summary>
         /// Calculates the distance between two points.
         /// </summary>
         /// <param name="a">First two dimensional point.</param>

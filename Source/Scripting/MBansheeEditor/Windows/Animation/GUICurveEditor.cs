@@ -64,7 +64,7 @@ namespace BansheeEditor
         private const int SIDEBAR_WIDTH = 30;
         private const int DRAG_START_DISTANCE = 3;
 
-        private AnimationWindow window;
+        private EditorWindow window;
         private GUILayout gui;
         private GUIPanel drawingPanel;
         private GUIPanel eventsPanel;
@@ -85,6 +85,7 @@ namespace BansheeEditor
 
         private CurveDrawInfo[] curveInfos = new CurveDrawInfo[0];
         private bool disableCurveEdit = false;
+        private bool drawCurveRange = false;
 
         private float xRange = 60.0f;
         private float yRange = 10.0f;
@@ -96,7 +97,9 @@ namespace BansheeEditor
         private int markedFrameIdx;
         private List<SelectedKeyframes> selectedKeyframes = new List<SelectedKeyframes>();
 
+        private bool showEvents = true;
         private List<EventInfo> events = new List<EventInfo>();
+        private SceneObject eventsSO;
 
         private bool isPointerHeld;
         private bool isMousePressedOverKey;
@@ -151,9 +154,11 @@ namespace BansheeEditor
                 yRange = value.y;
 
                 guiTimeline.SetRange(xRange);
-                guiEvents.SetRange(xRange);
                 guiCurveDrawing.SetRange(xRange, yRange * 2.0f);
                 guiSidebar.SetRange(offset.y - yRange, offset.y + yRange);
+
+                if(showEvents)
+                    guiEvents.SetRange(xRange);
 
                 Redraw();
             }
@@ -170,9 +175,11 @@ namespace BansheeEditor
                 offset = value;
 
                 guiTimeline.SetOffset(offset.x);
-                guiEvents.SetOffset(offset.x);
                 guiCurveDrawing.SetOffset(offset);
                 guiSidebar.SetRange(offset.y - yRange, offset.y + yRange);
+
+                if(showEvents)
+                    guiEvents.SetOffset(offset.x);
 
                 Redraw();
             }
@@ -242,10 +249,12 @@ namespace BansheeEditor
         /// <param name="gui">GUI layout into which to place the GUI element.</param>
         /// <param name="width">Width in pixels.</param>
         /// <param name="height">Height in pixels.</param>
-        public GUICurveEditor(AnimationWindow window, GUILayout gui, int width, int height)
+        /// <param name="showEvents">If true show events on the graph and allow their editing.</param>
+        public GUICurveEditor(EditorWindow window, GUILayout gui, int width, int height, bool showEvents)
         {
             this.window = window;
             this.gui = gui;
+            this.showEvents = showEvents;
 
             this.width = width;
             this.height = height;
@@ -283,26 +292,32 @@ namespace BansheeEditor
             timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
             timelineBgPanel.AddElement(timelineBackground);
 
-            eventsPanel = gui.AddPanel();
-            eventsPanel.SetPosition(0, TIMELINE_HEIGHT + VERT_PADDING);
-            guiEvents = new GUIAnimEvents(eventsPanel, width, EVENTS_HEIGHT);
+            int eventsHeaderHeight = 0;
+            if (showEvents)
+            {
+                eventsPanel = gui.AddPanel();
+                eventsPanel.SetPosition(0, TIMELINE_HEIGHT + VERT_PADDING);
+                guiEvents = new GUIAnimEvents(eventsPanel, width, EVENTS_HEIGHT);
 
-            GUIPanel eventsBgPanel = eventsPanel.AddPanel(1);
+                GUIPanel eventsBgPanel = eventsPanel.AddPanel(1);
 
-            eventsBackground = new GUITexture(null, EditorStyles.Header);
-            eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
-            eventsBgPanel.AddElement(eventsBackground);
+                eventsBackground = new GUITexture(null, EditorStyles.Header);
+                eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
+                eventsBgPanel.AddElement(eventsBackground);
+
+                eventsHeaderHeight = EVENTS_HEIGHT;
+            }
 
             drawingPanel = gui.AddPanel();
-            drawingPanel.SetPosition(0, TIMELINE_HEIGHT + EVENTS_HEIGHT + VERT_PADDING);
+            drawingPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
-            guiCurveDrawing = new GUICurveDrawing(drawingPanel, width, height - TIMELINE_HEIGHT - EVENTS_HEIGHT - VERT_PADDING * 2, curveInfos);
+            guiCurveDrawing = new GUICurveDrawing(drawingPanel, width, height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2, curveInfos);
             guiCurveDrawing.SetRange(60.0f, 20.0f);
 
             GUIPanel sidebarPanel = gui.AddPanel(-10);
-            sidebarPanel.SetPosition(0, TIMELINE_HEIGHT + EVENTS_HEIGHT + VERT_PADDING);
+            sidebarPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
-            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - EVENTS_HEIGHT - VERT_PADDING * 2);
+            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2);
             guiSidebar.SetRange(-10.0f, 10.0f);
         }
 
@@ -405,7 +420,7 @@ namespace BansheeEditor
                     else
                     {
                         int eventIdx;
-                        if (guiEvents.FindEvent(eventPos, out eventIdx))
+                        if (showEvents && guiEvents.FindEvent(eventPos, out eventIdx))
                         {
                             if (!Input.IsButtonHeld(ButtonCode.LeftShift) && !Input.IsButtonHeld(ButtonCode.RightShift))
                                 ClearSelection();
@@ -459,7 +474,7 @@ namespace BansheeEditor
                         keyframeContextMenu.Open(pointerPos, gui);
                     }
                 }
-                else if (guiEvents.GetFrame(eventPos) != -1) // Clicked over events bar
+                else if (showEvents && guiEvents.GetFrame(eventPos) != -1) // Clicked over events bar
                 {
                     contextClickPosition = eventPos;
 
@@ -584,9 +599,8 @@ namespace BansheeEditor
                             }
 
                             isModifiedDuringDrag = true;
-                            window.RecordClipState();
-
                             guiCurveDrawing.Rebuild();
+
                             UpdateEventsGUI();
                         }
                         else if (isMousePressedOverTangent && !disableCurveEdit)
@@ -627,8 +641,6 @@ namespace BansheeEditor
                                 curve.Apply();
 
                                 isModifiedDuringDrag = true;
-                                window.RecordClipState();
-
                                 guiCurveDrawing.Rebuild();
                             }
                         }
@@ -685,6 +697,20 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Changes curve rendering mode. Normally the curves are drawn individually, but when range rendering is enabled
+        /// the area between the first two curves is drawn instead. This setting is ignored if less than two curves are
+        /// present. More than two curves are also ignored.
+        /// </summary>
+        /// <param name="drawRange">True to enable range rendering mode, false to enable individual curve rendering.</param>
+        public void SetDrawRange(bool drawRange)
+        {
+            drawCurveRange = drawRange;
+            guiCurveDrawing.SetDrawRange(drawRange);
+
+            Redraw();
+        }
+
+        /// <summary>
         /// Change the physical size of the GUI element.
         /// </summary>
         /// <param name="width">Width of the element in pixels.</param>
@@ -694,13 +720,19 @@ namespace BansheeEditor
             this.width = width;
             this.height = height;
 
+            int eventsHeaderHeight = 0;
+            if (showEvents)
+            {
+                eventsHeaderHeight = EVENTS_HEIGHT;
+                guiEvents.SetSize(width, EVENTS_HEIGHT);
+                eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
+            }
+
             guiTimeline.SetSize(width, TIMELINE_HEIGHT);
-            guiEvents.SetSize(width, EVENTS_HEIGHT);
-            guiCurveDrawing.SetSize(width, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
-            guiSidebar.SetSize(SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - EVENTS_HEIGHT);
+            guiCurveDrawing.SetSize(width, height - TIMELINE_HEIGHT - eventsHeaderHeight);
+            guiSidebar.SetSize(SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - eventsHeaderHeight);
 
             timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
-            eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
 
             Redraw();
         }
@@ -712,10 +744,21 @@ namespace BansheeEditor
         public void SetFPS(int fps)
         {
             guiTimeline.SetFPS(fps);
-            guiEvents.SetFPS(fps);
             guiCurveDrawing.SetFPS(fps);
 
+            if(showEvents)
+                guiEvents.SetFPS(fps);
+
             Redraw();
+        }
+
+        /// <summary>
+        /// Sets a scene object that will be used for enumerating components/methods used for adding events.
+        /// </summary>
+        /// <param name="so">Scene object containing the animation component.</param>
+        public void SetEventSceneObject(SceneObject so)
+        {
+            eventsSO = so;
         }
 
         /// <summary>
@@ -737,8 +780,10 @@ namespace BansheeEditor
             markedFrameIdx = frameIdx;
 
             guiTimeline.SetMarkedFrame(frameIdx);
-            guiEvents.SetMarkedFrame(frameIdx);
             guiCurveDrawing.SetMarkedFrame(frameIdx);
+
+            if(showEvents)
+                guiEvents.SetMarkedFrame(frameIdx);
 
             Redraw();
         }
@@ -764,8 +809,6 @@ namespace BansheeEditor
             else
                 ShowReadOnlyMessage();
 
-            window.RecordClipState();
-
             OnCurveModified?.Invoke();
             guiCurveDrawing.Rebuild();
             UpdateEventsGUI();
@@ -778,10 +821,13 @@ namespace BansheeEditor
         {
             ClearSelection();
 
+            if (!showEvents)
+                return;
+
             float eventTime = guiEvents.GetTimeForFrame(markedFrameIdx);
             EventInfo eventInfo = new EventInfo();
             eventInfo.animEvent = new AnimationEvent("", eventTime);
-            
+
             events.Add(eventInfo);
             OnEventAdded?.Invoke();
 
@@ -796,6 +842,9 @@ namespace BansheeEditor
         /// </summary>
         private void UpdateEventsGUI()
         {
+            if (!showEvents)
+                return;
+
             AnimationEvent[] animEvents = new AnimationEvent[events.Count];
             bool[] selected = new bool[events.Count];
 
@@ -816,10 +865,12 @@ namespace BansheeEditor
         {
             guiCurveDrawing.Rebuild();
             guiTimeline.Rebuild();
-            guiEvents.Rebuild();
             guiSidebar.Rebuild();
+
+            if(showEvents)
+                guiEvents.Rebuild();
         }
-        
+
         /// <summary>
         /// Changes the tangent mode for all currently selected keyframes.
         /// </summary>
@@ -871,8 +922,6 @@ namespace BansheeEditor
                 curve.Apply();
             }
 
-            window.RecordClipState();
-
             OnCurveModified?.Invoke();
             guiCurveDrawing.Rebuild();
         }
@@ -901,8 +950,6 @@ namespace BansheeEditor
                 else
                     ShowReadOnlyMessage();
 
-                window.RecordClipState();
-
                 OnCurveModified?.Invoke();
                 guiCurveDrawing.Rebuild();
                 UpdateEventsGUI();
@@ -914,6 +961,9 @@ namespace BansheeEditor
         /// </summary>
         private void AddEventAtPosition()
         {
+            if (!showEvents)
+                return;
+
             int frame = guiEvents.GetFrame(contextClickPosition);
             if (frame != -1)
             {
@@ -959,7 +1009,6 @@ namespace BansheeEditor
             else
                 ShowReadOnlyMessage();
 
-            window.RecordClipState();
             ClearSelection();
 
             OnCurveModified?.Invoke();
@@ -980,7 +1029,6 @@ namespace BansheeEditor
             }
 
             events = newEvents;
-            window.RecordClipState();
 
             OnEventDeleted?.Invoke();
             ClearSelection();
@@ -1087,12 +1135,11 @@ namespace BansheeEditor
                 curve.Apply();
 
                 guiCurveDrawing.Rebuild();
-                OnCurveModified?.Invoke();
             },
             x =>
             {
                 if (x)
-                    window.RecordClipState();
+                    OnCurveModified?.Invoke();
             });
         }
 
@@ -1101,6 +1148,9 @@ namespace BansheeEditor
         /// </summary>
         private void EditSelectedEvent()
         {
+            if (!showEvents)
+                return;
+
             for (int i = 0; i < events.Count; i++)
             {
                 if (events[i].selected)
@@ -1126,8 +1176,10 @@ namespace BansheeEditor
             Rect2I eventBounds = GUIUtility.CalculateBounds(eventsPanel, window.GUI);
             Vector2I windowPos = position + new Vector2I(eventBounds.x, eventBounds.y);
 
-            SceneObject so = window.SelectedSO;
-            Component[] components = so.GetComponents();
+            if (eventsSO == null)
+                return;
+
+            Component[] components = eventsSO.GetComponents();
             string[] componentNames = new string[components.Length];
             for (int i = 0; i < components.Length; i++)
                 componentNames[i] = components[i].GetType().Name;
@@ -1136,12 +1188,11 @@ namespace BansheeEditor
             editWindow.Initialize(animEvent, componentNames, () =>
             {
                 UpdateEventsGUI();
-                OnEventModified?.Invoke();
             },
             x =>
             {
                 if(x)
-                    window.RecordClipState();
+                    OnEventModified?.Invoke();
             });
         }
 
