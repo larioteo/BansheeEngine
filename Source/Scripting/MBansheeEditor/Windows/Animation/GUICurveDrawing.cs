@@ -127,6 +127,41 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Attempts to find a curve under the provided coordinates.
+        /// </summary>
+        /// <param name="pixelCoords">Coordinates relative to this GUI element in pixels.</param>
+        /// <returns>Index of the curve, or -1 if none found.</returns>
+        public int FindCurve(Vector2I pixelCoords)
+        {
+            PixelToCurveSpace(pixelCoords, out var curveCoords, true);
+
+            float time = curveCoords.x;
+
+            float nearestDistance = float.MaxValue;
+            int curveIdx = -1;
+            for (int i = 0; i < curveInfos.Length; i++)
+            {
+                EdAnimationCurve curve = curveInfos[i].curve;
+
+                float value = curve.Evaluate(time, false);
+                Vector2I curPixelPos = CurveToPixelSpace(new Vector2(time, value));
+
+                float distanceToKey = Vector2I.Distance(pixelCoords, curPixelPos);
+                if (distanceToKey < nearestDistance)
+                {
+                    nearestDistance = distanceToKey;
+                    curveIdx = i;
+                }
+            }
+
+            // We're not near any curve
+            if (nearestDistance > 5.0f)
+                return -1;
+
+            return curveIdx;
+        }
+
+        /// <summary>
         /// Attempts to find a keyframe under the provided coordinates.
         /// </summary>
         /// <param name="pixelCoords">Coordinates relative to this GUI element in pixels.</param>
@@ -489,7 +524,7 @@ namespace BansheeEditor
             {
                 EdAnimationCurve[] curves = {curveInfos[0].curve, curveInfos[1].curve};
 
-                DrawCurveRange(curves, new Color(1.0f, 0.0f, 0.0f, 0.7f));
+                DrawCurveRange(curves, new Color(1.0f, 0.0f, 0.0f, 0.3f));
                 curvesToDraw = 2;
             }
 

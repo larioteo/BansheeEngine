@@ -95,6 +95,7 @@ namespace BansheeEditor
             if (selectedSO != null)
             {
                 EditorInput.OnPointerPressed -= OnPointerPressed;
+                EditorInput.OnPointerDoubleClick -= OnPointerDoubleClicked;
                 EditorInput.OnPointerMoved -= OnPointerMoved;
                 EditorInput.OnPointerReleased -= OnPointerReleased;
                 EditorInput.OnButtonUp -= OnButtonUp;
@@ -756,6 +757,7 @@ namespace BansheeEditor
                 if (selectedSO != null && so == null)
                 {
                     EditorInput.OnPointerPressed -= OnPointerPressed;
+                    EditorInput.OnPointerDoubleClick -= OnPointerDoubleClicked;
                     EditorInput.OnPointerMoved -= OnPointerMoved;
                     EditorInput.OnPointerReleased -= OnPointerReleased;
                     EditorInput.OnButtonUp -= OnButtonUp;
@@ -763,6 +765,7 @@ namespace BansheeEditor
                 else if (selectedSO == null && so != null)
                 {
                     EditorInput.OnPointerPressed += OnPointerPressed;
+                    EditorInput.OnPointerDoubleClick += OnPointerDoubleClicked;
                     EditorInput.OnPointerMoved += OnPointerMoved;
                     EditorInput.OnPointerReleased += OnPointerReleased;
                     EditorInput.OnButtonUp += OnButtonUp;
@@ -1925,6 +1928,15 @@ namespace BansheeEditor
                     isButtonHeld = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Triggered when the user double clicks the left mouse button.
+        /// </summary>
+        /// <param name="ev">Information about the mouse event.</param>
+        private void OnPointerDoubleClicked(PointerEvent ev)
+        {
+            guiCurveEditor.OnPointerDoubleClicked(ev);
         }
 
         /// <summary>

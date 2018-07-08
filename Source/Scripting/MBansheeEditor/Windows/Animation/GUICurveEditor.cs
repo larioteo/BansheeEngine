@@ -507,6 +507,37 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Handles input. Should be called by the owning window whenever a pointer is double-clicked.
+        /// </summary>
+        /// <param name="ev">Object containing pointer press event information.</param>
+        internal void OnPointerDoubleClicked(PointerEvent ev)
+        {
+            if (ev.IsUsed)
+                return;
+
+            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+
+            Rect2I elementBounds = GUIUtility.CalculateBounds(gui, window.GUI);
+            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+
+            bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
+            if (!isOverEditor)
+                return;
+
+            Rect2I drawingBounds = drawingPanel.Bounds;
+            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
+
+            if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out var curveCoord, true))
+            {
+                int curveIdx = guiCurveDrawing.FindCurve(drawingPos);
+                if (curveIdx == -1)
+                    return;
+
+                AddKeyframe(curveIdx, curveCoord.x);
+            }
+        }
+
+        /// <summary>
         /// Handles input. Should be called by the owning window whenever a pointer is moved.
         /// </summary>
         /// <param name="ev">Object containing pointer move event information.</param>
@@ -924,6 +955,35 @@ namespace BansheeEditor
 
             OnCurveModified?.Invoke();
             guiCurveDrawing.Rebuild();
+        }
+
+        /// <summary>
+        /// Adds a new keyframe at the specified time on the provided curve.
+        /// </summary>
+        /// <param name="curveIdx">Index of the curve to add the keyframe to.</param>
+        /// <param name="time">Time at which to add the keyframe.</param>
+        private void AddKeyframe(int curveIdx, float time)
+        {
+            ClearSelection();
+
+            if (!disableCurveEdit)
+            {
+                if (curveIdx < curveInfos.Length)
+                {
+                    EdAnimationCurve curve = curveInfos[curveIdx].curve;
+
+                    float value = curve.Evaluate(time, false);
+
+                    curve.AddOrUpdateKeyframe(time, value);
+                    curve.Apply();
+                }
+            }
+            else
+                ShowReadOnlyMessage();
+
+            OnCurveModified?.Invoke();
+            guiCurveDrawing.Rebuild();
+            UpdateEventsGUI();
         }
 
         /// <summary>
