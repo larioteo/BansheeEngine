@@ -20,9 +20,6 @@ namespace BansheeEditor
     internal class AnimationWindow : EditorWindow
     {
         private const int FIELD_DISPLAY_WIDTH = 300;
-        private const int DRAG_START_DISTANCE = 3;
-        private const float DRAG_SCALE = 3.0f;
-        private const float ZOOM_SCALE = 0.1f/120.0f; // One scroll step is usually 120 units, we want 1/10 of that
 
         private SceneObject selectedSO;
 
@@ -55,7 +52,7 @@ namespace BansheeEditor
             if (selectedSO == null)
                 return;
 
-            HandleDragAndZoomInput();
+            guiCurveEditor.HandleDragAndZoomInput();
 
             if (state == State.Playback)
             {
@@ -131,13 +128,7 @@ namespace BansheeEditor
         private GUILayout buttonLayout;
 
         private int buttonLayoutHeight;
-        private int scrollBarWidth;
-        private int scrollBarHeight;
 
-        private GUIResizeableScrollBarH horzScrollBar;
-        private GUIResizeableScrollBarV vertScrollBar;
-
-        private GUIPanel editorPanel;
         private GUIAnimFieldDisplay guiFieldDisplay;
         private GUICurveEditor guiCurveEditor;
 
@@ -416,30 +407,13 @@ namespace BansheeEditor
             bottomButtonLayout.AddElement(addPropertyBtn);
             bottomButtonLayout.AddElement(delPropertyBtn);
 
-            horzScrollBar = new GUIResizeableScrollBarH();
-            horzScrollBar.OnScrollOrResize += OnHorzScrollOrResize;
-
-            vertScrollBar = new GUIResizeableScrollBarV();
-            vertScrollBar.OnScrollOrResize += OnVertScrollOrResize;
-
             GUITexture separator = new GUITexture(null, EditorStyles.Separator, GUIOption.FixedWidth(3));
             contentLayout.AddElement(separator);
 
             GUILayout curveLayout = contentLayout.AddLayoutY();
-            GUILayout curveLayoutHorz = curveLayout.AddLayoutX();
-            GUILayout horzScrollBarLayout = curveLayout.AddLayoutX();
-            horzScrollBarLayout.AddElement(horzScrollBar);
-            horzScrollBarLayout.AddFlexibleSpace();
-
-            editorPanel = curveLayoutHorz.AddPanel();
-            curveLayoutHorz.AddElement(vertScrollBar);
-            curveLayoutHorz.AddFlexibleSpace();
-
-            scrollBarHeight = horzScrollBar.Bounds.height;
-            scrollBarWidth = vertScrollBar.Bounds.width;
 
             Vector2I curveEditorSize = GetCurveEditorSize();
-            guiCurveEditor = new GUICurveEditor(this, editorPanel, curveEditorSize.x, curveEditorSize.y, true);
+            guiCurveEditor = new GUICurveEditor(this, curveLayout, curveEditorSize.x, curveEditorSize.y, true);
             guiCurveEditor.SetEventSceneObject(selectedSO);
 
             guiCurveEditor.OnFrameSelected += OnFrameSelected;
@@ -473,12 +447,8 @@ namespace BansheeEditor
                 if(state != State.Recording)
                     SwitchState(State.Normal);
             };
+
             guiCurveEditor.Redraw();
-
-            horzScrollBar.SetWidth(curveEditorSize.x);
-            vertScrollBar.SetHeight(curveEditorSize.y);
-
-            UpdateScrollBarSize();
         }
 
         /// <summary>
@@ -493,199 +463,6 @@ namespace BansheeEditor
             Vector2I curveEditorSize = GetCurveEditorSize();
             guiCurveEditor.SetSize(curveEditorSize.x, curveEditorSize.y);
             guiCurveEditor.Redraw();
-
-            horzScrollBar.SetWidth(curveEditorSize.x);
-            vertScrollBar.SetHeight(curveEditorSize.y);
-
-            UpdateScrollBarSize();
-            UpdateScrollBarPosition();
-        }
-        #endregion
-
-        #region Scroll, drag, zoom
-        private Vector2I dragStartPos;
-        private bool isButtonHeld;
-        private bool isDragInProgress;
-
-        private float zoomAmount;
-
-        /// <summary>
-        /// Handles mouse scroll wheel and dragging events in order to zoom or drag the displayed curve editor contents.
-        /// </summary>
-        private void HandleDragAndZoomInput()
-        {
-            // Handle middle mouse dragging
-            if (isDragInProgress)
-            {
-                float lengthPerPixel = guiCurveEditor.Range.x / guiCurveEditor.Width;
-                float heightPerPixel = guiCurveEditor.Range.y / guiCurveEditor.Height;
-
-                float dragX = Input.GetAxisValue(InputAxis.MouseX) * DRAG_SCALE * lengthPerPixel;
-                float dragY = Input.GetAxisValue(InputAxis.MouseY) * DRAG_SCALE * heightPerPixel;
-
-                Vector2 offset = guiCurveEditor.Offset;
-                offset.x = Math.Max(0.0f, offset.x + dragX);
-                offset.y -= dragY;
-
-                guiCurveEditor.Offset = offset;
-                UpdateScrollBarSize();
-                UpdateScrollBarPosition();
-            }
-
-            // Handle zoom in/out
-            float scroll = Input.GetAxisValue(InputAxis.MouseZ);
-            if (scroll != 0.0f)
-            {
-                Vector2I windowPos = ScreenToWindowPos(Input.PointerPosition);
-                Vector2 curvePos;
-                if (guiCurveEditor.WindowToCurveSpace(windowPos, out curvePos))
-                {
-                    float zoom = scroll * ZOOM_SCALE;
-                    Zoom(curvePos, zoom);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Moves or resizes the vertical scroll bar under the curve editor.
-        /// </summary>
-        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
-        /// <param name="size">New size of the scrollbar handle, in range [0, 1].</param>
-        private void SetVertScrollbarProperties(float position, float size)
-        {
-            Vector2 visibleRange = guiCurveEditor.Range;
-            Vector2 totalRange = GetTotalRange();
-
-            visibleRange.y = totalRange.y*size;
-            guiCurveEditor.Range = visibleRange;
-
-            float scrollableRange = totalRange.y - visibleRange.y;
-
-            Vector2 offset = guiCurveEditor.Offset;
-            offset.y = -scrollableRange * (position * 2.0f - 1.0f);
-
-            guiCurveEditor.Offset = offset;
-        }
-
-        /// <summary>
-        /// Moves or resizes the horizontal scroll bar under the curve editor.
-        /// </summary>
-        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
-        /// <param name="size">New size of the scrollbar handle, in range [0, 1].</param>
-        private void SetHorzScrollbarProperties(float position, float size)
-        {
-            Vector2 visibleRange = guiCurveEditor.Range;
-            Vector2 totalRange = GetTotalRange();
-
-            visibleRange.x = totalRange.x * size;
-            guiCurveEditor.Range = visibleRange;
-
-            float scrollableRange = totalRange.x - visibleRange.x;
-
-            Vector2 offset = guiCurveEditor.Offset;
-            offset.x = scrollableRange * position;
-
-            guiCurveEditor.Offset = offset;
-        }
-
-        /// <summary>
-        /// Updates the size of both scrollbars depending on the currently visible curve area vs. the total curve area.
-        /// </summary>
-        private void UpdateScrollBarSize()
-        {
-            Vector2 visibleRange = guiCurveEditor.Range;
-            Vector2 totalRange = GetTotalRange();
-
-            horzScrollBar.HandleSize = visibleRange.x / totalRange.x;
-            vertScrollBar.HandleSize = visibleRange.y / totalRange.y;
-        }
-
-        /// <summary>
-        /// Updates the position of both scrollbars depending on the offset currently applied to the visible curve area.
-        /// </summary>
-        private void UpdateScrollBarPosition()
-        {
-            Vector2 visibleRange = guiCurveEditor.Range;
-            Vector2 totalRange = GetTotalRange();
-            Vector2 scrollableRange = totalRange - visibleRange;
-
-            Vector2 offset = guiCurveEditor.Offset;
-            if (scrollableRange.x > 0.0f)
-                horzScrollBar.Position = offset.x / scrollableRange.x;
-            else
-                horzScrollBar.Position = 0.0f;
-
-            if (scrollableRange.y > 0.0f)
-            {
-                float pos = offset.y/scrollableRange.y;
-                float sign = MathEx.Sign(pos);
-                pos = sign*MathEx.Clamp01(MathEx.Abs(pos));
-                pos = (1.0f - pos) /2.0f;
-
-                vertScrollBar.Position = pos;
-            }
-            else
-                vertScrollBar.Position = 0.0f;
-        }
-
-        /// <summary>
-        /// Calculates the width/height of the curve area depending on the current zoom level.
-        /// </summary>
-        /// <returns>Width/height of the curve area, in curve space (value, time).</returns>
-        private Vector2 GetZoomedRange()
-        {
-            float zoomLevel = MathEx.Pow(2, zoomAmount);
-
-            Vector2 optimalRange = GetOptimalRange();
-            return optimalRange / zoomLevel;
-        }
-
-        /// <summary>
-        /// Returns the total width/height of the contents of the curve area.
-        /// </summary>
-        /// <returns>Width/height of the curve area, in curve space (value, time).</returns>
-        private Vector2 GetTotalRange()
-        {
-            // Return optimal range (that covers the visible curve)
-            Vector2 optimalRange = GetOptimalRange();
-
-            // Increase range in case user zoomed out
-            Vector2 zoomedRange = GetZoomedRange();
-            return Vector2.Max(optimalRange, zoomedRange);
-        }
-
-        /// <summary>
-        /// Zooms in or out at the provided position in the curve display.
-        /// </summary>
-        /// <param name="curvePos">Position to zoom towards, relative to the curve display area, in curve space 
-        ///                        (value, time)</param>
-        /// <param name="amount">Amount to zoom in (positive), or out (negative).</param>
-        private void Zoom(Vector2 curvePos, float amount)
-        {
-            // Increase or decrease the visible range depending on zoom level
-            Vector2 oldZoomedRange = GetZoomedRange();
-            zoomAmount = MathEx.Clamp(zoomAmount + amount, -10.0f, 10.0f);
-            Vector2 zoomedRange = GetZoomedRange();
-
-            Vector2 zoomedDiff = zoomedRange - oldZoomedRange;
-
-            Vector2 currentRange = guiCurveEditor.Range;
-            Vector2 newRange = currentRange + zoomedDiff;
-            guiCurveEditor.Range = newRange;
-
-            // When zooming, make sure to focus on the point provided, so adjust the offset
-            Vector2 rangeScale = newRange;
-            rangeScale.x /= currentRange.x;
-            rangeScale.y /= currentRange.y;
-
-            Vector2 relativeCurvePos = curvePos - guiCurveEditor.Offset;
-            Vector2 newCurvePos = relativeCurvePos * rangeScale;
-            Vector2 diff = newCurvePos - relativeCurvePos;
-
-            guiCurveEditor.Offset -= diff;
-
-            UpdateScrollBarSize();
-            UpdateScrollBarPosition();
         }
         #endregion
 
@@ -774,7 +551,6 @@ namespace BansheeEditor
                 SwitchState(State.Empty);
 
                 selectedSO = so;
-                zoomAmount = 0.0f;
                 selectedFields.Clear();
                 clipInfo = null;
                 UndoRedo.Clear();
@@ -1317,66 +1093,6 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Returns width/height required to show the entire contents of the currently displayed curves.
-        /// </summary>
-        /// <returns>Width/height of the curve area, in curve space (time, value).</returns>
-        private Vector2 GetOptimalRange()
-        {
-            CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
-
-            float xMin, xMax;
-            float yMin, yMax;
-            CalculateRange(curvesToDisplay, out xMin, out xMax, out yMin, out yMax);
-
-            float xRange = xMax;
-            float yRange = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
-
-            // Add padding to y range
-            yRange *= 1.05f;
-
-            // Don't allow zero range
-            if (xRange == 0.0f)
-                xRange = 60.0f;
-
-            if (yRange == 0.0f)
-                yRange = 10.0f;
-
-            return new Vector2(xRange, yRange);
-        }
-
-        /// <summary>
-        /// Returns the offset and range required for fully displaying the currently selected set of curves. 
-        /// </summary>
-        /// <param name="offset">Offset used for centering the curves.</param>
-        /// <param name="range">Range representing the width/height in curve space (time, value). </param>
-        private void GetOptimalRangeAndOffset(out Vector2 offset, out Vector2 range)
-        {
-            CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
-
-            float xMin, xMax;
-            float yMin, yMax;
-            CalculateRange(curvesToDisplay, out xMin, out xMax, out yMin, out yMax);
-
-            float xRange = xMax - xMin;
-
-            float yRange = (yMax - yMin) * 0.5f;
-            float yOffset = yMin + yRange;
-
-            // Add padding to y range
-            yRange *= 1.05f;
-
-            // Don't allow zero range
-            if (xRange == 0.0f)
-                xRange = 60.0f;
-
-            if (yRange == 0.0f)
-                yRange = 10.0f;
-
-            offset = new Vector2(xMin, yOffset);
-            range = new Vector2(xRange, yRange);
-        }
-
-        /// <summary>
         /// Calculates an unique color for each animation curve.
         /// </summary>
         private void UpdateCurveColors()
@@ -1390,29 +1106,6 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Updates the offset and range of the curve display to fully fit the currently selected set of curves.
-        /// </summary>
-        /// <param name="resetTime">If true the time offset/range will be recalculated, otherwise current time offset will
-        ///                         be kept as is.</param>
-        private void CenterAndResizeCurveDisplay(bool resetTime)
-        {
-            Vector2 offset, range;
-            GetOptimalRangeAndOffset(out offset, out range);
-
-            if (!resetTime)
-            {
-                offset.x = guiCurveEditor.Offset.x;
-                range.x = guiCurveEditor.Range.x;
-            }
-
-            guiCurveEditor.Range = range;
-            guiCurveEditor.Offset = offset;
-
-            UpdateScrollBarPosition();
-            UpdateScrollBarSize();
-        }
-
-        /// <summary>
         /// Updates the curve display with currently selected curves.
         /// </summary>
         /// <param name="resetTime">If true the time offset/range will be recalculated, otherwise current time offset will
@@ -1421,8 +1114,7 @@ namespace BansheeEditor
         {
             CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
             guiCurveEditor.SetCurves(curvesToDisplay);
-
-            CenterAndResizeCurveDisplay(resetTime);
+            guiCurveEditor.CenterAndResize(resetTime);
         }
 
         #endregion 
@@ -1593,54 +1285,10 @@ namespace BansheeEditor
         private Vector2I GetCurveEditorSize()
         {
             Vector2I output = new Vector2I();
-            output.x = Math.Max(0, Width - FIELD_DISPLAY_WIDTH - scrollBarWidth);
-            output.y = Math.Max(0, Height - buttonLayoutHeight - scrollBarHeight);
+            output.x = Math.Max(0, Width - FIELD_DISPLAY_WIDTH);
+            output.y = Math.Max(0, Height - buttonLayoutHeight);
 
             return output;
-        }
-
-        /// <summary>
-        /// Calculates the total range covered by a set of curves.
-        /// </summary>
-        /// <param name="curveInfos">Curves to calculate range for.</param>
-        /// <param name="xMin">Minimum time value present in the curves.</param>
-        /// <param name="xMax">Maximum time value present in the curves.</param>
-        /// <param name="yMin">Minimum curve value present in the curves.</param>
-        /// <param name="yMax">Maximum curve value present in the curves.</param>
-        private static void CalculateRange(CurveDrawInfo[] curveInfos, out float xMin, out float xMax, out float yMin, 
-            out float yMax)
-        {
-            // Note: This only evaluates at keyframes, we should also evaluate in-between in order to account for steep
-            // tangents
-            xMin = float.PositiveInfinity;
-            xMax = float.NegativeInfinity;
-            yMin = float.PositiveInfinity;
-            yMax = float.NegativeInfinity;
-
-            foreach (var curveInfo in curveInfos)
-            {
-                KeyFrame[] keyframes = curveInfo.curve.KeyFrames;
-
-                foreach (var key in keyframes)
-                {
-                    xMin = Math.Min(xMin, key.time);
-                    xMax = Math.Max(xMax, key.time);
-                    yMin = Math.Min(yMin, key.value);
-                    yMax = Math.Max(yMax, key.value);
-                }
-            }
-
-            if (xMin == float.PositiveInfinity)
-                xMin = 0.0f;
-
-            if (xMax == float.NegativeInfinity)
-                xMax = 0.0f;
-
-            if (yMin == float.PositiveInfinity)
-                yMin = 0.0f;
-
-            if (yMax == float.NegativeInfinity)
-                yMax = 0.0f;
         }
 
         /// <summary>
@@ -1918,16 +1566,6 @@ namespace BansheeEditor
         {
             guiCurveEditor.OnPointerPressed(ev);
 
-            if (ev.button == PointerButton.Middle)
-            {
-                Vector2I windowPos = ScreenToWindowPos(ev.ScreenPos);
-                Vector2 curvePos;
-                if (guiCurveEditor.WindowToCurveSpace(windowPos, out curvePos))
-                {
-                    dragStartPos = windowPos;
-                    isButtonHeld = true;
-                }
-            }
         }
 
         /// <summary>
@@ -1947,26 +1585,6 @@ namespace BansheeEditor
         {
             guiCurveEditor.OnPointerMoved(ev);
 
-            if (isButtonHeld)
-            {
-                Vector2I windowPos = ScreenToWindowPos(ev.ScreenPos);
-
-                int distance = Vector2I.Distance(dragStartPos, windowPos);
-                if (distance >= DRAG_START_DISTANCE)
-                {
-                    isDragInProgress = true;
-
-                    Cursor.Hide();
-
-                    Rect2I clipRect;
-                    clipRect.x = ev.ScreenPos.x - 2;
-                    clipRect.y = ev.ScreenPos.y - 2;
-                    clipRect.width = 4;
-                    clipRect.height = 4;
-
-                    Cursor.ClipToRect(clipRect);
-                }
-            }
         }
 
         /// <summary>
@@ -1975,15 +1593,6 @@ namespace BansheeEditor
         /// <param name="ev">Information about the mouse release event.</param>
         private void OnPointerReleased(PointerEvent ev)
         {
-            if (isDragInProgress)
-            {
-                Cursor.Show();
-                Cursor.ClipDisable();
-            }
-
-            isButtonHeld = false;
-            isDragInProgress = false;
-
             guiCurveEditor.OnPointerReleased(ev);
         }
 
@@ -2016,26 +1625,6 @@ namespace BansheeEditor
             AddNewField(pathNoRoot, type);
             RecordState(pathNoRoot, 0.0f);
             ApplyClipChanges();
-        }
-
-        /// <summary>
-        /// Triggered when the user moves or resizes the horizontal scrollbar.
-        /// </summary>
-        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
-        /// <param name="size">New size of the scrollbar, in range [0, 1].</param>
-        private void OnHorzScrollOrResize(float position, float size)
-        {
-            SetHorzScrollbarProperties(position, size);
-        }
-
-        /// <summary>
-        /// Triggered when the user moves or resizes the vertical scrollbar.
-        /// </summary>
-        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
-        /// <param name="size">New size of the scrollbar, in range [0, 1].</param>
-        private void OnVertScrollOrResize(float position, float size)
-        {
-            SetVertScrollbarProperties(position, size);
         }
 
         /// <summary>

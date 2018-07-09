@@ -63,9 +63,12 @@ namespace BansheeEditor
         private const int EVENTS_HEIGHT = 15;
         private const int SIDEBAR_WIDTH = 30;
         private const int DRAG_START_DISTANCE = 3;
+        private const float DRAG_SCALE = 3.0f;
+        private const float ZOOM_SCALE = 0.1f/120.0f; // One scroll step is usually 120 units, we want 1/10 of that
 
         private EditorWindow window;
         private GUILayout gui;
+        private GUILayout mainPanel;
         private GUIPanel drawingPanel;
         private GUIPanel eventsPanel;
 
@@ -76,6 +79,12 @@ namespace BansheeEditor
         private GUIAnimEvents guiEvents;
         private GUICurveDrawing guiCurveDrawing;
         private GUIGraphValues guiSidebar;
+
+        private int scrollBarWidth;
+        private int scrollBarHeight;
+
+        private GUIResizeableScrollBarH horzScrollBar;
+        private GUIResizeableScrollBarV vertScrollBar;
 
         private ContextMenu blankContextMenu;
         private ContextMenu keyframeContextMenu;
@@ -256,9 +265,6 @@ namespace BansheeEditor
             this.gui = gui;
             this.showEvents = showEvents;
 
-            this.width = width;
-            this.height = height;
-
             blankContextMenu = new ContextMenu();
             blankContextMenu.AddItem("Add keyframe", AddKeyframeAtPosition);
 
@@ -283,436 +289,70 @@ namespace BansheeEditor
             eventContextMenu.AddItem("Delete", DeleteSelectedEvents);
             eventContextMenu.AddItem("Edit", EditSelectedEvent);
 
-            GUIPanel timelinePanel = gui.AddPanel();
-            guiTimeline = new GUIGraphTime(timelinePanel, width, TIMELINE_HEIGHT);
+            horzScrollBar = new GUIResizeableScrollBarH();
+            horzScrollBar.OnScrollOrResize += OnHorzScrollOrResize;
 
-            GUIPanel timelineBgPanel = gui.AddPanel(1);
+            vertScrollBar = new GUIResizeableScrollBarV();
+            vertScrollBar.OnScrollOrResize += OnVertScrollOrResize;
+
+            GUILayout curveLayoutHorz = gui.AddLayoutX();
+            GUILayout horzScrollBarLayout = gui.AddLayoutX();
+            horzScrollBarLayout.AddElement(horzScrollBar);
+            horzScrollBarLayout.AddFlexibleSpace();
+
+            mainPanel = curveLayoutHorz.AddPanel();
+            curveLayoutHorz.AddElement(vertScrollBar);
+            curveLayoutHorz.AddFlexibleSpace();
+
+            scrollBarHeight = horzScrollBar.Bounds.height;
+            scrollBarWidth = vertScrollBar.Bounds.width;
+
+            this.width = Math.Max(0, width - scrollBarWidth);
+            this.height = Math.Max(0, height - scrollBarHeight);
+
+            GUIPanel timelinePanel = mainPanel.AddPanel();
+            guiTimeline = new GUIGraphTime(timelinePanel, this.width, TIMELINE_HEIGHT);
+
+            GUIPanel timelineBgPanel = mainPanel.AddPanel(1);
 
             timelineBackground = new GUITexture(null, EditorStyles.Header);
-            timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
+            timelineBackground.Bounds = new Rect2I(0, 0, this.width, TIMELINE_HEIGHT + VERT_PADDING);
             timelineBgPanel.AddElement(timelineBackground);
 
             int eventsHeaderHeight = 0;
             if (showEvents)
             {
-                eventsPanel = gui.AddPanel();
+                eventsPanel = mainPanel.AddPanel();
                 eventsPanel.SetPosition(0, TIMELINE_HEIGHT + VERT_PADDING);
-                guiEvents = new GUIAnimEvents(eventsPanel, width, EVENTS_HEIGHT);
+                guiEvents = new GUIAnimEvents(eventsPanel, this.width, EVENTS_HEIGHT);
 
                 GUIPanel eventsBgPanel = eventsPanel.AddPanel(1);
 
                 eventsBackground = new GUITexture(null, EditorStyles.Header);
-                eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
+                eventsBackground.Bounds = new Rect2I(0, 0, this.width, EVENTS_HEIGHT + VERT_PADDING);
                 eventsBgPanel.AddElement(eventsBackground);
 
                 eventsHeaderHeight = EVENTS_HEIGHT;
             }
 
-            drawingPanel = gui.AddPanel();
+            drawingPanel = mainPanel.AddPanel();
             drawingPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
-            guiCurveDrawing = new GUICurveDrawing(drawingPanel, width, height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2, curveInfos);
+            guiCurveDrawing = new GUICurveDrawing(drawingPanel, this.width, this.height - TIMELINE_HEIGHT -
+                eventsHeaderHeight - VERT_PADDING * 2, curveInfos);
             guiCurveDrawing.SetRange(60.0f, 20.0f);
 
-            GUIPanel sidebarPanel = gui.AddPanel(-10);
+            GUIPanel sidebarPanel = mainPanel.AddPanel(-10);
             sidebarPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
-            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2);
+            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, this.height - TIMELINE_HEIGHT - 
+                eventsHeaderHeight - VERT_PADDING * 2);
             guiSidebar.SetRange(-10.0f, 10.0f);
-        }
 
-        /// <summary>
-        /// Converts coordinate in curve space (time, value) into pixel coordinates relative to the curve drawing area
-        /// origin.
-        /// </summary>
-        /// <param name="curveCoords">Time and value of the location to convert.</param>
-        /// <returns>Coordinates relative to curve drawing area's origin, in pixels.</returns>
-        public Vector2I CurveToPixelSpace(Vector2 curveCoords)
-        {
-            return guiCurveDrawing.CurveToPixelSpace(curveCoords);
-        }
+            horzScrollBar.SetWidth(this.width);
+            vertScrollBar.SetHeight(this.height);
 
-        /// <summary>
-        /// Converts coordinates in window space (relative to the parent window origin) into coordinates in curve space.
-        /// </summary>
-        /// <param name="windowPos">Coordinates relative to parent editor window, in pixels.</param>
-        /// <param name="curveCoord">Curve coordinates within the range as specified by <see cref="Range"/>. Only
-        ///                          valid when function returns true.</param>
-        /// <returns>True if the coordinates are within the curve area, false otherwise.</returns>
-        public bool WindowToCurveSpace(Vector2I windowPos, out Vector2 curveCoord)
-        {
-            Rect2I elementBounds = GUIUtility.CalculateBounds(gui, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
-
-            Rect2I drawingBounds = drawingPanel.Bounds;
-            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
-
-            return guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord);
-        }
-
-        /// <summary>
-        /// Handles input. Should be called by the owning window whenever a pointer is pressed.
-        /// </summary>
-        /// <param name="ev">Object containing pointer press event information.</param>
-        internal void OnPointerPressed(PointerEvent ev)
-        {
-            if (ev.IsUsed)
-                return;
-
-            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-            Rect2I elementBounds = GUIUtility.CalculateBounds(gui, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
-
-            bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
-            if (!isOverEditor)
-                return;
-            else
-                OnClicked?.Invoke();
-
-            Rect2I drawingBounds = drawingPanel.Bounds;
-            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
-
-            Rect2I eventBounds = eventsPanel.Bounds;
-            Vector2I eventPos = pointerPos - new Vector2I(eventBounds.x, eventBounds.y);
-
-            if (ev.Button == PointerButton.Left)
-            {
-                Vector2 curveCoord;
-                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord, true))
-                {
-                    KeyframeRef keyframeRef;
-                    if (!guiCurveDrawing.FindKeyFrame(drawingPos, out keyframeRef))
-                    {
-                        TangentRef tangentRef;
-                        if (guiCurveDrawing.FindTangent(drawingPos, out tangentRef))
-                        {
-                            isMousePressedOverTangent = true;
-                            dragStart = drawingPos;
-                            draggedTangent = tangentRef;
-                        }
-                        else
-                            ClearSelection();
-                    }
-                    else
-                    {
-                        if (!IsSelected(keyframeRef))
-                        {
-                            if (!Input.IsButtonHeld(ButtonCode.LeftShift) && !Input.IsButtonHeld(ButtonCode.RightShift))
-                                ClearSelection();
-
-                            SelectKeyframe(keyframeRef);
-                        }
-
-                        isMousePressedOverKey = true;
-                        dragStart = drawingPos;
-                    }
-
-                    guiCurveDrawing.Rebuild();
-                    UpdateEventsGUI();
-                }
-                else
-                {
-                    int frameIdx = guiTimeline.GetFrame(pointerPos);
-
-                    if (frameIdx != -1)
-                        SetMarkedFrame(frameIdx);
-                    else
-                    {
-                        int eventIdx;
-                        if (showEvents && guiEvents.FindEvent(eventPos, out eventIdx))
-                        {
-                            if (!Input.IsButtonHeld(ButtonCode.LeftShift) && !Input.IsButtonHeld(ButtonCode.RightShift))
-                                ClearSelection();
-
-                            events[eventIdx].selected = true;
-                            UpdateEventsGUI();
-                        }
-                        else
-                        {
-                            ClearSelection();
-
-                            guiCurveDrawing.Rebuild();
-                            UpdateEventsGUI();
-                        }
-                    }
-
-                    OnFrameSelected?.Invoke(frameIdx);
-                }
-
-                isPointerHeld = true;
-            }
-            else if (ev.Button == PointerButton.Right)
-            {
-                Vector2 curveCoord;
-                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord, true))
-                {
-                    contextClickPosition = drawingPos;
-
-                    KeyframeRef keyframeRef;
-                    if (!guiCurveDrawing.FindKeyFrame(drawingPos, out keyframeRef))
-                    {
-                        ClearSelection();
-
-                        blankContextMenu.Open(pointerPos, gui);
-
-                        guiCurveDrawing.Rebuild();
-                        UpdateEventsGUI();
-                    }
-                    else
-                    {
-                        // If clicked outside of current selection, just select the one keyframe
-                        if (!IsSelected(keyframeRef))
-                        {
-                            ClearSelection();
-                            SelectKeyframe(keyframeRef);
-
-                            guiCurveDrawing.Rebuild();
-                            UpdateEventsGUI();
-                        }
-
-                        keyframeContextMenu.Open(pointerPos, gui);
-                    }
-                }
-                else if (showEvents && guiEvents.GetFrame(eventPos) != -1) // Clicked over events bar
-                {
-                    contextClickPosition = eventPos;
-
-                    int eventIdx;
-                    if (!guiEvents.FindEvent(eventPos, out eventIdx))
-                    {
-                        ClearSelection();
-
-                        blankEventContextMenu.Open(pointerPos, gui);
-
-                        guiCurveDrawing.Rebuild();
-                        UpdateEventsGUI();
-                    }
-                    else
-                    {
-                        // If clicked outside of current selection, just select the one event
-                        if (!events[eventIdx].selected)
-                        {
-                            ClearSelection();
-                            events[eventIdx].selected = true;
-
-                            guiCurveDrawing.Rebuild();
-                            UpdateEventsGUI();
-                        }
-
-                        eventContextMenu.Open(pointerPos, gui);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles input. Should be called by the owning window whenever a pointer is double-clicked.
-        /// </summary>
-        /// <param name="ev">Object containing pointer press event information.</param>
-        internal void OnPointerDoubleClicked(PointerEvent ev)
-        {
-            if (ev.IsUsed)
-                return;
-
-            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-            Rect2I elementBounds = GUIUtility.CalculateBounds(gui, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
-
-            bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
-            if (!isOverEditor)
-                return;
-
-            Rect2I drawingBounds = drawingPanel.Bounds;
-            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
-
-            if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out var curveCoord, true))
-            {
-                int curveIdx = guiCurveDrawing.FindCurve(drawingPos);
-                if (curveIdx == -1)
-                    return;
-
-                AddKeyframe(curveIdx, curveCoord.x);
-            }
-        }
-
-        /// <summary>
-        /// Handles input. Should be called by the owning window whenever a pointer is moved.
-        /// </summary>
-        /// <param name="ev">Object containing pointer move event information.</param>
-        internal void OnPointerMoved(PointerEvent ev)
-        {
-            if (ev.Button != PointerButton.Left)
-                return;
-
-            if (isPointerHeld)
-            {
-                Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-                Rect2I elementBounds = GUIUtility.CalculateBounds(gui, window.GUI);
-                Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
-
-                if (isMousePressedOverKey || isMousePressedOverTangent)
-                {
-                    Rect2I drawingBounds = drawingPanel.Bounds;
-                    Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
-
-                    if (!isDragInProgress)
-                    {
-                        int distance = Vector2I.Distance(drawingPos, dragStart);
-                        if (distance >= DRAG_START_DISTANCE)
-                        {
-                            if (isMousePressedOverKey && !disableCurveEdit)
-                            {
-                                draggedKeyframes.Clear();
-                                foreach (var selectedEntry in selectedKeyframes)
-                                {
-                                    EdAnimationCurve curve = curveInfos[selectedEntry.curveIdx].curve;
-                                    KeyFrame[] keyFrames = curve.KeyFrames;
-
-                                    DraggedKeyframes newEntry = new DraggedKeyframes();
-                                    newEntry.curveIdx = selectedEntry.curveIdx;
-                                    draggedKeyframes.Add(newEntry);
-
-                                    foreach (var keyframeIdx in selectedEntry.keyIndices)
-                                        newEntry.keys.Add(new DraggedKeyframe(keyframeIdx, keyFrames[keyframeIdx]));
-                                }
-                            }
-
-                            isDragInProgress = true;
-                        }
-                    }
-
-                    if (isDragInProgress)
-                    {
-                        if (isMousePressedOverKey && !disableCurveEdit)
-                        {
-                            Vector2 diff = Vector2.Zero;
-
-                            Vector2 dragStartCurve;
-                            if (guiCurveDrawing.PixelToCurveSpace(dragStart, out dragStartCurve, true))
-                            {
-                                Vector2 currentPosCurve;
-                                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out currentPosCurve, true))
-                                    diff = currentPosCurve - dragStartCurve;
-                            }
-
-                            foreach (var draggedEntry in draggedKeyframes)
-                            {
-                                EdAnimationCurve curve = curveInfos[draggedEntry.curveIdx].curve;
-
-                                for (int i = 0; i < draggedEntry.keys.Count; i++)
-                                {
-                                    DraggedKeyframe draggedKey = draggedEntry.keys[i];
-
-                                    float newTime = Math.Max(0.0f, draggedKey.original.time + diff.x);
-                                    float newValue = draggedKey.original.value + diff.y;
-
-                                    int newIndex = curve.UpdateKeyframe(draggedKey.index, newTime, newValue);
-
-                                    // It's possible key changed position due to time change, but since we're moving all
-                                    // keys at once they cannot change position relative to one another, otherwise we would
-                                    // need to update indices for other keys as well.
-                                    draggedKey.index = newIndex;
-                                    draggedEntry.keys[i] = draggedKey;
-                                }
-
-                                curve.Apply();
-                            }
-
-                            // Rebuild selected keys from dragged keys (after potential sorting)
-                            ClearSelection();
-                            foreach (var draggedEntry in draggedKeyframes)
-                            {
-                                foreach (var keyframe in draggedEntry.keys)
-                                    SelectKeyframe(new KeyframeRef(draggedEntry.curveIdx, keyframe.index));
-                            }
-
-                            isModifiedDuringDrag = true;
-                            guiCurveDrawing.Rebuild();
-
-                            UpdateEventsGUI();
-                        }
-                        else if (isMousePressedOverTangent && !disableCurveEdit)
-                        {
-                            EdAnimationCurve curve = curveInfos[draggedTangent.keyframeRef.curveIdx].curve;
-                            KeyFrame keyframe = curve.KeyFrames[draggedTangent.keyframeRef.keyIdx];
-
-                            Vector2 keyframeCurveCoords = new Vector2(keyframe.time, keyframe.value);
-
-                            Vector2 currentPosCurve;
-                            if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out currentPosCurve, true))
-                            {
-                                Vector2 normal = currentPosCurve - keyframeCurveCoords;
-                                normal = normal.Normalized;
-
-                                float tangent = EdAnimationCurve.NormalToTangent(normal);
-
-                                if (draggedTangent.type == TangentType.In)
-                                {
-                                    if (normal.x > 0.0f)
-                                        tangent = float.PositiveInfinity;
-
-                                    keyframe.inTangent = -tangent;
-                                    if(curve.TangentModes[draggedTangent.keyframeRef.keyIdx] == TangentMode.Free)
-                                        keyframe.outTangent = -tangent;
-                                }
-                                else
-                                {
-                                    if (normal.x < 0.0f)
-                                        tangent = float.PositiveInfinity;
-
-                                    keyframe.outTangent = tangent;
-                                    if (curve.TangentModes[draggedTangent.keyframeRef.keyIdx] == TangentMode.Free)
-                                        keyframe.inTangent = tangent;
-                                }
-
-                                curve.KeyFrames[draggedTangent.keyframeRef.keyIdx] = keyframe;
-                                curve.Apply();
-
-                                isModifiedDuringDrag = true;
-                                guiCurveDrawing.Rebuild();
-                            }
-                        }
-                    }
-                }
-                else // Move frame marker
-                {
-                    int frameIdx = guiTimeline.GetFrame(pointerPos);
-
-                    if (frameIdx != -1)
-                        SetMarkedFrame(frameIdx);
-
-                    OnFrameSelected?.Invoke(frameIdx);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles input. Should be called by the owning window whenever a pointer is released.
-        /// </summary>
-        /// <param name="ev">Object containing pointer release event information.</param>
-        internal void OnPointerReleased(PointerEvent ev)
-        {
-            if (isModifiedDuringDrag)
-                OnCurveModified?.Invoke();
-
-            isPointerHeld = false;
-            isDragInProgress = false;
-            isMousePressedOverKey = false;
-            isMousePressedOverTangent = false;
-            isModifiedDuringDrag = false;
-        }
-
-        /// <summary>
-        /// Handles input. Should be called by the owning window whenever a button is released.
-        /// </summary>
-        /// <param name="ev">Object containing button release event information.</param>
-        internal void OnButtonUp(ButtonEvent ev)
-        {
-            if(ev.Button == ButtonCode.Delete)
-                DeleteSelectedKeyframes();
+            UpdateScrollBarSize();
         }
 
         /// <summary>
@@ -748,24 +388,28 @@ namespace BansheeEditor
         /// <param name="height">Height of the element in pixels.</param>
         public void SetSize(int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            this.width = Math.Max(0, width - scrollBarWidth);
+            this.height = Math.Max(0, height - scrollBarHeight);
 
             int eventsHeaderHeight = 0;
             if (showEvents)
             {
                 eventsHeaderHeight = EVENTS_HEIGHT;
-                guiEvents.SetSize(width, EVENTS_HEIGHT);
-                eventsBackground.Bounds = new Rect2I(0, 0, width, EVENTS_HEIGHT + VERT_PADDING);
+                guiEvents.SetSize(this.width, EVENTS_HEIGHT);
+                eventsBackground.Bounds = new Rect2I(0, 0, this.width, EVENTS_HEIGHT + VERT_PADDING);
             }
 
-            guiTimeline.SetSize(width, TIMELINE_HEIGHT);
-            guiCurveDrawing.SetSize(width, height - TIMELINE_HEIGHT - eventsHeaderHeight);
-            guiSidebar.SetSize(SIDEBAR_WIDTH, height - TIMELINE_HEIGHT - eventsHeaderHeight);
+            guiTimeline.SetSize(this.width, TIMELINE_HEIGHT);
+            guiCurveDrawing.SetSize(this.width, this.height - TIMELINE_HEIGHT - eventsHeaderHeight);
+            guiSidebar.SetSize(SIDEBAR_WIDTH, this.height - TIMELINE_HEIGHT - eventsHeaderHeight);
 
-            timelineBackground.Bounds = new Rect2I(0, 0, width, TIMELINE_HEIGHT + VERT_PADDING);
+            timelineBackground.Bounds = new Rect2I(0, 0, this.width, TIMELINE_HEIGHT + VERT_PADDING);
 
-            Redraw();
+            horzScrollBar.SetWidth(this.width);
+            vertScrollBar.SetHeight(this.height);
+
+            UpdateScrollBarSize();
+            UpdateScrollBarPosition();
         }
 
         /// <summary>
@@ -1268,6 +912,779 @@ namespace BansheeEditor
 
             DialogBox.Open(title, message, DialogBox.Type.OK);
         }
+
+        #region Input
+
+        /// <summary>
+        /// Handles input. Should be called by the owning window whenever a pointer is pressed.
+        /// </summary>
+        /// <param name="ev">Object containing pointer press event information.</param>
+        internal void OnPointerPressed(PointerEvent ev)
+        {
+            if (ev.IsUsed)
+                return;
+
+            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+
+            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
+            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+
+            bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
+            if (!isOverEditor)
+                return;
+            else
+                OnClicked?.Invoke();
+
+            Rect2I drawingBounds = drawingPanel.Bounds;
+            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
+
+            Rect2I eventBounds = eventsPanel.Bounds;
+            Vector2I eventPos = pointerPos - new Vector2I(eventBounds.x, eventBounds.y);
+
+            if (ev.Button == PointerButton.Left)
+            {
+                Vector2 curveCoord;
+                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord, true))
+                {
+                    KeyframeRef keyframeRef;
+                    if (!guiCurveDrawing.FindKeyFrame(drawingPos, out keyframeRef))
+                    {
+                        TangentRef tangentRef;
+                        if (guiCurveDrawing.FindTangent(drawingPos, out tangentRef))
+                        {
+                            isMousePressedOverTangent = true;
+                            dragStart = drawingPos;
+                            draggedTangent = tangentRef;
+                        }
+                        else
+                            ClearSelection();
+                    }
+                    else
+                    {
+                        if (!IsSelected(keyframeRef))
+                        {
+                            if (!Input.IsButtonHeld(ButtonCode.LeftShift) && !Input.IsButtonHeld(ButtonCode.RightShift))
+                                ClearSelection();
+
+                            SelectKeyframe(keyframeRef);
+                        }
+
+                        isMousePressedOverKey = true;
+                        dragStart = drawingPos;
+                    }
+
+                    guiCurveDrawing.Rebuild();
+                    UpdateEventsGUI();
+                }
+                else
+                {
+                    int frameIdx = guiTimeline.GetFrame(pointerPos);
+
+                    if (frameIdx != -1)
+                        SetMarkedFrame(frameIdx);
+                    else
+                    {
+                        int eventIdx;
+                        if (showEvents && guiEvents.FindEvent(eventPos, out eventIdx))
+                        {
+                            if (!Input.IsButtonHeld(ButtonCode.LeftShift) && !Input.IsButtonHeld(ButtonCode.RightShift))
+                                ClearSelection();
+
+                            events[eventIdx].selected = true;
+                            UpdateEventsGUI();
+                        }
+                        else
+                        {
+                            ClearSelection();
+
+                            guiCurveDrawing.Rebuild();
+                            UpdateEventsGUI();
+                        }
+                    }
+
+                    OnFrameSelected?.Invoke(frameIdx);
+                }
+
+                isPointerHeld = true;
+            }
+            else if (ev.Button == PointerButton.Right)
+            {
+                Vector2 curveCoord;
+                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord, true))
+                {
+                    contextClickPosition = drawingPos;
+
+                    KeyframeRef keyframeRef;
+                    if (!guiCurveDrawing.FindKeyFrame(drawingPos, out keyframeRef))
+                    {
+                        ClearSelection();
+
+                        blankContextMenu.Open(pointerPos, mainPanel);
+
+                        guiCurveDrawing.Rebuild();
+                        UpdateEventsGUI();
+                    }
+                    else
+                    {
+                        // If clicked outside of current selection, just select the one keyframe
+                        if (!IsSelected(keyframeRef))
+                        {
+                            ClearSelection();
+                            SelectKeyframe(keyframeRef);
+
+                            guiCurveDrawing.Rebuild();
+                            UpdateEventsGUI();
+                        }
+
+                        keyframeContextMenu.Open(pointerPos, mainPanel);
+                    }
+                }
+                else if (showEvents && guiEvents.GetFrame(eventPos) != -1) // Clicked over events bar
+                {
+                    contextClickPosition = eventPos;
+
+                    int eventIdx;
+                    if (!guiEvents.FindEvent(eventPos, out eventIdx))
+                    {
+                        ClearSelection();
+
+                        blankEventContextMenu.Open(pointerPos, mainPanel);
+
+                        guiCurveDrawing.Rebuild();
+                        UpdateEventsGUI();
+                    }
+                    else
+                    {
+                        // If clicked outside of current selection, just select the one event
+                        if (!events[eventIdx].selected)
+                        {
+                            ClearSelection();
+                            events[eventIdx].selected = true;
+
+                            guiCurveDrawing.Rebuild();
+                            UpdateEventsGUI();
+                        }
+
+                        eventContextMenu.Open(pointerPos, mainPanel);
+                    }
+                }
+            }
+            else if (ev.button == PointerButton.Middle)
+            {
+                Vector2 curvePos;
+                if (WindowToCurveSpace(windowPos, out curvePos))
+                {
+                    dragStartPos = windowPos;
+                    isMiddlePointerHeld = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles input. Should be called by the owning window whenever a pointer is double-clicked.
+        /// </summary>
+        /// <param name="ev">Object containing pointer press event information.</param>
+        internal void OnPointerDoubleClicked(PointerEvent ev)
+        {
+            if (ev.IsUsed)
+                return;
+
+            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+
+            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
+            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+
+            bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
+            if (!isOverEditor)
+                return;
+
+            Rect2I drawingBounds = drawingPanel.Bounds;
+            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
+
+            if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out var curveCoord, true))
+            {
+                int curveIdx = guiCurveDrawing.FindCurve(drawingPos);
+                if (curveIdx == -1)
+                    return;
+
+                AddKeyframe(curveIdx, curveCoord.x);
+            }
+        }
+
+        /// <summary>
+        /// Handles input. Should be called by the owning window whenever a pointer is moved.
+        /// </summary>
+        /// <param name="ev">Object containing pointer move event information.</param>
+        internal void OnPointerMoved(PointerEvent ev)
+        {
+            if (ev.Button != PointerButton.Left)
+                return;
+
+            if (isPointerHeld)
+            {
+                Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+
+                Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
+                Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+
+                if (isMousePressedOverKey || isMousePressedOverTangent)
+                {
+                    Rect2I drawingBounds = drawingPanel.Bounds;
+                    Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
+
+                    if (!isDragInProgress)
+                    {
+                        int distance = Vector2I.Distance(drawingPos, dragStart);
+                        if (distance >= DRAG_START_DISTANCE)
+                        {
+                            if (isMousePressedOverKey && !disableCurveEdit)
+                            {
+                                draggedKeyframes.Clear();
+                                foreach (var selectedEntry in selectedKeyframes)
+                                {
+                                    EdAnimationCurve curve = curveInfos[selectedEntry.curveIdx].curve;
+                                    KeyFrame[] keyFrames = curve.KeyFrames;
+
+                                    DraggedKeyframes newEntry = new DraggedKeyframes();
+                                    newEntry.curveIdx = selectedEntry.curveIdx;
+                                    draggedKeyframes.Add(newEntry);
+
+                                    foreach (var keyframeIdx in selectedEntry.keyIndices)
+                                        newEntry.keys.Add(new DraggedKeyframe(keyframeIdx, keyFrames[keyframeIdx]));
+                                }
+                            }
+
+                            isDragInProgress = true;
+                        }
+                    }
+
+                    if (isDragInProgress)
+                    {
+                        if (isMousePressedOverKey && !disableCurveEdit)
+                        {
+                            Vector2 diff = Vector2.Zero;
+
+                            Vector2 dragStartCurve;
+                            if (guiCurveDrawing.PixelToCurveSpace(dragStart, out dragStartCurve, true))
+                            {
+                                Vector2 currentPosCurve;
+                                if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out currentPosCurve, true))
+                                    diff = currentPosCurve - dragStartCurve;
+                            }
+
+                            foreach (var draggedEntry in draggedKeyframes)
+                            {
+                                EdAnimationCurve curve = curveInfos[draggedEntry.curveIdx].curve;
+
+                                for (int i = 0; i < draggedEntry.keys.Count; i++)
+                                {
+                                    DraggedKeyframe draggedKey = draggedEntry.keys[i];
+
+                                    float newTime = Math.Max(0.0f, draggedKey.original.time + diff.x);
+                                    float newValue = draggedKey.original.value + diff.y;
+
+                                    int newIndex = curve.UpdateKeyframe(draggedKey.index, newTime, newValue);
+
+                                    // It's possible key changed position due to time change, but since we're moving all
+                                    // keys at once they cannot change position relative to one another, otherwise we would
+                                    // need to update indices for other keys as well.
+                                    draggedKey.index = newIndex;
+                                    draggedEntry.keys[i] = draggedKey;
+                                }
+
+                                curve.Apply();
+                            }
+
+                            // Rebuild selected keys from dragged keys (after potential sorting)
+                            ClearSelection();
+                            foreach (var draggedEntry in draggedKeyframes)
+                            {
+                                foreach (var keyframe in draggedEntry.keys)
+                                    SelectKeyframe(new KeyframeRef(draggedEntry.curveIdx, keyframe.index));
+                            }
+
+                            isModifiedDuringDrag = true;
+                            guiCurveDrawing.Rebuild();
+
+                            UpdateEventsGUI();
+                        }
+                        else if (isMousePressedOverTangent && !disableCurveEdit)
+                        {
+                            EdAnimationCurve curve = curveInfos[draggedTangent.keyframeRef.curveIdx].curve;
+                            KeyFrame keyframe = curve.KeyFrames[draggedTangent.keyframeRef.keyIdx];
+
+                            Vector2 keyframeCurveCoords = new Vector2(keyframe.time, keyframe.value);
+
+                            Vector2 currentPosCurve;
+                            if (guiCurveDrawing.PixelToCurveSpace(drawingPos, out currentPosCurve, true))
+                            {
+                                Vector2 normal = currentPosCurve - keyframeCurveCoords;
+                                normal = normal.Normalized;
+
+                                float tangent = EdAnimationCurve.NormalToTangent(normal);
+
+                                if (draggedTangent.type == TangentType.In)
+                                {
+                                    if (normal.x > 0.0f)
+                                        tangent = float.PositiveInfinity;
+
+                                    keyframe.inTangent = -tangent;
+                                    if(curve.TangentModes[draggedTangent.keyframeRef.keyIdx] == TangentMode.Free)
+                                        keyframe.outTangent = -tangent;
+                                }
+                                else
+                                {
+                                    if (normal.x < 0.0f)
+                                        tangent = float.PositiveInfinity;
+
+                                    keyframe.outTangent = tangent;
+                                    if (curve.TangentModes[draggedTangent.keyframeRef.keyIdx] == TangentMode.Free)
+                                        keyframe.inTangent = tangent;
+                                }
+
+                                curve.KeyFrames[draggedTangent.keyframeRef.keyIdx] = keyframe;
+                                curve.Apply();
+
+                                isModifiedDuringDrag = true;
+                                guiCurveDrawing.Rebuild();
+                            }
+                        }
+                    }
+                }
+                else // Move frame marker
+                {
+                    int frameIdx = guiTimeline.GetFrame(pointerPos);
+
+                    if (frameIdx != -1)
+                        SetMarkedFrame(frameIdx);
+
+                    OnFrameSelected?.Invoke(frameIdx);
+                }
+            }
+
+            if (isMiddlePointerHeld)
+            {
+                Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+
+                int distance = Vector2I.Distance(dragStartPos, windowPos);
+                if (distance >= DRAG_START_DISTANCE)
+                {
+                    isZoomDragInProgress = true;
+
+                    Cursor.Hide();
+
+                    Rect2I clipRect;
+                    clipRect.x = ev.ScreenPos.x - 2;
+                    clipRect.y = ev.ScreenPos.y - 2;
+                    clipRect.width = 4;
+                    clipRect.height = 4;
+
+                    Cursor.ClipToRect(clipRect);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles input. Should be called by the owning window whenever a pointer is released.
+        /// </summary>
+        /// <param name="ev">Object containing pointer release event information.</param>
+        internal void OnPointerReleased(PointerEvent ev)
+        {
+            if (isZoomDragInProgress)
+            {
+                Cursor.Show();
+                Cursor.ClipDisable();
+            }
+
+            if (isModifiedDuringDrag)
+                OnCurveModified?.Invoke();
+
+            isMiddlePointerHeld = false;
+            isZoomDragInProgress = false;
+            isPointerHeld = false;
+            isDragInProgress = false;
+            isMousePressedOverKey = false;
+            isMousePressedOverTangent = false;
+            isModifiedDuringDrag = false;
+        }
+
+        /// <summary>
+        /// Handles input. Should be called by the owning window whenever a button is released.
+        /// </summary>
+        /// <param name="ev">Object containing button release event information.</param>
+        internal void OnButtonUp(ButtonEvent ev)
+        {
+            if(ev.Button == ButtonCode.Delete)
+                DeleteSelectedKeyframes();
+        }
+
+        #endregion
+
+        #region Scroll, drag, zoom
+        private Vector2I dragStartPos;
+        private bool isMiddlePointerHeld;
+        private bool isZoomDragInProgress;
+
+        private float zoomAmount;
+
+        /// <summary>
+        /// Handles mouse scroll wheel and dragging events in order to zoom or drag the displayed curve editor contents.
+        /// Should be called every frame.
+        /// </summary>
+        internal void HandleDragAndZoomInput()
+        {
+            // Handle middle mouse dragging
+            if (isZoomDragInProgress)
+            {
+                float lengthPerPixel = Range.x / Width;
+                float heightPerPixel = Range.y / Height;
+
+                float dragX = Input.GetAxisValue(InputAxis.MouseX) * DRAG_SCALE * lengthPerPixel;
+                float dragY = Input.GetAxisValue(InputAxis.MouseY) * DRAG_SCALE * heightPerPixel;
+
+                Vector2 offset = Offset;
+                offset.x = Math.Max(0.0f, offset.x + dragX);
+                offset.y -= dragY;
+
+                Offset = offset;
+                UpdateScrollBarSize();
+                UpdateScrollBarPosition();
+            }
+
+            // Handle zoom in/out
+            float scroll = Input.GetAxisValue(InputAxis.MouseZ);
+            if (scroll != 0.0f)
+            {
+                Vector2I windowPos = window.ScreenToWindowPos(Input.PointerPosition);
+                Vector2 curvePos;
+                if (WindowToCurveSpace(windowPos, out curvePos))
+                {
+                    float zoom = scroll * ZOOM_SCALE;
+                    Zoom(curvePos, zoom);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves or resizes the vertical scroll bar under the curve editor.
+        /// </summary>
+        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
+        /// <param name="size">New size of the scrollbar handle, in range [0, 1].</param>
+        private void SetVertScrollbarProperties(float position, float size)
+        {
+            Vector2 visibleRange = Range;
+            Vector2 totalRange = GetTotalRange();
+
+            visibleRange.y = totalRange.y*size;
+            Range = visibleRange;
+
+            float scrollableRange = totalRange.y - visibleRange.y;
+
+            Vector2 offset = Offset;
+            offset.y = -scrollableRange * (position * 2.0f - 1.0f);
+
+            Offset = offset;
+        }
+
+        /// <summary>
+        /// Moves or resizes the horizontal scroll bar under the curve editor.
+        /// </summary>
+        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
+        /// <param name="size">New size of the scrollbar handle, in range [0, 1].</param>
+        private void SetHorzScrollbarProperties(float position, float size)
+        {
+            Vector2 visibleRange = Range;
+            Vector2 totalRange = GetTotalRange();
+
+            visibleRange.x = totalRange.x * size;
+            Range = visibleRange;
+
+            float scrollableRange = totalRange.x - visibleRange.x;
+
+            Vector2 offset = Offset;
+            offset.x = scrollableRange * position;
+
+            Offset = offset;
+        }
+
+        /// <summary>
+        /// Updates the size of both scrollbars depending on the currently visible curve area vs. the total curve area.
+        /// </summary>
+        private void UpdateScrollBarSize()
+        {
+            Vector2 visibleRange = Range;
+            Vector2 totalRange = GetTotalRange();
+
+            horzScrollBar.HandleSize = visibleRange.x / totalRange.x;
+            vertScrollBar.HandleSize = visibleRange.y / totalRange.y;
+        }
+
+        /// <summary>
+        /// Updates the position of both scrollbars depending on the offset currently applied to the visible curve area.
+        /// </summary>
+        private void UpdateScrollBarPosition()
+        {
+            Vector2 visibleRange = Range;
+            Vector2 totalRange = GetTotalRange();
+            Vector2 scrollableRange = totalRange - visibleRange;
+
+            Vector2 offset = Offset;
+            if (scrollableRange.x > 0.0f)
+                horzScrollBar.Position = offset.x / scrollableRange.x;
+            else
+                horzScrollBar.Position = 0.0f;
+
+            if (scrollableRange.y > 0.0f)
+            {
+                float pos = offset.y/scrollableRange.y;
+                float sign = MathEx.Sign(pos);
+                pos = sign*MathEx.Clamp01(MathEx.Abs(pos));
+                pos = (1.0f - pos) /2.0f;
+
+                vertScrollBar.Position = pos;
+            }
+            else
+                vertScrollBar.Position = 0.0f;
+        }
+
+        /// <summary>
+        /// Calculates the width/height of the curve area depending on the current zoom level.
+        /// </summary>
+        /// <returns>Width/height of the curve area, in curve space (value, time).</returns>
+        private Vector2 GetZoomedRange()
+        {
+            float zoomLevel = MathEx.Pow(2, zoomAmount);
+
+            Vector2 optimalRange = GetOptimalRange();
+            return optimalRange / zoomLevel;
+        }
+
+        /// <summary>
+        /// Returns the total width/height of the contents of the curve area.
+        /// </summary>
+        /// <returns>Width/height of the curve area, in curve space (value, time).</returns>
+        private Vector2 GetTotalRange()
+        {
+            // Return optimal range (that covers the visible curve)
+            Vector2 optimalRange = GetOptimalRange();
+
+            // Increase range in case user zoomed out
+            Vector2 zoomedRange = GetZoomedRange();
+            return Vector2.Max(optimalRange, zoomedRange);
+        }
+
+        /// <summary>
+        /// Zooms in or out at the provided position in the curve display.
+        /// </summary>
+        /// <param name="curvePos">Position to zoom towards, relative to the curve display area, in curve space 
+        ///                        (value, time)</param>
+        /// <param name="amount">Amount to zoom in (positive), or out (negative).</param>
+        private void Zoom(Vector2 curvePos, float amount)
+        {
+            // Increase or decrease the visible range depending on zoom level
+            Vector2 oldZoomedRange = GetZoomedRange();
+            zoomAmount = MathEx.Clamp(zoomAmount + amount, -10.0f, 10.0f);
+            Vector2 zoomedRange = GetZoomedRange();
+
+            Vector2 zoomedDiff = zoomedRange - oldZoomedRange;
+
+            Vector2 currentRange = Range;
+            Vector2 newRange = currentRange + zoomedDiff;
+            Range = newRange;
+
+            // When zooming, make sure to focus on the point provided, so adjust the offset
+            Vector2 rangeScale = newRange;
+            rangeScale.x /= currentRange.x;
+            rangeScale.y /= currentRange.y;
+
+            Vector2 relativeCurvePos = curvePos - Offset;
+            Vector2 newCurvePos = relativeCurvePos * rangeScale;
+            Vector2 diff = newCurvePos - relativeCurvePos;
+
+            Offset -= diff;
+
+            UpdateScrollBarSize();
+            UpdateScrollBarPosition();
+        }
+
+        /// <summary>
+        /// Updates the offset and range of the curve display to fully fit the currently selected set of curves.
+        /// </summary>
+        /// <param name="resetTime">If true the time offset/range will be recalculated, otherwise current time offset will
+        ///                         be kept as is.</param>
+        internal void CenterAndResize(bool resetTime)
+        {
+            Vector2 offset, range;
+            GetOptimalRangeAndOffset(out offset, out range);
+
+            if (!resetTime)
+            {
+                offset.x = Offset.x;
+                range.x = Range.x;
+            }
+
+            Range = range;
+            Offset = offset;
+
+            UpdateScrollBarPosition();
+            UpdateScrollBarSize();
+        }
+
+        /// <summary>
+        /// Triggered when the user moves or resizes the horizontal scrollbar.
+        /// </summary>
+        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
+        /// <param name="size">New size of the scrollbar, in range [0, 1].</param>
+        private void OnHorzScrollOrResize(float position, float size)
+        {
+            SetHorzScrollbarProperties(position, size);
+        }
+
+        /// <summary>
+        /// Triggered when the user moves or resizes the vertical scrollbar.
+        /// </summary>
+        /// <param name="position">New position of the scrollbar, in range [0, 1].</param>
+        /// <param name="size">New size of the scrollbar, in range [0, 1].</param>
+        private void OnVertScrollOrResize(float position, float size)
+        {
+            SetVertScrollbarProperties(position, size);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Returns width/height required to show the entire contents of the currently displayed curves.
+        /// </summary>
+        /// <returns>Width/height of the curve area, in curve space (time, value).</returns>
+        private Vector2 GetOptimalRange()
+        {
+            float xMin, xMax;
+            float yMin, yMax;
+            CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
+
+            float xRange = xMax;
+            float yRange = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
+
+            // Add padding to y range
+            yRange *= 1.05f;
+
+            // Don't allow zero range
+            if (xRange == 0.0f)
+                xRange = 60.0f;
+
+            if (yRange == 0.0f)
+                yRange = 10.0f;
+
+            return new Vector2(xRange, yRange);
+        }
+
+        /// <summary>
+        /// Returns the offset and range required for fully displaying the currently selected set of curves. 
+        /// </summary>
+        /// <param name="offset">Offset used for centering the curves.</param>
+        /// <param name="range">Range representing the width/height in curve space (time, value). </param>
+        private void GetOptimalRangeAndOffset(out Vector2 offset, out Vector2 range)
+        {
+            float xMin, xMax;
+            float yMin, yMax;
+            CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
+
+            float xRange = xMax - xMin;
+
+            float yRange = (yMax - yMin) * 0.5f;
+            float yOffset = yMin + yRange;
+
+            // Add padding to y range
+            yRange *= 1.05f;
+
+            // Don't allow zero range
+            if (xRange == 0.0f)
+                xRange = 60.0f;
+
+            if (yRange == 0.0f)
+                yRange = 10.0f;
+
+            offset = new Vector2(xMin, yOffset);
+            range = new Vector2(xRange, yRange);
+        }
+
+
+        /// <summary>
+        /// Calculates the total range covered by a set of curves.
+        /// </summary>
+        /// <param name="curveInfos">Curves to calculate range for.</param>
+        /// <param name="xMin">Minimum time value present in the curves.</param>
+        /// <param name="xMax">Maximum time value present in the curves.</param>
+        /// <param name="yMin">Minimum curve value present in the curves.</param>
+        /// <param name="yMax">Maximum curve value present in the curves.</param>
+        private static void CalculateRange(CurveDrawInfo[] curveInfos, out float xMin, out float xMax, out float yMin, 
+            out float yMax)
+        {
+            // Note: This only evaluates at keyframes, we should also evaluate in-between in order to account for steep
+            // tangents
+            xMin = float.PositiveInfinity;
+            xMax = float.NegativeInfinity;
+            yMin = float.PositiveInfinity;
+            yMax = float.NegativeInfinity;
+
+            foreach (var curveInfo in curveInfos)
+            {
+                KeyFrame[] keyframes = curveInfo.curve.KeyFrames;
+
+                foreach (var key in keyframes)
+                {
+                    xMin = Math.Min(xMin, key.time);
+                    xMax = Math.Max(xMax, key.time);
+                    yMin = Math.Min(yMin, key.value);
+                    yMax = Math.Max(yMax, key.value);
+                }
+            }
+
+            if (xMin == float.PositiveInfinity)
+                xMin = 0.0f;
+
+            if (xMax == float.NegativeInfinity)
+                xMax = 0.0f;
+
+            if (yMin == float.PositiveInfinity)
+                yMin = 0.0f;
+
+            if (yMax == float.NegativeInfinity)
+                yMax = 0.0f;
+        }
+
+        /// <summary>
+        /// Converts coordinate in curve space (time, value) into pixel coordinates relative to the curve drawing area
+        /// origin.
+        /// </summary>
+        /// <param name="curveCoords">Time and value of the location to convert.</param>
+        /// <returns>Coordinates relative to curve drawing area's origin, in pixels.</returns>
+        public Vector2I CurveToPixelSpace(Vector2 curveCoords)
+        {
+            return guiCurveDrawing.CurveToPixelSpace(curveCoords);
+        }
+
+        /// <summary>
+        /// Converts coordinates in window space (relative to the parent window origin) into coordinates in curve space.
+        /// </summary>
+        /// <param name="windowPos">Coordinates relative to parent editor window, in pixels.</param>
+        /// <param name="curveCoord">Curve coordinates within the range as specified by <see cref="Range"/>. Only
+        ///                          valid when function returns true.</param>
+        /// <returns>True if the coordinates are within the curve area, false otherwise.</returns>
+        public bool WindowToCurveSpace(Vector2I windowPos, out Vector2 curveCoord)
+        {
+            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
+            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+
+            Rect2I drawingBounds = drawingPanel.Bounds;
+            Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
+
+            return guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord);
+        }
+
+        #endregion
     }
 
     /// <summary>
