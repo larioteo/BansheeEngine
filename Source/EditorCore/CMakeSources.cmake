@@ -37,6 +37,7 @@ set(BS_BANSHEEEDITOR_INC_SCENE
 
 set(BS_BANSHEEEDITOR_SRC_GUI
 	"GUI/BsGUIColor.cpp"
+	"GUI/BsGUIColorGradient.cpp"
 	"GUI/BsGUIColorField.cpp"
 	"GUI/BsGUIDockSlider.cpp"
 	"GUI/BsGUIDropButton.cpp"
@@ -72,6 +73,7 @@ set(BS_BANSHEEEDITOR_INC_LIBRARY
 
 set(BS_BANSHEEEDITOR_INC_GUI
 	"GUI/BsGUIColor.h"
+	"GUI/BsGUIColorGradient.h"
 	"GUI/BsGUIColorField.h"
 	"GUI/BsGUIDockSlider.h"
 	"GUI/BsGUIDropButton.h"
