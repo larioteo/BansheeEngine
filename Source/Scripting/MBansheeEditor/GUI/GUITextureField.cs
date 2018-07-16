@@ -80,7 +80,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUITextureField(string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, null, 0, style, options, false);
+            Internal_CreateInstance(this, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>

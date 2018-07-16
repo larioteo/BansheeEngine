@@ -81,7 +81,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIResourceField(Type type, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, type, null, 0, style, options, false);
+            Internal_CreateInstance(this, type, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>

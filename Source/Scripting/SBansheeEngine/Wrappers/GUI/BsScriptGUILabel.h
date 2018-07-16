@@ -7,6 +7,8 @@
 
 namespace bs
 {
+	struct __GUIContentInterop;
+
 	/** @addtogroup ScriptInteropEngine
 	 *  @{
 	 */
@@ -23,8 +25,9 @@ namespace bs
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static void internal_createInstance(MonoObject* instance, MonoObject* content, MonoString* style, MonoArray* guiOptions);
-		static void internal_setContent(ScriptGUILabel* nativeInstance, MonoObject* content);
+		static void internal_createInstance(MonoObject* instance, __GUIContentInterop* content, MonoString* style, 
+			MonoArray* guiOptions);
+		static void internal_setContent(ScriptGUILabel* nativeInstance, __GUIContentInterop* content);
 		static void internal_setTint(ScriptGUILabel* nativeInstance, Color* color);
 	};
 

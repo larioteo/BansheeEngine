@@ -5,11 +5,11 @@
 #include "BsMonoClass.h"
 #include "BsMonoMethod.h"
 #include "BsMonoUtil.h"
-#include "Wrappers/BsScriptGUIContentImages.h"
 #include "BsScriptResourceManager.h"
 #include "Wrappers/GUI/BsScriptGUISkin.h"
 
-#include "BsScriptSpriteTexture.generated.h"
+#include "Generated/BsScriptGUIContentImages.generated.h"
+#include "Generated/BsScriptSpriteTexture.generated.h"
 
 namespace bs
 {
@@ -71,18 +71,16 @@ namespace bs
 		return ScriptResourceManager::instance().getScriptResource(tex, true)->getManagedInstance();
 	}
 
-	MonoObject* ScriptEditorBuiltin::internal_GetSceneWindowIcon(SceneWindowIcon icon)
+	void ScriptEditorBuiltin::internal_GetSceneWindowIcon(SceneWindowIcon icon, __GUIContentImagesInterop* output)
 	{
 		GUIContentImages images = BuiltinEditorResources::instance().getSceneWindowIcon(icon);
-
-		return ScriptGUIContentImages::getManaged(images);
+		*output = ScriptGUIContentImages::toInterop(images);
 	}
 
-	MonoObject* ScriptEditorBuiltin::internal_GetAnimationWindowIcon(AnimationWindowIcon icon)
+	void ScriptEditorBuiltin::internal_GetAnimationWindowIcon(AnimationWindowIcon icon, __GUIContentImagesInterop* output)
 	{
 		GUIContentImages images = BuiltinEditorResources::instance().getAnimationWindowIcon(icon);
-
-		return ScriptGUIContentImages::getManaged(images);
+		*output = ScriptGUIContentImages::toInterop(images);
 	}
 
 	MonoObject* ScriptEditorBuiltin::internal_GetLogIcon(LogMessageIcon icon, int size, bool dark)

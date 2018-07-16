@@ -81,7 +81,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUITextField(bool multiline = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, multiline, null, 0, style, options, false);
+            Internal_CreateInstance(this, multiline, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>

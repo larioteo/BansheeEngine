@@ -9,11 +9,11 @@
 #include "BsGUITextureField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
 #include "BsScriptResourceManager.h"
 #include "Wrappers/BsScriptResourceRef.h"
 
-#include "BsScriptTexture.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
+#include "Generated/BsScriptTexture.generated.h"
 
 using namespace std::placeholders;
 
@@ -39,7 +39,7 @@ namespace bs
 		onChangedThunk = (OnChangedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnChanged", 1)->getThunk();
 	}
 
-	void ScriptGUITextureField::internal_createInstance(MonoObject* instance, MonoObject* title, UINT32 titleWidth,
+	void ScriptGUITextureField::internal_createInstance(MonoObject* instance, __GUIContentInterop* title, UINT32 titleWidth,
 		MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
@@ -54,7 +54,7 @@ namespace bs
 		GUITextureField* guiTextureField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiTextureField = GUITextureField::create(nativeContent, titleWidth, options, styleName);
 		}
 		else

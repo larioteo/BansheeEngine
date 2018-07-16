@@ -152,7 +152,8 @@ namespace BansheeEditor
         /// <returns>Sprite textures of the icon.</returns>
         public static GUIContentImages GetSceneWindowIcon(SceneWindowIcon icon)
         {
-            return Internal_GetSceneWindowIcon(icon);
+            Internal_GetSceneWindowIcon(icon, out var output);
+            return output;
         }
 
         /// <summary>
@@ -162,7 +163,8 @@ namespace BansheeEditor
         /// <returns>Sprite textures of the icon.</returns>
         public static GUIContentImages GetAnimationWindowIcon(AnimationWindowIcon icon)
         {
-            return Internal_GetAnimationWindowIcon(icon);
+            Internal_GetAnimationWindowIcon(icon, out var output);
+            return output;
         }
 
         /// <summary>
@@ -206,10 +208,10 @@ namespace BansheeEditor
         private static extern SpriteTexture Internal_GetInspectorWindowIcon(InspectorWindowIcon icon);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern GUIContentImages Internal_GetSceneWindowIcon(SceneWindowIcon icon);
+        private static extern void Internal_GetSceneWindowIcon(SceneWindowIcon icon, out GUIContentImages output);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern GUIContentImages Internal_GetAnimationWindowIcon(AnimationWindowIcon icon);
+        private static extern void Internal_GetAnimationWindowIcon(AnimationWindowIcon icon, out GUIContentImages output);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern SpriteTexture Internal_GetLogIcon(LogIcon icon, int size, bool dark);

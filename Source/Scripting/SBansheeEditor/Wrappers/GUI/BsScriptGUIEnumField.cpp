@@ -10,8 +10,9 @@
 #include "GUI/BsGUIListBoxField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/BsScriptHString.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -40,7 +41,7 @@ namespace bs
 	}
 
 	void ScriptGUIEnumField::internal_createInstance(MonoObject* instance, MonoArray* names, MonoArray* values, 
-		bool multiselect, MonoObject* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
+		bool multiselect, __GUIContentInterop* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
 
@@ -59,7 +60,7 @@ namespace bs
 		GUIListBoxField* guiField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiField = GUIListBoxField::create(nativeNames, multiselect, nativeContent, titleWidth, options, styleName);
 		}
 		else

@@ -12,8 +12,9 @@
 #include "GUI/BsGUIOptions.h"
 #include "Wrappers/GUI/BsScriptGUIElementStyle.h"
 #include "Wrappers/GUI/BsScriptGUILayout.h"
-#include "Wrappers/BsScriptHString.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 namespace bs
 {
@@ -30,7 +31,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_SetTint", (void*)&ScriptGUILabel::internal_setTint);
 	}
 
-	void ScriptGUILabel::internal_createInstance(MonoObject* instance, MonoObject* content, MonoString* style, MonoArray* guiOptions)
+	void ScriptGUILabel::internal_createInstance(MonoObject* instance, __GUIContentInterop* content, MonoString* style, 
+		MonoArray* guiOptions)
 	{
 		GUIOptions options;
 
@@ -39,15 +41,15 @@ namespace bs
 		for (UINT32 i = 0; i < arrayLen; i++)
 			options.addOption(scriptArray.get<GUIOption>(i));
 
-		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
+		GUIContent nativeContent = ScriptGUIContent::fromInterop(*content);
 		GUILabel* guiLabel = GUILabel::create(nativeContent, options, MonoUtil::monoToString(style));
 
 		new (bs_alloc<ScriptGUILabel>()) ScriptGUILabel(instance, guiLabel);
 	}
 
-	void ScriptGUILabel::internal_setContent(ScriptGUILabel* nativeInstance, MonoObject* content)
+	void ScriptGUILabel::internal_setContent(ScriptGUILabel* nativeInstance, __GUIContentInterop* content)
 	{
-		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
+		GUIContent nativeContent = ScriptGUIContent::fromInterop(*content);
 
 		GUILabel* label = (GUILabel*)nativeInstance->getGUIElement();
 		label->setContent(nativeContent);

@@ -9,8 +9,9 @@
 #include "GUI/BsGUIVector4Field.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
 #include "Wrappers/BsScriptVector.h"
+
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -37,7 +38,7 @@ namespace bs
 		onConfirmedThunk = (OnConfirmedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnConfirmed", 0)->getThunk();
 	}
 
-	void ScriptGUIVector4Field::internal_createInstance(MonoObject* instance, MonoObject* title, UINT32 titleWidth,
+	void ScriptGUIVector4Field::internal_createInstance(MonoObject* instance, __GUIContentInterop* title, UINT32 titleWidth,
 		MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
@@ -52,7 +53,7 @@ namespace bs
 		GUIVector4Field* field = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			field = GUIVector4Field::create(nativeContent, titleWidth, options, styleName);
 		}
 		else

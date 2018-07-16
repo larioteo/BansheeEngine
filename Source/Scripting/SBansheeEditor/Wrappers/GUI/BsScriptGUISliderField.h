@@ -7,6 +7,8 @@
 
 namespace bs
 {
+	struct __GUIContentInterop;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -30,8 +32,8 @@ namespace bs
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static void internal_createInstance(MonoObject* instance, float min, float max, MonoObject* title, UINT32 titleWidth,
-			MonoString* style, MonoArray* guiOptions, bool withTitle);
+		static void internal_createInstance(MonoObject* instance, float min, float max, __GUIContentInterop* title, 
+			UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle);
 
 		static float internal_getValue(ScriptGUISliderField* nativeInstance);
 		static float internal_getStep(ScriptGUISliderField* nativeInstance);

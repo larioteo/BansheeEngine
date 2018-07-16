@@ -4,6 +4,7 @@
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
+#include "BsScriptBlendClipInfo.generated.h"
 
 namespace bs
 {

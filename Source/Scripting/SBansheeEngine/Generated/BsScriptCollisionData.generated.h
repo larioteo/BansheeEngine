@@ -4,6 +4,7 @@
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsCommon.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsCommon.h"
+#include "BsScriptContactPoint.generated.h"
 
 namespace bs
 {

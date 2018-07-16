@@ -9,7 +9,9 @@
 #include "GUI/BsGUIIntField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -39,7 +41,7 @@ namespace bs
 		onConfirmedThunk = (OnConfirmedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnConfirmed", 0)->getThunk();
 	}
 
-	void ScriptGUIIntField::internal_createInstance(MonoObject* instance, MonoObject* title, UINT32 titleWidth, 
+	void ScriptGUIIntField::internal_createInstance(MonoObject* instance, __GUIContentInterop* title, UINT32 titleWidth, 
 		MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
@@ -54,7 +56,7 @@ namespace bs
 		GUIIntField* guiIntField = nullptr;
 		if(withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiIntField = GUIIntField::create(nativeContent, titleWidth, options, styleName);
 		}
 		else

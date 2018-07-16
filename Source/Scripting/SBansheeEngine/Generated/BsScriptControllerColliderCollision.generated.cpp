@@ -49,7 +49,7 @@ namespace bs
 		__ControllerColliderCollisionInterop output;
 		ScriptComponentBase* scriptcollider = nullptr;
 		if(value.collider)
-				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider);
+				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider));
 		MonoObject* tmpcollider;
 		if(scriptcollider != nullptr)
 			tmpcollider = scriptcollider->getManagedInstance();

@@ -9,9 +9,10 @@
 #include "BsMonoUtil.h"
 #include "BsMonoAssembly.h"
 #include "BsScriptObjectManager.h"
-#include "Wrappers/BsScriptHString.h"
 #include "RenderAPI/BsRenderWindow.h"
 #include "Wrappers/GUI/BsScriptGUILayout.h"
+
+#include "Generated/BsScriptHString.generated.h"
 
 using namespace std::placeholders;
 
@@ -64,7 +65,7 @@ namespace bs
 		if (title != nullptr)
 		{
 			ScriptHString* textScript = ScriptHString::toNative(title);
-			titleStr = textScript->getInternalValue();
+			titleStr = *textScript->getInternal();
 		}
 
 		thisPtr->mModalWindow->setTitle(titleStr);

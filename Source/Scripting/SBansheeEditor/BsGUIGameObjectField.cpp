@@ -261,7 +261,7 @@ namespace bs
 
 		if (mType == sceneObjectClass->getFullName()) // A scene object
 		{
-			setValue(draggedSceneObjects->objects[0], true);
+			setValue(static_object_cast<GameObject>(draggedSceneObjects->objects[0]), true);
 		}
 		else // A component
 		{
@@ -286,7 +286,7 @@ namespace bs
 						{
 							if (providedClass->isSubClassOf(acceptedClass))
 							{
-								setValue(managedComponent, true);
+								setValue(static_object_cast<GameObject>(managedComponent), true);
 							}
 						}
 					}
@@ -297,7 +297,7 @@ namespace bs
 							continue;
 
 						if (info->monoClass->isSubClassOf(acceptedClass))
-							setValue(component, true);
+							setValue(static_object_cast<GameObject>(component), true);
 					}
 				}
 			}

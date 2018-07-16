@@ -60,7 +60,7 @@ namespace bs
 
 		HSceneObject parent;
 		if (mSerializedObjectParentId != 0)
-			parent = GameObjectManager::instance().getObject(mSerializedObjectParentId);
+			parent = static_object_cast<SceneObject>(GameObjectManager::instance().getObject(mSerializedObjectParentId));
 
 		GameObjectManager::instance().setDeserializationMode(GODM_RestoreExternal | GODM_UseNewIds);
 

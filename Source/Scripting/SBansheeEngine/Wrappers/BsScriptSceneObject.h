@@ -20,7 +20,7 @@ namespace bs
 		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "SceneObject")
 
 		/** @copydoc ScriptGameObjectBase::getNativeHandle */
-		HGameObject getNativeHandle() const override { return mSceneObject; }
+		HGameObject getNativeHandle() const override { return static_object_cast<GameObject>(mSceneObject); }
 
 		/** @copydoc ScriptGameObjectBase::setNativeHandle */
 		void setNativeHandle(const HGameObject& gameObject) override;

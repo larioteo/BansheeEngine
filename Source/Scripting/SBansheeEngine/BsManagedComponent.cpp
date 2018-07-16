@@ -328,7 +328,7 @@ namespace bs
 			{
 				if (component.get() == this)
 				{
-					componentHandle = component;
+					componentHandle = static_object_cast<ManagedComponent>(component);
 					break;
 				}
 			}

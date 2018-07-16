@@ -26,7 +26,8 @@ namespace bs
 		static ScriptComponentBase* create##ScriptType(const HComponent& component)											\
 		{																													\
 			MonoObject* managedInstance = ScriptType::getMetaData()->scriptClass->createInstance();							\
-			ScriptType* scriptComponent = new (bs_alloc<ScriptType>()) ScriptType(managedInstance, component);				\
+			ScriptType* scriptComponent = new (bs_alloc<ScriptType>())														\
+				ScriptType(managedInstance, static_object_cast<ComponentType>(component));									\
 																															\
 			return scriptComponent;																							\
 		}																													\

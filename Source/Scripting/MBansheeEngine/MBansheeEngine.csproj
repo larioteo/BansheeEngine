@@ -110,8 +110,6 @@
     <Compile Include="Utility\PixelUtility.cs" />
     <Compile Include="Utility\PlainText.cs" />
     <Compile Include="Scene\Prefab.cs" />
-    <Compile Include="Utility\ProfilerOverlay.cs" />
-    <Compile Include="Interop\ProfilerOverlayInternal.cs" />
     <Compile Include="Interop\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\Quaternion.cs" />

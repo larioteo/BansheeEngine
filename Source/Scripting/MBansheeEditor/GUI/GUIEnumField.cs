@@ -122,7 +122,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, bool multiselect, string style = "", params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect, 
-                null, 0, style, options, false);
+                new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, bool multiselect = false, params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect, 
-                null, 0, "", options, false);
+                new GUIContent(), 0, "", options, false);
         }
 
         /// <summary>

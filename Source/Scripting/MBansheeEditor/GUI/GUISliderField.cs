@@ -71,7 +71,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUISliderField(float min, float max, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, min, max, null, 0, style, options, false);
+            Internal_CreateInstance(this, min, max, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>

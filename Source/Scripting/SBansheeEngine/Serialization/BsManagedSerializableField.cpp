@@ -195,7 +195,7 @@ namespace bs
 				if (value != nullptr)
 				{
 					ScriptSceneObject* scriptSceneObject = ScriptSceneObject::toNative(value);
-					fieldData->value = static_object_cast<SceneObject>(scriptSceneObject->getNativeHandle());
+					fieldData->value = scriptSceneObject->getNativeHandle();
 				}
 
 				return fieldData;
@@ -208,7 +208,7 @@ namespace bs
 				if (value != nullptr)
 				{
 					ScriptManagedComponent* scriptComponent = ScriptManagedComponent::toNative(value);
-					fieldData->value = static_object_cast<Component>(scriptComponent->getNativeHandle());
+					fieldData->value = scriptComponent->getNativeHandle();
 				}
 
 				return fieldData;
@@ -225,7 +225,7 @@ namespace bs
 				if (value != nullptr)
 				{
 					ScriptComponentBase* scriptComponent = ScriptComponent::toNative(value);
-					fieldData->value = scriptComponent->getComponent();
+					fieldData->value = static_object_cast<GameObject>(scriptComponent->getComponent());
 				}
 
 				return fieldData;
@@ -538,7 +538,8 @@ namespace bs
 			{
 				if(value)
 				{
-					ScriptSceneObject* scriptSceneObject = ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(value);
+					ScriptSceneObject* scriptSceneObject = 
+						ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(static_object_cast<SceneObject>(value));
 					return scriptSceneObject->getManagedInstance();
 				}
 				else
@@ -549,7 +550,8 @@ namespace bs
 			{
 				if (value)
 				{
-					ScriptManagedComponent* scriptComponent = ScriptGameObjectManager::instance().getManagedScriptComponent(value);
+					ScriptManagedComponent* scriptComponent =
+						ScriptGameObjectManager::instance().getManagedScriptComponent(static_object_cast<ManagedComponent>(value));
 					assert(scriptComponent != nullptr);
 
 					return scriptComponent->getManagedInstance();
@@ -562,7 +564,8 @@ namespace bs
 			{
 				if (value)
 				{
-					ScriptComponentBase* scriptComponent = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value);
+					ScriptComponentBase* scriptComponent = 
+						ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value));
 					assert(scriptComponent != nullptr);
 
 					return scriptComponent->getManagedInstance();

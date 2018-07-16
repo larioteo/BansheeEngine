@@ -8,7 +8,6 @@
 #include "BsGUIGameObjectField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
 #include "Wrappers/BsScriptGameObject.h"
 #include "Wrappers/BsScriptSceneObject.h"
 #include "Wrappers/BsScriptComponent.h"
@@ -17,6 +16,9 @@
 #include "Scene/BsSceneObject.h"
 #include "BsScriptGameObjectManager.h"
 #include "Reflection/BsRTTIType.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -40,8 +42,8 @@ namespace bs
 		onChangedThunk = (OnChangedThunkDef)metaData.scriptClass->getMethod("DoOnChanged", 1)->getThunk();
 	}
 
-	void ScriptGUIGameObjectField::internal_createInstance(MonoObject* instance, MonoReflectionType* type, MonoObject* title, UINT32 titleWidth,
-		MonoString* style, MonoArray* guiOptions, bool withTitle)
+	void ScriptGUIGameObjectField::internal_createInstance(MonoObject* instance, MonoReflectionType* type, 
+		__GUIContentInterop* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
 
@@ -61,7 +63,7 @@ namespace bs
 		GUIGameObjectField* guiGameObjectField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiGameObjectField = GUIGameObjectField::create(typeNamespace, typeName, nativeContent, titleWidth, options, styleName);
 		}
 		else

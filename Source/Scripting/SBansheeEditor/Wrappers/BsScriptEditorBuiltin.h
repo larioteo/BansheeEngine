@@ -8,6 +8,8 @@
 
 namespace bs
 {
+	struct __GUIContentImagesInterop;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -32,8 +34,8 @@ namespace bs
 		static MonoObject* internal_GetToolbarIcon(ToolbarIcon icon);
 		static MonoObject* internal_GetLibraryWindowIcon(LibraryWindowIcon icon);
 		static MonoObject* internal_GetInspectorWindowIcon(InspectorWindowIcon icon);
-		static MonoObject* internal_GetSceneWindowIcon(SceneWindowIcon icon);
-		static MonoObject* internal_GetAnimationWindowIcon(AnimationWindowIcon icon);
+		static void internal_GetSceneWindowIcon(SceneWindowIcon icon, __GUIContentImagesInterop* output);
+		static void internal_GetAnimationWindowIcon(AnimationWindowIcon icon, __GUIContentImagesInterop* output);
 		static MonoObject* internal_GetLogIcon(LogMessageIcon icon, int size, bool dark);
 		static MonoObject* internal_GetEditorIcon(EditorIcon icon);
 

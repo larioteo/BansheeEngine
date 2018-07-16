@@ -9,9 +9,10 @@
 #include "GUI/BsGUIListBoxField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/BsScriptHString.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
 #include <climits>
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -40,8 +41,8 @@ namespace bs
 		onSelectionChangedThunk = (OnSelectionChangedThunkDef)metaData.scriptClass->getMethod("DoOnSelectionChanged", 1)->getThunk();
 	}
 
-	void ScriptGUIListBoxField::internal_createInstance(MonoObject* instance, MonoArray* elements, bool multiselect, MonoObject* title, 
-		UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
+	void ScriptGUIListBoxField::internal_createInstance(MonoObject* instance, MonoArray* elements, bool multiselect, 
+		__GUIContentInterop* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
 
@@ -64,14 +65,14 @@ namespace bs
 			else
 			{
 				ScriptHString* textScript = ScriptHString::toNative(stringManaged);
-				nativeElements.push_back(textScript->getInternalValue());
+				nativeElements.push_back(*textScript->getInternal());
 			}
 		}
 
 		GUIListBoxField* guiField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiField = GUIListBoxField::create(nativeElements, multiselect, nativeContent, titleWidth, options, styleName);
 		}
 		else
@@ -126,7 +127,7 @@ namespace bs
 			else
 			{
 				ScriptHString* textScript = ScriptHString::toNative(stringManaged);
-				nativeElements.push_back(textScript->getInternalValue());
+				nativeElements.push_back(*textScript->getInternal());
 			}
 		}
 

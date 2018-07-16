@@ -9,7 +9,9 @@
 #include "GUI/BsGUIToggleField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -33,7 +35,7 @@ namespace bs
 		onChangedThunk = (OnChangedThunkDef)metaData.scriptClass->getMethod("DoOnChanged", 1)->getThunk();
 	}
 
-	void ScriptGUIToggleField::internal_createInstance(MonoObject* instance, MonoObject* title, UINT32 titleWidth,
+	void ScriptGUIToggleField::internal_createInstance(MonoObject* instance, __GUIContentInterop* title, UINT32 titleWidth,
 		MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
@@ -48,7 +50,7 @@ namespace bs
 		GUIToggleField* guiField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiField = GUIToggleField::create(nativeContent, titleWidth, options, styleName);
 		}
 		else

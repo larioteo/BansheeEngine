@@ -125,7 +125,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, bool multiselect = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, null, 0, style, options, false);
+            Internal_CreateInstance(this, elements, multiselect, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, bool multiselect = false, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, null, 0, "", options, false);
+            Internal_CreateInstance(this, elements, multiselect, new GUIContent(), 0, "", options, false);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, bool multiselect = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, null, 0, style, options, false);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, new GUIContent(), 0, style, options, false);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, bool multiselect = false, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, null, 0, "", options, false);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, new GUIContent(), 0, "", options, false);
         }
 
         /// <summary>

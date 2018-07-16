@@ -26,7 +26,6 @@ namespace BansheeEditor
         private const int HeaderHeight = 20;
         private const float DefaultPlacementDepth = 5.0f;
         private static readonly Color ClearColor = new Color(0.0f, 0.3685f, 0.7969f);
-        private const string ProfilerOverlayActiveKey = "_Internal_ProfilerOverlayActive";
         private const int HandleAxesGUISize = 50;
         private const int HandleAxesGUIPaddingX = 10;
         private const int HandleAxesGUIPaddingY = 5;
@@ -75,11 +74,6 @@ namespace BansheeEditor
         private VirtualButton moveToolKey;
         private VirtualButton rotateToolKey;
         private VirtualButton scaleToolKey;
-
-        // Profiler overlay
-        private ProfilerOverlay activeProfilerOverlay;
-        private Camera profilerCamera;
-        private VirtualButton toggleProfilerOverlayKey;
 
         // Drag & drop
         private bool dragActive;
@@ -195,17 +189,17 @@ namespace BansheeEditor
                 new LocEdString("Move"));
             GUIContent rotateIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Rotate), 
                 new LocEdString("Rotate"));
-            GUIContent scaleIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Scale), 
-                new LocEdString("Scale"));
+            GUIContent scaleIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Scale),
+                new LocEdString("Scale")); 
 
-            GUIContent localIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Local), 
+            GUIContent localIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Local),
                 new LocEdString("Local"));
-            GUIContent worldIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.World), 
+            GUIContent worldIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.World),
                 new LocEdString("World"));
 
-            GUIContent pivotIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Pivot), 
+            GUIContent pivotIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Pivot),
                 new LocEdString("Pivot"));
-            GUIContent centerIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Center), 
+            GUIContent centerIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Center),
                 new LocEdString("Center"));
 
             GUIContent moveSnapIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.MoveSnap), 
@@ -283,7 +277,6 @@ namespace BansheeEditor
             GUIPanel focusPanel = GUI.AddPanel(-2);
             focusPanel.AddElement(focusCatcher);
 
-            toggleProfilerOverlayKey = new VirtualButton(ToggleProfilerOverlayBinding);
             viewToolKey = new VirtualButton(ViewToolBinding);
             moveToolKey = new VirtualButton(MoveToolBinding);
             rotateToolKey = new VirtualButton(RotateToolBinding);
@@ -291,7 +284,6 @@ namespace BansheeEditor
             frameKey = new VirtualButton(FrameBinding);
 
             UpdateRenderTexture(Width, Height - HeaderHeight);
-            UpdateProfilerOverlay();
         }
 
         private void OnDestroy()
@@ -471,8 +463,6 @@ namespace BansheeEditor
                         DuplicateSelection();
                     else if (VirtualInput.IsButtonDown(EditorApplication.DeleteKey))
                         DeleteSelection();
-                    else if (VirtualInput.IsButtonDown(toggleProfilerOverlayKey))
-                        EditorSettings.SetBool(ProfilerOverlayActiveKey, !EditorSettings.GetBool(ProfilerOverlayActiveKey));
                     else if(VirtualInput.IsButtonDown(viewToolKey))
                         EditorApplication.ActiveSceneTool = SceneViewTool.View;
                     else if(VirtualInput.IsButtonDown(moveToolKey))
@@ -488,7 +478,6 @@ namespace BansheeEditor
             if (editorSettingsHash != EditorSettings.Hash)
             {
                 UpdateButtonStates();
-                UpdateProfilerOverlay();
                 editorSettingsHash = EditorSettings.Hash;
             }
 
@@ -822,37 +811,6 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Activates or deactivates the profiler overlay according to current editor settings.
-        /// </summary>
-        private void UpdateProfilerOverlay()
-        {
-            if (EditorSettings.GetBool(ProfilerOverlayActiveKey))
-            {
-                if (activeProfilerOverlay == null)
-                {
-                    SceneObject profilerSO = new SceneObject("EditorProfilerOverlay");
-                    profilerCamera = profilerSO.AddComponent<Camera>();
-                    profilerCamera.Viewport.Target = renderTexture;
-                    profilerCamera.Viewport.ClearFlags = ClearFlags.Empty;
-                    profilerCamera.Priority = 1;
-                    profilerCamera.Layers = 0;
-                    profilerCamera.RenderSettings.EnableHDR = false;
-
-                    activeProfilerOverlay = profilerSO.AddComponent<ProfilerOverlay>();
-                }
-            }
-            else
-            {
-                if (activeProfilerOverlay != null)
-                {
-                    activeProfilerOverlay.SceneObject.Destroy();
-                    activeProfilerOverlay = null;
-                    profilerCamera = null;
-                }
-            }
-        }
-
-        /// <summary>
         /// Creates the scene camera and updates the render texture. Should be called at least once before using the
         /// scene view. Should be called whenever the window is resized.
         /// </summary>
@@ -912,9 +870,6 @@ namespace BansheeEditor
             // render target destroy/create cycle for every single pixel.
 
             camera.AspectRatio = width / (float)height;
-
-            if (profilerCamera != null)
-                profilerCamera.Viewport.Target = renderTexture;
         }
 
         /// <summary>

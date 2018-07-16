@@ -94,7 +94,7 @@ namespace bs
 			return nullptr;
 
 		ScriptComponentBase* nativeInstance = info->createCallback(component);
-		nativeInstance->setNativeHandle(component);
+		nativeInstance->setNativeHandle(static_object_cast<GameObject>(component));
 
 		UINT64 instanceId = component->getInstanceId();
 		mScriptComponents[instanceId] = nativeInstance;

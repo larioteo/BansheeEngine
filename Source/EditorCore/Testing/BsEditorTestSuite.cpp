@@ -433,11 +433,11 @@ namespace bs
 		GameObjectHandle<TestComponentA> cmpExternal = soExternal->addComponent<TestComponentA>();
 
 		cmpA1_1->ref1 = so2_0;
-		cmpA1_1->ref2 = cmpB1_1;
+		cmpA1_1->ref2 = static_object_cast<Component>(cmpB1_1);
 		cmpB1_1->ref1 = soExternal;
 		cmpB1_1->val1 = "InitialValue";
 		cmpExternal->ref1 = so1_1;
-		cmpExternal->ref2 = cmpA1_1;
+		cmpExternal->ref2 = static_object_cast<Component>(cmpA1_1);
 
 		CmdRecordSO::execute(so0_0);
 		cmpB1_1->val1 = "ModifiedValue";
@@ -480,11 +480,11 @@ namespace bs
 		GameObjectHandle<TestComponentA> cmpExternal = soExternal->addComponent<TestComponentA>();
 
 		cmpA1_1->ref1 = so2_0;
-		cmpA1_1->ref2 = cmpB1_1;
+		cmpA1_1->ref2 = static_object_cast<Component>(cmpB1_1);
 		cmpB1_1->ref1 = soExternal;
 		cmpB1_1->val1 = "InitialValue";
 		cmpExternal->ref1 = so1_1;
-		cmpExternal->ref2 = cmpA1_1;
+		cmpExternal->ref2 = static_object_cast<Component>(cmpA1_1);
 
 		CmdDeleteSO::execute(so0_0);
 		UndoRedo::instance().undo();
@@ -730,7 +730,7 @@ namespace bs
 
 		BS_TEST_ASSERT(so0->getNumChildren() == nso0->getNumChildren());
 		HSceneObject nso0_1 = nso0->getChild(0);
-		GameObjectHandle<TestComponentC> ncmp0_1 = nso0_1->getComponent<TestComponentD>();
+		GameObjectHandle<TestComponentD> ncmp0_1 = nso0_1->getComponent<TestComponentD>();
 		BS_TEST_ASSERT(ncmp0_1 != nullptr);
 
 		HSceneObject nso1 = newRoot->getChild(1);

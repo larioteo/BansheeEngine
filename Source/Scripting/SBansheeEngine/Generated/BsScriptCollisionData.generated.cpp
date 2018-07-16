@@ -5,7 +5,6 @@
 #include "BsScriptGameObjectManager.h"
 #include "BsScriptCCollider.generated.h"
 #include "BsScriptContactPoint.generated.h"
-#include "BsScriptContactPoint.generated.h"
 
 namespace bs
 {
@@ -69,7 +68,7 @@ namespace bs
 		{
 			ScriptComponentBase* scriptcollider = nullptr;
 			if(value.collider[i])
-						scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.collider[i]);
+						scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider[i]));
 				if(scriptcollider != nullptr)
 				arraycollider.set(i, scriptcollider->getManagedInstance());
 			else

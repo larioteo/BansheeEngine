@@ -19,7 +19,7 @@ namespace bs
 		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "ManagedComponent")
 
 		/**	Returns a generic handle to the internal wrapped component. */
-		HGameObject getNativeHandle() const override { return mComponent; }
+		HGameObject getNativeHandle() const override { return static_object_cast<GameObject>(mComponent); }
 
 		/**	Sets the internal component this object wraps. */
 		void setNativeHandle(const HGameObject& gameObject) override { mComponent = static_object_cast<ManagedComponent>(gameObject); }

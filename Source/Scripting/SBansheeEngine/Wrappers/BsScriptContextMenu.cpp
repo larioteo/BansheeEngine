@@ -8,9 +8,10 @@
 #include "BsMonoMethod.h"
 #include "BsMonoUtil.h"
 #include "GUI/BsGUIContextMenu.h"
-#include "Wrappers/BsScriptHString.h"
 #include "Wrappers/GUI/BsScriptGUILayout.h"
 #include "GUI/BsGUILayout.h"
+
+#include "Generated/BsScriptHString.generated.h"
 
 using namespace std::placeholders;
 
@@ -81,7 +82,7 @@ namespace bs
 
 		String nativeLabel = MonoUtil::monoToString(label);
 		SPtr<GUIContextMenu> contextMenu = instance->getInternal();
-		contextMenu->setLocalizedName(nativeLabel, name->getInternalValue());
+		contextMenu->setLocalizedName(nativeLabel, *name->getInternal());
 	}
 
 	void ScriptContextMenu::onContextMenuItemTriggered(UINT32 idx)

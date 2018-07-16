@@ -15,8 +15,9 @@
 #include "Wrappers/GUI/BsScriptGUIToggleGroup.h"
 #include "Wrappers/GUI/BsScriptGUIElementStyle.h"
 #include "Wrappers/GUI/BsScriptGUILayout.h"
-#include "Wrappers/BsScriptHString.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptHString.generated.h"
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -49,7 +50,7 @@ namespace bs
 		onDoubleClickThunk = (OnDoubleClickThunkDef)metaData.scriptClass->getMethod("DoOnDoubleClick")->getThunk();
 	}
 
-	void ScriptGUIToggle::internal_createInstance(MonoObject* instance, MonoObject* content, 
+	void ScriptGUIToggle::internal_createInstance(MonoObject* instance, __GUIContentInterop* content, 
 		MonoObject* monoToggleGroup, MonoString* style, MonoArray* guiOptions)
 	{
 		GUIOptions options;
@@ -67,7 +68,7 @@ namespace bs
 			toggleGroup = scriptToggleGroup->getInternalValue();
 		}
 
-		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
+		GUIContent nativeContent = ScriptGUIContent::fromInterop(*content);
 		GUIToggle* guiToggle = GUIToggle::create(nativeContent, toggleGroup, options, MonoUtil::monoToString(style));
 
 		auto nativeInstance = new (bs_alloc<ScriptGUIToggle>()) ScriptGUIToggle(instance, guiToggle);
@@ -79,9 +80,9 @@ namespace bs
 		guiToggle->onDoubleClick.connect(std::bind(&ScriptGUIToggle::onDoubleClick, nativeInstance));
 	}
 
-	void ScriptGUIToggle::internal_setContent(ScriptGUIToggle* nativeInstance, MonoObject* content)
+	void ScriptGUIToggle::internal_setContent(ScriptGUIToggle* nativeInstance, __GUIContentInterop* content)
 	{
-		GUIContent nativeContent(ScriptGUIContent::getText(content), ScriptGUIContent::getImage(content), ScriptGUIContent::getTooltip(content));
+		GUIContent nativeContent = ScriptGUIContent::fromInterop(*content);
 
 		GUIToggle* toggle = (GUIToggle*)nativeInstance->getGUIElement();
 		toggle->setContent(nativeContent);

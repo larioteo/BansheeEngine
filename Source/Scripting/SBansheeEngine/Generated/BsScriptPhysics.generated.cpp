@@ -342,7 +342,7 @@ namespace bs
 		{
 			ScriptComponentBase* script__output = nullptr;
 			if(vec__output[i])
-						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(vec__output[i]));
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -365,7 +365,7 @@ namespace bs
 		{
 			ScriptComponentBase* script__output = nullptr;
 			if(vec__output[i])
-						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(vec__output[i]));
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -388,7 +388,7 @@ namespace bs
 		{
 			ScriptComponentBase* script__output = nullptr;
 			if(vec__output[i])
-						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(vec__output[i]));
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -416,7 +416,7 @@ namespace bs
 		{
 			ScriptComponentBase* script__output = nullptr;
 			if(vec__output[i])
-						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(vec__output[i]);
+						script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(vec__output[i]));
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else

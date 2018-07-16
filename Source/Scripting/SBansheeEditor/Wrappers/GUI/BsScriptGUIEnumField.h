@@ -7,6 +7,8 @@
 
 namespace bs
 {
+	struct __GUIContentInterop;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -37,7 +39,7 @@ namespace bs
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
 		static void internal_createInstance(MonoObject* instance, MonoArray* names, MonoArray* values, bool multiselect,
-			MonoObject* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle);
+			__GUIContentInterop* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle);
 
 		static UINT64 internal_getValue(ScriptGUIEnumField* nativeInstance);
 		static void internal_setValue(ScriptGUIEnumField* nativeInstance, UINT64 value);

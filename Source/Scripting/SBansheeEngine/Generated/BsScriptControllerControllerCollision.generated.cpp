@@ -48,7 +48,7 @@ namespace bs
 		__ControllerControllerCollisionInterop output;
 		ScriptComponentBase* scriptcontroller = nullptr;
 		if(value.controller)
-				scriptcontroller = ScriptGameObjectManager::instance().getBuiltinScriptComponent(value.controller);
+				scriptcontroller = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.controller));
 		MonoObject* tmpcontroller;
 		if(scriptcontroller != nullptr)
 			tmpcontroller = scriptcontroller->getManagedInstance();

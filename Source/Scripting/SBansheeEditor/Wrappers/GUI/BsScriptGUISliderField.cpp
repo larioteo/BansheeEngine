@@ -10,7 +10,8 @@
 #include "GUI/BsGUISliderField.h"
 #include "GUI/BsGUIOptions.h"
 #include "GUI/BsGUIContent.h"
-#include "Wrappers/GUI/BsScriptGUIContent.h"
+
+#include "Generated/BsScriptGUIContent.generated.h"
 
 using namespace std::placeholders;
 
@@ -38,8 +39,8 @@ namespace bs
 		onChangedThunk = (OnChangedThunkDef)metaData.scriptClass->getMethod("DoOnChanged", 1)->getThunk();
 	}
 
-	void ScriptGUISliderField::internal_createInstance(MonoObject* instance, float min, float max, MonoObject* title, UINT32 titleWidth,
-		MonoString* style, MonoArray* guiOptions, bool withTitle)
+	void ScriptGUISliderField::internal_createInstance(MonoObject* instance, float min, float max, 
+		__GUIContentInterop* title, UINT32 titleWidth, MonoString* style, MonoArray* guiOptions, bool withTitle)
 	{
 		GUIOptions options;
 
@@ -53,7 +54,7 @@ namespace bs
 		GUISliderField* guiSliderField = nullptr;
 		if (withTitle)
 		{
-			GUIContent nativeContent(ScriptGUIContent::getText(title), ScriptGUIContent::getImage(title), ScriptGUIContent::getTooltip(title));
+			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
 			guiSliderField = GUISliderField::create(nativeContent, titleWidth, options, styleName);
 		}
 		else

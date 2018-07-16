@@ -14,10 +14,11 @@
 #include "BsMonoAssembly.h"
 #include "BsScriptObjectManager.h"
 #include "Wrappers/GUI/BsScriptGUILayout.h"
-#include "Wrappers/BsScriptHString.h"
 #include "Platform/BsPlatform.h"
 #include "Input/BsInput.h"
 #include "Wrappers/BsScriptUndoRedo.h"
+
+#include "Generated/BsScriptHString.generated.h"
 
 using namespace std::placeholders;
 
@@ -402,7 +403,7 @@ namespace bs
 
 				if (scriptHString != nullptr)
 				{
-					mDisplayName = HString(scriptHString->getInternalValue());
+					mDisplayName = HString(*scriptHString->getInternal());
 					parentContainer.refreshWidgetNames();
 				}
 			}

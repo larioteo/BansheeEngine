@@ -3,7 +3,6 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptBlendClipInfo.generated.h"
-#include "BsScriptBlendClipInfo.generated.h"
 
 namespace bs
 {

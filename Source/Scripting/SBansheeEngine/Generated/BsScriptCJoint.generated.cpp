@@ -51,7 +51,7 @@ namespace bs
 		MonoObject* __output;
 		ScriptComponentBase* script__output = nullptr;
 		if(tmp__output)
-				script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(tmp__output);
+				script__output = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(tmp__output));
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else
