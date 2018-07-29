@@ -295,8 +295,10 @@ namespace BansheeEditor
             vertScrollBar = new GUIResizeableScrollBarV();
             vertScrollBar.OnScrollOrResize += OnVertScrollOrResize;
 
-            GUILayout curveLayoutHorz = gui.AddLayoutX();
-            GUILayout horzScrollBarLayout = gui.AddLayoutX();
+            GUILayout mainLayout = gui.AddLayoutY();
+
+            GUILayout curveLayoutHorz = mainLayout.AddLayoutX();
+            GUILayout horzScrollBarLayout = mainLayout.AddLayoutX();
             horzScrollBarLayout.AddElement(horzScrollBar);
             horzScrollBarLayout.AddFlexibleSpace();
 
