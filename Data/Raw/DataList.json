@@ -1546,6 +1546,11 @@
             "Path": "ProgressBarSmallFill.png",
             "SpriteUUID": "808b9443-46a8-1a63-b194-46a8ee5e8f25",
             "TextureUUID": "067a1430-4bfd-8c01-2284-4bfd42b28159"
+        },
+        {
+            "Path": "ContainerBg.png",
+            "SpriteUUID": "e15e000f-416e-b09e-2194-416eee62bfa9",
+            "TextureUUID": "64b57435-4bd1-f789-93b1-4bd18dfbb67e"
         }
     ]
 }
