@@ -87,9 +87,7 @@ namespace bs
 
 	SPtr<RendererMeshData> MeshEx::getMeshData(const HMesh& thisPtr)
 	{
-		SPtr<MeshData> meshData = thisPtr->allocBuffer();
-		thisPtr->readCachedData(*meshData);
-
+		const SPtr<MeshData>& meshData = thisPtr->getCachedData();
 		return RendererMeshData::create(meshData);
 	}
 

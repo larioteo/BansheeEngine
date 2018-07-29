@@ -31,11 +31,6 @@ namespace bs
 		refreshNonClientAreas();
 	}
 
-	WindowFrameWidget::~WindowFrameWidget()
-	{
-
-	}
-
 	void WindowFrameWidget::ownerWindowFocusChanged()
 	{
 		mWindowFrame->setFocused(mParentWindow->getProperties().hasFocus);

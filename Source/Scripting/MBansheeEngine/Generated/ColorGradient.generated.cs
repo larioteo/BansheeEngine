@@ -31,10 +31,20 @@ namespace BansheeEngine
 			Internal_ColorGradient1(this, keys);
 		}
 
-		/// <summary>Set of keys that control the gradient, sorted by time from first to last.</summary>
-		public void SetKeys(ColorGradientKey[] keys)
+		/// <summary>
+		/// Keys that control the gradient, sorted by time from first to last. Key times should be in range [0, 1].
+		/// </summary>
+		public void SetKeys(ColorGradientKey[] keys, float duration = 1f)
 		{
-			Internal_setKeys(mCachedPtr, keys);
+			Internal_setKeys(mCachedPtr, keys, duration);
+		}
+
+		/// <summary>
+		/// Keys that control the gradient, sorted by time from first to last. Key times should be in range [0, 1].
+		/// </summary>
+		public ColorGradientKey[] GetKeys()
+		{
+			return Internal_getKeys(mCachedPtr);
 		}
 
 		/// <summary>Specify a "gradient" that represents a single color value.</summary>
@@ -58,7 +68,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_ColorGradient1(ColorGradient managedInstance, ColorGradientKey[] keys);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setKeys(IntPtr thisPtr, ColorGradientKey[] keys);
+		private static extern void Internal_setKeys(IntPtr thisPtr, ColorGradientKey[] keys, float duration);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern ColorGradientKey[] Internal_getKeys(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setConstant(IntPtr thisPtr, ref Color color);
 		[MethodImpl(MethodImplOptions.InternalCall)]

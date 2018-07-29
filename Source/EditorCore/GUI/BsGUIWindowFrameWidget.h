@@ -30,7 +30,7 @@ namespace bs
 		 */
 		WindowFrameWidget(const HSceneObject& parent, bool allowResize, const SPtr<Camera>& camera, RenderWindow* ownerWindow, 
 			const HGUISkin& skin);
-		virtual ~WindowFrameWidget();
+		virtual ~WindowFrameWidget() = default;
 
 	protected:
 		/** @copydoc GUIWidget::ownerWindowFocusChanged */
@@ -58,7 +58,7 @@ namespace bs
 	public:
 		friend class CWindowFrameWidgetRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 
 		WindowFrameWidget() { } // Serialization only
 	};

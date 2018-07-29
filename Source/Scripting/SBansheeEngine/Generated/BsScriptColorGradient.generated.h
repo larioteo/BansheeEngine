@@ -25,7 +25,8 @@ namespace bs
 		static void Internal_ColorGradient(MonoObject* managedInstance);
 		static void Internal_ColorGradient0(MonoObject* managedInstance, Color* color);
 		static void Internal_ColorGradient1(MonoObject* managedInstance, MonoArray* keys);
-		static void Internal_setKeys(ScriptColorGradient* thisPtr, MonoArray* keys);
+		static void Internal_setKeys(ScriptColorGradient* thisPtr, MonoArray* keys, float duration);
+		static MonoArray* Internal_getKeys(ScriptColorGradient* thisPtr);
 		static void Internal_setConstant(ScriptColorGradient* thisPtr, Color* color);
 		static void Internal_evaluate(ScriptColorGradient* thisPtr, float t, Color* __output);
 	};

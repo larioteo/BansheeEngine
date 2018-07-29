@@ -15,7 +15,7 @@ namespace bs
 	 */
 
 	/** GUI element that displays a color gradient. */
-	class GUIColorGradient : public GUIElement
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUIColorGradient : public GUIElement
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */
@@ -27,6 +27,7 @@ namespace bs
 		 * @param[in]	styleName		Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:GUIColorGradient)
 		static GUIColorGradient* create(const String& styleName = StringUtil::BLANK);
 
 		/**
@@ -39,12 +40,15 @@ namespace bs
 		 */
 		static GUIColorGradient* create(const GUIOptions& options, const String& styleName = StringUtil::BLANK);
 
-		/**	Sets the color gradient to display. */
+		/**	Color gradient to display. */
+		BS_SCRIPT_EXPORT(pr:setter,n:Gradient)
 		void setGradient(const ColorGradient& colorGradient);
 
-		/**	Returns the currently displayed color gradient. */
+		/** @copydoc setGradient */
+		BS_SCRIPT_EXPORT(pr:getter,n:Gradient)
 		ColorGradient getGradient() const { return mValue; }
 
+		BS_SCRIPT_EXPORT()
 		Event<void()> onClicked; /**< Triggered when the user clicks on the GUI element. */
 
 		/** @name Internal
