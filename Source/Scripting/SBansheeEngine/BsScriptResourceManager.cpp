@@ -9,6 +9,7 @@
 #include "Resources/BsResource.h"
 #include "Wrappers/BsScriptManagedResource.h"
 #include "Serialization/BsScriptAssemblyManager.h"
+#include "BsManagedResource.h"
 
 using namespace std::placeholders;
 
@@ -86,6 +87,11 @@ namespace bs
 		return nullptr;
 	}
 
+	ScriptRRefBase* ScriptResourceManager::getScriptRRef(const HResource& resource, ::MonoClass* rrefClass)
+	{
+			return ScriptRRefBase::create(resource, rrefClass);
+	}
+
 	void ScriptResourceManager::destroyScriptResource(ScriptResourceBase* resource)
 	{
 		HResource resourceHandle = resource->getGenericHandle();
@@ -107,6 +113,23 @@ namespace bs
 		{
 			findIter->second->notifyResourceDestroyed();
 			mScriptResources.erase(findIter);
+		}
+	}
+
+	::MonoClass* ScriptResourceManager::getManagedResourceClass(UINT32 rttiId)
+	{
+		if(rttiId == Resource::getRTTIStatic()->getRTTIId())
+			return ScriptResource::getMetaData()->scriptClass->_getInternalClass();
+		else if(rttiId == ManagedResource::getRTTIStatic()->getRTTIId())
+			return ScriptResource::getMetaData()->scriptClass->_getInternalClass();
+		else
+		{
+			BuiltinResourceInfo* info = ScriptAssemblyManager::instance().getBuiltinResourceInfo(rttiId);
+
+			if (info == nullptr)
+				return nullptr;
+
+			return info->monoClass->_getInternalClass();
 		}
 	}
 

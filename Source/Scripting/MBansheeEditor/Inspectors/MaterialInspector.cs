@@ -49,7 +49,7 @@ namespace BansheeEditor
             shaderField.Value = material.Shader;
             shaderField.OnChanged += (x) =>
             {
-                Shader shader = Resources.Load<Shader>(x);
+                Shader shader = Resources.Load<Shader>(x.UUID);
 
                 material.Shader = shader;
                 EditorApplication.SetDirty(material);
@@ -599,7 +599,7 @@ namespace BansheeEditor
                 case ShaderParameterType.TextureCube:
                     guiElem.OnChanged += (x) =>
                     {
-                        Texture texture = Resources.Load<Texture>(x);
+                        Texture texture = Resources.Load<Texture>(x.UUID);
 
                         material.SetTexture(shaderParam.name, texture);
                         EditorApplication.SetDirty(material);

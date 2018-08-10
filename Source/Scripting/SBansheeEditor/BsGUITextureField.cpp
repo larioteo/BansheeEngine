@@ -173,25 +173,10 @@ namespace bs
 
 	HTexture GUITextureField::getValue() const
 	{
-		ResourceLoadFlags loadFlags = ResourceLoadFlag::Default | ResourceLoadFlag::KeepSourceData;
-		return static_resource_cast<Texture>(Resources::instance().loadFromUUID(mUUID, false, loadFlags));
+		return static_resource_cast<Texture>(Resources::instance()._getResourceHandle(mUUID));
 	}
 
 	void GUITextureField::setValue(const HTexture& value)
-	{
-		if (value)
-			setUUID(value.getUUID(), false);
-		else
-			setUUID(UUID::EMPTY, false);
-	}
-
-	WeakResourceHandle<Texture> GUITextureField::getValueWeak() const
-	{
-		HResource handle = Resources::instance()._getResourceHandle(mUUID);
-		return static_resource_cast<Texture>(handle.getWeak());
-	}
-
-	void GUITextureField::setValueWeak(const WeakResourceHandle<Texture>& value)
 	{
 		if (value)
 			setUUID(value.getUUID(), false);
@@ -206,15 +191,24 @@ namespace bs
 
 		mUUID = uuid;
 
-		HTexture texture;
+		HTexture previewIcon;
 
-		Path filePath;
-		if (Resources::instance().getFilePathFromUUID(mUUID, filePath))
-			texture = gResources().load<Texture>(filePath);
-		
-		if (texture != nullptr)
+		Path filePath = gProjectLibrary().uuidToPath(mUUID);
+		if (!filePath.isEmpty())
 		{
-			HSpriteTexture sprite = SpriteTexture::create(texture);
+			SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(filePath);
+			if(meta)
+				previewIcon = meta->getPreviewIcons().icon128;
+			else
+			{
+				// Not ideal. No cached texture so fall back on loading the original asset
+				previewIcon = gResources().load<Texture>(filePath);
+			}
+		}
+		
+		if (previewIcon != nullptr)
+		{
+			HSpriteTexture sprite = SpriteTexture::create(previewIcon);
 			mDropButton->setContent(GUIContent(sprite));
 			mClearButton->setVisible(true);
 		}
@@ -225,7 +219,7 @@ namespace bs
 		}
 
 		if (triggerEvent)
-			onValueChanged(texture.getWeak());
+			onValueChanged(static_resource_cast<Texture>(gResources()._getResourceHandle(mUUID)));
 	}
 
 	void GUITextureField::setTint(const Color& color)

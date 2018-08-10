@@ -47,6 +47,7 @@
 #include "BsScriptFont.generated.h"
 #include "BsScriptSpriteTexture.generated.h"
 #include "BsScriptStringTable.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
 
 namespace bs
 {
@@ -72,22 +73,6 @@ namespace bs
 #undef LOOKUP_BEGIN
 #undef ADD_ENTRY
 #undef LOOKUP_END
-
-	ScriptAssemblyManager::ScriptAssemblyManager()
-		: mBaseTypesInitialized(false), mSystemArrayClass(nullptr), mSystemGenericListClass(nullptr)
-		, mSystemGenericDictionaryClass(nullptr), mSystemTypeClass(nullptr), mComponentClass(nullptr)
-		, mManagedComponentClass(nullptr), mSceneObjectClass(nullptr), mMissingComponentClass(nullptr)
-		, mSerializeObjectAttribute(nullptr), mDontSerializeFieldAttribute(nullptr), mSerializeFieldAttribute(nullptr)
-		, mHideInInspectorAttribute(nullptr), mShowInInspectorAttribute(nullptr), mRangeAttribute(nullptr)
-		, mStepAttribute(nullptr)
-	{
-
-	}
-
-	ScriptAssemblyManager::~ScriptAssemblyManager()
-	{
-
-	}
 
 	Vector<String> ScriptAssemblyManager::getScriptAssemblies() const
 	{
@@ -125,10 +110,10 @@ namespace bs
 		const Vector<MonoClass*>& allClasses = curAssembly->getAllClasses();
 		for(auto& curClass : allClasses)
 		{
-			if ((curClass->isSubClassOf(mComponentClass) || curClass->isSubClassOf(resourceClass) ||
-				curClass->hasAttribute(mSerializeObjectAttribute)) && 
-				curClass != mComponentClass && curClass != resourceClass &&
-				curClass != mManagedComponentClass && curClass != managedResourceClass)
+			if ((curClass->isSubClassOf(mBuiltin.componentClass) || curClass->isSubClassOf(resourceClass) ||
+				curClass->hasAttribute(mBuiltin.serializeObjectAttribute)) && 
+				curClass != mBuiltin.componentClass && curClass != resourceClass &&
+				curClass != mBuiltin.managedComponentClass && curClass != managedResourceClass)
 			{
 				SPtr<ManagedSerializableTypeInfoObject> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoObject>();
 				typeInfo->mTypeNamespace = curClass->getNamespace();
@@ -179,27 +164,27 @@ namespace bs
 				MonoMemberVisibility visibility = field->getVisibility();
 				if (visibility == MonoMemberVisibility::Public)
 				{
-					if (!field->hasAttribute(mDontSerializeFieldAttribute))
+					if (!field->hasAttribute(mBuiltin.dontSerializeFieldAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (!field->hasAttribute(mHideInInspectorAttribute))
+					if (!field->hasAttribute(mBuiltin.hideInInspectorAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Inspectable;
 
 					fieldInfo->mFlags |= ScriptFieldFlag::Animable;
 				}
 				else
 				{
-					if (field->hasAttribute(mSerializeFieldAttribute))
+					if (field->hasAttribute(mBuiltin.serializeFieldAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (field->hasAttribute(mShowInInspectorAttribute))
+					if (field->hasAttribute(mBuiltin.showInInspectorAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Inspectable;
 				}
 
-				if (field->hasAttribute(mRangeAttribute))
+				if (field->hasAttribute(mBuiltin.rangeAttribute))
 					fieldInfo->mFlags |= ScriptFieldFlag::Range;
 
-				if (field->hasAttribute(mStepAttribute))
+				if (field->hasAttribute(mBuiltin.stepAttribute))
 					fieldInfo->mFlags |= ScriptFieldFlag::Step;
 
 				objInfo->mFieldNameToId[fieldInfo->mName] = fieldInfo->mFieldId;
@@ -226,17 +211,17 @@ namespace bs
 					if (visibility == MonoMemberVisibility::Public)
 						propertyInfo->mFlags |= ScriptFieldFlag::Animable;
 
-					if (property->hasAttribute(mSerializeFieldAttribute))
+					if (property->hasAttribute(mBuiltin.serializeFieldAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (property->hasAttribute(mShowInInspectorAttribute))
+					if (property->hasAttribute(mBuiltin.showInInspectorAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Inspectable;
 				}
 
-				if (property->hasAttribute(mRangeAttribute))
+				if (property->hasAttribute(mBuiltin.rangeAttribute))
 					propertyInfo->mFlags |= ScriptFieldFlag::Range;
 
-				if (property->hasAttribute(mStepAttribute))
+				if (property->hasAttribute(mBuiltin.stepAttribute))
 					propertyInfo->mFlags |= ScriptFieldFlag::Step;
 
 				objInfo->mFieldNameToId[propertyInfo->mName] = propertyInfo->mFieldId;
@@ -394,22 +379,24 @@ namespace bs
 
 				return typeInfo;
 			}
-			else if (monoClass->isSubClassOf(mSceneObjectClass) || monoClass->isSubClassOf(mComponentClass)) // Game object
+			else if(monoClass == ScriptRRefBase::getMetaData()->scriptClass) // Resource reference
+				return bs_shared_ptr_new<ManagedSerializableTypeInfoRRef>();
+			else if (monoClass->isSubClassOf(mBuiltin.sceneObjectClass) || monoClass->isSubClassOf(mBuiltin.componentClass)) // Game object
 			{
 				SPtr<ManagedSerializableTypeInfoRef> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoRef>();
 				typeInfo->mTypeNamespace = monoClass->getNamespace();
 				typeInfo->mTypeName = monoClass->getTypeName();
 				typeInfo->mRTIITypeId = 0;
 
-				if (monoClass == mComponentClass)
+				if (monoClass == mBuiltin.componentClass)
 					typeInfo->mType = ScriptReferenceType::BuiltinComponentBase;
-				else if (monoClass == mManagedComponentClass)
+				else if (monoClass == mBuiltin.managedComponentClass)
 					typeInfo->mType = ScriptReferenceType::ManagedComponentBase;
-				else if (monoClass->isSubClassOf(mSceneObjectClass))
+				else if (monoClass->isSubClassOf(mBuiltin.sceneObjectClass))
 					typeInfo->mType = ScriptReferenceType::SceneObject;
-				else if (monoClass->isSubClassOf(mManagedComponentClass))
+				else if (monoClass->isSubClassOf(mBuiltin.managedComponentClass))
 					typeInfo->mType = ScriptReferenceType::ManagedComponent;
-				else if (monoClass->isSubClassOf(mComponentClass))
+				else if (monoClass->isSubClassOf(mBuiltin.componentClass))
 				{
 					typeInfo->mType = ScriptReferenceType::BuiltinComponent;
 
@@ -443,7 +430,7 @@ namespace bs
 
 			break;
 		case MonoPrimitiveType::Generic:
-			if(monoClass->getFullName() == mSystemGenericListClass->getFullName()) // Full name is part of CIL spec, so it is just fine to compare like this
+			if(monoClass->getFullName() == mBuiltin.systemGenericListClass->getFullName()) // Full name is part of CIL spec, so it is just fine to compare like this
 			{
 				SPtr<ManagedSerializableTypeInfoList> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoList>();
 
@@ -458,7 +445,7 @@ namespace bs
 
 				return typeInfo;
 			}
-			else if(monoClass->getFullName() == mSystemGenericDictionaryClass->getFullName())
+			else if(monoClass->getFullName() == mBuiltin.systemGenericDictionaryClass->getFullName())
 			{
 				SPtr<ManagedSerializableTypeInfoDictionary> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoDictionary>();
 
@@ -480,6 +467,21 @@ namespace bs
 					typeInfo->mValueType = getTypeInfo(valueClass);
 
 				if (typeInfo->mKeyType == nullptr || typeInfo->mValueType == nullptr)
+					return nullptr;
+
+				return typeInfo;
+			}
+			else if(monoClass->getFullName() == mBuiltin.genericRRefClass->getFullName())
+			{
+				SPtr<ManagedSerializableTypeInfoRRef> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoRRef>();
+				
+				MonoProperty* itemProperty = monoClass->getProperty("Value");
+				MonoClass* itemClass = itemProperty->getReturnType();
+
+				if (itemClass != nullptr)
+					typeInfo->mResourceType = getTypeInfo(itemClass);
+				
+				if (typeInfo->mResourceType == nullptr)
 					return nullptr;
 
 				return typeInfo;
@@ -514,25 +516,7 @@ namespace bs
 	void ScriptAssemblyManager::clearScriptObjects()
 	{
 		mBaseTypesInitialized = false;
-
-		mSystemArrayClass = nullptr;
-		mSystemGenericListClass = nullptr;
-		mSystemGenericDictionaryClass = nullptr;
-		mSystemTypeClass = nullptr;
-
-		mSerializeObjectAttribute = nullptr;
-		mDontSerializeFieldAttribute = nullptr;
-
-		mComponentClass = nullptr;
-		mManagedComponentClass = nullptr;
-		mSceneObjectClass = nullptr;
-		mMissingComponentClass = nullptr;
-
-		mSerializeFieldAttribute = nullptr;
-		mHideInInspectorAttribute = nullptr;
-		mShowInInspectorAttribute = nullptr;
-		mRangeAttribute = nullptr;
-		mStepAttribute = nullptr;
+		mBuiltin = BuiltinScriptClasses();
 	}
 
 	void ScriptAssemblyManager::initializeBaseTypes()
@@ -546,64 +530,72 @@ namespace bs
 		if(bansheeEngineAssembly == nullptr)
 			BS_EXCEPT(InvalidStateException, String(ENGINE_ASSEMBLY) +  " assembly is not loaded.");
 
-		mSystemArrayClass = corlib->getClass("System", "Array");
-		if(mSystemArrayClass == nullptr)
+		mBuiltin.systemArrayClass = corlib->getClass("System", "Array");
+		if(mBuiltin.systemArrayClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find System.Array managed class.");
 
-		mSystemGenericListClass = corlib->getClass("System.Collections.Generic", "List`1");
-		if(mSystemGenericListClass == nullptr)
+		mBuiltin.systemGenericListClass = corlib->getClass("System.Collections.Generic", "List`1");
+		if(mBuiltin.systemGenericListClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find List<T> managed class.");
 
-		mSystemGenericDictionaryClass = corlib->getClass("System.Collections.Generic", "Dictionary`2");
-		if(mSystemGenericDictionaryClass == nullptr)
+		mBuiltin.systemGenericDictionaryClass = corlib->getClass("System.Collections.Generic", "Dictionary`2");
+		if(mBuiltin.systemGenericDictionaryClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Dictionary<TKey, TValue> managed class.");
 
-		mSystemTypeClass = corlib->getClass("System", "Type");
-		if (mSystemTypeClass == nullptr)
+		mBuiltin.systemTypeClass = corlib->getClass("System", "Type");
+		if (mBuiltin.systemTypeClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Type managed class.");
 
-		mSerializeObjectAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "SerializeObject");
-		if(mSerializeObjectAttribute == nullptr)
+		mBuiltin.serializeObjectAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "SerializeObject");
+		if(mBuiltin.serializeObjectAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find SerializableObject managed class.");
 
-		mDontSerializeFieldAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "DontSerializeField");
-		if(mDontSerializeFieldAttribute == nullptr)
+		mBuiltin.dontSerializeFieldAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "DontSerializeField");
+		if(mBuiltin.dontSerializeFieldAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find DontSerializeField managed class.");
 
-		mRangeAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "Range");
-		if (mRangeAttribute == nullptr)
+		mBuiltin.rangeAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "Range");
+		if (mBuiltin.rangeAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Range managed class.");
 
-		mStepAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "Step");
-		if (mStepAttribute == nullptr)
+		mBuiltin.stepAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "Step");
+		if (mBuiltin.stepAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Step managed class.");
 
-		mComponentClass = bansheeEngineAssembly->getClass("BansheeEngine", "Component");
-		if(mComponentClass == nullptr)
+		mBuiltin.componentClass = bansheeEngineAssembly->getClass("BansheeEngine", "Component");
+		if(mBuiltin.componentClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Component managed class.");
 
-		mManagedComponentClass = bansheeEngineAssembly->getClass("BansheeEngine", "ManagedComponent");
-		if (mManagedComponentClass == nullptr)
+		mBuiltin.managedComponentClass = bansheeEngineAssembly->getClass("BansheeEngine", "ManagedComponent");
+		if (mBuiltin.managedComponentClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find ManagedComponent managed class.");
 
-		mMissingComponentClass = bansheeEngineAssembly->getClass("BansheeEngine", "MissingComponent");
-		if (mMissingComponentClass == nullptr)
+		mBuiltin.missingComponentClass = bansheeEngineAssembly->getClass("BansheeEngine", "MissingComponent");
+		if (mBuiltin.missingComponentClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find MissingComponent managed class.");
 
-		mSceneObjectClass = bansheeEngineAssembly->getClass("BansheeEngine", "SceneObject");
-		if(mSceneObjectClass == nullptr)
+		mBuiltin.sceneObjectClass = bansheeEngineAssembly->getClass("BansheeEngine", "SceneObject");
+		if(mBuiltin.sceneObjectClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find SceneObject managed class.");
 
-		mSerializeFieldAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "SerializeField");
-		if(mSerializeFieldAttribute == nullptr)
+		mBuiltin.rrefBaseClass = bansheeEngineAssembly->getClass("BansheeEngine", "RRefBase");
+		if(mBuiltin.rrefBaseClass == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find RRefBase managed class.");
+
+		mBuiltin.genericRRefClass = bansheeEngineAssembly->getClass("BansheeEngine", "RRef`1");
+		if(mBuiltin.genericRRefClass == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find RRef<T> managed class.");
+
+		mBuiltin.serializeFieldAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "SerializeField");
+		if(mBuiltin.serializeFieldAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find SerializeField managed class.");
 
-		mHideInInspectorAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "HideInInspector");
-		if(mHideInInspectorAttribute == nullptr)
+		mBuiltin.hideInInspectorAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "HideInInspector");
+		if(mBuiltin.hideInInspectorAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find HideInInspector managed class.");
 
-		mShowInInspectorAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "ShowInInspector");
-		if (mShowInInspectorAttribute == nullptr)
+		mBuiltin.showInInspectorAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "ShowInInspector");
+		if (mBuiltin.showInInspectorAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find ShowInInspector managed class.");
 
 		mBaseTypesInitialized = true;

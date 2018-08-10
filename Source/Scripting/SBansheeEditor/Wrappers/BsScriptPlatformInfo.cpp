@@ -8,7 +8,8 @@
 #include "BsMonoMethod.h"
 #include "BsMonoUtil.h"
 #include "Wrappers/BsScriptPrefab.h"
-#include "Wrappers/BsScriptResourceRef.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "BsScriptResourceManager.h"
 
 namespace bs
 {
@@ -67,17 +68,21 @@ namespace bs
 
 	MonoObject* ScriptPlatformInfo::internal_GetMainScene(ScriptPlatformInfoBase* thisPtr)
 	{
-		WeakResourceHandle<Prefab> prefab = thisPtr->getPlatformInfo()->mainScene;
+		HPrefab prefab = thisPtr->getPlatformInfo()->mainScene;
 		
 		if (prefab != nullptr)
-			return ScriptResourceRef::create(prefab);
+		{
+			ScriptRRefBase* scriptRRef = ScriptResourceManager::instance().getScriptRRef(prefab);
+			if(scriptRRef)
+				return scriptRRef->getManagedInstance();
+		}
 
 		return nullptr;
 	}
 
-	void ScriptPlatformInfo::internal_SetMainScene(ScriptPlatformInfoBase* thisPtr, ScriptResourceRef* prefabRef)
+	void ScriptPlatformInfo::internal_SetMainScene(ScriptPlatformInfoBase* thisPtr, ScriptRRefBase* prefabRef)
 	{
-		WeakResourceHandle<Prefab> prefab;
+		HPrefab prefab;
 
 		if (prefabRef != nullptr)
 			prefab = static_resource_cast<Prefab>(prefabRef->getHandle());
@@ -147,17 +152,21 @@ namespace bs
 
 	MonoObject* ScriptWinPlatformInfo::internal_GetIcon(ScriptWinPlatformInfo* thisPtr)
 	{
-		WeakResourceHandle<Texture> icon = thisPtr->getWinPlatformInfo()->icon;
+		HTexture icon = thisPtr->getWinPlatformInfo()->icon;
 
 		if (icon != nullptr)
-			return ScriptResourceRef::create(icon);
+		{
+			ScriptRRefBase* scriptRRef = ScriptResourceManager::instance().getScriptRRef(icon);
+			if(scriptRRef)
+				return scriptRRef->getManagedInstance();
+		}
 
 		return nullptr;
 	}
 
-	void ScriptWinPlatformInfo::internal_SetIcon(ScriptWinPlatformInfo* thisPtr, ScriptResourceRef* textureRef)
+	void ScriptWinPlatformInfo::internal_SetIcon(ScriptWinPlatformInfo* thisPtr, ScriptRRefBase* textureRef)
 	{
-		WeakResourceHandle<Texture> icon;
+		HTexture icon;
 
 		if (textureRef != nullptr)
 			icon = static_resource_cast<Texture>(textureRef->getHandle());

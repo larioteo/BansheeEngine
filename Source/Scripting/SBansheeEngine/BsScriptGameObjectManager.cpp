@@ -55,7 +55,7 @@ namespace bs
 
 	ScriptSceneObject* ScriptGameObjectManager::createScriptSceneObject(const HSceneObject& sceneObject)
 	{
-		MonoClass* sceneObjectClass = ScriptAssemblyManager::instance().getSceneObjectClass();
+		MonoClass* sceneObjectClass = ScriptAssemblyManager::instance().getBuiltinClasses().sceneObjectClass;
 		MonoObject* instance = sceneObjectClass->createInstance();
 
 		return createScriptSceneObject(instance, sceneObject);

@@ -197,7 +197,7 @@ namespace BansheeEditor
                 heightField.Active = false;
             }
 
-            sceneField.OnChanged += x => platformInfo.MainScene = x;
+            sceneField.OnChanged += x => platformInfo.MainScene = x.As<Prefab>();
             debugToggle.OnChanged += x => platformInfo.Debug = x;
             definesField.OnChanged += x => platformInfo.Defines = x;
             fullscreenField.OnChanged += x =>

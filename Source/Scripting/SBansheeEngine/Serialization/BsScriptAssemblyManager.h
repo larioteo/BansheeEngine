@@ -14,13 +14,35 @@ namespace bs
 	 *  @{
 	 */
 
+	/** Contains all the built-in script classes that are always available. */
+	struct BuiltinScriptClasses
+	{
+		MonoClass* systemArrayClass = nullptr;
+		MonoClass* systemGenericListClass = nullptr;
+		MonoClass* systemGenericDictionaryClass = nullptr;
+		MonoClass* systemTypeClass = nullptr;
+
+		MonoClass* componentClass = nullptr;
+		MonoClass* managedComponentClass = nullptr;
+		MonoClass* sceneObjectClass = nullptr;
+		MonoClass* missingComponentClass = nullptr;
+
+		MonoClass* rrefBaseClass = nullptr;
+		MonoClass* genericRRefClass = nullptr;
+
+		MonoClass* serializeObjectAttribute = nullptr;
+		MonoClass* dontSerializeFieldAttribute = nullptr;
+		MonoClass* serializeFieldAttribute = nullptr;
+		MonoClass* hideInInspectorAttribute = nullptr;
+		MonoClass* showInInspectorAttribute = nullptr;
+		MonoClass* rangeAttribute = nullptr;
+		MonoClass* stepAttribute = nullptr;
+	};
+
 	/**	Stores data about managed serializable objects in specified assemblies. */
 	class BS_SCR_BE_EXPORT ScriptAssemblyManager : public Module<ScriptAssemblyManager>
 	{
 	public:
-		ScriptAssemblyManager();
-		~ScriptAssemblyManager();
-
 		/**
 		 * Loads all information about managed serializable objects in an assembly with the specified name. Assembly must be
 		 * currently loaded. Once the data has been loaded you will be able to call getSerializableObjectInfo() and
@@ -89,35 +111,9 @@ namespace bs
 		/**	Returns names of all assemblies that currently have managed serializable object data loaded. */
 		Vector<String> getScriptAssemblies() const;
 
-		/**	Gets the managed class for System.Array type. */
-		MonoClass* getSystemArrayClass() const { return mSystemArrayClass; }
+		/** Returns type information for various built-in classes. */
+		const BuiltinScriptClasses& getBuiltinClasses() const { return mBuiltin; }
 
-		/**	Gets the managed class for System.Collections.Generic.List<T> type. */
-		MonoClass* getSystemGenericListClass() const { return mSystemGenericListClass; }
-
-		/**	Gets the managed class for System.Collections.Generic.Dictionary<T,U> type. */
-		MonoClass* getSystemGenericDictionaryClass() const { return mSystemGenericDictionaryClass; }
-
-		/**	Gets the managed class for System.Type type. */
-		MonoClass* getSystemTypeClass() const { return mSystemTypeClass; }
-
-		/**	Gets the managed class for BansheeEngine.Component type. */
-		MonoClass* getComponentClass() const { return mComponentClass; }
-
-		/**	Gets the managed class for BansheeEngine.ManagedComponent type. */
-		MonoClass* getManagedComponentClass() const { return mManagedComponentClass; }
-
-		/**	Gets the managed class for BansheeEngine.MissingComponent type. */
-		MonoClass* getMissingComponentClass() const { return mMissingComponentClass; }
-
-		/**	Gets the managed class for BansheeEngine.SceneObject type. */
-		MonoClass* getSceneObjectClass() const { return mSceneObjectClass; }
-
-		/** Gets the managed class for BansheeEngine.Range attribute */
-		MonoClass* getRangeAttribute() const { return mRangeAttribute; }
-
-		/** Gets the managed class for BansheeEngine.Step attribute */
-		MonoClass* getStepAttribute() const { return mStepAttribute; }
 	private:
 		/**	Deletes all stored managed serializable object infos for all assemblies. */
 		void clearScriptObjects();
@@ -140,25 +136,9 @@ namespace bs
 		UnorderedMap<::MonoReflectionType*, BuiltinResourceInfo> mBuiltinResourceInfos;
 		UnorderedMap<UINT32, BuiltinResourceInfo> mBuiltinResourceInfosByTID;
 		UnorderedMap<UINT32, BuiltinResourceInfo> mBuiltinResourceInfosByType;
-		bool mBaseTypesInitialized;
+		bool mBaseTypesInitialized = false;
 
-		MonoClass* mSystemArrayClass;
-		MonoClass* mSystemGenericListClass;
-		MonoClass* mSystemGenericDictionaryClass;
-		MonoClass* mSystemTypeClass;
-
-		MonoClass* mComponentClass;
-		MonoClass* mManagedComponentClass;
-		MonoClass* mSceneObjectClass;
-		MonoClass* mMissingComponentClass;
-
-		MonoClass* mSerializeObjectAttribute;
-		MonoClass* mDontSerializeFieldAttribute;
-		MonoClass* mSerializeFieldAttribute;
-		MonoClass* mHideInInspectorAttribute;
-		MonoClass* mShowInInspectorAttribute;
-		MonoClass* mRangeAttribute;
-		MonoClass* mStepAttribute;
+		BuiltinScriptClasses mBuiltin;
 	};
 
 	/** @} */

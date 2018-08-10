@@ -133,7 +133,7 @@ namespace BansheeEditor
 
             meshField.OnChanged += x =>
             {
-                Mesh mesh = Resources.Load<Mesh>(x);
+                Mesh mesh = Resources.Load<Mesh>(x.UUID);
                 renderable.Mesh = mesh;
 
                 MarkAsModified();
@@ -217,7 +217,7 @@ namespace BansheeEditor
 
                 materialField.OnChanged += x =>
                 {
-                    Material material = Resources.Load<Material>(x);
+                    Material material = Resources.Load<Material>(x.UUID);
 
                     SetValue(material);
                     MarkAsModified();

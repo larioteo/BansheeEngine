@@ -167,42 +167,12 @@ namespace bs
 	HResource GUIResourceField::getValue() const
 	{
 		if (!mUUID.empty())
-			return gResources().loadFromUUID(mUUID, false, ResourceLoadFlag::Default | ResourceLoadFlag::KeepSourceData);
-
+			return gResources()._getResourceHandle(mUUID);
+		
 		return HResource();
 	}
 
 	void GUIResourceField::setValue(const HResource& value)
-	{
-		if (value)
-		{
-			Path resPath = gProjectLibrary().uuidToPath(value.getUUID());
-			if (!resPath.isEmpty() || !value.isLoaded(false))
-				setUUID(value.getUUID(), false);
-			else // A non-project library resource
-			{
-				if (mUUID == value.getUUID())
-					return;
-
-				mUUID = value.getUUID();
-
-				String title = value->getName() + " (" + mType + ")";
-				mDropButton->setContent(GUIContent(HEString(title)));
-			}
-		}
-		else
-			setUUID(UUID::EMPTY, false);
-	}
-
-	WeakResourceHandle<Resource> GUIResourceField::getValueWeak() const
-	{
-		if (!mUUID.empty())
-			return Resources::instance()._getResourceHandle(mUUID).getWeak();
-
-		return WeakResourceHandle<Resource>();
-	}
-
-	void GUIResourceField::setValueWeak(const WeakResourceHandle<Resource>& value)
 	{
 		if (value)
 		{
@@ -243,7 +213,7 @@ namespace bs
 		if (triggerEvent)
 		{
 			HResource handle = gResources()._getResourceHandle(mUUID);
-			onValueChanged(handle.getWeak());
+			onValueChanged(handle);
 		}
 	}
 

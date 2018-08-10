@@ -66,7 +66,7 @@ namespace BansheeEditor
 
             animationClipField.OnChanged += x =>
             {
-                AnimationClip clip = Resources.Load<AnimationClip>(x);
+                AnimationClip clip = Resources.Load<AnimationClip>(x.UUID);
 
                 animation.DefaultClip = clip;
                 MarkAsModified();

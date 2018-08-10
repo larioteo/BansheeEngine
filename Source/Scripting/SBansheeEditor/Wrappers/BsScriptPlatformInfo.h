@@ -8,6 +8,8 @@
 
 namespace bs
 {
+	class ScriptRRefBase;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -21,7 +23,7 @@ namespace bs
 
 	protected:
 		ScriptPlatformInfoBase(MonoObject* instance);
-		virtual ~ScriptPlatformInfoBase() {}
+		virtual ~ScriptPlatformInfoBase() = default;
 
 		SPtr<PlatformInfo> mPlatformInfo;
 	};
@@ -44,7 +46,7 @@ namespace bs
 		static MonoString* internal_GetDefines(ScriptPlatformInfoBase* thisPtr);
 		static void internal_SetDefines(ScriptPlatformInfoBase* thisPtr, MonoString* value);
 		static MonoObject* internal_GetMainScene(ScriptPlatformInfoBase* thisPtr);
-		static void internal_SetMainScene(ScriptPlatformInfoBase* thisPtr, ScriptResourceRef* prefabRef);
+		static void internal_SetMainScene(ScriptPlatformInfoBase* thisPtr, ScriptRRefBase* prefabRef);
 		static bool internal_GetFullscreen(ScriptPlatformInfoBase* thisPtr);
 		static void internal_SetFullscreen(ScriptPlatformInfoBase* thisPtr, bool fullscreen);
 		static void internal_GetResolution(ScriptPlatformInfoBase* thisPtr, UINT32* width, UINT32* height);
@@ -72,7 +74,7 @@ namespace bs
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
 		static MonoObject* internal_GetIcon(ScriptWinPlatformInfo* thisPtr);
-		static void internal_SetIcon(ScriptWinPlatformInfo* thisPtr, ScriptResourceRef* textureRef);
+		static void internal_SetIcon(ScriptWinPlatformInfo* thisPtr, ScriptRRefBase* textureRef);
 		static MonoString* internal_GetTitleText(ScriptWinPlatformInfo* thisPtr);
 		static void internal_SetTitleText(ScriptWinPlatformInfo* thisPtr, MonoString* text);
 	};

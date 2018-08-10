@@ -197,7 +197,7 @@ namespace bs
 				{ 256, nullptr }
 			};
 
-			HTexture icon = gResources().load(winPlatformInfo->icon);
+			HTexture icon = static_resource_cast<Texture>(gResources().loadFromUUID(winPlatformInfo->icon.getUUID()));
 			if (icon.isLoaded())
 			{
 				auto& texProps = icon->getProperties();
@@ -385,7 +385,7 @@ namespace bs
 		{
 			SPtr<WinPlatformInfo> winPlatformInfo = std::static_pointer_cast<WinPlatformInfo>(platformInfo);
 			
-			HTexture icon = gResources().load(winPlatformInfo->icon);
+			HTexture icon = static_resource_cast<Texture>(gResources().loadFromUUID(winPlatformInfo->icon.getUUID()));
 			if (icon != nullptr)
 				gResources().save(icon, destIconFile, true);
 		}

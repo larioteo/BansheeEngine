@@ -181,7 +181,7 @@ namespace bs
 			return false;
 
 		MonoClass* paramType = method->getParameterType(0);
-		MonoClass* componentClass = mScriptObjectManager.getComponentClass();
+		MonoClass* componentClass = mScriptObjectManager.getBuiltinClasses().componentClass;
 
 		if (!paramType->isSubClassOf(componentClass))
 			return false;

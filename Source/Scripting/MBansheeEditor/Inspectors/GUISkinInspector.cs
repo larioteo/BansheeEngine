@@ -292,7 +292,7 @@ namespace BansheeEditor
 
                 fontField.OnChanged += x => 
                 {
-                    Font font = Resources.Load<Font>(x);
+                    Font font = Resources.Load<Font>(x.UUID);
 
                     GetStyle().Font = font; 
                     MarkAsModified(); 
@@ -489,7 +489,7 @@ namespace BansheeEditor
 
                     textureField.OnChanged += x =>
                     {
-                        SpriteTexture texture = Resources.Load<SpriteTexture>(x);
+                        SpriteTexture texture = Resources.Load<SpriteTexture>(x.UUID);
                         state.Texture = texture;
 
                         if (OnChanged != null)

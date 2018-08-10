@@ -28,7 +28,7 @@ namespace BansheeEditor
         /// <param name="property">Serializable property referencing the array whose contents to display.</param>
         public InspectableResourceRef(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
             SerializableProperty property)
-            : base(parent, title, path, SerializableProperty.FieldType.ResourceRef, depth, layout, property)
+            : base(parent, title, path, SerializableProperty.FieldType.Resource, depth, layout, property)
         {
 
         }
@@ -36,7 +36,7 @@ namespace BansheeEditor
         /// <inheritoc/>
         protected internal override void Initialize(int layoutIndex)
         {
-            if (property.Type == SerializableProperty.FieldType.ResourceRef)
+            if (property.Type == SerializableProperty.FieldType.Resource)
             {
                 guiField = new GUIResourceField(property.InternalType, new GUIContent(title));
                 guiField.OnChanged += OnFieldValueChanged;
@@ -62,9 +62,9 @@ namespace BansheeEditor
         /// Triggered when the user drops a new resource onto the field, or clears the current value.
         /// </summary>
         /// <param name="newValue">New resource to reference.</param>
-        private void OnFieldValueChanged(ResourceRef newValue)
+        private void OnFieldValueChanged(RRefBase newValue)
         {
-            Resource res = Resources.Load<Resource>(newValue);
+            Resource res = Resources.Load<Resource>(newValue.UUID);
 
             property.SetValue(res);
             state = InspectableState.Modified;

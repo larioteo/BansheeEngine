@@ -264,6 +264,18 @@ namespace bs
 				break;
 			}
 		}
+		else if(typeInfo->getTypeId() == TID_SerializableTypeInfoRRef)
+		{
+			auto fieldData = bs_shared_ptr_new<ManagedSerializableFieldDataResourceRef>();
+
+			if(value != nullptr)
+			{
+				ScriptRRefBase* scriptRRefBase = ScriptRRefBase::toNative(value);
+				fieldData->value = scriptRRefBase->getHandle();
+			}
+
+			return fieldData;
+		}
 		else if(typeInfo->getTypeId() == TID_SerializableTypeInfoObject)
 		{
 			auto fieldData = bs_shared_ptr_new<ManagedSerializableFieldDataObject>();
@@ -495,7 +507,7 @@ namespace bs
 	{
 		if(typeInfo->getTypeId() == TID_SerializableTypeInfoRef)
 		{
-			auto refTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoRef>(typeInfo);
+			const auto refTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoRef>(typeInfo);
 
 			if (!value.isLoaded())
 				return nullptr;
@@ -515,13 +527,26 @@ namespace bs
 
 				return scriptResource->getManagedInstance();
 			}
+		}
+		else if(typeInfo->getTypeId() == TID_SerializableTypeInfoRRef)
+		{
+			const auto refTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoRRef>(typeInfo);
 
-			if (value.isLoaded())
+			::MonoClass* resourceRRefClass = nullptr;
+			if(refTypeInfo->mResourceType)
 			{
+				if (!typeInfo->isTypeLoaded())
+					return nullptr;
 
+				resourceRRefClass = typeInfo->getMonoClass();
+				if (resourceRRefClass == nullptr)
+					return nullptr;
 			}
-			else
-				return nullptr;
+
+			// Note: Each reference ref ends up creating its own object instance. Perhaps share the same instance between
+			// all references to the same resource?
+
+			return ScriptRRefBase::create(value, resourceRRefClass);
 		}
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");

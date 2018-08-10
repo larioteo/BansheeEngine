@@ -53,7 +53,7 @@ namespace bs
 
 		String fullName = elementNs + "." + elementTypeName;
 
-		if(ScriptAssemblyManager::instance().getSystemGenericListClass()->getFullName() != fullName)
+		if(ScriptAssemblyManager::instance().getBuiltinClasses().systemGenericListClass->getFullName() != fullName)
 			return nullptr;
 
 		return bs_shared_ptr_new<ManagedSerializableList>(ConstructPrivately(), typeInfo, managedInstance);

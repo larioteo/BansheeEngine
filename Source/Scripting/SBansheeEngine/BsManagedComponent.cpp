@@ -310,7 +310,7 @@ namespace bs
 		MonoObject* instance;
 		if (!ScriptAssemblyManager::instance().getSerializableObjectInfo(mNamespace, mTypeName, mObjInfo))
 		{
-			instance = ScriptAssemblyManager::instance().getMissingComponentClass()->createInstance(true);
+			instance = ScriptAssemblyManager::instance().getBuiltinClasses().missingComponentClass->createInstance(true);
 			mMissingType = true;
 		}
 		else

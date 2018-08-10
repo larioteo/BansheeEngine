@@ -84,7 +84,7 @@ set(BS_SBANSHEEENGINE_INC_WRAPPERS
 	"Wrappers/BsScriptSceneObject.h"
 	"Wrappers/BsScriptScene.h"
 	"Wrappers/BsScriptResources.h"
-	"Wrappers/BsScriptResourceRef.h"
+	"Wrappers/BsScriptRRefBase.h"
 	"Wrappers/BsScriptManagedComponent.h"
 	"Wrappers/BsScriptQuaternion.h"
 )
@@ -161,7 +161,7 @@ set(BS_SBANSHEEENGINE_SRC_WRAPPERS
 	"Wrappers/BsScriptSceneObject.cpp"
 	"Wrappers/BsScriptScene.cpp"
 	"Wrappers/BsScriptResources.cpp"
-	"Wrappers/BsScriptResourceRef.cpp"
+	"Wrappers/BsScriptRRefBase.cpp"
 	"Wrappers/BsScriptResource.cpp"
 	"Wrappers/BsScriptManagedComponent.cpp"
 	"Wrappers/BsScriptQuaternion.cpp"

@@ -264,7 +264,7 @@ namespace bs
 
 		String fullName = elementNs + "." + elementTypeName;
 
-		if(ScriptAssemblyManager::instance().getSystemGenericDictionaryClass()->getFullName() != fullName)
+		if(ScriptAssemblyManager::instance().getBuiltinClasses().systemGenericDictionaryClass->getFullName() != fullName)
 			return nullptr;
 
 		return bs_shared_ptr_new<ManagedSerializableDictionary>(ConstructPrivately(), typeInfo, managedInstance);

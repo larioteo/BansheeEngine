@@ -17,7 +17,7 @@ namespace BansheeEditor
     /// </summary>
     public sealed class GUITextureField : GUIElement
     {
-        public delegate void OnChangedDelegate(ResourceRef newValue);
+        public delegate void OnChangedDelegate(RRef<Texture> newValue);
 
         /// <summary>
         /// Triggered when the value in the field changes.
@@ -43,11 +43,11 @@ namespace BansheeEditor
         /// <summary>
         /// Reference to the <see cref="Texture"/> referenced by the field.
         /// </summary>
-        public ResourceRef ValueRef
+        public RRef<Texture> ValueRef
         {
             get
             {
-                ResourceRef value;
+                RRef<Texture> value;
                 Internal_GetValueRef(mCachedPtr, out value);
                 return value;
             }
@@ -96,7 +96,7 @@ namespace BansheeEditor
         /// Triggered by the runtime when the value of the field changes.
         /// </summary>
         /// <param name="newValue">New resource referenced by the field.</param>
-        private void Internal_DoOnChanged(ResourceRef newValue)
+        private void Internal_DoOnChanged(RRef<Texture> newValue)
         {
             if (OnChanged != null)
                 OnChanged(newValue);
@@ -113,10 +113,10 @@ namespace BansheeEditor
         private static extern void Internal_SetValue(IntPtr nativeInstance, Texture value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_GetValueRef(IntPtr nativeInstance, out ResourceRef value);
+        private static extern void Internal_GetValueRef(IntPtr nativeInstance, out RRef<Texture> value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetValueRef(IntPtr nativeInstance, ResourceRef value);
+        private static extern void Internal_SetValueRef(IntPtr nativeInstance, RRef<Texture> value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetTint(IntPtr nativeInstance, ref Color color);

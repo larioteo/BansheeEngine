@@ -4,6 +4,7 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Utility/BsModule.h"
+#include "Wrappers/BsScriptRRefBase.h"
 
 namespace bs
 {
@@ -65,6 +66,30 @@ namespace bs
 		ScriptResourceBase* getScriptResource(const UUID& UUID);
 
 		/**
+		 * Attempts to find an existing interop object for the specified resource reference, or creates a new object if one
+		 * cannot be found.
+		 * 
+		 * @param[in]	resource		Resource handle to create the reference wrapper object for.
+		 * @param[in]	rrefClass		Class of the managed RRef object to create.
+		 */
+		ScriptRRefBase* getScriptRRef(const HResource& resource, ::MonoClass* rrefClass);
+
+		/** 
+		 * Same as getScriptRRef(const HResource&, MonoClass*) except it automatically deduced the resource class from
+		 * the provided template parameter.
+		 */
+		template<class T>
+		ScriptRRefBase* getScriptRRef(const ResourceHandle<T>& resource)
+		{
+			::MonoClass* monoClass = getManagedResourceClass(T::getRTTIStatic()->getRTTIId());
+			if(!monoClass)
+				return nullptr;
+
+			::MonoClass* rrefClass = ScriptRRefBase::bindGenericParam(monoClass);
+			return getScriptRRef(resource, rrefClass);
+		}
+
+		/**
 		 * Deletes the provided resource interop objects. All resource interop objects should be deleted using this method.
 		 */
 		void destroyScriptResource(ScriptResourceBase* resource);
@@ -75,6 +100,12 @@ namespace bs
 	private:
 		/**	Triggered when the native resource has been unloaded and therefore destroyed. */
 		void onResourceDestroyed(const UUID& UUID);
+
+		/** 
+		 * Maps a RTTI ID to a class representing the specified resource type in managed code. Returns null if the ID 
+		 * cannot be mapped to a managed resource class.
+		 */
+		static ::MonoClass* getManagedResourceClass(UINT32 rttiId);
 
 		UnorderedMap<UUID, ScriptResourceBase*> mScriptResources;
 		HEvent mResourceDestroyedConn;

@@ -43,7 +43,7 @@ namespace BansheeEditor
         /// <summary>
         /// Initial scene that is loaded when application is first started.
         /// </summary>
-        public ResourceRef MainScene
+        public RRef<Prefab> MainScene
         {
             get { return Internal_GetMainScene(mCachedPtr); }
             set
@@ -127,7 +127,7 @@ namespace BansheeEditor
         private static extern void Internal_SetDefines(IntPtr thisPtr, string value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ResourceRef Internal_GetMainScene(IntPtr thisPtr);
+        private static extern RRef<Prefab> Internal_GetMainScene(IntPtr thisPtr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         static extern void Internal_SetMainScene(IntPtr thisPtr, IntPtr prefabPtr);
@@ -174,7 +174,7 @@ namespace BansheeEditor
         /// <summary>
         /// Texture that will be displayed on the application's executable.
         /// </summary>
-        public ResourceRef Icon
+        public RRef<Texture> Icon
         {
             get { return Internal_GetIcon(mCachedPtr); }
             set
@@ -197,7 +197,7 @@ namespace BansheeEditor
         }
         
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern ResourceRef Internal_GetIcon(IntPtr thisPtr);
+        private static extern RRef<Texture> Internal_GetIcon(IntPtr thisPtr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetIcon(IntPtr thisPtr, IntPtr texturePtr);

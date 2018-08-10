@@ -58,7 +58,7 @@ namespace BansheeEditor
 
             skinField.OnChanged += x =>
             {
-                GUISkin skin = Resources.Load<GUISkin>(x);
+                GUISkin skin = Resources.Load<GUISkin>(x.UUID);
                 guiWidget.Skin = skin;
 
                 MarkAsModified();

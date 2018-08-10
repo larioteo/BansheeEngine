@@ -25,7 +25,7 @@ namespace bs
 		 *
 		 * @param[in]	newHandle	Handle of the new texture.
 		 */
-		void onChanged(const WeakResourceHandle<Texture>& newHandle);
+		void onChanged(const HTexture& newHandle);
 
 		/** Retrieves a managed instance of the specified native texture. Will return null if one doesn't exist. */
 		static MonoObject* nativeToManagedResource(const HTexture& instance);

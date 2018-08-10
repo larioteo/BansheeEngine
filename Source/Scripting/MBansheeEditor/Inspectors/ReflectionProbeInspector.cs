@@ -47,7 +47,7 @@ namespace BansheeEditor
 
                 customTextureField.OnChanged += x =>
                 {
-                    probe.CustomTexture = Resources.Load<Texture>(x);
+                    probe.CustomTexture = Resources.Load<Texture>(x.UUID);
                     MarkAsModified();
                     ConfirmModify();
                 };

@@ -9,7 +9,6 @@
 #include "Resources/BsGameResourceManager.h"
 #include "BsScriptResourceManager.h"
 #include "Wrappers/BsScriptResource.h"
-#include "Wrappers/BsScriptResourceRef.h"
 #include "BsApplication.h"
 
 namespace bs
@@ -21,7 +20,7 @@ namespace bs
 	void ScriptResources::initRuntimeData()
 	{
 		metaData.scriptClass->addInternalCall("Internal_Load", (void*)&ScriptResources::internal_Load);
-		metaData.scriptClass->addInternalCall("Internal_LoadRef", (void*)&ScriptResources::internal_LoadRef);
+		metaData.scriptClass->addInternalCall("Internal_LoadFromUUID", (void*)&ScriptResources::internal_LoadFromUUID);
 		metaData.scriptClass->addInternalCall("Internal_UnloadUnused", (void*)&ScriptResources::internal_UnloadUnused);
 		metaData.scriptClass->addInternalCall("Internal_Release", (void*)&ScriptResources::internal_Release);
 		metaData.scriptClass->addInternalCall("Internal_ReleaseRef", (void*)&ScriptResources::internal_ReleaseRef);
@@ -39,12 +38,8 @@ namespace bs
 		return scriptResource->getManagedInstance();
 	}
 
-	MonoObject* ScriptResources::internal_LoadRef(MonoObject* reference, bool keepLoaded)
+	MonoObject* ScriptResources::internal_LoadFromUUID(UUID* uuid, bool keepLoaded)
 	{
-		ScriptResourceRef* scriptRef = ScriptResourceRef::toNative(reference);
-		if (scriptRef == nullptr)
-			return nullptr;
-
 		ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies;
 		if (keepLoaded)
 			loadFlags |= ResourceLoadFlag::KeepInternalRef;
@@ -52,7 +47,7 @@ namespace bs
 		if (gApplication().isEditor())
 			loadFlags |= ResourceLoadFlag::KeepSourceData;
 
-		HResource resource = gResources().load(scriptRef->getHandle(), loadFlags);
+		HResource resource = gResources().loadFromUUID(*uuid, loadFlags);
 		if (resource == nullptr)
 			return nullptr;
 
@@ -65,7 +60,7 @@ namespace bs
 		resource->getGenericHandle().release();
 	}
 
-	void ScriptResources::internal_ReleaseRef(ScriptResourceRef* resourceRef)
+	void ScriptResources::internal_ReleaseRef(ScriptRRefBase* resourceRef)
 	{
 		resourceRef->getHandle().release();
 	}

@@ -48,7 +48,7 @@ namespace BansheeEditor
         {
             meshField.OnChanged += x =>
             {
-                PhysicsMesh mesh = Resources.Load<PhysicsMesh>(x);
+                PhysicsMesh mesh = Resources.Load<PhysicsMesh>(x.UUID);
                 collider.Mesh = mesh;
 
                 MarkAsModified();

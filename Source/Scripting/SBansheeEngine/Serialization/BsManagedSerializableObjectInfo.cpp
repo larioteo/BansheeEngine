@@ -11,6 +11,7 @@
 #include "BsMonoProperty.h"
 #include "Serialization/BsScriptAssemblyManager.h"
 #include "Wrappers/BsScriptManagedResource.h"
+#include "Wrappers/BsScriptRRefBase.h"
 
 namespace bs
 {
@@ -101,7 +102,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				float min = 0;
@@ -116,7 +117,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				float max = 0;
@@ -131,7 +132,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				bool slider = false;
@@ -147,7 +148,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Step))
 		{
-			MonoClass* step = ScriptAssemblyManager::instance().getStepAttribute();
+			MonoClass* step = ScriptAssemblyManager::instance().getBuiltinClasses().stepAttribute;
 			if (step != nullptr)
 			{
 				float value = 0;
@@ -188,7 +189,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				float min = 0;
@@ -204,7 +205,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				float max = 0;
@@ -220,7 +221,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Range))
 		{
-			MonoClass* range = ScriptAssemblyManager::instance().getRangeAttribute();
+			MonoClass* range = ScriptAssemblyManager::instance().getBuiltinClasses().rangeAttribute;
 			if (range != nullptr)
 			{
 				bool slider = false;
@@ -237,7 +238,7 @@ namespace bs
 	{
 		if (mFlags.isSet(ScriptFieldFlag::Step))
 		{
-			MonoClass* step = ScriptAssemblyManager::instance().getStepAttribute();
+			MonoClass* step = ScriptAssemblyManager::instance().getBuiltinClasses().stepAttribute;
 			if (step != nullptr)
 			{
 				float value = 0;
@@ -379,11 +380,11 @@ namespace bs
 		case ScriptReferenceType::ManagedResourceBase:
 			return ScriptManagedResource::getMetaData()->scriptClass->_getInternalClass();
 		case ScriptReferenceType::SceneObject:
-			return ScriptAssemblyManager::instance().getSceneObjectClass()->_getInternalClass();
+			return ScriptAssemblyManager::instance().getBuiltinClasses().sceneObjectClass->_getInternalClass();
 		case ScriptReferenceType::BuiltinComponentBase:
-			return ScriptAssemblyManager::instance().getComponentClass()->_getInternalClass();
+			return ScriptAssemblyManager::instance().getBuiltinClasses().componentClass->_getInternalClass();
 		case ScriptReferenceType::ManagedComponentBase:
-			return ScriptAssemblyManager::instance().getManagedComponentClass()->_getInternalClass();
+			return ScriptAssemblyManager::instance().getBuiltinClasses().managedComponentClass->_getInternalClass();
 		default:
 			break;
 		}
@@ -404,6 +405,50 @@ namespace bs
 	RTTITypeBase* ManagedSerializableTypeInfoRef::getRTTI() const
 	{
 		return ManagedSerializableTypeInfoRef::getRTTIStatic();
+	}
+
+	bool ManagedSerializableTypeInfoRRef::matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const
+	{
+		if(!rtti_is_of_type<ManagedSerializableTypeInfoRRef>(typeInfo))
+			return false;
+
+		auto resourceTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoRRef>(typeInfo);
+
+		if(mResourceType == nullptr)
+			return resourceTypeInfo->mResourceType == nullptr;
+
+		return mResourceType->matches(resourceTypeInfo->mResourceType);
+	}
+
+	bool ManagedSerializableTypeInfoRRef::isTypeLoaded() const
+	{
+		return mResourceType == nullptr || mResourceType->isTypeLoaded();
+	}
+
+	::MonoClass* ManagedSerializableTypeInfoRRef::getMonoClass() const
+	{
+		// If non-null, this is a templated (i.e. C# generic) RRef type
+		if(mResourceType)
+		{
+			::MonoClass* resourceTypeClass = mResourceType->getMonoClass();
+			if (resourceTypeClass == nullptr)
+				return nullptr;
+
+			return ScriptRRefBase::bindGenericParam(resourceTypeClass);
+		}
+		// RRefBase
+		else
+			return ScriptAssemblyManager::instance().getBuiltinClasses().rrefBaseClass->_getInternalClass();
+	}
+
+	RTTITypeBase* ManagedSerializableTypeInfoRRef::getRTTIStatic()
+	{
+		return ManagedSerializableTypeInfoRRefRTTI::instance();
+	}
+
+	RTTITypeBase* ManagedSerializableTypeInfoRRef::getRTTI() const
+	{
+		return ManagedSerializableTypeInfoRRef::getRTTIStatic();
 	}
 
 	bool ManagedSerializableTypeInfoObject::matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const
@@ -495,7 +540,7 @@ namespace bs
 		if(elementClass == nullptr)
 			return nullptr;
 
-		MonoClass* genericListClass = ScriptAssemblyManager::instance().getSystemGenericListClass();
+		MonoClass* genericListClass = ScriptAssemblyManager::instance().getBuiltinClasses().systemGenericListClass;
 		::MonoClass* genParams[1] = { elementClass };
 
 		return MonoUtil::bindGenericParameters(genericListClass->_getInternalClass(), genParams, 1);
@@ -533,7 +578,8 @@ namespace bs
 		if(keyClass == nullptr || valueClass == nullptr)
 			return nullptr;
 
-		MonoClass* genericDictionaryClass = ScriptAssemblyManager::instance().getSystemGenericDictionaryClass();
+		MonoClass* genericDictionaryClass = 
+			ScriptAssemblyManager::instance().getBuiltinClasses().systemGenericDictionaryClass;
 
 		::MonoClass* params[2] = { keyClass, valueClass };
 		return MonoUtil::bindGenericParameters(genericDictionaryClass->_getInternalClass(), params, 2);

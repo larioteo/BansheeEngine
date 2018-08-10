@@ -48,7 +48,7 @@ namespace bs
 		if(managedInstance == nullptr)
 			return nullptr;
 
-		if(!ScriptAssemblyManager::instance().getSystemArrayClass()->isInstanceOfType(managedInstance))
+		if(!ScriptAssemblyManager::instance().getBuiltinClasses().systemArrayClass->isInstanceOfType(managedInstance))
 			return nullptr;
 
 		return bs_shared_ptr_new<ManagedSerializableArray>(ConstructPrivately(), typeInfo, managedInstance);
@@ -69,7 +69,7 @@ namespace bs
 		if (!typeInfo->isTypeLoaded())
 			return nullptr;
 
-		MonoClass* arrayClass = ScriptAssemblyManager::instance().getSystemArrayClass();
+		MonoClass* arrayClass = ScriptAssemblyManager::instance().getBuiltinClasses().systemArrayClass;
 
 		MonoMethod* createInstance = arrayClass->getMethodExact("CreateInstance", "Type,int[]");
 
@@ -203,7 +203,7 @@ namespace bs
 	{
 		mElementMonoClass = mArrayTypeInfo->mElementType->getMonoClass();
 
-		MonoClass* arrayClass = ScriptAssemblyManager::instance().getSystemArrayClass();
+		MonoClass* arrayClass = ScriptAssemblyManager::instance().getBuiltinClasses().systemArrayClass;
 		mCopyMethod = arrayClass->getMethodExact("Copy", "Array,Array,int");
 	}
 
@@ -271,7 +271,7 @@ namespace bs
 	{
 		MonoObject* managedInstace = MonoUtil::getObjectFromGCHandle(mGCHandle);
 
-		MonoClass* systemArray = ScriptAssemblyManager::instance().getSystemArrayClass();
+		MonoClass* systemArray = ScriptAssemblyManager::instance().getBuiltinClasses().systemArrayClass;
 		MonoMethod* getLength = systemArray->getMethod("GetLength", 1);
 
 		void* params[1] = { &dimension };

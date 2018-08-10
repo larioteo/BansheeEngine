@@ -67,7 +67,7 @@ namespace BansheeEditor
 
             audioClipField.OnChanged += x =>
             {
-                AudioClip clip = Resources.Load<AudioClip>(x);
+                AudioClip clip = Resources.Load<AudioClip>(x.UUID);
 
                 source.Clip = clip;
                 MarkAsModified();

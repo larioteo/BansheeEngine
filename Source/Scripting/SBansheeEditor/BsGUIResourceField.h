@@ -162,12 +162,6 @@ namespace bs
 		/**	Sets the resource referenced by the field. */
 		void setValue(const HResource& value);
 
-		/**	Returns a weak reference to the texture referenced by the field, if any. */
-		WeakResourceHandle<Resource> getValueWeak() const;
-
-		/**	Sets a weak reference to the texture referenced by the field. */
-		void setValueWeak(const WeakResourceHandle<Resource>& value);
-
 		/** Returns the resource referenced by the field. Returns empty string with no resource is referenced. */
 		UUID getUUID() const { return mUUID; }
 
@@ -178,7 +172,7 @@ namespace bs
 		 * Triggered whenever the referenced resource changes. Provides	a weak handle of the resource, or empty handle if
 		 * no resource is referenced.
 		 */
-		Event<void(const WeakResourceHandle<Resource>&)> onValueChanged;
+		Event<void(const HResource&)> onValueChanged;
 
 		/** @name Internal 
 		 *  @{

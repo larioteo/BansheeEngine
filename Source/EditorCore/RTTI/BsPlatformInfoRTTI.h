@@ -19,11 +19,12 @@ namespace bs
 		BS_BEGIN_RTTI_MEMBERS
 			BS_RTTI_MEMBER_PLAIN(defines, 0)
 			BS_RTTI_MEMBER_PLAIN(type, 1)
-			BS_RTTI_MEMBER_REFL(mainScene, 2)
+			//BS_RTTI_MEMBER_REFL(mainScene, 2)
 			BS_RTTI_MEMBER_PLAIN(fullscreen, 3)
 			BS_RTTI_MEMBER_PLAIN(windowedWidth, 4)
 			BS_RTTI_MEMBER_PLAIN(windowedHeight, 5)
 			BS_RTTI_MEMBER_PLAIN(debug, 6)
+			BS_RTTI_MEMBER_REFL(mainScene, 7)
 		BS_END_RTTI_MEMBERS
 
 	public:
@@ -48,8 +49,9 @@ namespace bs
 	{
 	private:
 		BS_BEGIN_RTTI_MEMBERS
-			BS_RTTI_MEMBER_REFL(icon, 9)
+			//BS_RTTI_MEMBER_REFL(icon, 9)
 			BS_RTTI_MEMBER_PLAIN(titlebarText, 10)
+			BS_RTTI_MEMBER_REFL(icon, 11)
 		BS_END_RTTI_MEMBERS
 
 	public:

@@ -136,17 +136,14 @@ namespace bs
 		GUITextureField(const PrivatelyConstruct& dummy, const GUIContent& labelContent,
 			UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel);
 
-		/** Returns the texture referenced by the field, if any. This will load the texture if it is not already loaded. */
+		/** 
+		 * Returns the texture referenced by the field, if any. Note that this will not load the texture in case it's not
+		 * already loaded. 
+		 */
 		HTexture getValue() const;
 
 		/**	Sets the texture referenced by the field. */
 		void setValue(const HTexture& value);
-
-		/**	Returns a weak reference to the texture referenced by the field, if any. */
-		WeakResourceHandle<Texture> getValueWeak() const;
-
-		/**	Sets a weak reference to the texture referenced by the field. */
-		void setValueWeak(const WeakResourceHandle<Texture>& value);
 
 		/**	Returns the texture referenced by the field. Returns empty string with no texture is referenced. */
 		UUID getUUID() const { return mUUID; }
@@ -164,7 +161,7 @@ namespace bs
 		 * Triggered whenever the referenced texture changes. Provides a weak handle to the resource, or empty handle if no
 		 * texture is referenced.
 		 */
-		Event<void(const WeakResourceHandle<Texture>&)> onValueChanged;
+		Event<void(const HTexture&)> onValueChanged;
 	private:
 		virtual ~GUITextureField();
 

@@ -72,7 +72,7 @@ namespace bs
 
 		ScriptAssemblyManager& sam = ScriptAssemblyManager::instance();
 
-		MonoClass* managedComponent = sam.getManagedComponentClass();
+		MonoClass* managedComponent = sam.getBuiltinClasses().managedComponentClass;
 		::MonoClass* requestedClass = MonoUtil::getClass(type);
 
 		bool isManagedComponent = MonoUtil::isSubClassOf(requestedClass, managedComponent->_getInternalClass());

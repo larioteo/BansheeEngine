@@ -16,7 +16,7 @@ namespace BansheeEditor
     /// </summary>
     public sealed class GUIResourceField : GUIElement
     {
-        public delegate void OnChangedDelegate(ResourceRef newValue);
+        public delegate void OnChangedDelegate(RRefBase newValue);
 
         /// <summary>
         /// Triggered when the value in the field changes.
@@ -42,11 +42,11 @@ namespace BansheeEditor
         /// <summary>
         /// Reference to the <see cref="Resource"/> referenced by the field.
         /// </summary>
-        public ResourceRef ValueRef
+        public RRefBase ValueRef
         {
             get
             {
-                ResourceRef value;
+                RRefBase value;
                 Internal_GetValueRef(mCachedPtr, out value);
                 return value;
             }
@@ -97,7 +97,7 @@ namespace BansheeEditor
         /// Triggered by the runtime when the value of the field changes.
         /// </summary>
         /// <param name="newValue">New resource referenced by the field.</param>
-        private void DoOnChanged(ResourceRef newValue)
+        private void DoOnChanged(RRefBase newValue)
         {
             if (OnChanged != null)
                 OnChanged(newValue);
@@ -114,10 +114,10 @@ namespace BansheeEditor
         private static extern void Internal_SetValue(IntPtr nativeInstance, Resource value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_GetValueRef(IntPtr nativeInstance, out ResourceRef value);
+        private static extern void Internal_GetValueRef(IntPtr nativeInstance, out RRefBase value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetValueRef(IntPtr nativeInstance, ResourceRef value);
+        private static extern void Internal_SetValueRef(IntPtr nativeInstance, RRefBase value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetTint(IntPtr nativeInstance, ref Color color);

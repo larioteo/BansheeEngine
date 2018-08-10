@@ -31,11 +31,12 @@ namespace BansheeEngine
             Vector3,
             Vector4,
             GameObjectRef,
-            ResourceRef,
+            Resource,
             Object,
             Array,
             List,
-            Dictionary
+            Dictionary,
+            RRef,
         }
 
         public delegate object Getter();
@@ -359,19 +360,19 @@ namespace BansheeEngine
                 else if (internalType.IsSubclassOf(typeof (GameObject)))
                     return FieldType.GameObjectRef;
                 else if (internalType.IsSubclassOf(typeof (Resource)))
-                    return FieldType.ResourceRef;
+                    return FieldType.Resource;
+                else if (internalType == typeof(RRefBase))
+                    return FieldType.RRef;
                 else if (internalType.IsGenericType)
                 {
                     Type genericType = internalType.GetGenericTypeDefinition();
 
                     if (genericType == typeof (List<>))
-                    {
                         return FieldType.List;
-                    }
                     else if (genericType == typeof (Dictionary<,>))
-                    {
                         return FieldType.Dictionary;
-                    }
+                    else if (genericType == typeof(RRef<>))
+                        return FieldType.RRef;
 
                     // Shouldn't happen because native code should only supply us with supported types
                     throw new Exception("Cannot determine field type. Found an unsupported generic type.");

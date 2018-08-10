@@ -27,7 +27,7 @@ namespace bs
 
 		PlatformType type; /**< Type of platform this object contains data for. */
 		String defines; /**< A set of semicolon separated defines to use when compiling scripts for this platform. */
-		WeakResourceHandle<Prefab> mainScene; /**< Default scene that is loaded when the application is started. */
+		ResourceHandle<Prefab> mainScene; /**< Default scene that is loaded when the application is started. */
 		bool fullscreen; /**< If true the application will be started in fullscreen using user's desktop resolution. */
 		UINT32 windowedWidth; /**< Width of the window if not starting the application in fullscreen. */
 		UINT32 windowedHeight; /**< Height of the window if not starting the application in fullscreen. */
@@ -47,7 +47,7 @@ namespace bs
 	{
 		WinPlatformInfo();
 
-		WeakResourceHandle<Texture> icon;
+		ResourceHandle<Texture> icon;
 		WString titlebarText;
 
 		/************************************************************************/

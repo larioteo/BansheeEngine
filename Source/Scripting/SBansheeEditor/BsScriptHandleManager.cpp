@@ -250,7 +250,7 @@ namespace bs
 			if (attribClass == nullptr)
 				return false;
 
-			MonoClass* componentClass = mScriptObjectManager.getComponentClass();
+			MonoClass* componentClass = mScriptObjectManager.getBuiltinClasses().componentClass;
 			if (!attribClass->isSubClassOf(componentClass))
 				return false;
 
