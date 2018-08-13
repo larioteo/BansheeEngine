@@ -58,7 +58,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, bool multiselect, GUIContent title, int titleWidth = 100, string style = "", params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect,
-                title, titleWidth, style, options, true);
+                ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, bool multiselect, GUIContent title, int titleWidth, params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect,
-                title, titleWidth, "", options, true);
+                ref title, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, GUIContent title, int titleWidth = 100, string style = "", params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), false,
-                title, titleWidth, style, options, true);
+                ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace BansheeEditor
         public GUIEnumField(Type enumType, GUIContent title, int titleWidth, params GUIOption[] options)
         {
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), false, 
-                title, titleWidth, "", options, true);
+                ref title, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -121,8 +121,9 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIEnumField(Type enumType, bool multiselect, string style = "", params GUIOption[] options)
         {
+            GUIContent emptyContent = new GUIContent();
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect, 
-                new GUIContent(), 0, style, options, false);
+                ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -135,8 +136,9 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIEnumField(Type enumType, bool multiselect = false, params GUIOption[] options)
         {
+            GUIContent emptyContent = new GUIContent();
             Internal_CreateInstance(this, Enum.GetNames(enumType), Enum.GetValues(enumType), multiselect, 
-                new GUIContent(), 0, "", options, false);
+                ref emptyContent, 0, "", options, false);
         }
 
         /// <summary>
@@ -177,7 +179,7 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_CreateInstance(GUIEnumField instance, string[] names, Array values, 
-            bool multiselect, GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
+            bool multiselect, ref GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern UInt64 Internal_GetValue(IntPtr nativeInstance);

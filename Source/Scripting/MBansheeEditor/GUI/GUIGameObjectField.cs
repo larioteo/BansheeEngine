@@ -51,7 +51,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIGameObjectField(Type type, GUIContent title, int titleWidth = 100, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, type, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, type, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -65,7 +65,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIGameObjectField(Type type, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, type, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, type, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -88,8 +89,8 @@ namespace BansheeEditor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUIGameObjectField instance, Type type, GUIContent title, int titleWidth,
-            string style, GUIOption[] options, bool withTitle);
+        private static extern void Internal_CreateInstance(GUIGameObjectField instance, Type type, ref GUIContent title, 
+            int titleWidth, string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_GetValue(IntPtr nativeInstance, out GameObject value);

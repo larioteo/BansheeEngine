@@ -48,7 +48,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUIToggle(GUIContent content, GUIToggleGroup toggleGroup, string style, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, toggleGroup, style, options);
+            Internal_CreateInstance(this, ref content, toggleGroup, style, options);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUIToggle(GUIContent content, string style, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, null, style, options);
+            Internal_CreateInstance(this, ref content, null, style, options);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace BansheeEngine
         ///                     default element style is used.</param>
         public GUIToggle(GUIContent content, string style)
         {
-            Internal_CreateInstance(this, content, null, style, new GUIOption[0]);
+            Internal_CreateInstance(this, ref content, null, style, new GUIOption[0]);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUIToggle(GUIContent content, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, null, "", options);
+            Internal_CreateInstance(this, ref content, null, "", options);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace BansheeEngine
         ///                     default element style is used.</param>
         public GUIToggle(GUIContent content, GUIToggleGroup toggleGroup, string style)
         {
-            Internal_CreateInstance(this, content, toggleGroup, style, new GUIOption[0]);
+            Internal_CreateInstance(this, ref content, toggleGroup, style, new GUIOption[0]);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUIToggle(GUIContent content, GUIToggleGroup toggleGroup, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, toggleGroup, "", options);
+            Internal_CreateInstance(this, ref content, toggleGroup, "", options);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace BansheeEngine
         /// <param name="content">Content to display on the button.</param>
         public void SetContent(GUIContent content)
         {
-            Internal_SetContent(mCachedPtr, content);
+            Internal_SetContent(mCachedPtr, ref content);
         }
 
         /// <summary>
@@ -180,11 +180,11 @@ namespace BansheeEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUIToggle instance, GUIContent content,
+        private static extern void Internal_CreateInstance(GUIToggle instance, ref GUIContent content,
             GUIToggleGroup toggleGroup, string style, GUIOption[] options);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetContent(IntPtr nativeInstance, GUIContent content);
+        private static extern void Internal_SetContent(IntPtr nativeInstance, ref GUIContent content);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Internal_GetValue(IntPtr nativeInstance);

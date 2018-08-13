@@ -67,7 +67,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUITextField(GUIContent title, int titleWidth = 100, bool multiline = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, multiline, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, multiline, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -81,7 +81,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUITextField(bool multiline = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, multiline, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, multiline, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -113,8 +114,8 @@ namespace BansheeEditor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUITextField instance, bool multiline, GUIContent title, int titleWidth,
-            string style, GUIOption[] options, bool withTitle);
+        private static extern void Internal_CreateInstance(GUITextField instance, bool multiline, ref GUIContent title, 
+            int titleWidth, string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_GetValue(IntPtr nativeInstance, out String value);

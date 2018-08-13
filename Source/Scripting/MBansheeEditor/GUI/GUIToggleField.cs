@@ -49,7 +49,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIToggleField(GUIContent title, int titleWidth = 100, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -62,7 +62,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIToggleField(string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace BansheeEditor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUIToggleField instance, GUIContent title, int titleWidth,
+        private static extern void Internal_CreateInstance(GUIToggleField instance, ref GUIContent title, int titleWidth,
             string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

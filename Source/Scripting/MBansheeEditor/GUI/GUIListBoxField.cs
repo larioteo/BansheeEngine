@@ -60,7 +60,7 @@ namespace BansheeEditor
         public GUIListBoxField(LocString[] elements, bool multiselect, GUIContent title, int titleWidth, string style = "",
             params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, elements, multiselect, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, bool multiselect, GUIContent title, int titleWidth = 100, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, title, titleWidth, "", options, true);
+            Internal_CreateInstance(this, elements, multiselect, ref title, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace BansheeEditor
         public GUIListBoxField(LocString[] elements, GUIContent title, int titleWidth, string style = "", 
             params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, false, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, elements, false, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, GUIContent title, int titleWidth = 100, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, false, title, titleWidth, "", options, true);
+            Internal_CreateInstance(this, elements, false, ref title, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -125,7 +125,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, bool multiselect = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, elements, multiselect, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -139,7 +140,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(LocString[] elements, bool multiselect = false, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, elements, multiselect, new GUIContent(), 0, "", options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, elements, multiselect, ref emptyContent, 0, "", options, false);
         }
 
         /// <summary>
@@ -159,7 +161,7 @@ namespace BansheeEditor
         public GUIListBoxField(string[] elements, bool multiselect, GUIContent title, int titleWidth, string style = "",
             params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -175,7 +177,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, bool multiselect, GUIContent title, int titleWidth = 100, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, title, titleWidth, "", options, true);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, ref title, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -193,7 +195,7 @@ namespace BansheeEditor
         public GUIListBoxField(string[] elements, GUIContent title, int titleWidth, string style = "",
             params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), false, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), false, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -207,7 +209,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, GUIContent title, int titleWidth = 100, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), false, title, titleWidth, "", options, true);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, ToLocalizedElements(elements), false, ref emptyContent, titleWidth, "", options, true);
         }
 
         /// <summary>
@@ -224,7 +227,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, bool multiselect = false, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -238,7 +242,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, bool multiselect = false, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, new GUIContent(), 0, "", options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, ToLocalizedElements(elements), multiselect, ref emptyContent, 0, "", options, false);
         }
 
         /// <summary>
@@ -316,7 +321,7 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_CreateInstance(GUIListBoxField instance, LocString[] entries, bool multiselect,
-            GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
+            ref GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetElements(IntPtr nativeInstance, LocString[] elements);

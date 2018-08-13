@@ -56,7 +56,7 @@ namespace BansheeEditor
         public GUISliderField(float min, float max, GUIContent title, int titleWidth = 100, 
             string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, min, max, title, titleWidth, style, options, true);
+            Internal_CreateInstance(this, min, max, ref title, titleWidth, style, options, true);
         }
 
         /// <summary>
@@ -71,7 +71,8 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUISliderField(float min, float max, string style = "", params GUIOption[] options)
         {
-            Internal_CreateInstance(this, min, max, new GUIContent(), 0, style, options, false);
+            GUIContent emptyContent = new GUIContent();
+            Internal_CreateInstance(this, min, max, ref emptyContent, 0, style, options, false);
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_CreateInstance(GUISliderField instance, float min, float max, 
-            GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
+            ref GUIContent title, int titleWidth, string style, GUIOption[] options, bool withTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Internal_GetValue(IntPtr nativeInstance);

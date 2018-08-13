@@ -25,7 +25,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUILabel(GUIContent content, string style, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, style, options);
+            Internal_CreateInstance(this, ref content, style, options);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace BansheeEngine
         ///                     default element style is used.</param>
         public GUILabel(GUIContent content, string style = "")
         {
-            Internal_CreateInstance(this, content, style, new GUIOption[0]);
+            Internal_CreateInstance(this, ref content, style, new GUIOption[0]);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace BansheeEngine
         ///                       override any similar options set by style.</param>
         public GUILabel(GUIContent content, params GUIOption[] options)
         {
-            Internal_CreateInstance(this, content, "", options);
+            Internal_CreateInstance(this, ref content, "", options);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace BansheeEngine
         /// <param name="content">Content to display on the label.</param>
         public void SetContent(GUIContent content)
         {
-            Internal_SetContent(mCachedPtr, content);
+            Internal_SetContent(mCachedPtr, ref content);
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace BansheeEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUILabel instance, GUIContent content, string style, 
+        private static extern void Internal_CreateInstance(GUILabel instance, ref GUIContent content, string style, 
             GUIOption[] options);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetContent(IntPtr nativeInstance, GUIContent content);
+        private static extern void Internal_SetContent(IntPtr nativeInstance, ref GUIContent content);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetTint(IntPtr nativeInstance, ref Color color);
