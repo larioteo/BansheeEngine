@@ -251,7 +251,7 @@ namespace BansheeEditor
             if (serializableObject.Type == typeof(Animation))
             {
                 Animation anim = serializableObject.Object as Animation;
-                MorphShapes morphShapes = anim?.SceneObject.GetComponent<Renderable>()?.Mesh?.MorphShapes;
+                MorphShapes morphShapes = anim?.SceneObject.GetComponent<Renderable>()?.Mesh.Value?.MorphShapes;
 
                 if (morphShapes != null)
                 {

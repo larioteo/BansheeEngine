@@ -21,6 +21,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptTexture* thisPtr);
+
 		static void Internal_create(MonoObject* managedInstance, PixelFormat format, uint32_t width, uint32_t height, uint32_t depth, TextureType texType, TextureUsage usage, uint32_t numSamples, bool hasMipmaps, bool gammaCorrection);
 		static PixelFormat Internal_getPixelFormat(ScriptTexture* thisPtr);
 		static TextureUsage Internal_getUsage(ScriptTexture* thisPtr);

@@ -14,10 +14,10 @@ namespace BansheeEngine
 	[StructLayout(LayoutKind.Sequential), SerializeObject]
 	public partial struct Blend2DInfo
 	{
-		public AnimationClip topLeftClip;
-		public AnimationClip topRightClip;
-		public AnimationClip botLeftClip;
-		public AnimationClip botRightClip;
+		public RRef<AnimationClip> topLeftClip;
+		public RRef<AnimationClip> topRightClip;
+		public RRef<AnimationClip> botLeftClip;
+		public RRef<AnimationClip> botRightClip;
 	}
 
 	/** @} */

@@ -5,6 +5,8 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
 #include "BsMonoUtil.h"
+#include "BsScriptResourceManager.h"
+#include "BsScriptRRefBase.h"
 
 namespace bs
 {
@@ -25,6 +27,17 @@ namespace bs
 		/** Returns the managed version of this resource. */
 		MonoObject* getManagedInstance() const;
 
+		/** 
+		 * Maps a RTTI ID to a class representing the specified resource type in managed code. Returns null if the ID 
+		 * cannot be mapped to a managed resource class.
+		 */
+		static ::MonoClass* getManagedResourceClass(UINT32 rttiId);
+
+		/** 
+		 * Returns a RRef<T> type that can be used for wrapping a resource of the type represeented by the provided 
+		 * RTTI ID. 
+		 */
+		static ::MonoClass* getRRefClass(UINT32 rttiId);
 	protected:
 		friend class ScriptResourceManager;
 
@@ -70,6 +83,20 @@ namespace bs
 
 		/**	Returns a handle to the internal wrapped resource. */
 		const ResourceHandle<ResType>& getHandle() const { return mResource; }
+
+		/** Returns a reference wrapper for this resource. */
+		MonoObject* getRRef() const
+		{
+			::MonoClass* rrefClass = getRRefClass(ResType::getRTTIStatic()->getRTTIId());
+			if(!rrefClass)
+				return nullptr;
+
+			ScriptRRefBase* rref = ScriptResourceManager::instance().getScriptRRef(mResource, rrefClass);
+			if(!rref)
+				return nullptr;
+
+			return rref->getManagedInstance();
+		}
 
 	protected:
 		friend class ScriptResourceManager;

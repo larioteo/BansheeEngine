@@ -69,9 +69,7 @@ namespace bs
 
 		ManagedSerializableDictionaryKeyValue& getEntry(ManagedSerializableDictionary* obj, UINT32 arrayIdx)
 		{ 
-			Vector<ManagedSerializableDictionaryKeyValue>& sequentialData = any_cast_ref<Vector<ManagedSerializableDictionaryKeyValue>>(obj->mRTTIData);
-
-			return sequentialData[arrayIdx];
+			return mSequentialData[arrayIdx];
 		}
 
 		void setEntry(ManagedSerializableDictionary* obj, UINT32 arrayIdx, ManagedSerializableDictionaryKeyValue& val)
@@ -81,9 +79,7 @@ namespace bs
 
 		UINT32 getNumEntries(ManagedSerializableDictionary* obj) 
 		{ 
-			Vector<ManagedSerializableDictionaryKeyValue>& sequentialData = any_cast_ref<Vector<ManagedSerializableDictionaryKeyValue>>(obj->mRTTIData);
-
-			return (UINT32)sequentialData.size();
+			return (UINT32)mSequentialData.size();
 		}
 
 		void setNumEntries(ManagedSerializableDictionary* obj, UINT32 numEntries) 
@@ -103,19 +99,9 @@ namespace bs
 		{
 			ManagedSerializableDictionary* serializableObject = static_cast<ManagedSerializableDictionary*>(obj);
 
-			Vector<ManagedSerializableDictionaryKeyValue> sequentialData;
 			auto enumerator = serializableObject->getEnumerator();
-
 			while (enumerator.moveNext())
-				sequentialData.push_back(ManagedSerializableDictionaryKeyValue(enumerator.getKey(), enumerator.getValue()));
-
-			serializableObject->mRTTIData = sequentialData;
-		}
-
-		void onSerializationEnded(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
-		{
-			ManagedSerializableDictionary* serializableObject = static_cast<ManagedSerializableDictionary*>(obj);
-			serializableObject->mRTTIData = nullptr;
+				mSequentialData.push_back(ManagedSerializableDictionaryKeyValue(enumerator.getKey(), enumerator.getValue()));
 		}
 
 		const String& getRTTIName() override
@@ -133,6 +119,9 @@ namespace bs
 		{
 			return ManagedSerializableDictionary::createEmpty();
 		}
+
+	private:
+		Vector<ManagedSerializableDictionaryKeyValue> mSequentialData;
 	};
 
 	/** @} */

@@ -51,7 +51,7 @@ namespace BansheeEngine
 		/// To re-enable auto-generation call this with a null parameter.
 		/// </summary>
 		[ShowInInspector]
-		public Texture CustomTexture
+		public RRef<Texture> CustomTexture
 		{
 			get { return Internal_getCustomTexture(mCachedPtr); }
 			set { Internal_setCustomTexture(mCachedPtr, value); }
@@ -79,9 +79,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setExtents(IntPtr thisPtr, ref Vector3 extents);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture Internal_getCustomTexture(IntPtr thisPtr);
+		private static extern RRef<Texture> Internal_getCustomTexture(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setCustomTexture(IntPtr thisPtr, Texture texture);
+		private static extern void Internal_setCustomTexture(IntPtr thisPtr, RRef<Texture> texture);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_capture(IntPtr thisPtr);
 	}

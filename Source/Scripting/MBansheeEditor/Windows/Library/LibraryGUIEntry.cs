@@ -458,7 +458,7 @@ namespace BansheeEditor
                 ResourceMeta meta = ProjectLibrary.GetMeta(path);
                 ProjectResourceIcons icons = meta.Icons;
 
-                Texture icon;
+                RRef<Texture> icon;
                 if (size <= 16)
                     icon = icons.icon16;
                 else if (size <= 32)
@@ -468,7 +468,7 @@ namespace BansheeEditor
                 else
                     icon = icons.icon64;
 
-                if(icon != null)
+                if (icon.Value != null)
                     return new SpriteTexture(icon);
 
                 switch (meta.ResType)

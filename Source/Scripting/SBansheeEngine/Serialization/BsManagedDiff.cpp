@@ -41,7 +41,7 @@ namespace bs
 	}
 
 	void ManagedDiff::applyDiff(const SPtr<IReflectable>& object, const SPtr<SerializedObject>& serzDiff,
-		DiffObjectMap& objectMap, Vector<DiffCommand>& diffCommands)
+		FrameAlloc& alloc, DiffObjectMap& objectMap, FrameVector<DiffCommand>& diffCommands)
 	{
 		SPtr<SerializedObject> diffObj = std::static_pointer_cast<SerializedObject>(serzDiff->subObjects[0].entries[0].serialized);
 

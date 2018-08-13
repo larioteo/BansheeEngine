@@ -38,7 +38,7 @@ namespace BansheeEditor
             if (animation == null)
                 return InspectableState.NotModified;
 
-            animationClipField.Value = animation.DefaultClip;
+            animationClipField.ValueRef = animation.DefaultClip;
             wrapModeField.Value = (ulong)animation.WrapMode;
             speedField.Value = animation.Speed;
             cullingField.Value = animation.Cull;
@@ -125,7 +125,7 @@ namespace BansheeEditor
 
             // Morph shapes
             Renderable renderable = animation.SceneObject.GetComponent<Renderable>();
-            MorphShapes morphShapes = renderable?.Mesh?.MorphShapes;
+            MorphShapes morphShapes = renderable?.Mesh.Value?.MorphShapes;
             if (morphShapes != null)
             {
                 GUIToggle morphShapesToggle = new GUIToggle(new LocEdString("Morph shapes"), EditorStyles.Foldout);

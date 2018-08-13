@@ -20,16 +20,16 @@ namespace BansheeEngine
 		/// rigidbody.
 		/// </summary>
 		[ShowInInspector]
-		public PhysicsMesh Mesh
+		public RRef<PhysicsMesh> Mesh
 		{
 			get { return Internal_getMesh(mCachedPtr); }
 			set { Internal_setMesh(mCachedPtr, value); }
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setMesh(IntPtr thisPtr, PhysicsMesh mesh);
+		private static extern void Internal_setMesh(IntPtr thisPtr, RRef<PhysicsMesh> mesh);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern PhysicsMesh Internal_getMesh(IntPtr thisPtr);
+		private static extern RRef<PhysicsMesh> Internal_getMesh(IntPtr thisPtr);
 	}
 
 	/** @} */

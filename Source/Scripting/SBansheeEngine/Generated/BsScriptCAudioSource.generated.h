@@ -7,6 +7,7 @@
 namespace bs
 {
 	class CAudioSource;
+	class AudioClip;
 
 	class BS_SCR_BE_EXPORT ScriptCAudioSource : public TScriptComponent<ScriptCAudioSource, CAudioSource>
 	{

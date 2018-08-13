@@ -31,10 +31,7 @@ namespace bs
 
 		SPtr<ManagedSerializableFieldDataEntry> getFieldEntry(ManagedSerializableObject* obj, UINT32 arrayIdx)
 		{
-			Vector<SPtr<ManagedSerializableMemberInfo>>& sequentialFields =
-				any_cast_ref<Vector<SPtr<ManagedSerializableMemberInfo>>>(obj->mRTTIData);
-
-			SPtr<ManagedSerializableMemberInfo> field = sequentialFields[arrayIdx];
+			SPtr<ManagedSerializableMemberInfo> field = mSequentialFields[arrayIdx];
 
 			SPtr<ManagedSerializableFieldKey> fieldKey = ManagedSerializableFieldKey::create(field->mParentTypeId, field->mFieldId);
 			SPtr<ManagedSerializableFieldData> fieldData = obj->getFieldData(field);
@@ -49,10 +46,7 @@ namespace bs
 
 		UINT32 getNumFieldEntries(ManagedSerializableObject* obj)
 		{
-			Vector<SPtr<ManagedSerializableMemberInfo>>& sequentialFields =
-				any_cast_ref<Vector<SPtr<ManagedSerializableMemberInfo>>>(obj->mRTTIData);
-
-			return (UINT32)sequentialFields.size();
+			return (UINT32)mSequentialFields.size();
 		}
 
 		void setNumFieldEntries(ManagedSerializableObject* obj, UINT32 numEntries)
@@ -72,26 +66,17 @@ namespace bs
 		{
 			ManagedSerializableObject* castObj = static_cast<ManagedSerializableObject*>(obj);
 
-			Vector<SPtr<ManagedSerializableMemberInfo>> sequentialFields;
 			SPtr<ManagedSerializableObjectInfo> curType = castObj->mObjInfo;
 			while (curType != nullptr)
 			{
 				for (auto& field : curType->mFields)
 				{
 					if (field.second->isSerializable())
-						sequentialFields.push_back(field.second);
+						mSequentialFields.push_back(field.second);
 				}
 
 				curType = curType->mBaseClass;
 			}
-
-			castObj->mRTTIData = sequentialFields;
-		}
-
-		void onSerializationEnded(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
-		{
-			ManagedSerializableObject* castObj = static_cast<ManagedSerializableObject*>(obj);
-			castObj->mRTTIData = nullptr;
 		}
 
 		IDiff& getDiffHandler() const override
@@ -115,6 +100,9 @@ namespace bs
 		{
 			return ManagedSerializableObject::createEmpty();
 		}
+
+	private:
+		Vector<SPtr<ManagedSerializableMemberInfo>> mSequentialFields;
 	};
 
 	/** @} */

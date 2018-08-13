@@ -563,7 +563,7 @@ namespace BansheeEditor
                     Animation animation = selectedSO.GetComponent<Animation>();
                     if (animation != null)
                     {
-                        AnimationClip clip = animation.DefaultClip;
+                        AnimationClip clip = animation.DefaultClip.Value;
                         if (clip != null)
                             LoadAnimClip(clip);
                     }

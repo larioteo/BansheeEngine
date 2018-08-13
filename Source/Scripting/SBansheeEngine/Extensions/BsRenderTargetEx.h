@@ -67,7 +67,7 @@ namespace bs
 		 * @param[in]	colorSurface			Color texture to render color data to.
 		 */
 		BS_SCRIPT_EXPORT(ec:RenderTexture)
-		static SPtr<RenderTexture> create(const HTexture& colorSurface);
+		static SPtr<RenderTexture> create(BS_NORREF const HTexture& colorSurface);
 
 		/**
 		 * Creates a new 2D render texture using existing textures as render destinations.
@@ -76,7 +76,8 @@ namespace bs
 		 * @param[in]	depthStencilSurface		Optional depth/stencil texture to render depth/stencil data to.
 		 */
 		BS_SCRIPT_EXPORT(ec:RenderTexture)
-		static SPtr<RenderTexture> create(const HTexture& colorSurface, const HTexture& depthStencilSurface);
+		static SPtr<RenderTexture> create(BS_NORREF const HTexture& colorSurface, 
+			BS_NORREF const HTexture& depthStencilSurface);
 
 		/**
 		 * Creates a new 2D render texture using one or multiple color textures and no depth-stencil texture.
@@ -84,7 +85,7 @@ namespace bs
 		 * @param[in]	colorSurface			Color texture(s) to render color data to.
 		 */
 		BS_SCRIPT_EXPORT(ec:RenderTexture)
-		static SPtr<RenderTexture> create(const Vector<HTexture>& colorSurface);
+		static SPtr<RenderTexture> create(BS_NORREF const Vector<HTexture>& colorSurface);
 
 		/**
 		 * Creates a new 2D render texture using one or multiple color textures and a depth/stencil texture.
@@ -93,19 +94,20 @@ namespace bs
 		 * @param[in]	depthStencilSurface		Optional depth/stencil texture to render depth/stencil data to.
 		 */
 		BS_SCRIPT_EXPORT(ec:RenderTexture)
-		static SPtr<RenderTexture> create(const Vector<HTexture>& colorSurface, const HTexture& depthStencilSurface);
+		static SPtr<RenderTexture> create(BS_NORREF const Vector<HTexture>& colorSurface, 
+			BS_NORREF const HTexture& depthStencilSurface);
 
 		/** Returns the primary color surface that contains rendered color data. */
 		BS_SCRIPT_EXPORT(e:RenderTexture,n:ColorSurface,pr:getter)
-		static HTexture getColorSurface(const SPtr<RenderTexture>& thisPtr);
+		static BS_NORREF HTexture getColorSurface(const SPtr<RenderTexture>& thisPtr);
 
 		/** Returns all the color surfaces. */
 		BS_SCRIPT_EXPORT(e:RenderTexture,n:ColorSurfaces,pr:getter)
-		static Vector<HTexture> getColorSurfaces(const SPtr<RenderTexture>& thisPtr);
+		static BS_NORREF Vector<HTexture> getColorSurfaces(const SPtr<RenderTexture>& thisPtr);
 
 		/** Returns the depth/stencil surface that contains rendered depth and stencil data. */
 		BS_SCRIPT_EXPORT(e:RenderTexture,n:DepthStencilSurface,pr:getter)
-		static HTexture getDepthStencilSurface(const SPtr<RenderTexture>& thisPtr);
+		static BS_NORREF HTexture getDepthStencilSurface(const SPtr<RenderTexture>& thisPtr);
 	};
 
 	/** @endcond */

@@ -4,8 +4,9 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCReflectionProbe.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "Wrappers/BsScriptVector.h"
-#include "BsScriptTexture.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 
 namespace bs
 {
@@ -79,8 +80,8 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getCustomTexture();
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else
@@ -92,10 +93,10 @@ namespace bs
 	void ScriptCReflectionProbe::Internal_setCustomTexture(ScriptCReflectionProbe* thisPtr, MonoObject* texture)
 	{
 		ResourceHandle<Texture> tmptexture;
-		ScriptTexture* scripttexture;
-		scripttexture = ScriptTexture::toNative(texture);
+		ScriptRRefBase* scripttexture;
+		scripttexture = ScriptRRefBase::toNative(texture);
 		if(scripttexture != nullptr)
-			tmptexture = scripttexture->getHandle();
+			tmptexture = static_resource_cast<Texture>(scripttexture->getHandle());
 		thisPtr->getHandle()->setCustomTexture(tmptexture);
 	}
 

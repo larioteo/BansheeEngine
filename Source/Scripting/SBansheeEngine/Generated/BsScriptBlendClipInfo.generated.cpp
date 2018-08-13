@@ -3,6 +3,7 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptAnimationClip.generated.h"
 
 namespace bs
@@ -28,10 +29,10 @@ namespace bs
 	{
 		BlendClipInfo output;
 		ResourceHandle<AnimationClip> tmpclip;
-		ScriptAnimationClip* scriptclip;
-		scriptclip = ScriptAnimationClip::toNative(value.clip);
+		ScriptRRefBase* scriptclip;
+		scriptclip = ScriptRRefBase::toNative(value.clip);
 		if(scriptclip != nullptr)
-			tmpclip = scriptclip->getHandle();
+			tmpclip = static_resource_cast<AnimationClip>(scriptclip->getHandle());
 		output.clip = tmpclip;
 		output.position = value.position;
 
@@ -41,8 +42,8 @@ namespace bs
 	__BlendClipInfoInterop ScriptBlendClipInfo::toInterop(const BlendClipInfo& value)
 	{
 		__BlendClipInfoInterop output;
-		ScriptResourceBase* scriptclip;
-		scriptclip = ScriptResourceManager::instance().getScriptResource(value.clip, true);
+		ScriptRRefBase* scriptclip;
+		scriptclip = ScriptResourceManager::instance().getScriptRRef(value.clip);
 		MonoObject* tmpclip;
 		if(scriptclip != nullptr)
 			tmpclip = scriptclip->getManagedInstance();

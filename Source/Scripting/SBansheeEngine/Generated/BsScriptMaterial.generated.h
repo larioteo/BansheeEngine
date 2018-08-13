@@ -7,8 +7,11 @@
 
 namespace bs
 {
+	class Shader;
 	class Material;
+	class Texture;
 	class MaterialEx;
+	class SpriteTexture;
 
 	class BS_SCR_BE_EXPORT ScriptMaterial : public TScriptResource<ScriptMaterial, Material>
 	{
@@ -20,6 +23,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptMaterial* thisPtr);
+
 		static void Internal_setShader(ScriptMaterial* thisPtr, MonoObject* shader);
 		static MonoObject* Internal_clone(ScriptMaterial* thisPtr);
 		static MonoObject* Internal_getShader(ScriptMaterial* thisPtr);

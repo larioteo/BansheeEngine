@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMaterial.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptPhysicsMaterial.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMaterial.h"
 
 namespace bs
 {
@@ -15,6 +16,7 @@ namespace bs
 
 	void ScriptPhysicsMaterial::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptPhysicsMaterial::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_setStaticFriction", (void*)&ScriptPhysicsMaterial::Internal_setStaticFriction);
 		metaData.scriptClass->addInternalCall("Internal_getStaticFriction", (void*)&ScriptPhysicsMaterial::Internal_getStaticFriction);
 		metaData.scriptClass->addInternalCall("Internal_setDynamicFriction", (void*)&ScriptPhysicsMaterial::Internal_setDynamicFriction);
@@ -32,6 +34,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptPhysicsMaterial::Internal_getRef(ScriptPhysicsMaterial* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	void ScriptPhysicsMaterial::Internal_setStaticFriction(ScriptPhysicsMaterial* thisPtr, float value)
 	{
 		thisPtr->getHandle()->setStaticFriction(value);

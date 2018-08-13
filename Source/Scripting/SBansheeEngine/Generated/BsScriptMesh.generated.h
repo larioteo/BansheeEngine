@@ -22,6 +22,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptMesh* thisPtr);
+
 		static MonoObject* Internal_getSkeleton(ScriptMesh* thisPtr);
 		static MonoObject* Internal_getMorphShapes(ScriptMesh* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, int32_t numVertices, int32_t numIndices, DrawOperationType topology, MeshUsage usage, VertexLayout vertex, IndexType index);

@@ -22,6 +22,12 @@ namespace BansheeEngine
 			Internal_create(this, format, width, height, depth, texType, usage, numSamples, hasMipmaps, gammaCorrection);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<Texture> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Returns the pixel format for the texture surface.</summary>
 		public PixelFormat PixelFormat
 		{
@@ -81,6 +87,10 @@ namespace BansheeEngine
 		{
 			get { return Internal_getMipmapCount(mCachedPtr); }
 		}
+
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<Texture>(Texture x)
+		{ return Internal_GetRef(x.mCachedPtr); }
 
 		/// <summary>
 		/// Returns pixels for the specified mip level & face. Pixels will be read from system memory, which means the texture 
@@ -144,6 +154,8 @@ namespace BansheeEngine
 			Internal_setPixelsArray(mCachedPtr, colors, face, mipLevel);
 		}
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<Texture> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(Texture managedInstance, PixelFormat format, uint width, uint height, uint depth, TextureType texType, TextureUsage usage, uint numSamples, bool hasMipmaps, bool gammaCorrection);
 		[MethodImpl(MethodImplOptions.InternalCall)]

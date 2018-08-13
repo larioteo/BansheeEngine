@@ -7,6 +7,7 @@
 namespace bs
 {
 	class SpriteTexture;
+	class Texture;
 
 	class BS_SCR_BE_EXPORT ScriptSpriteTexture : public TScriptResource<ScriptSpriteTexture, SpriteTexture>
 	{
@@ -18,6 +19,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptSpriteTexture* thisPtr);
+
 		static void Internal_setTexture(ScriptSpriteTexture* thisPtr, MonoObject* texture);
 		static MonoObject* Internal_getTexture(ScriptSpriteTexture* thisPtr);
 		static uint32_t Internal_getWidth(ScriptSpriteTexture* thisPtr);

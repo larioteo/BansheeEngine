@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Localization/BsStringTableManager.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptStringTable.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Localization/BsStringTable.h"
 
 namespace bs
 {
@@ -45,8 +46,8 @@ namespace bs
 		tmp__output = StringTableManager::instance().getTable(id);
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else
@@ -63,10 +64,10 @@ namespace bs
 	void ScriptStringTableManager::Internal_setTable(uint32_t id, MonoObject* table)
 	{
 		ResourceHandle<StringTable> tmptable;
-		ScriptStringTable* scripttable;
-		scripttable = ScriptStringTable::toNative(table);
+		ScriptRRefBase* scripttable;
+		scripttable = ScriptRRefBase::toNative(table);
 		if(scripttable != nullptr)
-			tmptable = scripttable->getHandle();
+			tmptable = static_resource_cast<StringTable>(scripttable->getHandle());
 		StringTableManager::instance().setTable(id, tmptable);
 	}
 }

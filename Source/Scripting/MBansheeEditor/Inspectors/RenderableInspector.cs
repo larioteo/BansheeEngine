@@ -18,13 +18,13 @@ namespace BansheeEditor
     {
         private GUIResourceField meshField;
         private GUIListBoxField layersField;
-        private GUIArrayField<Material, MaterialArrayRow> materialsField;
+        private GUIArrayField<RRef<Material>, MaterialArrayRow> materialsField;
         private List<MaterialParamGUI[]> materialParams = new List<MaterialParamGUI[]>();
 
         private ulong layersValue = 0;
         private InspectableState modifyState;
 
-        private Material[] materials;
+        private RRef<Material>[] materials;
         private GUILayout materialsLayout;
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace BansheeEditor
 
             bool rebuildMaterialsGUI = false;
 
-            Material[] newMaterials = renderable.Materials;
+            RRef<Material>[] newMaterials = renderable.Materials;
             if (newMaterials == null)
                 rebuildMaterialsGUI = materials != null;
             else
@@ -70,7 +70,7 @@ namespace BansheeEditor
             if (rebuildMaterialsGUI)
                 BuildMaterialsGUI();
 
-            meshField.Value = renderable.Mesh;
+            meshField.ValueRef = renderable.Mesh;
 
             if (layersValue != renderable.Layers)
             {
@@ -92,10 +92,11 @@ namespace BansheeEditor
             {
                 for (int i = 0; i < materialParams.Count; i++)
                 {
-                    if (materialParams[i] != null)
+                    Material material = materials[i].Value;
+                    if (material != null && materialParams[i] != null)
                     {
                         foreach (var param in materialParams[i])
-                            param.Refresh(materials[i]);
+                            param.Refresh(material);
                     }
                 }
             }
@@ -126,7 +127,7 @@ namespace BansheeEditor
 
             layersValue = 0;
             materials = renderable.Materials;
-            materialsField = GUIArrayField<Material, MaterialArrayRow>.Create(new LocEdString("Materials"), materials, Layout);
+            materialsField = GUIArrayField<RRef<Material>, MaterialArrayRow>.Create(new LocEdString("Materials"), materials, Layout);
             materialsField.OnChanged += x => { materials = x; };
             materialsField.IsExpanded = Persistent.GetBool("materialsField_Expanded");
             materialsField.OnExpand += x => Persistent.SetBool("materialsField_Expanded", x);
@@ -170,7 +171,8 @@ namespace BansheeEditor
             {
                 for (int i = 0; i < materials.Length; i++)
                 {
-                    if (materials[i] == null)
+                    Material material = materials[i].Value;
+                    if (material == null)
                     {
                         materialParams.Add(new MaterialParamGUI[0]);
                         continue;
@@ -178,7 +180,7 @@ namespace BansheeEditor
 
                     materialsLayout.AddSpace(10);
 
-                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(materials[i], materialsLayout);
+                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material, materialsLayout);
                     materialParams.Add(matParams);
                 }
             }
@@ -217,9 +219,7 @@ namespace BansheeEditor
 
                 materialField.OnChanged += x =>
                 {
-                    Material material = Resources.Load<Material>(x.UUID);
-
-                    SetValue(material);
+                    SetValue(x.As<Material>());
                     MarkAsModified();
                     ConfirmModify();
                 };
@@ -230,7 +230,7 @@ namespace BansheeEditor
             /// <inheritdoc/>
             internal protected override InspectableState Refresh()
             {
-                materialField.Value = GetValue<Material>();
+                materialField.ValueRef = GetValue<RRef<Material>>();
 
                 return base.Refresh();
             }

@@ -20,19 +20,25 @@ namespace BansheeEngine
 		protected SpriteTexture() { }
 
 		/// <summary>Creates a new sprite texture that references the entire area of the provided texture.</summary>
-		public SpriteTexture(Texture texture)
+		public SpriteTexture(RRef<Texture> texture)
 		{
 			Internal_create(this, texture);
 		}
 
 		/// <summary>Creates a new sprite texture that references a sub-area of the provided texture.</summary>
-		public SpriteTexture(Vector2 uvOffset, Vector2 uvScale, Texture texture)
+		public SpriteTexture(Vector2 uvOffset, Vector2 uvScale, RRef<Texture> texture)
 		{
 			Internal_create0(this, ref uvOffset, ref uvScale, texture);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<SpriteTexture> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Determines the internal texture that the sprite texture references.</summary>
-		public Texture Texture
+		public RRef<Texture> Texture
 		{
 			get { return Internal_getTexture(mCachedPtr); }
 			set { Internal_setTexture(mCachedPtr, value); }
@@ -101,10 +107,16 @@ namespace BansheeEngine
 			set { Internal_setAnimationPlayback(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<SpriteTexture>(SpriteTexture x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setTexture(IntPtr thisPtr, Texture texture);
+		private static extern RRef<SpriteTexture> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture Internal_getTexture(IntPtr thisPtr);
+		private static extern void Internal_setTexture(IntPtr thisPtr, RRef<Texture> texture);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<Texture> Internal_getTexture(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern uint Internal_getWidth(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -126,9 +138,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern SpriteAnimationPlayback Internal_getAnimationPlayback(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(SpriteTexture managedInstance, Texture texture);
+		private static extern void Internal_create(SpriteTexture managedInstance, RRef<Texture> texture);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create0(SpriteTexture managedInstance, ref Vector2 uvOffset, ref Vector2 uvScale, Texture texture);
+		private static extern void Internal_create0(SpriteTexture managedInstance, ref Vector2 uvOffset, ref Vector2 uvScale, RRef<Texture> texture);
 	}
 
 	/** @} */

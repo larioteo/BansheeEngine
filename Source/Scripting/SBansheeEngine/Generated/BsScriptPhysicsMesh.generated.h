@@ -19,6 +19,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptPhysicsMesh* thisPtr);
+
 		static PhysicsMeshType Internal_getType(ScriptPhysicsMesh* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, MonoObject* meshData, PhysicsMeshType type);
 		static MonoObject* Internal_getMeshData(ScriptPhysicsMesh* thisPtr);

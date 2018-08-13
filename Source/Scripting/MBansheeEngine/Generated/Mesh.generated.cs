@@ -93,6 +93,12 @@ namespace BansheeEngine
 			Internal_create2(this, data, subMeshes, usage);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<Mesh> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Gets the skeleton required for animation of this mesh, if any is available.</summary>
 		public Skeleton Skeleton
 		{
@@ -127,6 +133,12 @@ namespace BansheeEngine
 			set { Internal_setMeshData(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<Mesh>(Mesh x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<Mesh> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Skeleton Internal_getSkeleton(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

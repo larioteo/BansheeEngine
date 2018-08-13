@@ -13,7 +13,7 @@ namespace BansheeEngine
         /// </summary>
         /// <param name="name">Name of the texture parameter.</param>
         /// <returns>Texture assigned to the specified material</returns>
-        public Texture GetTexture(string name)
+        public RRef<Texture> GetTexture(string name)
         {
             return Internal_getTexture(mCachedPtr, name);
         }
@@ -25,7 +25,7 @@ namespace BansheeEngine
         /// <param name="name">Name of the texture parameter.</param>
         /// <param name="texture">Texture resource to assign.</param>
         /// <param name="surface">Subset of the texture to assign.</param>
-        public void SetTexture(string name, Texture texture, TextureSurface surface)
+        public void SetTexture(string name, RRef<Texture> texture, TextureSurface surface)
         {
             Internal_setTexture(mCachedPtr, name, texture, surface.mipLevel, surface.numMipLevels, surface.face, 
                 surface.numFaces);
@@ -36,7 +36,7 @@ namespace BansheeEngine
         /// </summary>
         /// <param name="name">Name of the texture parameter.</param>
         /// <param name="texture">Texture resource to assign.</param>
-        public void SetTexture(string name, Texture texture)
+        public void SetTexture(string name, RRef<Texture> texture)
         {
             Internal_setTexture(mCachedPtr, name, texture, 0, 0, 0, 0);
         }

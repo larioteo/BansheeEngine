@@ -22,12 +22,12 @@ namespace bs
 	private:
 		SPtr<ManagedSerializableObject> getObjectData(ManagedResource* obj)
 		{
-			return any_cast<SPtr<ManagedSerializableObject>>(obj->mRTTIData);
+			return any_cast<SPtr<ManagedSerializableObject>>(mSerializableObject);
 		}
 
 		void setObjectData(ManagedResource* obj, SPtr<ManagedSerializableObject> val)
 		{
-			obj->mRTTIData = val;
+			mSerializableObject = val;
 		}
 
 	public:
@@ -38,20 +38,17 @@ namespace bs
 
 		void onSerializationStarted(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
 		{
-			ManagedResource* mc = static_cast<ManagedResource*>(obj);
-
-			mc->mRTTIData = ManagedSerializableObject::createFromExisting(mc->getManagedInstance());
+			ManagedResource* mr = static_cast<ManagedResource*>(obj);
+			mSerializableObject = ManagedSerializableObject::createFromExisting(mr->getManagedInstance());
 		}
 
 		void onDeserializationEnded(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
 		{
 			ManagedResource* mr = static_cast<ManagedResource*>(obj);
-			SPtr<ManagedSerializableObject> serializableObject = any_cast<SPtr<ManagedSerializableObject>>(mr->mRTTIData);
 
 			SPtr<Resource> mrPtr = std::static_pointer_cast<Resource>(mr->getThisPtr());
 			HManagedResource handle = static_resource_cast<ManagedResource>(gResources()._createResourceHandle(mrPtr));
-			mr->setHandle(serializableObject->deserialize(), handle);
-			mr->mRTTIData = nullptr;
+			mr->setHandle(mSerializableObject->deserialize(), handle);
 		}
 
 		const String& getRTTIName() override
@@ -69,6 +66,9 @@ namespace bs
 		{
 			return ManagedResource::createEmpty();
 		}
+
+	private:
+		SPtr<ManagedSerializableObject> mSerializableObject;
 	};
 
 	/** @} */

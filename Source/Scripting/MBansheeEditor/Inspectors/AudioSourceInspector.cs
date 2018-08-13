@@ -38,7 +38,7 @@ namespace BansheeEditor
             if (source == null)
                 return InspectableState.NotModified;
 
-            audioClipField.Value = source.Clip;
+            audioClipField.ValueRef = source.Clip;
             volumeField.Value = source.Volume;
             pitchField.Value = source.Pitch;
             loopField.Value = source.Loop;

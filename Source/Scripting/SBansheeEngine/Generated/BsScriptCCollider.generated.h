@@ -7,6 +7,7 @@
 namespace bs
 {
 	class CCollider;
+	class PhysicsMaterial;
 	struct __CollisionDataInterop;
 
 	class BS_SCR_BE_EXPORT ScriptCColliderBase : public ScriptComponentBase

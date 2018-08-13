@@ -22,7 +22,7 @@ namespace BansheeEngine
 			return value;
 		}
 
-		public AnimationClip clip;
+		public RRef<AnimationClip> clip;
 		public float position;
 	}
 

@@ -23,23 +23,33 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Creates a new material with the specified shader.</summary>
-		public Material(Shader shader)
+		public Material(RRef<Shader> shader)
 		{
 			Internal_create0(this, shader);
+		}
+
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<Material> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
 		}
 
 		/// <summary>
 		/// Sets a shader that will be used by the material. Material will be initialized using all compatible techniques from 
 		/// the shader. Shader must be set before doing any other operations with the material.
 		/// </summary>
-		public Shader Shader
+		public RRef<Shader> Shader
 		{
 			get { return Internal_getShader(mCachedPtr); }
 			set { Internal_setShader(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<Material>(Material x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
 		/// <summary>Creates a deep copy of the material and returns the new object.</summary>
-		public Material Clone()
+		public RRef<Material> Clone()
 		{
 			return Internal_clone(mCachedPtr);
 		}
@@ -240,11 +250,13 @@ namespace BansheeEngine
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setShader(IntPtr thisPtr, Shader shader);
+		private static extern RRef<Material> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Material Internal_clone(IntPtr thisPtr);
+		private static extern void Internal_setShader(IntPtr thisPtr, RRef<Shader> shader);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Shader Internal_getShader(IntPtr thisPtr);
+		private static extern RRef<Material> Internal_clone(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<Shader> Internal_getShader(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setFloat(IntPtr thisPtr, string name, float value, uint arrayIdx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -284,15 +296,15 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(Material managedInstance);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create0(Material managedInstance, Shader shader);
+		private static extern void Internal_create0(Material managedInstance, RRef<Shader> shader);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setTexture(IntPtr thisPtr, string name, Texture value, uint mipLevel, uint numMipLevels, uint arraySlice, uint numArraySlices);
+		private static extern void Internal_setTexture(IntPtr thisPtr, string name, RRef<Texture> value, uint mipLevel, uint numMipLevels, uint arraySlice, uint numArraySlices);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture Internal_getTexture(IntPtr thisPtr, string name);
+		private static extern RRef<Texture> Internal_getTexture(IntPtr thisPtr, string name);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setSpriteTexture(IntPtr thisPtr, string name, SpriteTexture value);
+		private static extern void Internal_setSpriteTexture(IntPtr thisPtr, string name, RRef<SpriteTexture> value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern SpriteTexture Internal_getSpriteTexture(IntPtr thisPtr, string name);
+		private static extern RRef<SpriteTexture> Internal_getSpriteTexture(IntPtr thisPtr, string name);
 	}
 
 	/** @} */

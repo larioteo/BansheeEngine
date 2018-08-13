@@ -28,7 +28,7 @@ namespace BansheeEditor
             if (material == null)
                 return;
 
-            Shader activeShader = material.Shader;
+            Shader activeShader = material.Shader.Value;
             BuiltinShader builtinType = ShaderToBuiltin(activeShader);
 
             builtinShaderField = new GUIEnumField(typeof(BuiltinShader), new LocEdString("Shader"));
@@ -46,7 +46,7 @@ namespace BansheeEditor
             };
 
             shaderField = new GUIResourceField(typeof(Shader), new LocEdString("Shader file"));
-            shaderField.Value = material.Shader;
+            shaderField.ValueRef = material.Shader;
             shaderField.OnChanged += (x) =>
             {
                 Shader shader = Resources.Load<Shader>(x.UUID);
@@ -69,9 +69,9 @@ namespace BansheeEditor
             if (material == null)
                 return InspectableState.NotModified;
 
-            if (material.Shader != shaderField.Value)
+            if (material.Shader != shaderField.ValueRef)
             {
-                shaderField.Value = material.Shader;
+                shaderField.ValueRef = material.Shader;
                 RebuildParamGUI(material);
             }
 
@@ -132,7 +132,7 @@ namespace BansheeEditor
         /// <returns>A material parameter GUI object for each supported material parameter.</returns>
         static internal MaterialParamGUI[] CreateMaterialGUI(Material mat, GUILayout layout)
         {
-            Shader shader = mat.Shader;
+            Shader shader = mat.Shader.Value;
             if (shader == null)
                 return new MaterialParamGUI[0];
 
@@ -619,7 +619,7 @@ namespace BansheeEditor
                 case ShaderParameterType.Texture2D:
                 case ShaderParameterType.Texture3D:
                 case ShaderParameterType.TextureCube:
-                    value = material.GetTexture(shaderParam.name);
+                    value = material.GetTexture(shaderParam.name).Value;
                     break;
             }
 

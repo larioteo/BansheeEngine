@@ -17,6 +17,16 @@ namespace BansheeEngine
 		private Font(bool __dummy0) { }
 		protected Font() { }
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<Font> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<Font>(Font x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
 		/// <summary>Returns font bitmap for a specific font size.</summary>
 		/// <param name="size">Size of the bitmap in points.</param>
 		/// <returns>Bitmap object if it exists, false otherwise.</returns>
@@ -33,6 +43,8 @@ namespace BansheeEngine
 			return Internal_getClosestSize(mCachedPtr, size);
 		}
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<Font> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern FontBitmap Internal_getBitmap(IntPtr thisPtr, uint size);
 		[MethodImpl(MethodImplOptions.InternalCall)]

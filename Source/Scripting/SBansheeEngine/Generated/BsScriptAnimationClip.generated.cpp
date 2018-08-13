@@ -4,10 +4,11 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationClip.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptAnimationCurves.generated.h"
 #include "BsScriptRootMotion.generated.h"
 #include "BsScriptAnimationEvent.generated.h"
-#include "BsScriptAnimationClip.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationClip.h"
 
 namespace bs
 {
@@ -18,6 +19,7 @@ namespace bs
 
 	void ScriptAnimationClip::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptAnimationClip::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_getCurves", (void*)&ScriptAnimationClip::Internal_getCurves);
 		metaData.scriptClass->addInternalCall("Internal_setCurves", (void*)&ScriptAnimationClip::Internal_setCurves);
 		metaData.scriptClass->addInternalCall("Internal_getEvents", (void*)&ScriptAnimationClip::Internal_getEvents);
@@ -40,6 +42,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool,bool", ctorParams);
 	}
+	MonoObject* ScriptAnimationClip::Internal_getRef(ScriptAnimationClip* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	MonoObject* ScriptAnimationClip::Internal_getCurves(ScriptAnimationClip* thisPtr)
 	{
 		SPtr<AnimationCurves> tmp__output;

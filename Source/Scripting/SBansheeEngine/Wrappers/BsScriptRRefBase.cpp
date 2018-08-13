@@ -38,14 +38,18 @@ namespace bs
 		{
 			type = MonoManager::instance().findClass(rawType);
 			if (type == nullptr)
-				return nullptr;
-
-			assert(type->isSubClassOf(metaData.scriptClass));
+				type = metaData.scriptClass;
+			else
+			{
+				assert(type->isSubClassOf(metaData.scriptClass));
+			}
 		}
 
 		MonoObject* obj = type->createInstance();
 		ScriptRRefBase* output = new (bs_alloc<ScriptRRefBase>()) ScriptRRefBase(obj, handle);
 
+		// Note: It's important this method never returns null, handles should always be created to avoid extensive null
+		// checks
 		return output;
 	}
 
@@ -87,15 +91,28 @@ namespace bs
 
 	MonoObject* ScriptRRefBase::internal_GetResource(ScriptRRefBase* thisPtr)
 	{
-		ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies | ResourceLoadFlag::KeepInternalRef;
+		const HResource resource = thisPtr->getHandle();
+		if(resource == nullptr)
+			return nullptr;
 
-		if (gApplication().isEditor())
-			loadFlags |= ResourceLoadFlag::KeepSourceData;
+		ScriptResourceBase* scriptResource = nullptr;
+		if(resource.isLoaded(false))
+			scriptResource = ScriptResourceManager::instance().getScriptResource(resource, true);
+		else
+		{
+			ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies;
 
-		const HResource resource = gResources().loadFromUUID(thisPtr->getHandle().getUUID(), loadFlags);
-		ScriptResourceBase* scriptResource = ScriptResourceManager::instance().getScriptResource(resource, true);
+			if (gApplication().isEditor())
+				loadFlags |= ResourceLoadFlag::KeepSourceData;
 
-		return scriptResource->getManagedInstance();
+			const HResource loadedResource = gResources().loadFromUUID(thisPtr->getHandle().getUUID(), loadFlags);
+			scriptResource = ScriptResourceManager::instance().getScriptResource(loadedResource, true);
+		}
+
+		if(scriptResource)
+			return scriptResource->getManagedInstance();
+
+		return nullptr;
 	}
 
 	void ScriptRRefBase::internal_GetUUID(ScriptRRefBase* thisPtr, UUID* uuid)

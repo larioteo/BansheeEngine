@@ -4,8 +4,9 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCRenderable.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptMesh.generated.h"
-#include "BsScriptMaterial.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Mesh/BsMesh.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Material/BsMaterial.h"
 
 namespace bs
 {
@@ -32,10 +33,10 @@ namespace bs
 	void ScriptCRenderable::Internal_setMesh(ScriptCRenderable* thisPtr, MonoObject* mesh)
 	{
 		ResourceHandle<Mesh> tmpmesh;
-		ScriptMesh* scriptmesh;
-		scriptmesh = ScriptMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<Mesh>(scriptmesh->getHandle());
 		thisPtr->getHandle()->setMesh(tmpmesh);
 	}
 
@@ -45,8 +46,8 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getMesh();
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else
@@ -58,20 +59,20 @@ namespace bs
 	void ScriptCRenderable::Internal_setMaterial(ScriptCRenderable* thisPtr, uint32_t idx, MonoObject* material)
 	{
 		ResourceHandle<Material> tmpmaterial;
-		ScriptMaterial* scriptmaterial;
-		scriptmaterial = ScriptMaterial::toNative(material);
+		ScriptRRefBase* scriptmaterial;
+		scriptmaterial = ScriptRRefBase::toNative(material);
 		if(scriptmaterial != nullptr)
-			tmpmaterial = scriptmaterial->getHandle();
+			tmpmaterial = static_resource_cast<Material>(scriptmaterial->getHandle());
 		thisPtr->getHandle()->setMaterial(idx, tmpmaterial);
 	}
 
 	void ScriptCRenderable::Internal_setMaterial0(ScriptCRenderable* thisPtr, MonoObject* material)
 	{
 		ResourceHandle<Material> tmpmaterial;
-		ScriptMaterial* scriptmaterial;
-		scriptmaterial = ScriptMaterial::toNative(material);
+		ScriptRRefBase* scriptmaterial;
+		scriptmaterial = ScriptRRefBase::toNative(material);
 		if(scriptmaterial != nullptr)
-			tmpmaterial = scriptmaterial->getHandle();
+			tmpmaterial = static_resource_cast<Material>(scriptmaterial->getHandle());
 		thisPtr->getHandle()->setMaterial(tmpmaterial);
 	}
 
@@ -81,8 +82,8 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getMaterial(idx);
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else
@@ -100,10 +101,10 @@ namespace bs
 			vecmaterials.resize(arraymaterials.size());
 			for(int i = 0; i < (int)arraymaterials.size(); i++)
 			{
-				ScriptMaterial* scriptmaterials;
-				scriptmaterials = ScriptMaterial::toNative(arraymaterials.get<MonoObject*>(i));
+				ScriptRRefBase* scriptmaterials;
+				scriptmaterials = ScriptRRefBase::toNative(arraymaterials.get<MonoObject*>(i));
 				if(scriptmaterials != nullptr)
-					vecmaterials[i] = scriptmaterials->getHandle();
+					vecmaterials[i] = static_resource_cast<Material>(scriptmaterials->getHandle());
 			}
 		}
 		thisPtr->getHandle()->setMaterials(vecmaterials);
@@ -116,11 +117,11 @@ namespace bs
 
 		MonoArray* __output;
 		int arraySize__output = (int)vec__output.size();
-		ScriptArray array__output = ScriptArray::create<ScriptMaterial>(arraySize__output);
+		ScriptArray array__output = ScriptArray::create<ScriptRRefBase>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptResourceBase* script__output;
-			script__output = ScriptResourceManager::instance().getScriptResource(vec__output[i], true);
+			ScriptRRefBase* script__output;
+			script__output = ScriptResourceManager::instance().getScriptRRef(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else

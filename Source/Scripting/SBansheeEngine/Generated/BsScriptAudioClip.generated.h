@@ -19,6 +19,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptAudioClip* thisPtr);
+
 		static uint32_t Internal_getBitDepth(ScriptAudioClip* thisPtr);
 		static uint32_t Internal_getFrequency(ScriptAudioClip* thisPtr);
 		static uint32_t Internal_getNumChannels(ScriptAudioClip* thisPtr);

@@ -59,7 +59,7 @@ namespace BansheeEditor
             if (spriteTexture == null)
                 return InspectableState.NotModified;
 
-            textureField.Value = spriteTexture.Texture;
+            textureField.ValueRef = spriteTexture.Texture;
             offsetField.Value = spriteTexture.Offset;
             scaleField.Value = spriteTexture.Scale;
 

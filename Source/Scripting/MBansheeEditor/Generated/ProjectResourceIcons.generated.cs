@@ -9,13 +9,13 @@ namespace BansheeEditor
 	[StructLayout(LayoutKind.Sequential), SerializeObject]
 	public partial struct ProjectResourceIcons
 	{
-		public Texture icon16;
-		public Texture icon32;
-		public Texture icon48;
-		public Texture icon64;
-		public Texture icon96;
-		public Texture icon128;
-		public Texture icon192;
-		public Texture icon256;
+		public RRef<Texture> icon16;
+		public RRef<Texture> icon32;
+		public RRef<Texture> icon48;
+		public RRef<Texture> icon64;
+		public RRef<Texture> icon96;
+		public RRef<Texture> icon128;
+		public RRef<Texture> icon192;
+		public RRef<Texture> icon256;
 	}
 }

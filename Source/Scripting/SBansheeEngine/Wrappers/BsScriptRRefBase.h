@@ -31,7 +31,7 @@ namespace bs
 		 * Creates a new managed RRefBase for the provided resource.
 		 *
 		 * @param[in]	handle	Handle to the resource to wrap.
-		 * @param[in]	type	Class of the RRef type to use for wrapping the resource. If null then the resource
+		 * @param[in]	rawType	Class of the RRef type to use for wrapping the resource. If null then the resource
 		 *						will be wrapped in a non-specific RRefBase object. Otherwise it will be wrapped in a
 		 *						templated RRef<T> object. In the latter case caller is responsible for ensuring the
 		 *						template parameter of RRef matches the actual resource type.

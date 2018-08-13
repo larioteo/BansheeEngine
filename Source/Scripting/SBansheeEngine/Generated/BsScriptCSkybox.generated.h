@@ -5,6 +5,7 @@
 
 namespace bs
 {
+	class Texture;
 	class CSkybox;
 
 	class BS_SCR_BE_EXPORT ScriptCSkybox : public TScriptComponent<ScriptCSkybox, CSkybox>

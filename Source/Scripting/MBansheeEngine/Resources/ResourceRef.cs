@@ -25,7 +25,8 @@ namespace BansheeEngine
         public bool IsLoaded => Internal_IsLoaded(mCachedPtr);
 
         /// <summary>
-        /// Returns the referenced resource if loaded, or null otherwise.
+        /// Returns the referenced resource. If the resource hasn't been loaded it will be loaded as if calling
+        /// <see cref="Resources.Load{T}(string,bool)"/> using default settings.
         /// </summary>
         public Resource GenericValue => Internal_GetResource(mCachedPtr);
 
@@ -54,6 +55,9 @@ namespace BansheeEngine
         /// <inheritdoc/>
         public override bool Equals(object other)
         {
+            if (ReferenceEquals(other, null))
+                return false;
+
             if (!(other is RRefBase))
                 return false;
 
@@ -63,6 +67,39 @@ namespace BansheeEngine
             Internal_GetUUID(otherRef.mCachedPtr, out var rhs);
 
             return lhs.Equals(rhs);
+        }
+
+        public bool Equals(RRefBase other)
+        {
+            if (ReferenceEquals(other, null))
+                return false;
+
+            Internal_GetUUID(mCachedPtr, out var lhs);
+            Internal_GetUUID(other.mCachedPtr, out var rhs);
+
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator==(RRefBase lhs, RRefBase rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+                return true;
+
+            if (ReferenceEquals(lhs, null))
+                return false;
+
+            if (ReferenceEquals(rhs, null))
+                return false;
+
+            Internal_GetUUID(lhs.mCachedPtr, out var lhsUUID);
+            Internal_GetUUID(rhs.mCachedPtr, out var rhsUUID);
+
+            return lhsUUID.Equals(rhsUUID);
+        }
+
+        public static bool operator!=(RRefBase lhs, RRefBase rhs)
+        {
+            return !(lhs == rhs);
         }
 
         /// <inheritdoc/>
@@ -91,7 +128,8 @@ namespace BansheeEngine
     public class RRef<T> : RRefBase where T : Resource
     {
         /// <summary>
-        /// Returns the referenced resource if loaded, or null otherwise.
+        /// Returns the referenced resource. If the resource hasn't been loaded it will be loaded as if calling
+        /// <see cref="Resources.Load{T}(string,bool)"/> using default settings.
         /// </summary>
         public T Value => (T) GenericValue;
     }

@@ -28,6 +28,12 @@ namespace BansheeEngine
 			Internal_create(this, meshData, type);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<PhysicsMesh> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Returns the type of the physics mesh.</summary>
 		public PhysicsMeshType Type
 		{
@@ -40,6 +46,12 @@ namespace BansheeEngine
 			get { return Internal_getMeshData(mCachedPtr); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<PhysicsMesh>(PhysicsMesh x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<PhysicsMesh> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern PhysicsMeshType Internal_getType(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

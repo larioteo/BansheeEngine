@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Localization/BsStringTable.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptStringTable.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Localization/BsStringTable.h"
 
 namespace bs
 {
@@ -15,6 +16,7 @@ namespace bs
 
 	void ScriptStringTable::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptStringTable::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_contains", (void*)&ScriptStringTable::Internal_contains);
 		metaData.scriptClass->addInternalCall("Internal_getNumStrings", (void*)&ScriptStringTable::Internal_getNumStrings);
 		metaData.scriptClass->addInternalCall("Internal_getIdentifiers", (void*)&ScriptStringTable::Internal_getIdentifiers);
@@ -32,6 +34,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptStringTable::Internal_getRef(ScriptStringTable* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	bool ScriptStringTable::Internal_contains(ScriptStringTable* thisPtr, MonoString* identifier)
 	{
 		bool tmp__output;

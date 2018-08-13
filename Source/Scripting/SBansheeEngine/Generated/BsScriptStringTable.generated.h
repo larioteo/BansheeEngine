@@ -18,6 +18,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptStringTable* thisPtr);
+
 		static bool Internal_contains(ScriptStringTable* thisPtr, MonoString* identifier);
 		static uint32_t Internal_getNumStrings(ScriptStringTable* thisPtr);
 		static MonoArray* Internal_getIdentifiers(ScriptStringTable* thisPtr);

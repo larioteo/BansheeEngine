@@ -114,11 +114,11 @@ namespace BansheeEditor
             if (renderable == null)
                 return null;
 
-            Mesh mesh = renderable.Mesh;
+            RRef<Mesh> mesh = renderable.Mesh;
             if (mesh == null)
                 return null;
 
-            Skeleton skeleton = mesh.Skeleton;
+            Skeleton skeleton = mesh.Value.Skeleton;
             string[] boneNames = new string[skeleton.NumBones];
             for (int i = 0; i < boneNames.Length; i++)
                 boneNames[i] = skeleton.GetBoneInfo(i).name;

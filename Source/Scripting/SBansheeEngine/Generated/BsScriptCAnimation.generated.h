@@ -7,6 +7,7 @@
 namespace bs
 {
 	class CAnimation;
+	class AnimationClip;
 	struct __Blend1DInfoInterop;
 	struct __Blend2DInfoInterop;
 

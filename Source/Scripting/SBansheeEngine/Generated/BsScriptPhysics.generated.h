@@ -7,6 +7,7 @@ namespace bs
 {
 	struct __PhysicsQueryHitInterop;
 	class Physics;
+	class PhysicsMesh;
 
 	class BS_SCR_BE_EXPORT ScriptPhysics : public ScriptObject<ScriptPhysics>
 	{

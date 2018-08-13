@@ -4,8 +4,9 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCollider.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptCollisionData.generated.h"
-#include "BsScriptPhysicsMaterial.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMaterial.h"
 
 namespace bs
 {
@@ -108,10 +109,10 @@ namespace bs
 	void ScriptCCollider::Internal_setMaterial(ScriptCColliderBase* thisPtr, MonoObject* material)
 	{
 		ResourceHandle<PhysicsMaterial> tmpmaterial;
-		ScriptPhysicsMaterial* scriptmaterial;
-		scriptmaterial = ScriptPhysicsMaterial::toNative(material);
+		ScriptRRefBase* scriptmaterial;
+		scriptmaterial = ScriptRRefBase::toNative(material);
 		if(scriptmaterial != nullptr)
-			tmpmaterial = scriptmaterial->getHandle();
+			tmpmaterial = static_resource_cast<PhysicsMaterial>(scriptmaterial->getHandle());
 		static_object_cast<CCollider>(thisPtr->getComponent())->setMaterial(tmpmaterial);
 	}
 
@@ -121,8 +122,8 @@ namespace bs
 		tmp__output = static_object_cast<CCollider>(thisPtr->getComponent())->getMaterial();
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else

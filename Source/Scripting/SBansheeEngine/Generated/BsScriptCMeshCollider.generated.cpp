@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCMeshCollider.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptPhysicsMesh.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMesh.h"
 
 namespace bs
 {
@@ -23,10 +24,10 @@ namespace bs
 	void ScriptCMeshCollider::Internal_setMesh(ScriptCMeshCollider* thisPtr, MonoObject* mesh)
 	{
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		thisPtr->getHandle()->setMesh(tmpmesh);
 	}
 
@@ -36,8 +37,8 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getMesh();
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else

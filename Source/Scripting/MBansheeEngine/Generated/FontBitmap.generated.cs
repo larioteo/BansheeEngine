@@ -55,7 +55,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Textures in which the character's pixels are stored.</summary>
-		public Texture[] TexturePages
+		public RRef<Texture>[] TexturePages
 		{
 			get { return Internal_gettexturePages(mCachedPtr); }
 			set { Internal_settexturePages(mCachedPtr, value); }
@@ -92,9 +92,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setspaceWidth(IntPtr thisPtr, uint value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture[] Internal_gettexturePages(IntPtr thisPtr);
+		private static extern RRef<Texture>[] Internal_gettexturePages(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_settexturePages(IntPtr thisPtr, Texture[] value);
+		private static extern void Internal_settexturePages(IntPtr thisPtr, RRef<Texture>[] value);
 	}
 
 	/** @} */

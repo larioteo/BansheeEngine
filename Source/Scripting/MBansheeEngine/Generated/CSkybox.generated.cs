@@ -19,7 +19,7 @@ namespace BansheeEngine
 		/// contain HDR data.
 		/// </summary>
 		[ShowInInspector]
-		public Texture Texture
+		public RRef<Texture> Texture
 		{
 			get { return Internal_getTexture(mCachedPtr); }
 			set { Internal_setTexture(mCachedPtr, value); }
@@ -37,9 +37,9 @@ namespace BansheeEngine
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture Internal_getTexture(IntPtr thisPtr);
+		private static extern RRef<Texture> Internal_getTexture(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setTexture(IntPtr thisPtr, Texture texture);
+		private static extern void Internal_setTexture(IntPtr thisPtr, RRef<Texture> texture);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setBrightness(IntPtr thisPtr, float brightness);
 		[MethodImpl(MethodImplOptions.InternalCall)]

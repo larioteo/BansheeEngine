@@ -83,7 +83,7 @@ namespace BansheeEditor
         [DrawGizmo(DrawGizmoFlags.Selected | DrawGizmoFlags.ParentSelected)]
         private static void DrawMeshCollider(MeshCollider collider)
         {
-            PhysicsMesh mesh = collider.Mesh;
+            PhysicsMesh mesh = collider.Mesh.Value;
             if (mesh == null)
                 return;
 

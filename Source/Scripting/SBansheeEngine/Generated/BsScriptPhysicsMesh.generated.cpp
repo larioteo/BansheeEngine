@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMesh.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptPhysicsMesh.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMesh.h"
 #include "BsScriptRendererMeshData.generated.h"
 #include "../../SBansheeEngine/Extensions/BsPhysicsMeshEx.h"
 
@@ -17,6 +18,7 @@ namespace bs
 
 	void ScriptPhysicsMesh::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptPhysicsMesh::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptPhysicsMesh::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptPhysicsMesh::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_getMeshData", (void*)&ScriptPhysicsMesh::Internal_getMeshData);
@@ -30,6 +32,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptPhysicsMesh::Internal_getRef(ScriptPhysicsMesh* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	PhysicsMeshType ScriptPhysicsMesh::Internal_getType(ScriptPhysicsMesh* thisPtr)
 	{
 		PhysicsMeshType tmp__output;

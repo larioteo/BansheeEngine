@@ -4,11 +4,12 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Mesh/BsMesh.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptSkeleton.generated.h"
 #include "BsScriptRendererMeshData.generated.h"
 #include "BsScriptMorphShapes.generated.h"
 #include "BsScriptSubMesh.generated.h"
-#include "BsScriptMesh.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Mesh/BsMesh.h"
 #include "../../SBansheeEngine/Extensions/BsMeshEx.h"
 
 namespace bs
@@ -20,6 +21,7 @@ namespace bs
 
 	void ScriptMesh::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptMesh::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_getSkeleton", (void*)&ScriptMesh::Internal_getSkeleton);
 		metaData.scriptClass->addInternalCall("Internal_getMorphShapes", (void*)&ScriptMesh::Internal_getMorphShapes);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptMesh::Internal_create);
@@ -41,6 +43,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptMesh::Internal_getRef(ScriptMesh* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	MonoObject* ScriptMesh::Internal_getSkeleton(ScriptMesh* thisPtr)
 	{
 		SPtr<Skeleton> tmp__output;

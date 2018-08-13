@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCAudioSource.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptAudioClip.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Audio/BsAudioClip.h"
 
 namespace bs
 {
@@ -43,10 +44,10 @@ namespace bs
 	void ScriptCAudioSource::Internal_setClip(ScriptCAudioSource* thisPtr, MonoObject* clip)
 	{
 		ResourceHandle<AudioClip> tmpclip;
-		ScriptAudioClip* scriptclip;
-		scriptclip = ScriptAudioClip::toNative(clip);
+		ScriptRRefBase* scriptclip;
+		scriptclip = ScriptRRefBase::toNative(clip);
 		if(scriptclip != nullptr)
-			tmpclip = scriptclip->getHandle();
+			tmpclip = static_resource_cast<AudioClip>(scriptclip->getHandle());
 		thisPtr->getHandle()->setClip(tmpclip);
 	}
 
@@ -56,8 +57,8 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getClip();
 
 		MonoObject* __output;
-		ScriptResourceBase* script__output;
-		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		ScriptRRefBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptRRef(tmp__output);
 		if(script__output != nullptr)
 			__output = script__output->getManagedInstance();
 		else

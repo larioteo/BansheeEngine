@@ -45,7 +45,7 @@ namespace BansheeEngine
 		/// Determines the physical material of the collider. The material determines how objects hitting the collider  behave.
 		/// </summary>
 		[ShowInInspector]
-		public PhysicsMaterial Material
+		public RRef<PhysicsMaterial> Material
 		{
 			get { return Internal_getMaterial(mCachedPtr); }
 			set { Internal_setMaterial(mCachedPtr, value); }
@@ -123,9 +123,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getMass(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setMaterial(IntPtr thisPtr, PhysicsMaterial material);
+		private static extern void Internal_setMaterial(IntPtr thisPtr, RRef<PhysicsMaterial> material);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern PhysicsMaterial Internal_getMaterial(IntPtr thisPtr);
+		private static extern RRef<PhysicsMaterial> Internal_getMaterial(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setContactOffset(IntPtr thisPtr, float value);
 		[MethodImpl(MethodImplOptions.InternalCall)]

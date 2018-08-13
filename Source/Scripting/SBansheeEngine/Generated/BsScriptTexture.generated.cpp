@@ -4,7 +4,8 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 #include "BsScriptResourceManager.h"
-#include "BsScriptTexture.generated.h"
+#include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 #include "Wrappers/BsScriptColor.h"
 #include "../../SBansheeEngine/Extensions/BsTextureEx.h"
 #include "BsScriptPixelData.generated.h"
@@ -19,6 +20,7 @@ namespace bs
 
 	void ScriptTexture::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptTexture::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptTexture::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_getPixelFormat", (void*)&ScriptTexture::Internal_getPixelFormat);
 		metaData.scriptClass->addInternalCall("Internal_getUsage", (void*)&ScriptTexture::Internal_getUsage);
@@ -43,6 +45,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptTexture::Internal_getRef(ScriptTexture* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	void ScriptTexture::Internal_create(MonoObject* managedInstance, PixelFormat format, uint32_t width, uint32_t height, uint32_t depth, TextureType texType, TextureUsage usage, uint32_t numSamples, bool hasMipmaps, bool gammaCorrection)
 	{
 		ResourceHandle<Texture> instance = TextureEx::create(format, width, height, depth, texType, usage, numSamples, hasMipmaps, gammaCorrection);

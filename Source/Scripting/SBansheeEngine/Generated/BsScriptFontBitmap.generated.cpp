@@ -4,8 +4,9 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Text/BsFont.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptCharDesc.generated.h"
-#include "BsScriptTexture.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 
 namespace bs
 {
@@ -143,11 +144,11 @@ namespace bs
 
 		MonoArray* __output;
 		int arraySize__output = (int)vec__output.size();
-		ScriptArray array__output = ScriptArray::create<ScriptTexture>(arraySize__output);
+		ScriptArray array__output = ScriptArray::create<ScriptRRefBase>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			ScriptResourceBase* script__output;
-			script__output = ScriptResourceManager::instance().getScriptResource(vec__output[i], true);
+			ScriptRRefBase* script__output;
+			script__output = ScriptResourceManager::instance().getScriptRRef(vec__output[i]);
 			if(script__output != nullptr)
 				array__output.set(i, script__output->getManagedInstance());
 			else
@@ -167,10 +168,10 @@ namespace bs
 			vecvalue.resize(arrayvalue.size());
 			for(int i = 0; i < (int)arrayvalue.size(); i++)
 			{
-				ScriptTexture* scriptvalue;
-				scriptvalue = ScriptTexture::toNative(arrayvalue.get<MonoObject*>(i));
+				ScriptRRefBase* scriptvalue;
+				scriptvalue = ScriptRRefBase::toNative(arrayvalue.get<MonoObject*>(i));
 				if(scriptvalue != nullptr)
-					vecvalue[i] = scriptvalue->getHandle();
+					vecvalue[i] = static_resource_cast<Texture>(scriptvalue->getHandle());
 			}
 
 		}

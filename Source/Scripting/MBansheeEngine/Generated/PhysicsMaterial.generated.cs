@@ -35,6 +35,12 @@ namespace BansheeEngine
 			Internal_create(this, staticFriction, dynamicFriction, restitution);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<PhysicsMaterial> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>
 		/// Controls friction when two in-contact objects are not moving lateral to each other (for example how difficult  it is 
 		/// to get an object moving from a static state while it is in contact with other object(s)).
@@ -65,6 +71,12 @@ namespace BansheeEngine
 			set { Internal_setRestitutionCoefficient(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<PhysicsMaterial>(PhysicsMaterial x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<PhysicsMaterial> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setStaticFriction(IntPtr thisPtr, float value);
 		[MethodImpl(MethodImplOptions.InternalCall)]

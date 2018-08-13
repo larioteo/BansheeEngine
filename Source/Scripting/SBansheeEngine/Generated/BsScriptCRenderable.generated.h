@@ -7,6 +7,8 @@
 namespace bs
 {
 	class CRenderable;
+	class Mesh;
+	class Material;
 
 	class BS_SCR_BE_EXPORT ScriptCRenderable : public TScriptComponent<ScriptCRenderable, CRenderable>
 	{

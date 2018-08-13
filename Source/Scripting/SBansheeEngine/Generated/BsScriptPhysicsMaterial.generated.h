@@ -17,6 +17,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptPhysicsMaterial* thisPtr);
+
 		static void Internal_setStaticFriction(ScriptPhysicsMaterial* thisPtr, float value);
 		static float Internal_getStaticFriction(ScriptPhysicsMaterial* thisPtr);
 		static void Internal_setDynamicFriction(ScriptPhysicsMaterial* thisPtr, float value);

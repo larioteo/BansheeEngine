@@ -114,7 +114,7 @@ namespace BansheeEngine
 		/// Maximum distance at which to perform the query. Hits past this distance will not be detected.
 		/// </param>
 		/// <returns>True if something was hit, false otherwise.</returns>
-		public static bool ConvexCast(PhysicsMesh mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, out PhysicsQueryHit hit, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
+		public static bool ConvexCast(RRef<PhysicsMesh> mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, out PhysicsQueryHit hit, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
 		{
 			return Internal_convexCast(mesh, ref position, ref rotation, ref unitDir, out hit, layer, max);
 		}
@@ -195,7 +195,7 @@ namespace BansheeEngine
 		/// Maximum distance at which to perform the query. Hits past this distance will not be detected.
 		/// </param>
 		/// <returns>List of all detected hits.</returns>
-		public static PhysicsQueryHit[] ConvexCastAll(PhysicsMesh mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
+		public static PhysicsQueryHit[] ConvexCastAll(RRef<PhysicsMesh> mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
 		{
 			return Internal_convexCastAll(mesh, ref position, ref rotation, ref unitDir, layer, max);
 		}
@@ -294,7 +294,7 @@ namespace BansheeEngine
 		/// Maximum distance at which to perform the query. Hits past this distance will not be detected.
 		/// </param>
 		/// <returns>True if something was hit, false otherwise.</returns>
-		public static bool ConvexCastAny(PhysicsMesh mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
+		public static bool ConvexCastAny(RRef<PhysicsMesh> mesh, Vector3 position, Quaternion rotation, Vector3 unitDir, ulong layer = 18446744073709551615, float max = 3.40282347E+38f)
 		{
 			return Internal_convexCastAny(mesh, ref position, ref rotation, ref unitDir, layer, max);
 		}
@@ -334,7 +334,7 @@ namespace BansheeEngine
 		/// <param name="rotation">Orientation of the mesh.</param>
 		/// <param name="layer">Layers to consider for the query. This allows you to ignore certain groups of objects.</param>
 		/// <returns>List of all colliders that overlap the mesh.</returns>
-		public static Collider[] ConvexOverlap(PhysicsMesh mesh, Vector3 position, Quaternion rotation, ulong layer = 18446744073709551615)
+		public static Collider[] ConvexOverlap(RRef<PhysicsMesh> mesh, Vector3 position, Quaternion rotation, ulong layer = 18446744073709551615)
 		{
 			return Internal_convexOverlap(mesh, ref position, ref rotation, layer);
 		}
@@ -374,7 +374,7 @@ namespace BansheeEngine
 		/// <param name="rotation">Orientation of the mesh.</param>
 		/// <param name="layer">Layers to consider for the query. This allows you to ignore certain groups of objects.</param>
 		/// <returns>True if there is overlap with another object, false otherwise.</returns>
-		public static bool ConvexOverlapAny(PhysicsMesh mesh, Vector3 position, Quaternion rotation, ulong layer = 18446744073709551615)
+		public static bool ConvexOverlapAny(RRef<PhysicsMesh> mesh, Vector3 position, Quaternion rotation, ulong layer = 18446744073709551615)
 		{
 			return Internal_convexOverlapAny(mesh, ref position, ref rotation, layer);
 		}
@@ -427,7 +427,7 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_capsuleCast(ref Capsule capsule, ref Quaternion rotation, ref Vector3 unitDir, out PhysicsQueryHit hit, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool Internal_convexCast(PhysicsMesh mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, out PhysicsQueryHit hit, ulong layer, float max);
+		private static extern bool Internal_convexCast(RRef<PhysicsMesh> mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, out PhysicsQueryHit hit, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern PhysicsQueryHit[] Internal_rayCastAll(ref Ray ray, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -439,7 +439,7 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern PhysicsQueryHit[] Internal_capsuleCastAll(ref Capsule capsule, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern PhysicsQueryHit[] Internal_convexCastAll(PhysicsMesh mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
+		private static extern PhysicsQueryHit[] Internal_convexCastAll(RRef<PhysicsMesh> mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_rayCastAny(ref Ray ray, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -451,7 +451,7 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_capsuleCastAny(ref Capsule capsule, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool Internal_convexCastAny(PhysicsMesh mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
+		private static extern bool Internal_convexCastAny(RRef<PhysicsMesh> mesh, ref Vector3 position, ref Quaternion rotation, ref Vector3 unitDir, ulong layer, float max);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Collider[] Internal_boxOverlap(ref AABox box, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -459,7 +459,7 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Collider[] Internal_capsuleOverlap(ref Capsule capsule, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Collider[] Internal_convexOverlap(PhysicsMesh mesh, ref Vector3 position, ref Quaternion rotation, ulong layer);
+		private static extern Collider[] Internal_convexOverlap(RRef<PhysicsMesh> mesh, ref Vector3 position, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_boxOverlapAny(ref AABox box, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -467,7 +467,7 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_capsuleOverlapAny(ref Capsule capsule, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool Internal_convexOverlapAny(PhysicsMesh mesh, ref Vector3 position, ref Quaternion rotation, ulong layer);
+		private static extern bool Internal_convexOverlapAny(RRef<PhysicsMesh> mesh, ref Vector3 position, ref Quaternion rotation, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getGravity(out Vector3 __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]

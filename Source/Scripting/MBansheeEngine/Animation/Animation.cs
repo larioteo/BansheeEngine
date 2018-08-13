@@ -46,7 +46,7 @@ namespace BansheeEngine
         /// <param name="startTime">Time to start playing at, in seconds.</param>
         /// <param name="freeze">If true, only the frame at the specified time will be shown, without advancing the 
         ///                      animation.</param>
-        internal void EditorPlay(AnimationClip clip, float startTime, bool freeze = false)
+        internal void EditorPlay(RRef<AnimationClip> clip, float startTime, bool freeze = false)
         {
             bool inPreviewMode = Internal__togglePreviewMode(mCachedPtr, true);
 
@@ -80,7 +80,7 @@ namespace BansheeEngine
         /// <returns>Time in seconds.</returns>
         internal float EditorGetTime()
         {
-            AnimationClip clip = Internal_getClip(mCachedPtr, 0);
+            RRef<AnimationClip> clip = Internal_getClip(mCachedPtr, 0);
 
             AnimationClipState clipState;
             if (clip != null && GetState(clip, out clipState))
@@ -260,7 +260,7 @@ namespace BansheeEngine
         /// Builds a list of properties that will be animated using float animation curves.
         /// </summary>
         /// <param name="clip">Clip to retrieve the float animation curves from.</param>
-        partial void RebuildFloatProperties(AnimationClip clip)
+        partial void RebuildFloatProperties(RRef<AnimationClip> clip)
         {
             if (clip == null)
             {
@@ -268,7 +268,7 @@ namespace BansheeEngine
                 return;
             }
 
-            AnimationCurves curves = clip.Curves;
+            AnimationCurves curves = clip.Value.Curves;
 
             List<FloatCurvePropertyInfo> newFloatProperties = new List<FloatCurvePropertyInfo>();
             for (int i = 0; i < curves.Generic.Length; i++)
@@ -391,7 +391,7 @@ namespace BansheeEngine
         /// </summary>
         /// <param name="clip">Clip that the event originated from.</param>
         /// <param name="name">Name of the event.</param>
-        partial void EventTriggered(AnimationClip clip, string name)
+        partial void EventTriggered(RRef<AnimationClip> clip, string name)
         {
             // Event should be in format "ComponentType/MethodName"
             if (string.IsNullOrEmpty(name))

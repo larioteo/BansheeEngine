@@ -4,11 +4,11 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Utility/BsModule.h"
-#include "Wrappers/BsScriptRRefBase.h"
+#include "Wrappers/BsScriptResource.h"
 
 namespace bs
 {
-	namespace Detail { }
+	class ScriptRRefBase;
 
 	/** @addtogroup SBansheeEngine
 	 *  @{
@@ -81,11 +81,7 @@ namespace bs
 		template<class T>
 		ScriptRRefBase* getScriptRRef(const ResourceHandle<T>& resource)
 		{
-			::MonoClass* monoClass = getManagedResourceClass(T::getRTTIStatic()->getRTTIId());
-			if(!monoClass)
-				return nullptr;
-
-			::MonoClass* rrefClass = ScriptRRefBase::bindGenericParam(monoClass);
+			::MonoClass* rrefClass = ScriptResourceBase::getRRefClass(T::getRTTIStatic()->getRTTIId());
 			return getScriptRRef(resource, rrefClass);
 		}
 
@@ -100,12 +96,6 @@ namespace bs
 	private:
 		/**	Triggered when the native resource has been unloaded and therefore destroyed. */
 		void onResourceDestroyed(const UUID& UUID);
-
-		/** 
-		 * Maps a RTTI ID to a class representing the specified resource type in managed code. Returns null if the ID 
-		 * cannot be mapped to a managed resource class.
-		 */
-		static ::MonoClass* getManagedResourceClass(UINT32 rttiId);
 
 		UnorderedMap<UUID, ScriptResourceBase*> mScriptResources;
 		HEvent mResourceDestroyedConn;

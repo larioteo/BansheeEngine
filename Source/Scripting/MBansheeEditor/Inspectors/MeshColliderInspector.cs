@@ -66,7 +66,7 @@ namespace BansheeEditor
         /// <param name="collider">Collider to update the GUI from.</param>
         protected void Refresh(MeshCollider collider)
         {
-            meshField.Value = collider.Mesh;
+            meshField.ValueRef = collider.Mesh;
 
             base.Refresh(collider);
         }

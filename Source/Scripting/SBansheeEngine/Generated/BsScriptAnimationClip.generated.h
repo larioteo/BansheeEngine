@@ -18,6 +18,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptAnimationClip* thisPtr);
+
 		static MonoObject* Internal_getCurves(ScriptAnimationClip* thisPtr);
 		static void Internal_setCurves(ScriptAnimationClip* thisPtr, MonoObject* curves);
 		static MonoArray* Internal_getEvents(ScriptAnimationClip* thisPtr);

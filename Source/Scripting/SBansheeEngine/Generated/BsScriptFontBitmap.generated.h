@@ -7,6 +7,7 @@ namespace bs
 {
 	struct __CharDescInterop;
 	struct FontBitmap;
+	class Texture;
 
 	class BS_SCR_BE_EXPORT ScriptFontBitmap : public ScriptObject<ScriptFontBitmap>
 	{

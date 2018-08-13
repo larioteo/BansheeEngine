@@ -27,7 +27,7 @@ namespace BansheeEngine
 		/// <summary>Returns the string table with the specified id. If the table doesn't exist new one is created.</summary>
 		/// <param name="id">Identifier of the string table.</param>
 		/// <returns>String table with the specified identifier.</returns>
-		public static StringTable GetTable(uint id)
+		public static RRef<StringTable> GetTable(uint id)
 		{
 			return Internal_getTable(id);
 		}
@@ -42,7 +42,7 @@ namespace BansheeEngine
 		/// <summary>Registers a new string table or replaces an old one at the specified id.</summary>
 		/// <param name="id">Identifier of the string table.</param>
 		/// <param name="table">New string table to assign to the specified identifier.</param>
-		public static void SetTable(uint id, StringTable table)
+		public static void SetTable(uint id, RRef<StringTable> table)
 		{
 			Internal_setTable(id, table);
 		}
@@ -52,11 +52,11 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Language Internal_getActiveLanguage();
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern StringTable Internal_getTable(uint id);
+		private static extern RRef<StringTable> Internal_getTable(uint id);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_removeTable(uint id);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setTable(uint id, StringTable table);
+		private static extern void Internal_setTable(uint id, RRef<StringTable> table);
 	}
 
 	/** @} */

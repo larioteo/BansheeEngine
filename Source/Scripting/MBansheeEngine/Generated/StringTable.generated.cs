@@ -19,6 +19,12 @@ namespace BansheeEngine
 			Internal_create(this);
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<StringTable> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Returns a total number of strings in the table.</summary>
 		public uint NumStrings
 		{
@@ -30,6 +36,10 @@ namespace BansheeEngine
 		{
 			get { return Internal_getIdentifiers(mCachedPtr); }
 		}
+
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<StringTable>(StringTable x)
+		{ return Internal_GetRef(x.mCachedPtr); }
 
 		/// <summary>Checks does the string table contain the provided identifier.</summary>
 		/// <param name="identifier">Identifier to look for.</param>
@@ -59,6 +69,8 @@ namespace BansheeEngine
 			Internal_removeString(mCachedPtr, identifier);
 		}
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<StringTable> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_contains(IntPtr thisPtr, string identifier);
 		[MethodImpl(MethodImplOptions.InternalCall)]

@@ -17,6 +17,12 @@ namespace BansheeEngine
 		private AudioClip(bool __dummy0) { }
 		protected AudioClip() { }
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public RRef<AudioClip> Ref
+		{
+			get { return Internal_GetRef(mCachedPtr); }
+		}
+
 		/// <summary>Returns the size of a single sample, in bits.</summary>
 		public uint BitDepth
 		{
@@ -65,6 +71,12 @@ namespace BansheeEngine
 			get { return Internal_is3D(mCachedPtr); }
 		}
 
+		/// <summary>Returns a reference wrapper for this resource.</summary>
+		public static implicit operator RRef<AudioClip>(AudioClip x)
+		{ return Internal_GetRef(x.mCachedPtr); }
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RRef<AudioClip> Internal_GetRef(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern uint Internal_getBitDepth(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

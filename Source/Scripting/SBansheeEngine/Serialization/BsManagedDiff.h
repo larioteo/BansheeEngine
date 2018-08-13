@@ -24,10 +24,10 @@ namespace bs
 
 		/**
 		 * @copydoc	IDiff::applyDiff(const SPtr<IReflectable>&, const SPtr<SerializedObject>&, 
-		 *			DiffObjectMap&, Vector<DiffCommand>&)
+		 *			FrameAlloc&, DiffObjectMap&, FrameVector<DiffCommand>&)
 		 */
 		void applyDiff(const SPtr<IReflectable>& object, const SPtr<SerializedObject>& serzDiff,
-			DiffObjectMap& objectMap, Vector<DiffCommand>& diffCommands) override;
+			FrameAlloc& alloc, DiffObjectMap& objectMap, FrameVector<DiffCommand>& diffCommands) override;
 	};
 
 	/** @} */

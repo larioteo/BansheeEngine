@@ -13,6 +13,7 @@ namespace bs
 
 	void ScriptAudioClip::initRuntimeData()
 	{
+		metaData.scriptClass->addInternalCall("Internal_GetRef", (void*)&ScriptAudioClip::Internal_getRef);
 		metaData.scriptClass->addInternalCall("Internal_getBitDepth", (void*)&ScriptAudioClip::Internal_getBitDepth);
 		metaData.scriptClass->addInternalCall("Internal_getFrequency", (void*)&ScriptAudioClip::Internal_getFrequency);
 		metaData.scriptClass->addInternalCall("Internal_getNumChannels", (void*)&ScriptAudioClip::Internal_getNumChannels);
@@ -31,6 +32,11 @@ namespace bs
 
 		return metaData.scriptClass->createInstance("bool", ctorParams);
 	}
+	MonoObject* ScriptAudioClip::Internal_getRef(ScriptAudioClip* thisPtr)
+	{
+		return thisPtr->getRRef();
+	}
+
 	uint32_t ScriptAudioClip::Internal_getBitDepth(ScriptAudioClip* thisPtr)
 	{
 		uint32_t tmp__output;

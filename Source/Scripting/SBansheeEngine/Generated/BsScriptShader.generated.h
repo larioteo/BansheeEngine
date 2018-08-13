@@ -20,6 +20,8 @@ namespace bs
 		static MonoObject* createInstance();
 
 	private:
+		static MonoObject* Internal_getRef(ScriptShader* thisPtr);
+
 		static MonoArray* Internal_getParameters(ScriptShader* thisPtr);
 	};
 }

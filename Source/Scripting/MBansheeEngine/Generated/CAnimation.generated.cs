@@ -25,7 +25,7 @@ namespace BansheeEngine
 		/// modify their states individually.
 		/// </summary>
 		[ShowInInspector]
-		public AnimationClip DefaultClip
+		public RRef<AnimationClip> DefaultClip
 		{
 			get { return Internal_getDefaultClip(mCachedPtr); }
 			set { Internal_setDefaultClip(mCachedPtr, value); }
@@ -98,7 +98,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Triggered when the list of properties animated via generic animation curves needs to be recreated (script only).
 		/// </summary>
-		partial void RebuildFloatProperties(AnimationClip p0);
+		partial void RebuildFloatProperties(RRef<AnimationClip> p0);
 
 		/// <summary>
 		/// Triggered when generic animation curves values need be applied to the properties they effect (script only).
@@ -106,11 +106,11 @@ namespace BansheeEngine
 		partial void _UpdateFloatProperties();
 
 		/// <summary>Triggers a callback in script code when animation event is triggered (script only).</summary>
-		partial void EventTriggered(AnimationClip p0, string p1);
+		partial void EventTriggered(RRef<AnimationClip> p0, string p1);
 
 		/// <summary>Plays the specified animation clip.</summary>
 		/// <param name="clip">Clip to play.</param>
-		public void Play(AnimationClip clip)
+		public void Play(RRef<AnimationClip> clip)
 		{
 			Internal_play(mCachedPtr, clip);
 		}
@@ -132,7 +132,7 @@ namespace BansheeEngine
 		/// Layer to play the clip in. Multiple additive clips can be playing at once in separate layers and each layer has its 
 		/// own weight.
 		/// </param>
-		public void BlendAdditive(AnimationClip clip, float weight, float fadeLength = 0f, uint layer = 0)
+		public void BlendAdditive(RRef<AnimationClip> clip, float weight, float fadeLength = 0f, uint layer = 0)
 		{
 			Internal_blendAdditive(mCachedPtr, clip, weight, fadeLength, layer);
 		}
@@ -174,7 +174,7 @@ namespace BansheeEngine
 		/// </summary>
 		/// <param name="clip">Clip to fade in.</param>
 		/// <param name="fadeLength">Determines the time period over which the fade occurs. In seconds.</param>
-		public void CrossFade(AnimationClip clip, float fadeLength)
+		public void CrossFade(RRef<AnimationClip> clip, float fadeLength)
 		{
 			Internal_crossFade(mCachedPtr, clip, fadeLength);
 		}
@@ -184,7 +184,7 @@ namespace BansheeEngine
 		/// </summary>
 		/// <param name="clip">Animation clip to sample.</param>
 		/// <param name="time">Time to sample the clip at.</param>
-		public void Sample(AnimationClip clip, float time)
+		public void Sample(RRef<AnimationClip> clip, float time)
 		{
 			Internal_sample(mCachedPtr, clip, time);
 		}
@@ -210,7 +210,7 @@ namespace BansheeEngine
 		/// Animation clip state containing the requested information. Only valid if the method returns true.
 		/// </param>
 		/// <returns>True if the state was found (animation clip is playing), false otherwise.</returns>
-		public bool GetState(AnimationClip clip, out AnimationClipState state)
+		public bool GetState(RRef<AnimationClip> clip, out AnimationClipState state)
 		{
 			return Internal_getState(mCachedPtr, clip, out state);
 		}
@@ -221,7 +221,7 @@ namespace BansheeEngine
 		/// </summary>
 		/// <param name="clip">Clip to change the state for.</param>
 		/// <param name="state">New state of the animation (e.g. changing the time for seeking).</param>
-		public void SetState(AnimationClip clip, AnimationClipState state)
+		public void SetState(RRef<AnimationClip> clip, AnimationClipState state)
 		{
 			Internal_setState(mCachedPtr, clip, ref state);
 		}
@@ -239,9 +239,9 @@ namespace BansheeEngine
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setDefaultClip(IntPtr thisPtr, AnimationClip clip);
+		private static extern void Internal_setDefaultClip(IntPtr thisPtr, RRef<AnimationClip> clip);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern AnimationClip Internal_getDefaultClip(IntPtr thisPtr);
+		private static extern RRef<AnimationClip> Internal_getDefaultClip(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setWrapMode(IntPtr thisPtr, AnimWrapMode wrapMode);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -251,17 +251,17 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getSpeed(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_play(IntPtr thisPtr, AnimationClip clip);
+		private static extern void Internal_play(IntPtr thisPtr, RRef<AnimationClip> clip);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_blendAdditive(IntPtr thisPtr, AnimationClip clip, float weight, float fadeLength, uint layer);
+		private static extern void Internal_blendAdditive(IntPtr thisPtr, RRef<AnimationClip> clip, float weight, float fadeLength, uint layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_blend1D(IntPtr thisPtr, ref Blend1DInfo info, float t);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_blend2D(IntPtr thisPtr, ref Blend2DInfo info, ref Vector2 t);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_crossFade(IntPtr thisPtr, AnimationClip clip, float fadeLength);
+		private static extern void Internal_crossFade(IntPtr thisPtr, RRef<AnimationClip> clip, float fadeLength);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_sample(IntPtr thisPtr, AnimationClip clip, float time);
+		private static extern void Internal_sample(IntPtr thisPtr, RRef<AnimationClip> clip, float time);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_stop(IntPtr thisPtr, uint layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -269,9 +269,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_isPlaying(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool Internal_getState(IntPtr thisPtr, AnimationClip clip, out AnimationClipState state);
+		private static extern bool Internal_getState(IntPtr thisPtr, RRef<AnimationClip> clip, out AnimationClipState state);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setState(IntPtr thisPtr, AnimationClip clip, ref AnimationClipState state);
+		private static extern void Internal_setState(IntPtr thisPtr, RRef<AnimationClip> clip, ref AnimationClipState state);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setMorphChannelWeight(IntPtr thisPtr, string name, float weight);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -289,14 +289,14 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern uint Internal_getNumClips(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern AnimationClip Internal_getClip(IntPtr thisPtr, uint idx);
+		private static extern RRef<AnimationClip> Internal_getClip(IntPtr thisPtr, uint idx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal__refreshClipMappings(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal__getGenericCurveValue(IntPtr thisPtr, uint curveIdx, out float value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal__togglePreviewMode(IntPtr thisPtr, bool enabled);
-		private void Internal__scriptRebuildFloatProperties(AnimationClip p0)
+		private void Internal__scriptRebuildFloatProperties(RRef<AnimationClip> p0)
 		{
 			RebuildFloatProperties(p0);
 		}
@@ -304,7 +304,7 @@ namespace BansheeEngine
 		{
 			_UpdateFloatProperties();
 		}
-		private void Internal__scriptOnEventTriggered(AnimationClip p0, string p1)
+		private void Internal__scriptOnEventTriggered(RRef<AnimationClip> p0, string p1)
 		{
 			EventTriggered(p0, p1);
 		}

@@ -4,9 +4,10 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysics.h"
 #include "BsScriptResourceManager.h"
+#include "Wrappers/BsScriptRRefBase.h"
 #include "BsScriptGameObjectManager.h"
 #include "BsScriptPhysicsQueryHit.generated.h"
-#include "BsScriptPhysicsMesh.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsMesh.h"
 #include "Wrappers/BsScriptVector.h"
 #include "Wrappers/BsScriptQuaternion.h"
 #include "BsScriptCCollider.generated.h"
@@ -136,10 +137,10 @@ namespace bs
 	{
 		bool tmp__output;
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		PhysicsQueryHit tmphit;
 		tmp__output = Physics::instance().convexCast(tmpmesh, *position, *rotation, *unitDir, tmphit, layer, max);
 
@@ -241,10 +242,10 @@ namespace bs
 	{
 		Vector<PhysicsQueryHit> vec__output;
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		vec__output = Physics::instance().convexCastAll(tmpmesh, *position, *rotation, *unitDir, layer, max);
 
 		MonoArray* __output;
@@ -318,10 +319,10 @@ namespace bs
 	{
 		bool tmp__output;
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		tmp__output = Physics::instance().convexCastAny(tmpmesh, *position, *rotation, *unitDir, layer, max);
 
 		bool __output;
@@ -403,10 +404,10 @@ namespace bs
 	{
 		Vector<GameObjectHandle<CCollider>> vec__output;
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		vec__output = Physics::instance().convexOverlap(tmpmesh, *position, *rotation, layer);
 
 		MonoArray* __output;
@@ -464,10 +465,10 @@ namespace bs
 	{
 		bool tmp__output;
 		ResourceHandle<PhysicsMesh> tmpmesh;
-		ScriptPhysicsMesh* scriptmesh;
-		scriptmesh = ScriptPhysicsMesh::toNative(mesh);
+		ScriptRRefBase* scriptmesh;
+		scriptmesh = ScriptRRefBase::toNative(mesh);
 		if(scriptmesh != nullptr)
-			tmpmesh = scriptmesh->getHandle();
+			tmpmesh = static_resource_cast<PhysicsMesh>(scriptmesh->getHandle());
 		tmp__output = Physics::instance().convexOverlapAny(tmpmesh, *position, *rotation, layer);
 
 		bool __output;

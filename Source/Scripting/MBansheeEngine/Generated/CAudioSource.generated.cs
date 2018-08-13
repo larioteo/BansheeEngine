@@ -22,7 +22,7 @@ namespace BansheeEngine
 
 		/// <summary>Aaudio clip to play.</summary>
 		[ShowInInspector]
-		public AudioClip Clip
+		public RRef<AudioClip> Clip
 		{
 			get { return Internal_getClip(mCachedPtr); }
 			set { Internal_setClip(mCachedPtr, value); }
@@ -130,9 +130,9 @@ namespace BansheeEngine
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setClip(IntPtr thisPtr, AudioClip clip);
+		private static extern void Internal_setClip(IntPtr thisPtr, RRef<AudioClip> clip);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern AudioClip Internal_getClip(IntPtr thisPtr);
+		private static extern RRef<AudioClip> Internal_getClip(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setVolume(IntPtr thisPtr, float volume);
 		[MethodImpl(MethodImplOptions.InternalCall)]
