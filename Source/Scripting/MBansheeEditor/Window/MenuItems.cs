@@ -645,7 +645,7 @@ namespace BansheeEditor
         {
             SceneObject so = UndoRedo.CreateSO("Box", "Created a box");
             Renderable renderable = so.AddComponent<Renderable>();
-            renderable.Mesh = Builtin.Box.Ref;
+            renderable.Mesh = Builtin.Box;
 
             Selection.SceneObject = so;
             FocusOnHierarchyOrScene();
@@ -661,7 +661,7 @@ namespace BansheeEditor
         {
             SceneObject so = UndoRedo.CreateSO("Sphere", "Created a sphere");
             Renderable renderable = so.AddComponent<Renderable>();
-            renderable.Mesh = Builtin.Sphere.Ref;
+            renderable.Mesh = Builtin.Sphere;
 
             Selection.SceneObject = so;
             FocusOnHierarchyOrScene();
@@ -677,7 +677,7 @@ namespace BansheeEditor
         {
             SceneObject so = UndoRedo.CreateSO("Cone", "Created a cone");
             Renderable renderable = so.AddComponent<Renderable>();
-            renderable.Mesh = Builtin.Cone.Ref;
+            renderable.Mesh = Builtin.Cone;
 
             Selection.SceneObject = so;
             FocusOnHierarchyOrScene();
@@ -693,7 +693,7 @@ namespace BansheeEditor
         {
             SceneObject so = UndoRedo.CreateSO("Quad", "Created a quad");
             Renderable renderable = so.AddComponent<Renderable>();
-            renderable.Mesh = Builtin.Quad.Ref;
+            renderable.Mesh = Builtin.Quad;
 
             Selection.SceneObject = so;
             FocusOnHierarchyOrScene();
@@ -708,7 +708,7 @@ namespace BansheeEditor
         {
             SceneObject so = UndoRedo.CreateSO("Disc", "Created a disc");
             Renderable renderable = so.AddComponent<Renderable>();
-            renderable.Mesh = Builtin.Disc.Ref;
+            renderable.Mesh = Builtin.Disc;
 
             Selection.SceneObject = so;
             FocusOnHierarchyOrScene();

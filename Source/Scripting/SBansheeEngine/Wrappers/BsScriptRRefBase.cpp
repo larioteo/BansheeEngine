@@ -91,13 +91,15 @@ namespace bs
 
 	MonoObject* ScriptRRefBase::internal_GetResource(ScriptRRefBase* thisPtr)
 	{
+		if(thisPtr->mScriptResource)
+			return thisPtr->mScriptResource->getManagedInstance();
+
 		const HResource resource = thisPtr->getHandle();
 		if(resource == nullptr)
 			return nullptr;
 
-		ScriptResourceBase* scriptResource = nullptr;
 		if(resource.isLoaded(false))
-			scriptResource = ScriptResourceManager::instance().getScriptResource(resource, true);
+			thisPtr->mScriptResource = ScriptResourceManager::instance().getScriptResource(resource, true);
 		else
 		{
 			ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies;
@@ -106,11 +108,11 @@ namespace bs
 				loadFlags |= ResourceLoadFlag::KeepSourceData;
 
 			const HResource loadedResource = gResources().loadFromUUID(thisPtr->getHandle().getUUID(), loadFlags);
-			scriptResource = ScriptResourceManager::instance().getScriptResource(loadedResource, true);
+			thisPtr->mScriptResource = ScriptResourceManager::instance().getScriptResource(loadedResource, true);
 		}
 
-		if(scriptResource)
-			return scriptResource->getManagedInstance();
+		if(thisPtr->mScriptResource)
+			return thisPtr->mScriptResource->getManagedInstance();
 
 		return nullptr;
 	}

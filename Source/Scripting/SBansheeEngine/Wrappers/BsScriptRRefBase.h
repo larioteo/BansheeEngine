@@ -46,6 +46,8 @@ namespace bs
 		static ::MonoClass* bindGenericParam(::MonoClass* param);
 
 	private:
+		friend class ScriptResourceManager;
+
 		ScriptRRefBase(MonoObject* instance, ResourceHandle<Resource> handle);
 		~ScriptRRefBase();
 
@@ -55,10 +57,14 @@ namespace bs
 		/** @copydoc ScriptObjectBase::_onManagedInstanceDeleted */
 		void _onManagedInstanceDeleted(bool assemblyRefresh) override;
 
+		/** Clears the internal cached ScriptResource reference. Should be called if the resource got destroyed. */
+		void clearResource() { mScriptResource = nullptr; }
+
 		/** @copydoc create() */
 		static ScriptRRefBase* createInternal(const ResourceHandle<Resource>& handle, ::MonoClass* type = nullptr);
 
 		ResourceHandle<Resource> mResource;
+		ScriptResourceBase* mScriptResource = nullptr;
 		UINT32 mGCHandle;
 
 		/************************************************************************/

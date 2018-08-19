@@ -63,7 +63,7 @@ namespace bs
 		 * Attempts to find a resource interop object for a resource with the specified UUID. Returns null if the object
 		 * cannot be found.
 		 */
-		ScriptResourceBase* getScriptResource(const UUID& UUID);
+		ScriptResourceBase* getScriptResource(const UUID& uuid);
 
 		/**
 		 * Attempts to find an existing interop object for the specified resource reference, or creates a new object if one
@@ -97,8 +97,17 @@ namespace bs
 		/**	Triggered when the native resource has been unloaded and therefore destroyed. */
 		void onResourceDestroyed(const UUID& UUID);
 
+		/** 
+		 * Clears all cached RRefs. Should be called before assembly refresh since the refs will no longer be valid
+		 * after.
+		 */
+		void clearRRefs();
+
 		UnorderedMap<UUID, ScriptResourceBase*> mScriptResources;
+		UnorderedMap<::MonoClass*, UnorderedMap<UUID, ScriptRRefBase*>> mScriptRRefsPerType;
+
 		HEvent mResourceDestroyedConn;
+		HEvent mDomainUnloadedConn;
 	};
 
 	/** @} */

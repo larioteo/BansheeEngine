@@ -30,8 +30,7 @@ namespace BansheeEditor
 
             textureField.OnChanged += (x) =>
             {
-                Texture texture = Resources.Load<Texture>(x.UUID);
-                spriteTexture.Texture = texture;
+                spriteTexture.Texture = x;
                 EditorApplication.SetDirty(spriteTexture);
             };
 

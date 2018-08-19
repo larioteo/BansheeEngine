@@ -19,10 +19,12 @@ namespace bs
 	ScriptResourceManager::ScriptResourceManager()
 	{
 		mResourceDestroyedConn = gResources().onResourceDestroyed.connect(std::bind(&ScriptResourceManager::onResourceDestroyed, this, _1));
+		mDomainUnloadedConn = MonoManager::instance().onDomainUnload.connect(std::bind(&ScriptResourceManager::clearRRefs, this));
 	}
 
 	ScriptResourceManager::~ScriptResourceManager()
 	{
+		mDomainUnloadedConn.disconnect();
 		mResourceDestroyedConn.disconnect();
 	}
 
@@ -90,7 +92,15 @@ namespace bs
 
 	ScriptRRefBase* ScriptResourceManager::getScriptRRef(const HResource& resource, ::MonoClass* rrefClass)
 	{
-		return ScriptRRefBase::create(resource, rrefClass);
+		UnorderedMap<UUID, ScriptRRefBase*>& rrefs = mScriptRRefsPerType[rrefClass];
+		const auto iterFind = rrefs.find(resource.getUUID());
+		if (iterFind != rrefs.end())
+			return iterFind->second;
+
+		ScriptRRefBase* newRRef = ScriptRRefBase::create(resource, rrefClass);
+		rrefs[resource.getUUID()] = newRRef;
+
+		return newRRef;
 	}
 
 	void ScriptResourceManager::destroyScriptResource(ScriptResourceBase* resource)
@@ -101,20 +111,47 @@ namespace bs
 		if(uuid.empty())
 			BS_EXCEPT(InvalidParametersException, "Provided resource handle has an undefined resource UUID.");
 
+#if BS_DEBUG_MODE
+		for(auto& kvp : mScriptRRefsPerType)
+		{
+			UnorderedMap<UUID, ScriptRRefBase*>& rrefs = kvp.second;
+
+			// No handles should exist at this point because we only manually free the ScriptResourceBase object if the
+			// native resource is destroyed, which we handle in onResourceDestroyed. And only other destruction should
+			// happen during assembly refresh, which we handled in clearRRefs().
+			const auto iterFind = rrefs.find(uuid);
+			assert(iterFind == rrefs.end());
+		}
+#endif
+
 		(resource)->~ScriptResourceBase();
 		MemoryAllocator<GenAlloc>::free(resource);
 
 		mScriptResources.erase(uuid);
 	}
 
-	void ScriptResourceManager::onResourceDestroyed(const UUID& UUID)
+	void ScriptResourceManager::onResourceDestroyed(const UUID& uuid)
 	{
-		auto findIter = mScriptResources.find(UUID);
+		for(auto& kvp : mScriptRRefsPerType)
+		{
+			UnorderedMap<UUID, ScriptRRefBase*>& rrefs = kvp.second;
+
+			const auto iterFind = rrefs.find(uuid);
+			if (iterFind != rrefs.end())
+				iterFind->second->clearResource();
+		}
+
+		auto findIter = mScriptResources.find(uuid);
 		if (findIter != mScriptResources.end())
 		{
 			findIter->second->notifyResourceDestroyed();
 			mScriptResources.erase(findIter);
 		}
+	}
+
+	void ScriptResourceManager::clearRRefs()
+	{
+		mScriptRRefsPerType.clear();
 	}
 
 	void ScriptResourceManager::_throwExceptionIfInvalidOrDuplicate(const UUID& uuid) const
