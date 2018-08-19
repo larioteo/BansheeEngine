@@ -185,7 +185,10 @@ namespace BansheeEditor
                         field = new InspectableVector4(parent, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Resource:
-                        field = new InspectableResourceRef(parent, title, path, depth, layout, property);
+                        field = new InspectableResource(parent, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.RRef:
+                        field = new InspectableRRef(parent, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.GameObjectRef:
                         field = new InspectableGameObjectRef(parent, title, path, depth, layout, property);

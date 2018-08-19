@@ -91,6 +91,7 @@
     <Compile Include="Inspectors\SphereColliderInspector.cs" />
     <Compile Include="Inspectors\SphericalJointInspector.cs" />
     <Compile Include="Windows\GradientPicker.cs" />
+    <Compile Include="Windows\Inspector\InspectableRRef.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldRangeStyle.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldStepStyle.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldStyle.cs" />
@@ -176,7 +177,7 @@
     <Compile Include="Windows\Inspector\InspectableObject.cs" />
     <Compile Include="Windows\Inspector\InspectableField.cs" />
     <Compile Include="Windows\Inspector\InspectableInt.cs" />
-    <Compile Include="Windows\Inspector\InspectableResourceRef.cs" />
+    <Compile Include="Windows\Inspector\InspectableResource.cs" />
     <Compile Include="Windows\Inspector\InspectableString.cs" />
     <Compile Include="Windows\Inspector\InspectableVector2.cs" />
     <Compile Include="Windows\Inspector\InspectableVector3.cs" />
