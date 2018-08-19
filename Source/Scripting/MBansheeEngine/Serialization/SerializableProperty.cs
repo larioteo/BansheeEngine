@@ -361,7 +361,7 @@ namespace BansheeEngine
                     return FieldType.GameObjectRef;
                 else if (internalType.IsSubclassOf(typeof (Resource)))
                     return FieldType.Resource;
-                else if (internalType == typeof(RRefBase))
+                else if (internalType.IsSubclassOf(typeof (RRefBase)))
                     return FieldType.RRef;
                 else if (internalType.IsGenericType)
                 {
