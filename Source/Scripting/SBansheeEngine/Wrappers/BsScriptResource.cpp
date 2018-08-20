@@ -24,6 +24,19 @@ namespace bs
 		return MonoUtil::getObjectFromGCHandle(mGCHandle);
 	}
 
+	MonoObject* ScriptResourceBase::getRRef(const HResource& resource, UINT32 rttiId)
+	{
+		::MonoClass* rrefClass = getRRefClass(rttiId);
+		if(!rrefClass)
+			return nullptr;
+
+		ScriptRRefBase* rref = ScriptResourceManager::instance().getScriptRRef(resource, rrefClass);
+		if(!rref)
+			return nullptr;
+
+		return rref->getManagedInstance();
+	}
+
 	void ScriptResourceBase::setManagedInstance(::MonoObject* instance)
 	{
 		BS_ASSERT(mGCHandle == 0 && "Attempting to set a new managed instance without freeing the old one.");
