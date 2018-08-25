@@ -879,7 +879,10 @@ namespace BansheeEditor
             position.x = guiEvents.GetOffset(animEvent.time);
             position.y = EVENTS_HEIGHT/2;
 
-            Rect2I eventBounds = GUIUtility.CalculateBounds(eventsPanel, window.GUI);
+            Rect2I eventBounds = new Rect2I();
+            if (showEvents)
+                eventBounds = GUIUtility.CalculateBounds(eventsPanel, window.GUI);
+
             Vector2I windowPos = position + new Vector2I(eventBounds.x, eventBounds.y);
 
             if (eventsSO == null)
@@ -940,7 +943,10 @@ namespace BansheeEditor
             Rect2I drawingBounds = drawingPanel.Bounds;
             Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
 
-            Rect2I eventBounds = eventsPanel.Bounds;
+            Rect2I eventBounds = new Rect2I();
+            if(showEvents)
+                eventBounds = eventsPanel.Bounds;
+
             Vector2I eventPos = pointerPos - new Vector2I(eventBounds.x, eventBounds.y);
 
             if (ev.Button == PointerButton.Left)

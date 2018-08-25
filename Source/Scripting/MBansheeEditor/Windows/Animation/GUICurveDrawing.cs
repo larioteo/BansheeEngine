@@ -579,7 +579,7 @@ namespace BansheeEditor
         /// <param name="color">Color to draw the curve with.</param>
         private void DrawCurve(EdAnimationCurve curve, Color color)
         {
-            float range = GetRange();
+            float range = GetRange(true);
             float lengthPerPixel = range / drawableWidth;
 
             KeyFrame[] keyframes = curve.KeyFrames;
@@ -588,24 +588,28 @@ namespace BansheeEditor
 
             // Draw start line
             {
-                float curveStart = MathEx.Clamp(keyframes[0].time, 0.0f, range);
-                float curveValue = curve.Evaluate(0.0f, false);
-
-                Vector2I start = CurveToPixelSpace(new Vector2(0.0f, curveValue));
-                start.x -= GUIGraphTime.PADDING;
+                float curveStart = keyframes[0].time;
+                float curveValue = curve.Evaluate(curveStart, false);
 
                 Vector2I end = CurveToPixelSpace(new Vector2(curveStart, curveValue));
+                Vector2I start = new Vector2I(-GUIGraphTime.PADDING, end.y);
 
-                canvas.DrawLine(start, end, COLOR_MID_GRAY);
+                if(start.x < end.x)
+                    canvas.DrawLine(start, end, COLOR_MID_GRAY);
             }
 
             List<Vector2I> linePoints = new List<Vector2I>();
 
             // Draw in between keyframes
+            float startVisibleTime = rangeOffset;
+            float endVisibleTime = startVisibleTime + range;
             for (int i = 0; i < keyframes.Length - 1; i++)
             {
-                float start = MathEx.Clamp(keyframes[i].time, 0.0f, range);
-                float end = MathEx.Clamp(keyframes[i + 1].time, 0.0f, range);
+                float start = keyframes[i].time;
+                float end = keyframes[i + 1].time;
+
+                if (end < startVisibleTime || start > endVisibleTime)
+                    continue;
 
                 bool isStep = keyframes[i].outTangent == float.PositiveInfinity ||
                               keyframes[i + 1].inTangent == float.PositiveInfinity;
@@ -665,13 +669,14 @@ namespace BansheeEditor
 
             // Draw end line
             {
-                float curveEnd = MathEx.Clamp(keyframes[keyframes.Length - 1].time, 0.0f, range);
-                float curveValue = curve.Evaluate(range, false);
+                float curveEnd = keyframes[keyframes.Length - 1].time;
+                float curveValue = curve.Evaluate(curveEnd, false);
 
                 Vector2I start = CurveToPixelSpace(new Vector2(curveEnd, curveValue));
                 Vector2I end = new Vector2I(width, start.y);
 
-                canvas.DrawLine(start, end, COLOR_MID_GRAY);
+                if(start.x < end.x)
+                    canvas.DrawLine(start, end, COLOR_MID_GRAY);
             }
         }
 
@@ -682,7 +687,7 @@ namespace BansheeEditor
         /// <param name="color">Color to draw the area with.</param>
         private void DrawCurveRange(EdAnimationCurve[] curves, Color color)
         {
-            float range = GetRange();
+            float range = GetRange(true);
 
             if(curves.Length != 2 || curves[0] == null || curves[1] == null)
                 return;
@@ -695,6 +700,9 @@ namespace BansheeEditor
             float timePerSample = range / numSamples;
 
             float time = rangeOffset;
+            float lengthPerPixel = rangeLength / drawableWidth;
+            time -= lengthPerPixel * PADDING;
+
             int[] keyframeIndices = {0, 0};
 
             // Find first valid keyframe indices
