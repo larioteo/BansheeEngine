@@ -1,5 +1,6 @@
 ﻿//********************************** Banshee Engine (www.banshee5d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+using System;
 using BansheeEngine;
 
 namespace BansheeEditor
@@ -7,63 +8,115 @@ namespace BansheeEditor
     /// <summary>
     /// Opens a window that allows the user to edit a single animation curve or two curves representing a range.
     /// </summary>
-    [DefaultSize(600, 400)]
-    public class CurveEditorWindow : EditorWindow
+    public class CurveEditorWindow : ModalWindow
     {
+        private EdAnimationCurve curveA; 
+        private EdAnimationCurve curveB; 
+
         private GUICurveEditor curveEditor;
+        private GUIButton guiOK;
+        private GUIButton guiCancel;
+
+        private Action<bool, AnimationCurve, AnimationCurve> closedCallbackRange;
+        private Action<bool, AnimationCurve> closedCallback;
+
+        /// <summary>
+        /// Shows the curve editor window that allows the user to edit a single curve.
+        /// </summary>
+        /// <param name="curve">Curve to initialize the window with.</param>
+        /// <param name="closedCallback">Optional callback to trigger when the user finishes editing the curve or
+        ///                              cancels out of the dialog.</param>
+        /// <returns>An instance of the curve editor window.</returns>
+        public static CurveEditorWindow Show(AnimationCurve curve, Action<bool, AnimationCurve> closedCallback = null)
+        {
+            CurveEditorWindow picker = new CurveEditorWindow(curve, closedCallback);
+            return picker;
+        }
+
+        /// <summary>
+        /// Shows the curve editor window that allows the user to edit a curve range (two curves).
+        /// </summary>
+        /// <param name="curveA">First curve of the range to display/edit.</param>
+        /// <param name="curveB">Second curve of the range to display/edit.</param>
+        /// <param name="closedCallback">Optional callback to trigger when the user finishes editing the curve or
+        ///                              cancels out of the dialog.</param>
+        /// <returns>An instance of the curve editor window.</returns>
+        public static CurveEditorWindow Show(AnimationCurve curveA, AnimationCurve curveB, 
+            Action<bool, AnimationCurve, AnimationCurve> closedCallback = null)
+        {
+            CurveEditorWindow picker = new CurveEditorWindow(curveA, curveB, closedCallback);
+            return picker;
+        }
 
         #region Overrides
 
-        // DEBUG ONLY
-        [MenuItem("Windows/Dbg", 5000)]
-        public static void Open()
+        private CurveEditorWindow(AnimationCurve curve, Action<bool, AnimationCurve> closedCallback = null)
+            : base(false)
         {
-            OpenWindow<CurveEditorWindow>();
+            Title = new LocString("Curve editor");
+            Width = 600;
+            Height = 460;
+
+            curveA = new EdAnimationCurve(curve ?? new AnimationCurve(new KeyFrame[] {}), null);
+            this.closedCallback = closedCallback;
         }
 
-        /// <inheritdoc/>
-        protected override LocString GetDisplayName()
+        private CurveEditorWindow(AnimationCurve curveA, AnimationCurve curveB, 
+            Action<bool, AnimationCurve, AnimationCurve> closedCallback = null)
+            : base(false)
         {
-            return new LocEdString("Curve editor");
+            Title = new LocString("Curve editor");
+            Width = 600;
+            Height = 460;
+
+            this.curveA = new EdAnimationCurve(curveA ?? new AnimationCurve(new KeyFrame[] {}), null);
+            this.curveB = new EdAnimationCurve(curveB ?? new AnimationCurve(new KeyFrame[] {}), null);
+
+            this.closedCallbackRange = closedCallback;
         }
 
         private void OnInitialize()
         {
-            // TODO - Add methods to allow the window to be open with user-defined curve(s)
-            // TODO - Add callbacks that trigger when user finishes editing
-            // TODO - Add OK/Cancel buttons? Make the window modal?
-            // TODO - Add a CurveField GUI element that can be used for curve preview, clicking on which opens this window
+            GUILayout vertLayout = GUI.AddLayoutY();
+            GUILayout editorPanel = vertLayout.AddPanel(GUIOption.FixedHeight(400));
+            GUILayout buttonLayout = vertLayout.AddLayoutX(GUIOption.FixedHeight(40));
 
-            curveEditor = new GUICurveEditor(this, this.GUI, 600, 400, false);
+            guiOK = new GUIButton(new LocEdString("OK"));
+            guiCancel = new GUIButton(new LocEdString("Cancel"));
+
+            guiOK.OnClick += OnOK;
+            guiCancel.OnClick += OnCancel;
+
+            CurveDrawOptions drawOptions = CurveDrawOptions.DrawKeyframes | CurveDrawOptions.DrawMarkers;
+            if (curveB != null)
+                drawOptions |= CurveDrawOptions.DrawRange;
+
+            curveEditor = new GUICurveEditor(editorPanel, 600, 400, false, drawOptions); 
             curveEditor.Redraw();
 
-            EdAnimationCurve[] edAnimCurve =
+            CurveDrawInfo[] drawinfo;
+
+            if (curveB != null)
             {
-                new EdAnimationCurve(),
-                new EdAnimationCurve()
-            };
-
-            edAnimCurve[0].AddKeyframe(0.0f, 1.0f);
-            edAnimCurve[0].AddKeyframe(5.0f, 3.0f);
-            edAnimCurve[0].AddKeyframe(8.0f, -3.0f);
-            edAnimCurve[0].AddKeyframe(15.0f, 2.0f);
-            edAnimCurve[0].Apply();
-
-            edAnimCurve[1].AddKeyframe(0.0f, -3.0f);
-            edAnimCurve[1].AddKeyframe(3.0f, 0.0f);
-            edAnimCurve[1].AddKeyframe(10.0f, -1.0f);
-            edAnimCurve[1].AddKeyframe(13.0f, -5.0f);
-            edAnimCurve[1].Apply();
-
-            CurveDrawInfo[] drawinfo =
+                drawinfo = new []
+                {
+                    new CurveDrawInfo(curveA, Color.BansheeOrange),
+                    new CurveDrawInfo(curveB, Color.Green),
+                };
+            }
+            else
             {
-                new CurveDrawInfo(edAnimCurve[0], Color.Green),
-                new CurveDrawInfo(edAnimCurve[1], Color.Red),
-            };
+                drawinfo = new [] { new CurveDrawInfo(curveA, Color.BansheeOrange), };
+            }
 
             curveEditor.SetCurves(drawinfo);
             curveEditor.CenterAndResize(true);
-            curveEditor.SetDrawRange(true);
+
+            buttonLayout.AddFlexibleSpace();
+            buttonLayout.AddElement(guiOK);
+            buttonLayout.AddSpace(10);
+            buttonLayout.AddElement(guiCancel);
+            buttonLayout.AddFlexibleSpace();
 
             EditorInput.OnPointerPressed += OnPointerPressed;
             EditorInput.OnPointerDoubleClick += OnPointerDoubleClicked;
@@ -86,12 +139,34 @@ namespace BansheeEditor
             EditorInput.OnButtonUp -= OnButtonUp;
         }
 
-        /// <inheritdoc/>
-        protected override void WindowResized(int width, int height)
+        #endregion
+
+        #region GUI
+
+        /// <summary>
+        /// Triggered when the user finishes editing the curve(s) and closes the dialog.
+        /// </summary>
+        void OnOK()
         {
-            Vector2I curveEditorSize = new Vector2I(width, height);
-            curveEditor.SetSize(curveEditorSize.x, curveEditorSize.y);
-            curveEditor.Redraw();
+            if (curveB != null)
+                closedCallbackRange?.Invoke(true, curveA.Normal, curveB.Normal);
+            else
+                closedCallback?.Invoke(true, curveA.Normal);
+
+            Close();
+        }
+
+        /// <summary>
+        /// Triggered when the user cancels editing the curve(s) closes the dialog.
+        /// </summary>
+        void OnCancel()
+        {
+            if (curveB != null)
+                closedCallbackRange?.Invoke(false, curveA.Normal, curveB.Normal);
+            else
+                closedCallback?.Invoke(false, curveA.Normal);
+
+            Close();
         }
 
         #endregion
@@ -104,7 +179,6 @@ namespace BansheeEditor
         private void OnPointerPressed(PointerEvent ev)
         {
             curveEditor.OnPointerPressed(ev);
-
         }
 
         /// <summary>
@@ -123,7 +197,6 @@ namespace BansheeEditor
         private void OnPointerMoved(PointerEvent ev)
         {
             curveEditor.OnPointerMoved(ev);
-
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Triggered when the user clicks on the GUI element.</summary>
-		public event Action OnClicked;
+		partial void OnClicked();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setGradient(IntPtr thisPtr, ColorGradient colorGradient);
@@ -43,7 +43,7 @@ namespace BansheeEditor
 		private static extern void Internal_create(GUIColorGradient managedInstance, string styleName);
 		private void Internal_onClicked()
 		{
-			OnClicked?.Invoke();
+			OnClicked();
 		}
 	}
 

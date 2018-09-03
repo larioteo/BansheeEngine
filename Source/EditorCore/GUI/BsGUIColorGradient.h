@@ -48,7 +48,7 @@ namespace bs
 		BS_SCRIPT_EXPORT(pr:getter,n:Gradient)
 		ColorGradient getGradient() const { return mValue; }
 
-		BS_SCRIPT_EXPORT()
+		BS_SCRIPT_EXPORT(in:true)
 		Event<void()> onClicked; /**< Triggered when the user clicks on the GUI element. */
 
 		/** @name Internal
