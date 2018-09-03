@@ -1221,7 +1221,7 @@ namespace BansheeEditor
             openPosition.x = buttonBounds.x + buttonBounds.width / 2;
             openPosition.y = buttonBounds.y + buttonBounds.height / 2;
 
-            LibraryDropDown dropDown = DropDownWindow.Open<LibraryDropDown>(this, openPosition);
+            LibraryDropDown dropDown = DropDownWindow.Open<LibraryDropDown>(GUI, openPosition);
             dropDown.Initialize(this);
         }
 

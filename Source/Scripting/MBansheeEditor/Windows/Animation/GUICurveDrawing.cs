@@ -28,8 +28,7 @@ namespace BansheeEditor
         private float yOffset;
 
         private GUIGraphTicks tickHandler;
-        private bool drawMarkers = true;
-        private bool drawRange = false;
+        private CurveDrawOptions drawOptions;
 
         /// <summary>
         /// Creates a new curve drawing GUI element.
@@ -38,15 +37,17 @@ namespace BansheeEditor
         /// <param name="width">Width of the element in pixels.</param>
         /// <param name="height">Height of the element in pixels.</param>
         /// <param name="curveInfos">Initial set of curves to display. </param>
-        /// <param name="drawMarkers">If enabled draw frame markers, or if disabled draw just the curve.</param>
-        public GUICurveDrawing(GUILayout layout, int width, int height, CurveDrawInfo[] curveInfos, bool drawMarkers = true)
+        /// <param name="options">Options that control which additional elements to draw.</param>
+        public GUICurveDrawing(GUILayout layout, int width, int height, CurveDrawInfo[] curveInfos, 
+            CurveDrawOptions options = CurveDrawOptions.DrawKeyframes | CurveDrawOptions.DrawMarkers)
             :base(layout, width, height)
         {
-            if(drawMarkers)
+            drawOptions = options;
+
+            if(drawOptions.HasFlag(CurveDrawOptions.DrawMarkers))
                 tickHandler = new GUIGraphTicks(GUITickStepType.Time);
 
             this.curveInfos = curveInfos;
-            this.drawMarkers = drawMarkers;
             
             ClearSelectedKeyframes(); // Makes sure the array is initialized
         }
@@ -82,17 +83,6 @@ namespace BansheeEditor
             yOffset = offset.y;
         }
 
-        /// <summary>
-        /// Changes curve rendering mode. Normally the curves are drawn individually, but when range rendering is enabled
-        /// the area between the first two curves is drawn instead. This setting is ignored if less than two curves are
-        /// present. More than two curves are also ignored.
-        /// </summary>
-        /// <param name="drawRange">True to enable range rendering mode, false to enable individual curve rendering.</param>
-        public void SetDrawRange(bool drawRange)
-        {
-            this.drawRange = drawRange;
-        }
-        
         /// <summary>
         /// Marks the specified key-frame as selected, changing the way it is displayed.
         /// </summary>
@@ -323,6 +313,80 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Returns the offset and range required for fully displaying the provided set of curves. 
+        /// </summary>
+        /// <param name="offset">Offset used for centering the curves.</param>
+        /// <param name="range">Range representing the width/height in curve space (time, value). </param>
+        public static void GetOptimalRangeAndOffset(CurveDrawInfo[] curveInfos, out Vector2 offset, out Vector2 range)
+        {
+            float xMin, xMax;
+            float yMin, yMax;
+            CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
+
+            float xRange = xMax - xMin;
+
+            float yRange = (yMax - yMin) * 0.5f;
+            float yOffset = yMin + yRange;
+
+            // Add padding to y range
+            yRange *= 1.05f;
+
+            // Don't allow zero range
+            if (xRange == 0.0f)
+                xRange = 60.0f;
+
+            if (yRange == 0.0f)
+                yRange = 10.0f;
+
+            offset = new Vector2(xMin, yOffset);
+            range = new Vector2(xRange, yRange);
+        }
+
+        /// <summary>
+        /// Calculates the total range covered by a set of curves.
+        /// </summary>
+        /// <param name="curveInfos">Curves to calculate range for.</param>
+        /// <param name="xMin">Minimum time value present in the curves.</param>
+        /// <param name="xMax">Maximum time value present in the curves.</param>
+        /// <param name="yMin">Minimum curve value present in the curves.</param>
+        /// <param name="yMax">Maximum curve value present in the curves.</param>
+        public static void CalculateRange(CurveDrawInfo[] curveInfos, out float xMin, out float xMax, out float yMin, 
+            out float yMax)
+        {
+            // Note: This only evaluates at keyframes, we should also evaluate in-between in order to account for steep
+            // tangents
+            xMin = float.PositiveInfinity;
+            xMax = float.NegativeInfinity;
+            yMin = float.PositiveInfinity;
+            yMax = float.NegativeInfinity;
+
+            foreach (var curveInfo in curveInfos)
+            {
+                KeyFrame[] keyframes = curveInfo.curve.KeyFrames;
+
+                foreach (var key in keyframes)
+                {
+                    xMin = Math.Min(xMin, key.time);
+                    xMax = Math.Max(xMax, key.time);
+                    yMin = Math.Min(yMin, key.value);
+                    yMax = Math.Max(yMax, key.value);
+                }
+            }
+
+            if (xMin == float.PositiveInfinity)
+                xMin = 0.0f;
+
+            if (xMax == float.NegativeInfinity)
+                xMax = 0.0f;
+
+            if (yMin == float.PositiveInfinity)
+                yMin = 0.0f;
+
+            if (yMax == float.NegativeInfinity)
+                yMax = 0.0f;
+        }
+
+        /// <summary>
         /// Generates a unique color based on the provided index.
         /// </summary>
         /// <param name="idx">Index to use for generating a color. Should be less than 30 in order to guarantee reasonably
@@ -494,7 +558,8 @@ namespace BansheeEditor
             if (curveInfos == null)
                 return;
 
-            if (drawMarkers)
+            bool drawMarkers = drawOptions.HasFlag(CurveDrawOptions.DrawMarkers);
+            if(drawMarkers)
             {
                 tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), drawableWidth + PADDING);
 
@@ -519,6 +584,7 @@ namespace BansheeEditor
             }
 
             // Draw range
+            bool drawRange = drawOptions.HasFlag(CurveDrawOptions.DrawRange);
             int curvesToDraw = curveInfos.Length;
             if (drawRange && curveInfos.Length >= 2)
             {
@@ -529,21 +595,25 @@ namespace BansheeEditor
             }
 
             // Draw curves
+            bool drawKeyframes = drawOptions.HasFlag(CurveDrawOptions.DrawKeyframes);
             for (int i = 0; i < curvesToDraw; i++)
             {
                 DrawCurve(curveInfos[i].curve, curveInfos[i].color);
 
                 // Draw keyframes
-                KeyFrame[] keyframes = curveInfos[i].curve.KeyFrames;
-
-                for (int j = 0; j < keyframes.Length; j++)
+                if (drawKeyframes)
                 {
-                    bool isSelected = IsSelected(i, j);
+                    KeyFrame[] keyframes = curveInfos[i].curve.KeyFrames;
 
-                    DrawKeyframe(keyframes[j].time, keyframes[j].value, isSelected);
+                    for (int j = 0; j < keyframes.Length; j++)
+                    {
+                        bool isSelected = IsSelected(i, j);
 
-                    if (isSelected)
-                        DrawTangents(keyframes[j], curveInfos[i].curve.TangentModes[j]);
+                        DrawKeyframe(keyframes[j].time, keyframes[j].value, isSelected);
+
+                        if (isSelected)
+                            DrawTangents(keyframes[j], curveInfos[i].curve.TangentModes[j]);
+                    }
                 }
             }
 
@@ -889,7 +959,7 @@ namespace BansheeEditor
     /// <summary>
     /// Information necessary to draw a curve.
     /// </summary>
-    internal struct CurveDrawInfo
+    public struct CurveDrawInfo
     {
         public CurveDrawInfo(EdAnimationCurve curve, Color color)
         {
@@ -899,6 +969,28 @@ namespace BansheeEditor
 
         public EdAnimationCurve curve;
         public Color color;
+    }
+
+    /// <summary>
+    /// Controls which elements should a <see cref="GUICurveDrawing"/> object draw.
+    /// </summary>
+    [Flags]
+    internal enum CurveDrawOptions
+    {
+        /// <summary>
+        /// Draws markers at specific time intervals.
+        /// </summary>
+        DrawMarkers = 1 << 0,
+
+        /// <summary>
+        /// Draws elements representing individual keyframes.
+        /// </summary>
+        DrawKeyframes = 1 << 1,
+
+        /// <summary>
+        /// Draws curves and the area between them. Only relevant if only two curves are provided for drawing.
+        /// </summary>
+        DrawRange = 1 << 2
     }
 
     /** }@ */

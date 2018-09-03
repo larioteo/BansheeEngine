@@ -58,7 +58,20 @@ namespace BansheeEngine
         }
 
         /// <summary>
-        /// Gets or sets non-clipped bounds of the GUI element including the margins. Relative to a parent GUI panel.
+        /// Returns the non-clipped bounds of the GUI element in screen space.
+        /// </summary>
+        public Rect2I ScreenBounds
+        {
+            get
+            {
+                Rect2I bounds;
+                Internal_GetScreenBounds(mCachedPtr, out bounds);
+                return bounds;
+            }
+        }
+
+        /// <summary>
+        /// Returns the non-clipped bounds of the GUI element including the margins. Relative to a parent GUI panel.
         /// </summary>
         public Rect2I VisualBounds
         {
@@ -295,6 +308,9 @@ namespace BansheeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_GetVisualBounds(IntPtr nativeInstance, out Rect2I value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_GetScreenBounds(IntPtr nativeInstance, out Rect2I value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetContextMenu(IntPtr nativeInstance, IntPtr contextMenu);

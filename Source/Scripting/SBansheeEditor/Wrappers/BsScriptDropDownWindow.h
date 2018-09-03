@@ -9,6 +9,8 @@
 
 namespace bs
 {
+	class ScriptGUIElementBaseTBase;
+
 	/** @addtogroup ScriptInteropEditor
 	 *  @{
 	 */
@@ -42,7 +44,7 @@ namespace bs
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static MonoObject* internal_CreateInstance(MonoString* ns, MonoString* typeName, ScriptEditorWindow* parentWindow, Vector2I* position);
+		static MonoObject* internal_CreateInstance(MonoString* ns, MonoString* typeName, ScriptGUIElementBaseTBase* parentElement, Vector2I* position);
 		static void internal_Close(ScriptDropDownWindow* nativeInstance);
 		static UINT32 internal_GetWidth(ScriptDropDownWindow* nativeInstance);
 		static void internal_SetWidth(ScriptDropDownWindow* nativeInstance, UINT32 value);

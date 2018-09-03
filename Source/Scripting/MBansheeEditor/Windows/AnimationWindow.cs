@@ -267,7 +267,7 @@ namespace BansheeEditor
             optionsButton.OnClick += () =>
             {
                 Vector2I openPosition = ScreenToWindowPos(Input.PointerPosition);
-                AnimationOptions dropDown = DropDownWindow.Open<AnimationOptions>(this, openPosition);
+                AnimationOptions dropDown = DropDownWindow.Open<AnimationOptions>(GUI, openPosition);
                 dropDown.Initialize(this);
             };
 
@@ -280,7 +280,7 @@ namespace BansheeEditor
                 Action openPropertyWindow = () =>
                 {
                     Vector2I windowPos = ScreenToWindowPos(Input.PointerPosition);
-                    FieldSelectionWindow fieldSelection = DropDownWindow.Open<FieldSelectionWindow>(this, windowPos);
+                    FieldSelectionWindow fieldSelection = DropDownWindow.Open<FieldSelectionWindow>(GUI, windowPos);
                     fieldSelection.OnFieldSelected += OnFieldAdded;
                 };
 
@@ -413,7 +413,7 @@ namespace BansheeEditor
             GUILayout curveLayout = contentLayout.AddLayoutY();
 
             Vector2I curveEditorSize = GetCurveEditorSize();
-            guiCurveEditor = new GUICurveEditor(this, curveLayout, curveEditorSize.x, curveEditorSize.y, true);
+            guiCurveEditor = new GUICurveEditor(curveLayout, curveEditorSize.x, curveEditorSize.y, true);
             guiCurveEditor.SetEventSceneObject(selectedSO);
 
             guiCurveEditor.OnFrameSelected += OnFrameSelected;

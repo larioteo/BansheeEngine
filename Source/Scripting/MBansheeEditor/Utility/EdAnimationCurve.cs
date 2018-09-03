@@ -12,7 +12,7 @@ namespace BansheeEditor
     /// <summary>
     /// Type of tangent on a keyframe in an animation curve.
     /// </summary>
-    internal enum TangentType
+    public enum TangentType
     {
         In = 1 << 0,
         Out = 1 << 1
@@ -23,7 +23,7 @@ namespace BansheeEditor
     /// Modes for "in" and "out" tangents can be combined.
     /// </summary>
     [Flags]
-    internal enum TangentMode
+    public enum TangentMode
     {
         /// <summary>
         /// Both tangents are calculated automatically based on the two surrounding keyframes.
@@ -71,7 +71,7 @@ namespace BansheeEditor
     /// <see cref="AnimationCurve"/> wrapper for use in editor only. Allows easier manipulation of animation keyframes, and
     /// also stores keyframe tangent modes which are not required for non-editor curves.
     /// </summary>
-    internal class EdAnimationCurve
+    public class EdAnimationCurve
     {
         private AnimationCurve native;
 

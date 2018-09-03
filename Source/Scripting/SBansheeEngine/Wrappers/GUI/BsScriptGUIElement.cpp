@@ -112,6 +112,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_GetBounds", (void*)&ScriptGUIElement::internal_getBounds);
 		metaData.scriptClass->addInternalCall("Internal_SetBounds", (void*)&ScriptGUIElement::internal_setBounds);
 		metaData.scriptClass->addInternalCall("Internal_GetVisibleBounds", (void*)&ScriptGUIElement::internal_getVisibleBounds);
+		metaData.scriptClass->addInternalCall("Internal_GetScreenBounds", (void*)&ScriptGUIElement::internal_getScreenBounds);
 		metaData.scriptClass->addInternalCall("Internal_SetPosition", (void*)&ScriptGUIElement::internal_SetPosition);
 		metaData.scriptClass->addInternalCall("Internal_SetWidth", (void*)&ScriptGUIElement::internal_SetWidth);
 		metaData.scriptClass->addInternalCall("Internal_SetFlexibleWidth", (void*)&ScriptGUIElement::internal_SetFlexibleWidth);
@@ -307,6 +308,17 @@ namespace bs
 		}
 
 		*bounds = nativeInstance->getGUIElement()->getVisibleBounds();
+	}
+
+	void ScriptGUIElement::internal_getScreenBounds(ScriptGUIElementBaseTBase* nativeInstance, Rect2I* bounds)
+	{
+		if (nativeInstance->isDestroyed())
+		{
+			*bounds = Rect2I();
+			return;
+		}
+
+		*bounds = nativeInstance->getGUIElement()->getScreenBounds();
 	}
 
 	void ScriptGUIElement::internal_SetPosition(ScriptGUIElementBaseTBase* nativeInstance, INT32 x, INT32 y)

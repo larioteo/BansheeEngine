@@ -1,5 +1,5 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
-//**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+//**************** Copyright (c) 2018 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
 using System.Collections.Generic;
 using BansheeEngine;
@@ -66,7 +66,6 @@ namespace BansheeEditor
         private const float DRAG_SCALE = 3.0f;
         private const float ZOOM_SCALE = 0.1f/120.0f; // One scroll step is usually 120 units, we want 1/10 of that
 
-        private EditorWindow window;
         private GUILayout gui;
         private GUILayout mainPanel;
         private GUIPanel drawingPanel;
@@ -94,7 +93,6 @@ namespace BansheeEditor
 
         private CurveDrawInfo[] curveInfos = new CurveDrawInfo[0];
         private bool disableCurveEdit = false;
-        private bool drawCurveRange = false;
 
         private float xRange = 60.0f;
         private float yRange = 10.0f;
@@ -254,14 +252,14 @@ namespace BansheeEditor
         /// <summary>
         /// Creates a new curve editor GUI elements.
         /// </summary>
-        /// <param name="window">Parent window of the GUI element.</param>
         /// <param name="gui">GUI layout into which to place the GUI element.</param>
         /// <param name="width">Width in pixels.</param>
         /// <param name="height">Height in pixels.</param>
         /// <param name="showEvents">If true show events on the graph and allow their editing.</param>
-        public GUICurveEditor(EditorWindow window, GUILayout gui, int width, int height, bool showEvents)
+        /// <param name="drawOptions">Options that control which elements to display when drawing curves.</param>
+        public GUICurveEditor(GUILayout gui, int width, int height, bool showEvents, 
+            CurveDrawOptions drawOptions = CurveDrawOptions.DrawMarkers | CurveDrawOptions.DrawKeyframes)
         {
-            this.window = window;
             this.gui = gui;
             this.showEvents = showEvents;
 
@@ -341,7 +339,7 @@ namespace BansheeEditor
             drawingPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
             guiCurveDrawing = new GUICurveDrawing(drawingPanel, this.width, this.height - TIMELINE_HEIGHT -
-                eventsHeaderHeight - VERT_PADDING * 2, curveInfos);
+                eventsHeaderHeight - VERT_PADDING * 2, curveInfos, drawOptions);
             guiCurveDrawing.SetRange(60.0f, 20.0f);
 
             GUIPanel sidebarPanel = mainPanel.AddPanel(-10);
@@ -365,20 +363,6 @@ namespace BansheeEditor
         {
             this.curveInfos = curveInfos;
             guiCurveDrawing.SetCurves(curveInfos);
-
-            Redraw();
-        }
-
-        /// <summary>
-        /// Changes curve rendering mode. Normally the curves are drawn individually, but when range rendering is enabled
-        /// the area between the first two curves is drawn instead. This setting is ignored if less than two curves are
-        /// present. More than two curves are also ignored.
-        /// </summary>
-        /// <param name="drawRange">True to enable range rendering mode, false to enable individual curve rendering.</param>
-        public void SetDrawRange(bool drawRange)
-        {
-            drawCurveRange = drawRange;
-            guiCurveDrawing.SetDrawRange(drawRange);
 
             Redraw();
         }
@@ -828,13 +812,11 @@ namespace BansheeEditor
             KeyFrame keyFrame = keyFrames[keyIndex];
             Vector2I position = guiCurveDrawing.CurveToPixelSpace(new Vector2(keyFrame.time, keyFrame.value));
 
-            Rect2I drawingBounds = GUIUtility.CalculateBounds(drawingPanel, window.GUI);
+            Rect2I drawingBounds = drawingPanel.Bounds;
             position.x = MathEx.Clamp(position.x, 0, drawingBounds.width);
             position.y = MathEx.Clamp(position.y, 0, drawingBounds.height);
 
-            Vector2I windowPos = position + new Vector2I(drawingBounds.x, drawingBounds.y);
-            
-            KeyframeEditWindow editWindow = DropDownWindow.Open<KeyframeEditWindow>(window, windowPos);
+            KeyframeEditWindow editWindow = DropDownWindow.Open<KeyframeEditWindow>(drawingPanel, position);
             editWindow.Initialize(keyFrame, x =>
             {
                 curve.UpdateKeyframe(keyIndex, x.time, x.value);
@@ -873,27 +855,21 @@ namespace BansheeEditor
         /// <param name="eventIdx">Event index to open the edit window for.</param>
         private void StartEventEdit(int eventIdx)
         {
+            if (!showEvents || eventsSO == null)
+                return;
+
             AnimationEvent animEvent = events[eventIdx].animEvent;
 
             Vector2I position = new Vector2I();
             position.x = guiEvents.GetOffset(animEvent.time);
             position.y = EVENTS_HEIGHT/2;
 
-            Rect2I eventBounds = new Rect2I();
-            if (showEvents)
-                eventBounds = GUIUtility.CalculateBounds(eventsPanel, window.GUI);
-
-            Vector2I windowPos = position + new Vector2I(eventBounds.x, eventBounds.y);
-
-            if (eventsSO == null)
-                return;
-
             Component[] components = eventsSO.GetComponents();
             string[] componentNames = new string[components.Length];
             for (int i = 0; i < components.Length; i++)
                 componentNames[i] = components[i].GetType().Name;
 
-            EventEditWindow editWindow = DropDownWindow.Open<EventEditWindow>(window, windowPos);
+            EventEditWindow editWindow = DropDownWindow.Open<EventEditWindow>(eventsPanel, position);
             editWindow.Initialize(animEvent, componentNames, () =>
             {
                 UpdateEventsGUI();
@@ -929,10 +905,8 @@ namespace BansheeEditor
             if (ev.IsUsed)
                 return;
 
-            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+            Rect2I elementBounds = mainPanel.ScreenBounds;
+            Vector2I pointerPos = ev.ScreenPos - new Vector2I(elementBounds.x, elementBounds.y);
 
             bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
             if (!isOverEditor)
@@ -1080,9 +1054,9 @@ namespace BansheeEditor
             else if (ev.button == PointerButton.Middle)
             {
                 Vector2 curvePos;
-                if (WindowToCurveSpace(windowPos, out curvePos))
+                if (WindowToCurveSpace(pointerPos, out curvePos))
                 {
-                    dragStartPos = windowPos;
+                    dragStartPos = pointerPos;
                     isMiddlePointerHeld = true;
                 }
             }
@@ -1097,10 +1071,8 @@ namespace BansheeEditor
             if (ev.IsUsed)
                 return;
 
-            Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+            Rect2I elementBounds = mainPanel.ScreenBounds;
+            Vector2I pointerPos = ev.ScreenPos - new Vector2I(elementBounds.x, elementBounds.y);
 
             bool isOverEditor = pointerPos.x >= 0 && pointerPos.x < width && pointerPos.y >= 0 && pointerPos.y < height;
             if (!isOverEditor)
@@ -1130,10 +1102,8 @@ namespace BansheeEditor
 
             if (isPointerHeld)
             {
-                Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
-
-                Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
-                Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
+                Rect2I elementBounds = mainPanel.ScreenBounds;
+                Vector2I pointerPos = ev.ScreenPos - new Vector2I(elementBounds.x, elementBounds.y);
 
                 if (isMousePressedOverKey || isMousePressedOverTangent)
                 {
@@ -1272,9 +1242,10 @@ namespace BansheeEditor
 
             if (isMiddlePointerHeld)
             {
-                Vector2I windowPos = window.ScreenToWindowPos(ev.ScreenPos);
+                Rect2I elementBounds = mainPanel.ScreenBounds;
+                Vector2I pointerPos = ev.ScreenPos - new Vector2I(elementBounds.x, elementBounds.y);
 
-                int distance = Vector2I.Distance(dragStartPos, windowPos);
+                int distance = Vector2I.Distance(dragStartPos, pointerPos);
                 if (distance >= DRAG_START_DISTANCE)
                 {
                     isZoomDragInProgress = true;
@@ -1363,9 +1334,11 @@ namespace BansheeEditor
             float scroll = Input.GetAxisValue(InputAxis.MouseZ);
             if (scroll != 0.0f)
             {
-                Vector2I windowPos = window.ScreenToWindowPos(Input.PointerPosition);
+                Rect2I elementBounds = mainPanel.ScreenBounds;
+                Vector2I pointerPos = Input.PointerPosition - new Vector2I(elementBounds.x, elementBounds.y);
+
                 Vector2 curvePos;
-                if (WindowToCurveSpace(windowPos, out curvePos))
+                if (WindowToCurveSpace(pointerPos, out curvePos))
                 {
                     float zoom = scroll * ZOOM_SCALE;
                     Zoom(curvePos, zoom);
@@ -1523,7 +1496,7 @@ namespace BansheeEditor
         internal void CenterAndResize(bool resetTime)
         {
             Vector2 offset, range;
-            GetOptimalRangeAndOffset(out offset, out range);
+            GUICurveDrawing.GetOptimalRangeAndOffset(curveInfos, out offset, out range);
 
             if (!resetTime)
             {
@@ -1570,7 +1543,7 @@ namespace BansheeEditor
         {
             float xMin, xMax;
             float yMin, yMax;
-            CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
+            GUICurveDrawing.CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
 
             float xRange = xMax;
             float yRange = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
@@ -1589,81 +1562,6 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Returns the offset and range required for fully displaying the currently selected set of curves. 
-        /// </summary>
-        /// <param name="offset">Offset used for centering the curves.</param>
-        /// <param name="range">Range representing the width/height in curve space (time, value). </param>
-        private void GetOptimalRangeAndOffset(out Vector2 offset, out Vector2 range)
-        {
-            float xMin, xMax;
-            float yMin, yMax;
-            CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
-
-            float xRange = xMax - xMin;
-
-            float yRange = (yMax - yMin) * 0.5f;
-            float yOffset = yMin + yRange;
-
-            // Add padding to y range
-            yRange *= 1.05f;
-
-            // Don't allow zero range
-            if (xRange == 0.0f)
-                xRange = 60.0f;
-
-            if (yRange == 0.0f)
-                yRange = 10.0f;
-
-            offset = new Vector2(xMin, yOffset);
-            range = new Vector2(xRange, yRange);
-        }
-
-
-        /// <summary>
-        /// Calculates the total range covered by a set of curves.
-        /// </summary>
-        /// <param name="curveInfos">Curves to calculate range for.</param>
-        /// <param name="xMin">Minimum time value present in the curves.</param>
-        /// <param name="xMax">Maximum time value present in the curves.</param>
-        /// <param name="yMin">Minimum curve value present in the curves.</param>
-        /// <param name="yMax">Maximum curve value present in the curves.</param>
-        private static void CalculateRange(CurveDrawInfo[] curveInfos, out float xMin, out float xMax, out float yMin, 
-            out float yMax)
-        {
-            // Note: This only evaluates at keyframes, we should also evaluate in-between in order to account for steep
-            // tangents
-            xMin = float.PositiveInfinity;
-            xMax = float.NegativeInfinity;
-            yMin = float.PositiveInfinity;
-            yMax = float.NegativeInfinity;
-
-            foreach (var curveInfo in curveInfos)
-            {
-                KeyFrame[] keyframes = curveInfo.curve.KeyFrames;
-
-                foreach (var key in keyframes)
-                {
-                    xMin = Math.Min(xMin, key.time);
-                    xMax = Math.Max(xMax, key.time);
-                    yMin = Math.Min(yMin, key.value);
-                    yMax = Math.Max(yMax, key.value);
-                }
-            }
-
-            if (xMin == float.PositiveInfinity)
-                xMin = 0.0f;
-
-            if (xMax == float.NegativeInfinity)
-                xMax = 0.0f;
-
-            if (yMin == float.PositiveInfinity)
-                yMin = 0.0f;
-
-            if (yMax == float.NegativeInfinity)
-                yMax = 0.0f;
-        }
-
-        /// <summary>
         /// Converts coordinate in curve space (time, value) into pixel coordinates relative to the curve drawing area
         /// origin.
         /// </summary>
@@ -1677,15 +1575,12 @@ namespace BansheeEditor
         /// <summary>
         /// Converts coordinates in window space (relative to the parent window origin) into coordinates in curve space.
         /// </summary>
-        /// <param name="windowPos">Coordinates relative to parent editor window, in pixels.</param>
+        /// <param name="pointerPos">Coordinates relative to this GUI element, in pixels.</param>
         /// <param name="curveCoord">Curve coordinates within the range as specified by <see cref="Range"/>. Only
         ///                          valid when function returns true.</param>
         /// <returns>True if the coordinates are within the curve area, false otherwise.</returns>
-        public bool WindowToCurveSpace(Vector2I windowPos, out Vector2 curveCoord)
+        public bool WindowToCurveSpace(Vector2I pointerPos, out Vector2 curveCoord)
         {
-            Rect2I elementBounds = GUIUtility.CalculateBounds(mainPanel, window.GUI);
-            Vector2I pointerPos = windowPos - new Vector2I(elementBounds.x, elementBounds.y);
-
             Rect2I drawingBounds = drawingPanel.Bounds;
             Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
 

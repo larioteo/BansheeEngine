@@ -16,6 +16,9 @@
 #include "GUI/BsCGUIWidget.h"
 #include "EditorWindow/BsDropDownWindowManager.h"
 #include "BsScriptObjectManager.h"
+#include "RenderAPI/BsViewport.h"
+#include "RenderAPI/BsRenderWindow.h"
+#include "Reflection/BsRTTIType.h"
 
 using namespace std::placeholders;
 
@@ -53,10 +56,10 @@ namespace bs
 	}
 
 	MonoObject* ScriptDropDownWindow::internal_CreateInstance(MonoString* ns, MonoString* typeName, 
-		ScriptEditorWindow* parentWindow, Vector2I* position)
+		ScriptGUIElementBaseTBase* parentElement, Vector2I* position)
 	{
-		String strTypeName = MonoUtil::monoToString(typeName);
-		String strNamespace = MonoUtil::monoToString(ns);
+		const String strTypeName = MonoUtil::monoToString(typeName);
+		const String strNamespace = MonoUtil::monoToString(ns);
 		String fullName = strNamespace + "." + strTypeName;
 
 		MonoClass* windowClass = MonoManager::instance().findClass(strNamespace, strTypeName);
@@ -84,22 +87,39 @@ namespace bs
 
 		MonoObject* instance = windowClass->createInstance(false);
 
-		ManagedDropDownWindow* dropDownWindow = nullptr;
-		if (parentWindow != nullptr && !parentWindow->isDestroyed())
+		GUIElementBase* rootElement = nullptr;
+		if (!parentElement->isDestroyed())
+			rootElement = parentElement->getGUIElement();
+
+		SPtr<RenderWindow> window;
+		SPtr<Camera> camera;
+		if(rootElement)
 		{
-			EditorWidgetBase* editorWidget = parentWindow->getEditorWidget();
-			EditorWidgetContainer* parentContainer = editorWidget->_getParent();
-			if (parentContainer != nullptr)
+			GUIWidget* widget = rootElement->_getParentWidget();
+			if (widget)
 			{
-				SPtr<RenderWindow> parentRenderWindow = parentContainer->getParentWindow()->getRenderWindow();
-				SPtr<Camera> parentCamera = parentContainer->getParentWidget().getCamera();
+				Viewport* viewport = widget->getTarget();
+				if (viewport)
+				{
+					SPtr<RenderTarget> target = viewport->getTarget();
+					if (target && target->getProperties().isWindow)
+						window = std::static_pointer_cast<RenderWindow>(target);
+				}
 
-				position->x += editorWidget->getX();
-				position->y += editorWidget->getY();
-
-				dropDownWindow = DropDownWindowManager::instance().open<ManagedDropDownWindow>(
-					parentRenderWindow, parentCamera, *position, instance, width, height);
+				camera = widget->getCamera();
 			}
+		}
+
+		ManagedDropDownWindow* dropDownWindow = nullptr;
+		if(window && camera)
+		{
+			const Rect2I screenBounds = rootElement->getScreenBounds();
+			const Vector2I windowPos = window->screenToWindowPos(Vector2I(screenBounds.x, screenBounds.y));
+
+			(*position) += windowPos;
+
+			dropDownWindow = DropDownWindowManager::instance().open<ManagedDropDownWindow>(
+				window, camera, *position, instance, width, height);
 		}
 
 		ScriptDropDownWindow* nativeInstance = new (bs_alloc<ScriptDropDownWindow>()) ScriptDropDownWindow(dropDownWindow);

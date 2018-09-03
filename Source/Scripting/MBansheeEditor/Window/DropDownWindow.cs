@@ -41,11 +41,11 @@ namespace BansheeEditor
         /// Opens a new drop down window at the specified location.
         /// </summary>
         /// <typeparam name="T">Type of the drop down window to open.</typeparam>
-        /// <param name="parent">Parent editor window to open the drop down window in.</param>
+        /// <param name="parent">Parent GUI element relative to which to open the drop down window.</param>
         /// <param name="position">Position relative to the parent editor window at which to open the drop down window.
         ///                        </param>
         /// <returns>Instance of the opened drop down window.</returns>
-        public static T Open<T>(EditorWindow parent, Vector2I position) where T : DropDownWindow, new()
+        public static T Open<T>(GUIElement parent, Vector2I position) where T : DropDownWindow, new()
         {
             IntPtr parentPtr = IntPtr.Zero;
             if (parent != null)
