@@ -91,7 +91,7 @@ namespace BansheeEditor
         private ContextMenu eventContextMenu;
         private Vector2I contextClickPosition;
 
-        private CurveDrawInfo[] curveInfos = new CurveDrawInfo[0];
+        private EdCurveDrawInfo[] curveInfos = new EdCurveDrawInfo[0];
         private bool disableCurveEdit = false;
 
         private float xRange = 60.0f;
@@ -339,7 +339,7 @@ namespace BansheeEditor
             drawingPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
             guiCurveDrawing = new GUICurveDrawing(drawingPanel, this.width, this.height - TIMELINE_HEIGHT -
-                eventsHeaderHeight - VERT_PADDING * 2, curveInfos, drawOptions);
+                eventsHeaderHeight - VERT_PADDING * 2, GetPlainCurveDrawInfos(), drawOptions);
             guiCurveDrawing.SetRange(60.0f, 20.0f);
 
             GUIPanel sidebarPanel = mainPanel.AddPanel(-10);
@@ -359,10 +359,10 @@ namespace BansheeEditor
         /// Change the set of curves to display.
         /// </summary>
         /// <param name="curveInfos">New set of curves to draw on the GUI element.</param>
-        public void SetCurves(CurveDrawInfo[] curveInfos)
+        public void SetCurves(EdCurveDrawInfo[] curveInfos)
         {
             this.curveInfos = curveInfos;
-            guiCurveDrawing.SetCurves(curveInfos);
+            guiCurveDrawing.SetCurves(GetPlainCurveDrawInfos());
 
             Redraw();
         }
@@ -471,7 +471,7 @@ namespace BansheeEditor
                 ShowReadOnlyMessage();
 
             OnCurveModified?.Invoke();
-            guiCurveDrawing.Rebuild();
+            RefreshCurveDrawing();
             UpdateEventsGUI();
         }
 
@@ -533,6 +533,15 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Updates the curve drawing. Should be called after animation curves change.
+        /// </summary>
+        private void RefreshCurveDrawing()
+        {
+            guiCurveDrawing.SetCurves(GetPlainCurveDrawInfos());
+            guiCurveDrawing.Rebuild();
+        }
+
+        /// <summary>
         /// Changes the tangent mode for all currently selected keyframes.
         /// </summary>
         /// <param name="mode">Tangent mode to set. If only in or out tangent mode is provided, the mode for the opposite 
@@ -552,7 +561,12 @@ namespace BansheeEditor
                 foreach (var keyframeIdx in selectedEntry.keyIndices)
                 {
                     if (mode == TangentMode.Auto || mode == TangentMode.Free)
+                    {
                         curve.SetTangentMode(keyframeIdx, mode);
+
+                        // Refresh tangent display
+                        guiCurveDrawing.SelectKeyframe(new KeyframeRef(selectedEntry.curveIdx, keyframeIdx), mode, true);
+                    }
                     else
                     {
                         TangentMode newMode = curve.TangentModes[keyframeIdx];
@@ -577,6 +591,9 @@ namespace BansheeEditor
                         }
 
                         curve.SetTangentMode(keyframeIdx, newMode);
+
+                        // Refresh tangent display
+                        guiCurveDrawing.SelectKeyframe(new KeyframeRef(selectedEntry.curveIdx, keyframeIdx), newMode, true);
                     }
                 }
 
@@ -584,7 +601,7 @@ namespace BansheeEditor
             }
 
             OnCurveModified?.Invoke();
-            guiCurveDrawing.Rebuild();
+            RefreshCurveDrawing();
         }
 
         /// <summary>
@@ -612,7 +629,7 @@ namespace BansheeEditor
                 ShowReadOnlyMessage();
 
             OnCurveModified?.Invoke();
-            guiCurveDrawing.Rebuild();
+            RefreshCurveDrawing();
             UpdateEventsGUI();
         }
 
@@ -641,7 +658,7 @@ namespace BansheeEditor
                     ShowReadOnlyMessage();
 
                 OnCurveModified?.Invoke();
-                guiCurveDrawing.Rebuild();
+                RefreshCurveDrawing();
                 UpdateEventsGUI();
             }
         }
@@ -702,7 +719,7 @@ namespace BansheeEditor
             ClearSelection();
 
             OnCurveModified?.Invoke();
-            guiCurveDrawing.Rebuild();
+            RefreshCurveDrawing();
             UpdateEventsGUI();
         }
 
@@ -745,7 +762,15 @@ namespace BansheeEditor
         /// <param name="keyframeRef">Keyframe to select.</param>
         private void SelectKeyframe(KeyframeRef keyframeRef)
         {
-            guiCurveDrawing.SelectKeyframe(keyframeRef, true);
+            TangentMode tangentMode = TangentMode.Auto;
+            if (keyframeRef.curveIdx >= 0 && keyframeRef.curveIdx < curveInfos.Length)
+            {
+                EdAnimationCurve curve = curveInfos[keyframeRef.curveIdx].curve;
+                if (keyframeRef.keyIdx >= 0 && keyframeRef.keyIdx < curve.TangentModes.Length)
+                    tangentMode = curve.TangentModes[keyframeRef.keyIdx];
+            }
+
+            guiCurveDrawing.SelectKeyframe(keyframeRef, tangentMode, true);
 
             if (!IsSelected(keyframeRef))
             {
@@ -822,7 +847,7 @@ namespace BansheeEditor
                 curve.UpdateKeyframe(keyIndex, x.time, x.value);
                 curve.Apply();
 
-                guiCurveDrawing.Rebuild();
+                RefreshCurveDrawing();
             },
             x =>
             {
@@ -1182,8 +1207,8 @@ namespace BansheeEditor
                             }
 
                             isModifiedDuringDrag = true;
-                            guiCurveDrawing.Rebuild();
 
+                            RefreshCurveDrawing();
                             UpdateEventsGUI();
                         }
                         else if (isMousePressedOverTangent && !disableCurveEdit)
@@ -1224,7 +1249,7 @@ namespace BansheeEditor
                                 curve.Apply();
 
                                 isModifiedDuringDrag = true;
-                                guiCurveDrawing.Rebuild();
+                                RefreshCurveDrawing();
                             }
                         }
                     }
@@ -1496,7 +1521,7 @@ namespace BansheeEditor
         internal void CenterAndResize(bool resetTime)
         {
             Vector2 offset, range;
-            GUICurveDrawing.GetOptimalRangeAndOffset(curveInfos, out offset, out range);
+            GUICurveDrawing.GetOptimalRangeAndOffset(GetPlainCurveDrawInfos(), out offset, out range);
 
             if (!resetTime)
             {
@@ -1509,6 +1534,19 @@ namespace BansheeEditor
 
             UpdateScrollBarPosition();
             UpdateScrollBarSize();
+        }
+
+        /// <summary>
+        /// Returns a set of current curve draw infos with non-editor curves.
+        /// </summary>
+        /// <returns>Curve draw infos.</returns>
+        private CurveDrawInfo[] GetPlainCurveDrawInfos()
+        {
+            CurveDrawInfo[] output = new CurveDrawInfo[curveInfos.Length];
+            for(int i = 0; i < curveInfos.Length; i++)
+                output[i] = new CurveDrawInfo(curveInfos[i].curve.Normal, curveInfos[i].color);
+
+            return output;
         }
 
         /// <summary>
@@ -1543,7 +1581,7 @@ namespace BansheeEditor
         {
             float xMin, xMax;
             float yMin, yMax;
-            GUICurveDrawing.CalculateRange(curveInfos, out xMin, out xMax, out yMin, out yMax);
+            GUICurveDrawing.CalculateRange(GetPlainCurveDrawInfos(), out xMin, out xMax, out yMin, out yMax);
 
             float xRange = xMax;
             float yRange = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
@@ -1588,6 +1626,21 @@ namespace BansheeEditor
         }
 
         #endregion
+    }    
+    
+    /// <summary>
+    /// Information necessary to drawing an editor curve.
+    /// </summary>
+    public struct EdCurveDrawInfo
+    {
+        public EdCurveDrawInfo(EdAnimationCurve curve, Color color)
+        {
+            this.curve = curve;
+            this.color = color;
+        }
+
+        public EdAnimationCurve curve;
+        public Color color;
     }
 
     /// <summary>

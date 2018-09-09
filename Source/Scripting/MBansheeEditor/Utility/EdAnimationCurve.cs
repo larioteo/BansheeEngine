@@ -10,64 +10,6 @@ namespace BansheeEditor
      */
 
     /// <summary>
-    /// Type of tangent on a keyframe in an animation curve.
-    /// </summary>
-    public enum TangentType
-    {
-        In = 1 << 0,
-        Out = 1 << 1
-    }
-
-    /// <summary>
-    /// Flags that are used for describing how are tangents calculated for a specific keyframe in an animation curve. 
-    /// Modes for "in" and "out" tangents can be combined.
-    /// </summary>
-    [Flags]
-    public enum TangentMode
-    {
-        /// <summary>
-        /// Both tangents are calculated automatically based on the two surrounding keyframes.
-        /// </summary>
-        Auto = 0,
-        /// <summary>
-        /// Left tangent is calculated automatically based on the two surrounding keyframes.
-        /// </summary>
-        InAuto = TangentType.In | 1 << 2,
-        /// <summary>
-        /// Left tangent is manually adjusted by the user.
-        /// </summary>
-        InFree = TangentType.In | 1 << 3,
-        /// <summary>
-        /// Tangent is calculated automatically based on the previous keyframe.
-        /// </summary>
-        InLinear = TangentType.In | 1 << 4,
-        /// <summary>
-        /// Tangent is infinite, ensuring there is a instantaneus jump between previous and current keyframe value.
-        /// </summary>
-        InStep = TangentType.In | 1 << 5,
-        /// <summary>
-        /// Right tangents are calculated automatically based on the two surrounding keyframes.
-        /// </summary>
-        OutAuto = TangentType.Out | 1 << 6,
-        /// <summary>
-        /// Right tangent is manually adjusted by the user.
-        /// </summary>
-        OutFree = TangentType.Out | 1 << 7,
-        /// <summary>
-        /// Tangent is calculated automatically based on the next keyframe.
-        /// </summary>
-        OutLinear = TangentType.Out | 1 << 8,
-        /// <summary>
-        /// Tangent is infinite, ensuring there is a instantaneus jump between current and next keyframe value.
-        /// </summary>
-        OutStep = TangentType.Out | 1 << 9,
-        /// <summary>
-        /// Both tangents are manually adjusted by the user.
-        /// </summary>
-        Free = 1 << 10,
-    }
-
-    /// <summary>
     /// <see cref="AnimationCurve"/> wrapper for use in editor only. Allows easier manipulation of animation keyframes, and
     /// also stores keyframe tangent modes which are not required for non-editor curves.
     /// </summary>
@@ -515,36 +457,6 @@ namespace BansheeEditor
                 keyFrames[keyFrames.Length - 1] = keyThis;
             }
         }
-    }
-
-    /// <summary>
-    /// Structure containing a reference to a keyframe as a curve index, and a keyframe index within that curve.
-    /// </summary>
-    internal struct KeyframeRef
-    {
-        public KeyframeRef(int curveIdx, int keyIdx)
-        {
-            this.curveIdx = curveIdx;
-            this.keyIdx = keyIdx;
-        }
-
-        public int curveIdx;
-        public int keyIdx;
-    }
-
-    /// <summary>
-    /// Structure containing a reference to a keyframe tangent, as a keyframe reference and type of the tangent.
-    /// </summary>
-    internal struct TangentRef
-    {
-        public TangentRef(KeyframeRef keyframeRef, TangentType type)
-        {
-            this.keyframeRef = keyframeRef;
-            this.type = type;
-        }
-
-        public KeyframeRef keyframeRef;
-        public TangentType type;
     }
 
     /** @} */

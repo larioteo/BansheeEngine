@@ -1075,16 +1075,16 @@ namespace BansheeEditor
         /// Returns a list of all animation curves that should be displayed in the curve display.
         /// </summary>
         /// <returns>Array of curves to display.</returns>
-        private CurveDrawInfo[] GetDisplayedCurves()
+        private EdCurveDrawInfo[] GetDisplayedCurves()
         {
-            List<CurveDrawInfo> curvesToDisplay = new List<CurveDrawInfo>();
+            List<EdCurveDrawInfo> curvesToDisplay = new List<EdCurveDrawInfo>();
 
             if (clipInfo == null)
                 return curvesToDisplay.ToArray();
 
             for (int i = 0; i < selectedFields.Count; i++)
             {
-                CurveDrawInfo[] curveInfos;
+                EdCurveDrawInfo[] curveInfos;
                 if (TryGetCurve(selectedFields[i], out curveInfos))
                     curvesToDisplay.AddRange(curveInfos);
             }
@@ -1112,7 +1112,7 @@ namespace BansheeEditor
         ///                         be kept as is.</param>
         private void UpdateDisplayedCurves(bool resetTime = false)
         {
-            CurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
+            EdCurveDrawInfo[] curvesToDisplay = GetDisplayedCurves();
             guiCurveEditor.SetCurves(curvesToDisplay);
             guiCurveEditor.CenterAndResize(resetTime);
         }
@@ -1138,7 +1138,7 @@ namespace BansheeEditor
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = type;
                         fieldCurves.isPropertyCurve = isPropertyCurve;
-                        fieldCurves.curveInfos = new CurveDrawInfo[4];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[4];
 
                         string[] subPaths = { ".x", ".y", ".z", ".w" };
                         for (int i = 0; i < subPaths.Length; i++)
@@ -1156,7 +1156,7 @@ namespace BansheeEditor
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = type;
                         fieldCurves.isPropertyCurve = isPropertyCurve;
-                        fieldCurves.curveInfos = new CurveDrawInfo[3];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[3];
 
                         string[] subPaths = { ".x", ".y", ".z" };
                         for (int i = 0; i < subPaths.Length; i++)
@@ -1174,7 +1174,7 @@ namespace BansheeEditor
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = type;
                         fieldCurves.isPropertyCurve = isPropertyCurve;
-                        fieldCurves.curveInfos = new CurveDrawInfo[2];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[2];
 
                         string[] subPaths = { ".x", ".y" };
                         for (int i = 0; i < subPaths.Length; i++)
@@ -1192,7 +1192,7 @@ namespace BansheeEditor
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = type;
                         fieldCurves.isPropertyCurve = isPropertyCurve;
-                        fieldCurves.curveInfos = new CurveDrawInfo[4];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[4];
 
                         string[] subPaths = { ".r", ".g", ".b", ".a" };
                         for (int i = 0; i < subPaths.Length; i++)
@@ -1210,7 +1210,7 @@ namespace BansheeEditor
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = type;
                         fieldCurves.isPropertyCurve = isPropertyCurve;
-                        fieldCurves.curveInfos = new CurveDrawInfo[1];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[1];
 
                         fieldCurves.curveInfos[0].curve = new EdAnimationCurve();
                         selectedFields.Add(path);
@@ -1298,7 +1298,7 @@ namespace BansheeEditor
         /// <param name="curveInfos">One or multiple curves found for the specific path (one field can have multiple curves
         ///                          if it is a complex type, like a vector).</param>
         /// <returns>True if the curve field was found, false otherwise.</returns>
-        private bool TryGetCurve(string path, out CurveDrawInfo[] curveInfos)
+        private bool TryGetCurve(string path, out EdCurveDrawInfo[] curveInfos)
         {
             int index = path.LastIndexOf(".");
             string parentPath;
@@ -1346,7 +1346,7 @@ namespace BansheeEditor
                 }
             }
 
-            curveInfos = new CurveDrawInfo[0];
+            curveInfos = new EdCurveDrawInfo[0];
             return false;
         }
 

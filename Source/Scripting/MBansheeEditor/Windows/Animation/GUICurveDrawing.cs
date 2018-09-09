@@ -16,13 +16,28 @@ namespace BansheeEditor
     /// </summary>
     internal class GUICurveDrawing : GUITimelineBase
     {
+        /// <summary>
+        /// Information about a currently selected keyframe.
+        /// </summary>
+        struct SelectedKeyframe
+        {
+            public SelectedKeyframe(KeyframeRef keyframeRef, TangentMode tangentMode)
+            {
+                this.keyframeRef = keyframeRef;
+                this.tangentMode = tangentMode;
+            }
+
+            public KeyframeRef keyframeRef;
+            public TangentMode tangentMode;
+        }
+
         private const int LINE_SPLIT_WIDTH = 2;
         private const int TANGENT_LINE_DISTANCE = 30;
         private static readonly Color COLOR_MID_GRAY = new Color(90.0f / 255.0f, 90.0f / 255.0f, 90.0f / 255.0f, 1.0f);
         private static readonly Color COLOR_DARK_GRAY = new Color(40.0f / 255.0f, 40.0f / 255.0f, 40.0f / 255.0f, 1.0f);
 
         private CurveDrawInfo[] curveInfos;
-        private bool[][] selectedKeyframes;
+        private List<SelectedKeyframe> selectedKeyframes = new List<SelectedKeyframe>();
 
         private float yRange = 20.0f;
         private float yOffset;
@@ -87,19 +102,31 @@ namespace BansheeEditor
         /// Marks the specified key-frame as selected, changing the way it is displayed.
         /// </summary>
         /// <param name="keyframeRef">Keyframe reference containing the curve and keyframe index.</param>
+        /// <param name="tangentMode">Type of tangent to display on the selected keyframe.</param>
         /// <param name="selected">True to select it, false to deselect it.</param>
-        public void SelectKeyframe(KeyframeRef keyframeRef, bool selected)
+        public void SelectKeyframe(KeyframeRef keyframeRef, TangentMode tangentMode, bool selected)
         {
-            if (selectedKeyframes == null)
-                return;
+            int foundIdx = -1;
+            for(int i = 0; i < selectedKeyframes.Count; i++)
+            {
+                SelectedKeyframe entry = selectedKeyframes[i];
 
-            if (keyframeRef.curveIdx < 0 || keyframeRef.curveIdx >= selectedKeyframes.Length)
-                return;
+                if (entry.keyframeRef.keyIdx == keyframeRef.keyIdx && entry.keyframeRef.curveIdx == keyframeRef.curveIdx &&
+                    entry.tangentMode == tangentMode)
+                {
+                    foundIdx = i;
+                    break;
+                }
 
-            if (keyframeRef.keyIdx < 0 || keyframeRef.keyIdx >= selectedKeyframes[keyframeRef.curveIdx].Length)
-                return;
+            }
 
-            selectedKeyframes[keyframeRef.curveIdx][keyframeRef.keyIdx] = selected;
+            if (selected)
+            {
+                if (foundIdx == -1)
+                    selectedKeyframes.Add(new SelectedKeyframe(keyframeRef, tangentMode));
+            }
+            else
+                selectedKeyframes.RemoveAt(foundIdx);
         }
 
         /// <summary>
@@ -107,13 +134,7 @@ namespace BansheeEditor
         /// </summary>
         public void ClearSelectedKeyframes()
         {
-            selectedKeyframes = new bool[curveInfos.Length][];
-
-            for (int i = 0; i < curveInfos.Length; i++)
-            {
-                KeyFrame[] keyframes = curveInfos[i].curve.KeyFrames;
-                selectedKeyframes[i] = new bool[keyframes.Length];
-            }
+            selectedKeyframes.Clear();
         }
 
         /// <summary>
@@ -131,7 +152,7 @@ namespace BansheeEditor
             int curveIdx = -1;
             for (int i = 0; i < curveInfos.Length; i++)
             {
-                EdAnimationCurve curve = curveInfos[i].curve;
+                AnimationCurve curve = curveInfos[i].curve;
 
                 float value = curve.Evaluate(time, false);
                 Vector2I curPixelPos = CurveToPixelSpace(new Vector2(time, value));
@@ -165,7 +186,7 @@ namespace BansheeEditor
             float nearestDistance = float.MaxValue;
             for (int i = 0; i < curveInfos.Length; i++)
             {
-                EdAnimationCurve curve = curveInfos[i].curve;
+                AnimationCurve curve = curveInfos[i].curve;
                 KeyFrame[] keyframes = curve.KeyFrames;
 
                 for (int j = 0; j < keyframes.Length; j++)
@@ -202,44 +223,45 @@ namespace BansheeEditor
             tangent = new TangentRef();
 
             float nearestDistance = float.MaxValue;
-            for (int i = 0; i < curveInfos.Length; i++)
+            foreach (var entry in selectedKeyframes)
             {
-                EdAnimationCurve curve = curveInfos[i].curve;
+                KeyframeRef keyframeRef = entry.keyframeRef;
+                if (keyframeRef.curveIdx < 0 || keyframeRef.curveIdx >= curveInfos.Length)
+                    continue;
+
+                AnimationCurve curve = curveInfos[keyframeRef.curveIdx].curve;
+                if (keyframeRef.keyIdx < 0 || keyframeRef.keyIdx >= curve.KeyFrames.Length)
+                    continue;
+
                 KeyFrame[] keyframes = curve.KeyFrames;
+                TangentMode tangentMode = entry.tangentMode;
 
-                for (int j = 0; j < keyframes.Length; j++)
+                if (IsTangentDisplayed(tangentMode, TangentType.In))
                 {
-                    if (!IsSelected(i, j))
-                        continue;
+                    Vector2I tangentCoords = GetTangentPosition(keyframes[keyframeRef.keyIdx], TangentType.In);
 
-                    TangentMode tangentMode = curve.TangentModes[j];
-
-                    if (IsTangentDisplayed(tangentMode, TangentType.In))
+                    float distanceToHandle = Vector2I.Distance(pixelCoords, tangentCoords);
+                    if (distanceToHandle < nearestDistance)
                     {
-                        Vector2I tangentCoords = GetTangentPosition(keyframes[j], TangentType.In);
+                        nearestDistance = distanceToHandle;
+                        tangent.keyframeRef.keyIdx = keyframeRef.keyIdx;
+                        tangent.keyframeRef.curveIdx = keyframeRef.curveIdx;
+                        tangent.type = TangentType.In;
+                    }
+;
+                }
 
-                        float distanceToHandle = Vector2I.Distance(pixelCoords, tangentCoords);
-                        if (distanceToHandle < nearestDistance)
-                        {
-                            nearestDistance = distanceToHandle;
-                            tangent.keyframeRef.keyIdx = j;
-                            tangent.keyframeRef.curveIdx = i;
-                            tangent.type = TangentType.In;
-                        }
-;                    }
+                if (IsTangentDisplayed(tangentMode, TangentType.Out))
+                {
+                    Vector2I tangentCoords = GetTangentPosition(keyframes[keyframeRef.keyIdx], TangentType.Out);
 
-                    if (IsTangentDisplayed(tangentMode, TangentType.Out))
+                    float distanceToHandle = Vector2I.Distance(pixelCoords, tangentCoords);
+                    if (distanceToHandle < nearestDistance)
                     {
-                        Vector2I tangentCoords = GetTangentPosition(keyframes[j], TangentType.Out);
-
-                        float distanceToHandle = Vector2I.Distance(pixelCoords, tangentCoords);
-                        if (distanceToHandle < nearestDistance)
-                        {
-                            nearestDistance = distanceToHandle;
-                            tangent.keyframeRef.keyIdx = j;
-                            tangent.keyframeRef.curveIdx = i;
-                            tangent.type = TangentType.Out;
-                        }
+                        nearestDistance = distanceToHandle;
+                        tangent.keyframeRef.keyIdx = keyframeRef.keyIdx;
+                        tangent.keyframeRef.curveIdx = keyframeRef.curveIdx;
+                        tangent.type = TangentType.Out;
                     }
                 }
             }
@@ -561,14 +583,14 @@ namespace BansheeEditor
             bool drawMarkers = drawOptions.HasFlag(CurveDrawOptions.DrawMarkers);
             if(drawMarkers)
             {
-                tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), drawableWidth + PADDING);
+                tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), (uint)(drawableWidth + PADDING));
 
                 // Draw vertical frame markers
-                int numTickLevels = tickHandler.NumLevels;
+                int numTickLevels = (int)tickHandler.NumLevels;
                 for (int i = numTickLevels - 1; i >= 0; i--)
                 {
                     float[] ticks = tickHandler.GetTicks(i);
-                    float strength = tickHandler.GetLevelStrength(i);
+                    float strength = tickHandler.GetLevelStrength((uint)i);
 
                     for (int j = 0; j < ticks.Length; j++)
                     {
@@ -588,7 +610,7 @@ namespace BansheeEditor
             int curvesToDraw = curveInfos.Length;
             if (drawRange && curveInfos.Length >= 2)
             {
-                EdAnimationCurve[] curves = {curveInfos[0].curve, curveInfos[1].curve};
+                AnimationCurve[] curves = {curveInfos[0].curve, curveInfos[1].curve};
 
                 DrawCurveRange(curves, new Color(1.0f, 0.0f, 0.0f, 0.3f));
                 curvesToDraw = 2;
@@ -610,11 +632,25 @@ namespace BansheeEditor
                         bool isSelected = IsSelected(i, j);
 
                         DrawKeyframe(keyframes[j].time, keyframes[j].value, isSelected);
-
-                        if (isSelected)
-                            DrawTangents(keyframes[j], curveInfos[i].curve.TangentModes[j]);
                     }
                 }
+            }
+
+            // Draw tangents
+            foreach (var entry in selectedKeyframes)
+            {
+                KeyframeRef keyframeRef = entry.keyframeRef;
+                if (keyframeRef.curveIdx < 0 || keyframeRef.curveIdx >= curveInfos.Length)
+                    continue;
+
+                AnimationCurve curve = curveInfos[keyframeRef.curveIdx].curve;
+                if (keyframeRef.keyIdx < 0 || keyframeRef.keyIdx >= curve.KeyFrames.Length)
+                    continue;
+
+                KeyFrame[] keyframes = curve.KeyFrames;
+                TangentMode tangentMode = entry.tangentMode;
+
+                DrawTangents(keyframes[keyframeRef.keyIdx], tangentMode);
             }
 
             // Draw selected frame marker
@@ -630,16 +666,13 @@ namespace BansheeEditor
         /// <returns>True if selected, false otherwise.</returns>
         private bool IsSelected(int curveIdx, int keyIdx)
         {
-            if (selectedKeyframes == null)
-                return false;
+            foreach (var entry in selectedKeyframes)
+            {
+                if (entry.keyframeRef.curveIdx == curveIdx && entry.keyframeRef.keyIdx == keyIdx)
+                    return true;
+            }
 
-            if (curveIdx < 0 || curveIdx >= selectedKeyframes.Length)
-                return false;
-
-            if (keyIdx < 0 || keyIdx >= selectedKeyframes[curveIdx].Length)
-                return false;
-
-            return selectedKeyframes[curveIdx][keyIdx];
+            return false;
         }
 
         /// <summary>
@@ -647,7 +680,7 @@ namespace BansheeEditor
         /// </summary>
         /// <param name="curve">Curve to draw within the currently set range. </param>
         /// <param name="color">Color to draw the curve with.</param>
-        private void DrawCurve(EdAnimationCurve curve, Color color)
+        private void DrawCurve(AnimationCurve curve, Color color)
         {
             float range = GetRange(true);
             float lengthPerPixel = range / drawableWidth;
@@ -755,7 +788,7 @@ namespace BansheeEditor
         /// </summary>
         /// <param name="curves">Curves to draw within the currently set range.</param>
         /// <param name="color">Color to draw the area with.</param>
-        private void DrawCurveRange(EdAnimationCurve[] curves, Color color)
+        private void DrawCurveRange(AnimationCurve[] curves, Color color)
         {
             float range = GetRange(true);
 
@@ -954,43 +987,6 @@ namespace BansheeEditor
 
             canvas.DrawTriangleList(vertices.ToArray(), color, 129);
         }
-    }
-
-    /// <summary>
-    /// Information necessary to draw a curve.
-    /// </summary>
-    public struct CurveDrawInfo
-    {
-        public CurveDrawInfo(EdAnimationCurve curve, Color color)
-        {
-            this.curve = curve;
-            this.color = color;
-        }
-
-        public EdAnimationCurve curve;
-        public Color color;
-    }
-
-    /// <summary>
-    /// Controls which elements should a <see cref="GUICurveDrawing"/> object draw.
-    /// </summary>
-    [Flags]
-    internal enum CurveDrawOptions
-    {
-        /// <summary>
-        /// Draws markers at specific time intervals.
-        /// </summary>
-        DrawMarkers = 1 << 0,
-
-        /// <summary>
-        /// Draws elements representing individual keyframes.
-        /// </summary>
-        DrawKeyframes = 1 << 1,
-
-        /// <summary>
-        /// Draws curves and the area between them. Only relevant if only two curves are provided for drawing.
-        /// </summary>
-        DrawRange = 1 << 2
     }
 
     /** }@ */

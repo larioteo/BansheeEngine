@@ -94,19 +94,19 @@ namespace BansheeEditor
             curveEditor = new GUICurveEditor(editorPanel, 600, 400, false, drawOptions); 
             curveEditor.Redraw();
 
-            CurveDrawInfo[] drawinfo;
+            EdCurveDrawInfo[] drawinfo;
 
             if (curveB != null)
             {
                 drawinfo = new []
                 {
-                    new CurveDrawInfo(curveA, Color.BansheeOrange),
-                    new CurveDrawInfo(curveB, Color.Green),
+                    new EdCurveDrawInfo(curveA, Color.BansheeOrange),
+                    new EdCurveDrawInfo(curveB, Color.Green),
                 };
             }
             else
             {
-                drawinfo = new [] { new CurveDrawInfo(curveA, Color.BansheeOrange), };
+                drawinfo = new [] { new EdCurveDrawInfo(curveA, Color.BansheeOrange), };
             }
 
             curveEditor.SetCurves(drawinfo);

@@ -63,7 +63,6 @@
     <Compile Include="Windows\Animation\GUICurveEditor.cs" />
     <Compile Include="Windows\Animation\GUIFieldSelector.cs" />
     <Compile Include="Windows\Animation\GUIGraphValues.cs" />
-    <Compile Include="Windows\Animation\GUIGraphTicks.cs" />
     <Compile Include="Windows\Animation\GUIGraphTime.cs" />
     <Compile Include="Windows\Animation\GUITimelineBase.cs" />
     <Compile Include="Windows\BrowseDialog.cs" />

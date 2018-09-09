@@ -20,6 +20,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_quaternionToEulerCurve", (void*)&ScriptAnimationUtility::Internal_quaternionToEulerCurve);
 		metaData.scriptClass->addInternalCall("Internal_splitCurve", (void*)&ScriptAnimationUtility::Internal_splitCurve);
 		metaData.scriptClass->addInternalCall("Internal_combineCurve", (void*)&ScriptAnimationUtility::Internal_combineCurve);
+		metaData.scriptClass->addInternalCall("Internal_calculateRange", (void*)&ScriptAnimationUtility::Internal_calculateRange);
 
 	}
 
@@ -107,5 +108,24 @@ namespace bs
 		__output = ScriptTAnimationCurveVector3::create(tmp__output);
 
 		return __output;
+	}
+
+	void ScriptAnimationUtility::Internal_calculateRange(MonoArray* curves, float* xMin, float* xMax, float* yMin, float* yMax)
+	{
+		Vector<SPtr<TAnimationCurve<float>>> veccurves;
+		if(curves != nullptr)
+		{
+			ScriptArray arraycurves(curves);
+			veccurves.resize(arraycurves.size());
+			for(int i = 0; i < (int)arraycurves.size(); i++)
+			{
+				ScriptTAnimationCurvefloat* scriptcurves;
+				scriptcurves = ScriptTAnimationCurvefloat::toNative(arraycurves.get<MonoObject*>(i));
+				if(scriptcurves != nullptr)
+					veccurves[i] = scriptcurves->getInternal();
+			}
+
+		}
+		AnimationUtility::calculateRange(veccurves, *xMin, *xMax, *yMin, *yMax);
 	}
 }

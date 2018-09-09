@@ -25,7 +25,7 @@ namespace BansheeEditor
         /// <param name="height">Height of the GUI element in pixels.</param>
         public GUICurveField(GUILayout layout, AnimationCurve curve, int width = 200, int height = 60)
         { 
-            drawInfos = new [] { new CurveDrawInfo(new EdAnimationCurve(curve, null), Color.BansheeOrange ) };
+            drawInfos = new [] { new CurveDrawInfo(curve, Color.BansheeOrange ) };
             drawRange = false;
 
             Initialize(layout, width, height);
@@ -43,8 +43,8 @@ namespace BansheeEditor
         { 
             drawInfos = new []
             {
-                new CurveDrawInfo(new EdAnimationCurve(curveA, null), Color.BansheeOrange ),
-                new CurveDrawInfo(new EdAnimationCurve(curveB, null), Color.Green )
+                new CurveDrawInfo(curveA, Color.BansheeOrange ),
+                new CurveDrawInfo(curveB, Color.Green )
             };
             drawRange = true;
 
@@ -97,26 +97,26 @@ namespace BansheeEditor
         {
             if (drawRange)
             {
-                CurveEditorWindow.Show(drawInfos[0].curve.Normal, drawInfos[1].curve.Normal,
+                CurveEditorWindow.Show(drawInfos[0].curve, drawInfos[1].curve,
                     (success, curveA, curveB) =>
                 {
                     if (!success)
                         return;
 
-                    drawInfos[0].curve = new EdAnimationCurve(curveA, null);
-                    drawInfos[1].curve = new EdAnimationCurve(curveB, null);
+                    drawInfos[0].curve = curveA;
+                    drawInfos[1].curve = curveB;
                     curveDrawing.SetCurves(drawInfos);
                     Refresh();
                 });
             }
             else
             {
-                CurveEditorWindow.Show(drawInfos[0].curve.Normal, (success, curve) =>
+                CurveEditorWindow.Show(drawInfos[0].curve, (success, curve) =>
                 {
                     if (!success)
                         return;
 
-                    drawInfos[0].curve = new EdAnimationCurve(curve, null);
+                    drawInfos[0].curve = curve;
                     curveDrawing.SetCurves(drawInfos);
                     Refresh();
                 });

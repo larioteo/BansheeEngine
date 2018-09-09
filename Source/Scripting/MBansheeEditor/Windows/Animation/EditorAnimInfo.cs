@@ -18,7 +18,7 @@ namespace BansheeEditor
     internal struct FieldAnimCurves
     {
         public SerializableProperty.FieldType type;
-        public CurveDrawInfo[] curveInfos;
+        public EdCurveDrawInfo[] curveInfos;
         public bool isPropertyCurve;
     }
 
@@ -145,18 +145,18 @@ namespace BansheeEditor
 
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = SerializableProperty.FieldType.Vector3;
-                        fieldCurves.curveInfos = new CurveDrawInfo[3];
+                        fieldCurves.curveInfos = new EdCurveDrawInfo[3];
                         fieldCurves.isPropertyCurve = !clipInfo.isImported;
 
-                        fieldCurves.curveInfos[0] = new CurveDrawInfo();
+                        fieldCurves.curveInfos[0] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[0].curve = new EdAnimationCurve(componentCurves[0], tangentsX);
                         fieldCurves.curveInfos[0].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
 
-                        fieldCurves.curveInfos[1] = new CurveDrawInfo();
+                        fieldCurves.curveInfos[1] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[1].curve = new EdAnimationCurve(componentCurves[1], tangentsY);
                         fieldCurves.curveInfos[1].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
 
-                        fieldCurves.curveInfos[2] = new CurveDrawInfo();
+                        fieldCurves.curveInfos[2] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[2].curve = new EdAnimationCurve(componentCurves[2], tangentsZ);
                         fieldCurves.curveInfos[2].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
 
@@ -268,7 +268,7 @@ namespace BansheeEditor
                 bool isMorphCurve = false;
                 string curvePath = KVP.Key;
 
-                fieldCurves.curveInfos = new CurveDrawInfo[numCurves];
+                fieldCurves.curveInfos = new EdCurveDrawInfo[numCurves];
                 for (int i = 0; i < numCurves; i++)
                 {
                     int curveIdx = KVP.Value[i].Item1;
@@ -278,7 +278,7 @@ namespace BansheeEditor
                     if (tangentIdx != -1)
                         tangents = editorCurveData.floatCurves[tangentIdx].tangents;
 
-                    fieldCurves.curveInfos[i] = new CurveDrawInfo();
+                    fieldCurves.curveInfos[i] = new EdCurveDrawInfo();
                     fieldCurves.curveInfos[i].curve = new EdAnimationCurve(clipCurves.Generic[curveIdx].curve, tangents);
                     fieldCurves.curveInfos[i].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
 

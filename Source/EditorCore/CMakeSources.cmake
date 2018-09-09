@@ -62,6 +62,7 @@ set(BS_BANSHEEEDITOR_SRC_GUI
 	"GUI/BsGUIVector4Field.cpp"
 	"GUI/BsGUIWindowFrame.cpp"
 	"GUI/BsGUIWindowFrameWidget.cpp"
+	"GUI/BsGUICurves.cpp"
 )
 
 set(BS_BANSHEEEDITOR_INC_LIBRARY
@@ -98,6 +99,7 @@ set(BS_BANSHEEEDITOR_INC_GUI
 	"GUI/BsGUIVector4Field.h"
 	"GUI/BsGUIWindowFrame.h"
 	"GUI/BsGUIWindowFrameWidget.h"
+	"GUI/BsGUICurves.h"
 )
 
 set(BS_BANSHEEEDITOR_INC_UNDOREDO

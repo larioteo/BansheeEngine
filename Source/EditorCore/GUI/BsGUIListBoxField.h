@@ -186,7 +186,7 @@ namespace bs
 		void setElementStates(const Vector<bool>& states);
 
 		/** @copydoc GUIElement::setTint */
-		virtual void setTint(const Color& color) override;
+		void setTint(const Color& color) override;
 
 		/** Triggers when a new element is selected. Provides index to the element. */
 		Event<void(UINT32, bool)> onSelectionChanged; 

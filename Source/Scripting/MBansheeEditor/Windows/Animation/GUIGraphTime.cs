@@ -90,17 +90,17 @@ namespace BansheeEditor
         public override void Rebuild()
         {
             canvas.Clear();
-            tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), drawableWidth + PADDING);
+            tickHandler.SetRange(rangeOffset, rangeOffset + GetRange(true), (uint)(drawableWidth + PADDING));
 
             float range = GetRange();
 
-            int numTickLevels = tickHandler.NumLevels;
+            int numTickLevels = (int)tickHandler.NumLevels;
             for (int i = numTickLevels - 1; i >= 0; i--)
             {
                 bool drawText = i == 0;
 
                 float[] ticks = tickHandler.GetTicks(i);
-                float strength = tickHandler.GetLevelStrength(i);
+                float strength = tickHandler.GetLevelStrength((uint)i);
 
                 if (ticks.Length > 0)
                 {
