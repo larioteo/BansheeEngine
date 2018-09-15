@@ -150,15 +150,15 @@ namespace BansheeEditor
 
                         fieldCurves.curveInfos[0] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[0].curve = new EdAnimationCurve(componentCurves[0], tangentsX);
-                        fieldCurves.curveInfos[0].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
+                        fieldCurves.curveInfos[0].color = GetUniqueColor(globalCurveIdx++);
 
                         fieldCurves.curveInfos[1] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[1].curve = new EdAnimationCurve(componentCurves[1], tangentsY);
-                        fieldCurves.curveInfos[1].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
+                        fieldCurves.curveInfos[1].color = GetUniqueColor(globalCurveIdx++);
 
                         fieldCurves.curveInfos[2] = new EdCurveDrawInfo();
                         fieldCurves.curveInfos[2].curve = new EdAnimationCurve(componentCurves[2], tangentsZ);
-                        fieldCurves.curveInfos[2].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
+                        fieldCurves.curveInfos[2].color = GetUniqueColor(globalCurveIdx++);
 
                         string curvePath = curveEntry.name.TrimEnd('/') + subPath;
                         clipInfo.curves[curvePath] = fieldCurves;
@@ -280,7 +280,7 @@ namespace BansheeEditor
 
                     fieldCurves.curveInfos[i] = new EdCurveDrawInfo();
                     fieldCurves.curveInfos[i].curve = new EdAnimationCurve(clipCurves.Generic[curveIdx].curve, tangents);
-                    fieldCurves.curveInfos[i].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
+                    fieldCurves.curveInfos[i].color = GetUniqueColor(globalCurveIdx++);
 
                     if (clipCurves.Generic[curveIdx].flags.HasFlag(AnimationCurveFlags.MorphFrame))
                     {
@@ -559,6 +559,21 @@ namespace BansheeEditor
                 }
             }
         }
+
+        /// <summary>
+        /// Generates a unique color based on the provided index.
+        /// </summary>
+        /// <param name="idx">Index to use for generating a color. Should be less than 30 in order to guarantee reasonably
+        /// different colors.</param>
+        /// <returns>Unique color.</returns>
+        public static Color GetUniqueColor(int idx)
+        {
+            const int COLOR_SPACING = 359 / 15;
+
+            float hue = ((idx * COLOR_SPACING) % 359) / 359.0f;
+            return Color.HSV2RGB(new Color(hue, 175.0f / 255.0f, 175.0f / 255.0f));
+        }
+
     }
 
     /** @} */

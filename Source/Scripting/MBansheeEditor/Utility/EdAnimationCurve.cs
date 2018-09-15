@@ -360,8 +360,6 @@ namespace BansheeEditor
                 KeyFrame keyThis = keyFrames[i];
                 KeyFrame keyNext = keyFrames[i + 1];
 
-                keyThis.inTangent = 0.0f;
-
                 TangentMode tangentMode = tangentModes[i];
                 if (tangentMode == TangentMode.Auto) // Both automatic
                 {

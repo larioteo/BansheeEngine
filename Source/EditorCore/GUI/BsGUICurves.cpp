@@ -7,6 +7,7 @@
 #include "GUI/BsGUIHelper.h"
 #include "GUI/BsGUICanvas.h"
 #include "Math/BsLine2.h"
+#include "GUI/BsGUIWidget.h"
 
 namespace bs
 {
@@ -189,8 +190,6 @@ namespace bs
 	{
 		GUITimeline::setRange(xRange);
 		mYRange = yRange;
-
-		_markContentAsDirty();
 	}
 
 	void GUICurves::setOffset(const Vector2& offset)
@@ -381,7 +380,7 @@ namespace bs
 		const float centerOffset = mYRange / 2.0f;
 
 		const float t = mOffset + relativeCoords.x * lengthPerPixel;
-		const float value = mYRange + centerOffset - relativeCoords.y * heightPerPixel;
+		const float value = mYOffset + centerOffset - relativeCoords.y * heightPerPixel;
 
 		curveCoords = Vector2();
 		curveCoords.x = t;
@@ -846,11 +845,15 @@ namespace bs
 		}
 		else
 			mSelectedKeyframes.erase(mSelectedKeyframes.begin() + foundIdx);
+
+		_markContentAsDirty();
 	}
 
 	void GUICurves::clearSelectedKeyframes()
 	{
 		mSelectedKeyframes.clear();
+
+		_markContentAsDirty();
 	}
 
 	bool GUICurves::isSelected(int curveIdx, int keyIdx) const

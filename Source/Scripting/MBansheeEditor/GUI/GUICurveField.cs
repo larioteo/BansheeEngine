@@ -12,7 +12,7 @@ namespace BansheeEditor
     public class GUICurveField
     {
         private GUIPanel mainPanel;
-        private GUICurveDrawing curveDrawing;
+        //private GUICurveDrawing curveDrawing;
         private CurveDrawInfo[] drawInfos;
         private bool drawRange;
 
@@ -72,8 +72,8 @@ namespace BansheeEditor
             if (drawRange)
                 drawOptions |= CurveDrawOptions.DrawRange;
 
-            curveDrawing = new GUICurveDrawing(curveDrawingPanel, width - padding.width, height - padding.height,
-                drawInfos, drawOptions);
+            //curveDrawing = new GUICurveDrawing(curveDrawingPanel, width - padding.width, height - padding.height,
+            //    drawInfos, drawOptions);
 
             Refresh();
 
@@ -105,7 +105,7 @@ namespace BansheeEditor
 
                     drawInfos[0].curve = curveA;
                     drawInfos[1].curve = curveB;
-                    curveDrawing.SetCurves(drawInfos);
+                    //curveDrawing.SetCurves(drawInfos);
                     Refresh();
                 });
             }
@@ -117,7 +117,7 @@ namespace BansheeEditor
                         return;
 
                     drawInfos[0].curve = curve;
-                    curveDrawing.SetCurves(drawInfos);
+                    //curveDrawing.SetCurves(drawInfos);
                     Refresh();
                 });
             }
@@ -137,10 +137,10 @@ namespace BansheeEditor
         private void Refresh()
         {
             Vector2 offset, range;
-            GUICurveDrawing.GetOptimalRangeAndOffset(drawInfos, out offset, out range);
-            curveDrawing.SetRange(range.x, range.y * 2.0f);
-            curveDrawing.SetOffset(offset);
-            curveDrawing.Rebuild();
+            //GUICurveDrawing.GetOptimalRangeAndOffset(drawInfos, out offset, out range);
+            //curveDrawing.SetRange(range.x, range.y * 2.0f);
+            //curveDrawing.SetOffset(offset);
+            //curveDrawing.Rebuild();
         }
     }
 }

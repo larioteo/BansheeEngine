@@ -1101,7 +1101,7 @@ namespace BansheeEditor
             foreach (var curveGroup in clipInfo.curves)
             {
                 for (int i = 0; i < curveGroup.Value.curveInfos.Length; i++)
-                    curveGroup.Value.curveInfos[i].color = GUICurveDrawing.GetUniqueColor(globalCurveIdx++);
+                    curveGroup.Value.curveInfos[i].color = EditorAnimClipInfo.GetUniqueColor(globalCurveIdx++);
             }
         }
 
