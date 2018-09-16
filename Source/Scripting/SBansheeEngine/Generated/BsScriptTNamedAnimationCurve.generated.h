@@ -9,6 +9,9 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "BsScriptObject.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
@@ -58,6 +61,28 @@ namespace bs
 
 	private:
 		ScriptTNamedAnimationCurveVector3(MonoObject* managedInstance);
+
+	};
+
+	struct __TNamedAnimationCurveVector2Interop
+	{
+		MonoString* name;
+		Flags<AnimationCurveFlag> flags;
+		MonoObject* curve;
+	};
+
+	class BS_SCR_BE_EXPORT ScriptTNamedAnimationCurveVector2 : public ScriptObject<ScriptTNamedAnimationCurveVector2>
+	{
+	public:
+		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "NamedVector2Curve")
+
+		static MonoObject* box(const __TNamedAnimationCurveVector2Interop& value);
+		static __TNamedAnimationCurveVector2Interop unbox(MonoObject* value);
+		static TNamedAnimationCurve<Vector2> fromInterop(const __TNamedAnimationCurveVector2Interop& value);
+		static __TNamedAnimationCurveVector2Interop toInterop(const TNamedAnimationCurve<Vector2>& value);
+
+	private:
+		ScriptTNamedAnimationCurveVector2(MonoObject* managedInstance);
 
 	};
 

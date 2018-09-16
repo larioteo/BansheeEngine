@@ -71,7 +71,7 @@ namespace BansheeEditor
 		/// </summary>
 		/// <param name="level">Level for which to retrieve the positions. Must not be larger than getNumLevels() - 1.</param>
 		/// <returns>Positions of all ticks of the provided level.</returns>
-		public float[] GetTicks(int level)
+		public float[] GetTicks(uint level)
 		{
 			return Internal_getTicks(mCachedPtr, level);
 		}
@@ -87,7 +87,7 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getLevelStrength(IntPtr thisPtr, uint level);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern float[] Internal_getTicks(IntPtr thisPtr, int level);
+		private static extern float[] Internal_getTicks(IntPtr thisPtr, uint level);
 	}
 
 	/** @} */

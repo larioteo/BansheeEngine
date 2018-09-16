@@ -71,7 +71,7 @@ namespace bs
 		return __output;
 	}
 
-	MonoArray* ScriptGUIGraphTicks::Internal_getTicks(ScriptGUIGraphTicks* thisPtr, int32_t level)
+	MonoArray* ScriptGUIGraphTicks::Internal_getTicks(ScriptGUIGraphTicks* thisPtr, uint32_t level)
 	{
 		Vector<float> vec__output;
 		vec__output = thisPtr->getInternal()->getTicks(level);

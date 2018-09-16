@@ -6,6 +6,8 @@
 #include "BsScriptTKeyframe.generated.h"
 #include "BsScriptTKeyframe.generated.h"
 #include "Wrappers/BsScriptVector.h"
+#include "BsScriptTKeyframe.generated.h"
+#include "Wrappers/BsScriptVector.h"
 #include "Wrappers/BsScriptQuaternion.h"
 #include "BsScriptTKeyframe.generated.h"
 
@@ -138,6 +140,71 @@ namespace bs
 		for(int i = 0; i < arraySize__output; i++)
 		{
 			array__output.set(i, ScriptTKeyframeVector3::toInterop(vec__output[i]));
+		}
+		__output = array__output.getInternal();
+
+		return __output;
+	}
+
+	ScriptTAnimationCurveVector2::ScriptTAnimationCurveVector2(MonoObject* managedInstance, const SPtr<TAnimationCurve<Vector2>>& value)
+		:ScriptObject(managedInstance), mInternal(value)
+	{
+	}
+
+	void ScriptTAnimationCurveVector2::initRuntimeData()
+	{
+		metaData.scriptClass->addInternalCall("Internal_TAnimationCurve", (void*)&ScriptTAnimationCurveVector2::Internal_TAnimationCurve);
+		metaData.scriptClass->addInternalCall("Internal_evaluate", (void*)&ScriptTAnimationCurveVector2::Internal_evaluate);
+		metaData.scriptClass->addInternalCall("Internal_getKeyFrames", (void*)&ScriptTAnimationCurveVector2::Internal_getKeyFrames);
+
+	}
+
+	MonoObject* ScriptTAnimationCurveVector2::create(const SPtr<TAnimationCurve<Vector2>>& value)
+	{
+		if(value == nullptr) return nullptr; 
+
+		bool dummy = false;
+		void* ctorParams[1] = { &dummy };
+
+		MonoObject* managedInstance = metaData.scriptClass->createInstance("bool", ctorParams);
+		new (bs_alloc<ScriptTAnimationCurveVector2>()) ScriptTAnimationCurveVector2(managedInstance, value);
+		return managedInstance;
+	}
+	void ScriptTAnimationCurveVector2::Internal_TAnimationCurve(MonoObject* managedInstance, MonoArray* keyframes)
+	{
+		Vector<TKeyframe<Vector2>> veckeyframes;
+		if(keyframes != nullptr)
+		{
+			ScriptArray arraykeyframes(keyframes);
+			veckeyframes.resize(arraykeyframes.size());
+			for(int i = 0; i < (int)arraykeyframes.size(); i++)
+			{
+				veckeyframes[i] = ScriptTKeyframeVector2::fromInterop(arraykeyframes.get<__TKeyframeVector2Interop>(i));
+			}
+		}
+		SPtr<TAnimationCurve<Vector2>> instance = bs_shared_ptr_new<TAnimationCurve<Vector2>>(veckeyframes);
+		new (bs_alloc<ScriptTAnimationCurveVector2>())ScriptTAnimationCurveVector2(managedInstance, instance);
+	}
+
+	void ScriptTAnimationCurveVector2::Internal_evaluate(ScriptTAnimationCurveVector2* thisPtr, float time, bool loop, Vector2* __output)
+	{
+		Vector2 tmp__output;
+		tmp__output = thisPtr->getInternal()->evaluate(time, loop);
+
+		*__output = tmp__output;
+	}
+
+	MonoArray* ScriptTAnimationCurveVector2::Internal_getKeyFrames(ScriptTAnimationCurveVector2* thisPtr)
+	{
+		Vector<TKeyframe<Vector2>> vec__output;
+		vec__output = thisPtr->getInternal()->getKeyFrames();
+
+		MonoArray* __output;
+		int arraySize__output = (int)vec__output.size();
+		ScriptArray array__output = ScriptArray::create<ScriptTKeyframeVector2>(arraySize__output);
+		for(int i = 0; i < arraySize__output; i++)
+		{
+			array__output.set(i, ScriptTKeyframeVector2::toInterop(vec__output[i]));
 		}
 		__output = array__output.getInternal();
 

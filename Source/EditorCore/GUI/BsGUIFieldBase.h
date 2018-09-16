@@ -165,6 +165,7 @@ namespace bs
 		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:T)
 		static T* create(const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style = StringUtil::BLANK)
 		{
@@ -182,6 +183,7 @@ namespace bs
 		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:T)
 		static T* create(const GUIContent& labelContent,
 			const String& style = StringUtil::BLANK)
 		{
@@ -201,6 +203,7 @@ namespace bs
 		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:T)
 		static T* create(const HString& labelText, UINT32 labelWidth,
 			const String& style = StringUtil::BLANK)
 		{
@@ -219,6 +222,7 @@ namespace bs
 		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:T)
 		static T* create(const HString& labelText, const String& style = StringUtil::BLANK)
 		{
 			const String* curStyle = &style;
@@ -235,6 +239,7 @@ namespace bs
 		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
+		BS_SCRIPT_EXPORT(ec:T)
 		static T* create(const String& style = StringUtil::BLANK)
 		{
 			const String* curStyle = &style;

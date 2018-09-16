@@ -26,6 +26,6 @@ namespace bs
 		static void Internal_setRange(ScriptGUIGraphTicks* thisPtr, float valueRangeStart, float valueRangeEnd, uint32_t pixelRange);
 		static void Internal_setTickSpacing(ScriptGUIGraphTicks* thisPtr, int32_t minPx, int32_t maxPx);
 		static float Internal_getLevelStrength(ScriptGUIGraphTicks* thisPtr, uint32_t level);
-		static MonoArray* Internal_getTicks(ScriptGUIGraphTicks* thisPtr, int32_t level);
+		static MonoArray* Internal_getTicks(ScriptGUIGraphTicks* thisPtr, uint32_t level);
 	};
 }

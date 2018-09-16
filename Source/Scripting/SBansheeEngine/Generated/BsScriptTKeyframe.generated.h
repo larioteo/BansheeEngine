@@ -9,7 +9,10 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "BsScriptObject.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "Math/BsVector3.h"
+#include "Math/BsVector2.h"
 #include "Math/BsQuaternion.h"
 
 namespace bs
@@ -60,6 +63,29 @@ namespace bs
 
 	private:
 		ScriptTKeyframeVector3(MonoObject* managedInstance);
+
+	};
+
+	struct __TKeyframeVector2Interop
+	{
+		Vector2 value;
+		Vector2 inTangent;
+		Vector2 outTangent;
+		float time;
+	};
+
+	class BS_SCR_BE_EXPORT ScriptTKeyframeVector2 : public ScriptObject<ScriptTKeyframeVector2>
+	{
+	public:
+		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "KeyFrameVec2")
+
+		static MonoObject* box(const __TKeyframeVector2Interop& value);
+		static __TKeyframeVector2Interop unbox(MonoObject* value);
+		static TKeyframe<Vector2> fromInterop(const __TKeyframeVector2Interop& value);
+		static __TKeyframeVector2Interop toInterop(const TKeyframe<Vector2>& value);
+
+	private:
+		ScriptTKeyframeVector2(MonoObject* managedInstance);
 
 	};
 

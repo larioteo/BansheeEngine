@@ -99,7 +99,7 @@ namespace BansheeEditor
             {
                 bool drawText = i == 0;
 
-                float[] ticks = tickHandler.GetTicks(i);
+                float[] ticks = tickHandler.GetTicks((uint)i);
                 float strength = tickHandler.GetLevelStrength((uint)i);
 
                 if (ticks.Length > 0)

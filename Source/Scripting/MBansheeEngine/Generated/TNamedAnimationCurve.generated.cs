@@ -110,6 +110,56 @@ namespace BansheeEngine
 
 	/// <summary>An animation curve and its name.</summary>
 	[StructLayout(LayoutKind.Sequential), SerializeObject]
+	public partial struct NamedVector2Curve
+	{
+		/// <summary>Initializes the struct with default values.</summary>
+		public static NamedVector2Curve Default()
+		{
+			NamedVector2Curve value = new NamedVector2Curve();
+			value.name = "";
+			value.flags = (AnimationCurveFlags)0;
+			value.curve = null;
+
+			return value;
+		}
+
+		/// <summary>Constructs a new named animation curve.</summary>
+		/// <param name="name">Name of the curve.</param>
+		/// <param name="curve">Curve containing the animation data.</param>
+		public NamedVector2Curve(string name, Vector2Curve curve)
+		{
+			this.name = name;
+			this.flags = (AnimationCurveFlags)0;
+			this.curve = curve;
+		}
+
+		/// <summary>Constructs a new named animation curve.</summary>
+		/// <param name="name">Name of the curve.</param>
+		/// <param name="flags">Flags that describe the animation curve.</param>
+		/// <param name="curve">Curve containing the animation data.</param>
+		public NamedVector2Curve(string name, AnimationCurveFlags flags, Vector2Curve curve)
+		{
+			this.name = name;
+			this.flags = (AnimationCurveFlags)0;
+			this.curve = curve;
+		}
+
+		/// <summary>Name of the curve.</summary>
+		public string name;
+		/// <summary>Flags that describe the animation curve.</summary>
+		public AnimationCurveFlags flags;
+		/// <summary>Actual curve containing animation data.</summary>
+		public Vector2Curve curve;
+	}
+
+	/** @} */
+
+	/** @addtogroup Animation
+	 *  @{
+	 */
+
+	/// <summary>An animation curve and its name.</summary>
+	[StructLayout(LayoutKind.Sequential), SerializeObject]
 	public partial struct NamedQuaternionCurve
 	{
 		/// <summary>Initializes the struct with default values.</summary>

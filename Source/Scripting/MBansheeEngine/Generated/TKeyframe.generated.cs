@@ -66,6 +66,26 @@ namespace BansheeEngine
 
 	/// <summary>Animation keyframe, represented as an endpoint of a cubic hermite spline.</summary>
 	[StructLayout(LayoutKind.Sequential), SerializeObject]
+	public partial struct KeyFrameVec2
+	{
+		/// <summary>Value of the key.</summary>
+		public Vector2 value;
+		/// <summary>Input tangent (going from the previous key to this one) of the key.</summary>
+		public Vector2 inTangent;
+		/// <summary>Output tangent (going from this key to next one) of the key.</summary>
+		public Vector2 outTangent;
+		/// <summary>Position of the key along the animation spline.</summary>
+		public float time;
+	}
+
+	/** @} */
+
+	/** @addtogroup Animation
+	 *  @{
+	 */
+
+	/// <summary>Animation keyframe, represented as an endpoint of a cubic hermite spline.</summary>
+	[StructLayout(LayoutKind.Sequential), SerializeObject]
 	public partial struct KeyFrameQuat
 	{
 		/// <summary>Value of the key.</summary>

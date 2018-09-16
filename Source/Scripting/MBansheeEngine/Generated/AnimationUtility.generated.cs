@@ -38,12 +38,6 @@ namespace BansheeEngine
 			return Internal_combineCurve(curveComponents);
 		}
 
-		/// <summary>Calculates the total range covered by a set of curves.</summary>
-		/// <param name="curves">Curves to calculate range for.</param>
-		/// <param name="xMin">Minimum time value present in the curves.</param>
-		/// <param name="xMax">Maximum time value present in the curves.</param>
-		/// <param name="yMin">Minimum curve value present in the curves.</param>
-		/// <param name="yMax">Maximum curve value present in the curves.</param>
 		public static void CalculateRange(AnimationCurve[] curves, out float xMin, out float xMax, out float yMin, out float yMax)
 		{
 			Internal_calculateRange(curves, out xMin, out xMax, out yMin, out yMax);

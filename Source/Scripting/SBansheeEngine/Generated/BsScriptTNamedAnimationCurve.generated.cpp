@@ -10,6 +10,8 @@
 #include "BsScriptTAnimationCurve.generated.h"
 #include "BsScriptTAnimationCurve.generated.h"
 #include "BsScriptTAnimationCurve.generated.h"
+#include "BsScriptTAnimationCurve.generated.h"
+#include "BsScriptTAnimationCurve.generated.h"
 
 namespace bs
 {
@@ -111,6 +113,58 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpcurvecopy;
 		tmpcurvecopy = bs_shared_ptr_new<TAnimationCurve<Vector3>>(value.curve);
 		tmpcurve = ScriptTAnimationCurveVector3::create(tmpcurvecopy);
+		output.curve = tmpcurve;
+
+		return output;
+	}
+
+
+	ScriptTNamedAnimationCurveVector2::ScriptTNamedAnimationCurveVector2(MonoObject* managedInstance)
+		:ScriptObject(managedInstance)
+	{ }
+
+	void ScriptTNamedAnimationCurveVector2::initRuntimeData()
+	{ }
+
+	MonoObject*ScriptTNamedAnimationCurveVector2::box(const __TNamedAnimationCurveVector2Interop& value)
+	{
+		return MonoUtil::box(metaData.scriptClass->_getInternalClass(), (void*)&value);
+	}
+
+	__TNamedAnimationCurveVector2Interop ScriptTNamedAnimationCurveVector2::unbox(MonoObject* value)
+	{
+		return *(__TNamedAnimationCurveVector2Interop*)MonoUtil::unbox(value);
+	}
+
+	TNamedAnimationCurve<Vector2> ScriptTNamedAnimationCurveVector2::fromInterop(const __TNamedAnimationCurveVector2Interop& value)
+	{
+		TNamedAnimationCurve<Vector2> output;
+		String tmpname;
+		tmpname = MonoUtil::monoToString(value.name);
+		output.name = tmpname;
+		output.flags = value.flags;
+		SPtr<TAnimationCurve<Vector2>> tmpcurve;
+		ScriptTAnimationCurveVector2* scriptcurve;
+		scriptcurve = ScriptTAnimationCurveVector2::toNative(value.curve);
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
+		if(tmpcurve != nullptr)
+		output.curve = *tmpcurve;
+
+		return output;
+	}
+
+	__TNamedAnimationCurveVector2Interop ScriptTNamedAnimationCurveVector2::toInterop(const TNamedAnimationCurve<Vector2>& value)
+	{
+		__TNamedAnimationCurveVector2Interop output;
+		MonoString* tmpname;
+		tmpname = MonoUtil::stringToMono(value.name);
+		output.name = tmpname;
+		output.flags = value.flags;
+		MonoObject* tmpcurve;
+		SPtr<TAnimationCurve<Vector2>> tmpcurvecopy;
+		tmpcurvecopy = bs_shared_ptr_new<TAnimationCurve<Vector2>>(value.curve);
+		tmpcurve = ScriptTAnimationCurveVector2::create(tmpcurvecopy);
 		output.curve = tmpcurve;
 
 		return output;

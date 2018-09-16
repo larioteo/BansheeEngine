@@ -118,6 +118,15 @@ namespace bs
 		BS_SCRIPT_EXPORT()
 		float getTimeForFrame(INT32 index) const;
 
+		/**
+		 * @name Internal
+		 * @{
+		 */
+
+		/** @copydoc GUIElement::_getOptimalSize */
+		Vector2I _getOptimalSize() const override;
+
+		/** @} */
 	protected:
 		GUITimeline(const String& styleName, const GUIDimensions& dimensions);
 		~GUITimeline() override = default;
@@ -136,9 +145,6 @@ namespace bs
 
 		/** @copydoc GUIElement::_updateLayoutInternal */
 		void _updateLayoutInternal(const GUILayoutData& data) override;
-
-		/** @copydoc GUIElement::_getOptimalSize */
-		Vector2I _getOptimalSize() const override;
 
 		/** @copydoc GUIElement::styleUpdated */
 		void styleUpdated() override;

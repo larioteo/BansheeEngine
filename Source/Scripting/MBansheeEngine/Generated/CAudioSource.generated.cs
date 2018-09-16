@@ -20,7 +20,7 @@ namespace BansheeEngine
 		private AudioSource(bool __dummy0) { }
 		protected AudioSource() { }
 
-		/// <summary>Aaudio clip to play.</summary>
+		/// <summary>Audio clip to play.</summary>
 		[ShowInInspector]
 		public RRef<AudioClip> Clip
 		{

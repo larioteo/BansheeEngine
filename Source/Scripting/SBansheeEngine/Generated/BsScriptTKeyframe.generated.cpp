@@ -5,6 +5,8 @@
 #include "Wrappers/BsScriptQuaternion.h"
 #include "Wrappers/BsScriptVector.h"
 #include "Wrappers/BsScriptVector.h"
+#include "Wrappers/BsScriptVector.h"
+#include "Wrappers/BsScriptVector.h"
 #include "Wrappers/BsScriptQuaternion.h"
 
 namespace bs
@@ -76,6 +78,46 @@ namespace bs
 	__TKeyframeVector3Interop ScriptTKeyframeVector3::toInterop(const TKeyframe<Vector3>& value)
 	{
 		__TKeyframeVector3Interop output;
+		output.value = value.value;
+		output.inTangent = value.inTangent;
+		output.outTangent = value.outTangent;
+		output.time = value.time;
+
+		return output;
+	}
+
+
+	ScriptTKeyframeVector2::ScriptTKeyframeVector2(MonoObject* managedInstance)
+		:ScriptObject(managedInstance)
+	{ }
+
+	void ScriptTKeyframeVector2::initRuntimeData()
+	{ }
+
+	MonoObject*ScriptTKeyframeVector2::box(const __TKeyframeVector2Interop& value)
+	{
+		return MonoUtil::box(metaData.scriptClass->_getInternalClass(), (void*)&value);
+	}
+
+	__TKeyframeVector2Interop ScriptTKeyframeVector2::unbox(MonoObject* value)
+	{
+		return *(__TKeyframeVector2Interop*)MonoUtil::unbox(value);
+	}
+
+	TKeyframe<Vector2> ScriptTKeyframeVector2::fromInterop(const __TKeyframeVector2Interop& value)
+	{
+		TKeyframe<Vector2> output;
+		output.value = value.value;
+		output.inTangent = value.inTangent;
+		output.outTangent = value.outTangent;
+		output.time = value.time;
+
+		return output;
+	}
+
+	__TKeyframeVector2Interop ScriptTKeyframeVector2::toInterop(const TKeyframe<Vector2>& value)
+	{
+		__TKeyframeVector2Interop output;
 		output.value = value.value;
 		output.inTangent = value.inTangent;
 		output.outTangent = value.outTangent;

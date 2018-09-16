@@ -128,7 +128,7 @@ namespace BansheeEditor
             int numTickLevels = (int)tickHandler.NumLevels;
             for (int i = numTickLevels - 1; i >= 0; i--)
             {
-                float[] ticks = tickHandler.GetTicks(i);
+                float[] ticks = tickHandler.GetTicks((uint)i);
                 float strength = tickHandler.GetLevelStrength((uint)i);
                
                 if (ticks.Length > 0)
