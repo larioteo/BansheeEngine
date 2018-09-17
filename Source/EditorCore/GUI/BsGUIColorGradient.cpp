@@ -174,8 +174,7 @@ namespace bs
 		{
 			const float t = i / (float)width + halfPixel;
 
-			Color value;
-			value.setAsRGBA(gradient.evaluate(t));
+			Color value = Color::fromRGBA(gradient.evaluate(t));
 
 			if (alpha)
 				value = Color::lerp(value.a, Color::Black, Color::White);

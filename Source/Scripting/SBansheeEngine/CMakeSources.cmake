@@ -215,6 +215,7 @@ set(BS_SBANSHEEENGINE_INC_EXTENSIONS
 	"Extensions/BsMaterialEx.h"
 	"Extensions/BsRenderTargetEx.h"
 	"Extensions/BsColorGradientEx.h"
+	"Extensions/BsParticleDistributionEx.h"
 )
 
 set(BS_SBANSHEEENGINE_SRC_EXTENSIONS
@@ -230,6 +231,7 @@ set(BS_SBANSHEEENGINE_SRC_EXTENSIONS
 	"Extensions/BsMaterialEx.cpp"
 	"Extensions/BsRenderTargetEx.cpp"
 	"Extensions/BsColorGradientEx.cpp"
+	"Extensions/BsParticleDistributionEx.cpp"
 )
 
 source_group("Header Files" FILES ${BS_SBANSHEEENGINE_INC_NOFILTER})

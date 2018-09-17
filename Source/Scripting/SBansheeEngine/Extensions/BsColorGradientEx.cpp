@@ -6,9 +6,6 @@ namespace bs
 {
 	Color ColorGradientEx::evaluate(const SPtr<ColorGradient>& thisPtr, float t)
 	{
-		Color output;
-		output.setAsRGBA(thisPtr->evaluate(t));
-
-		return output;
+		return Color::fromRGBA(thisPtr->evaluate(t));
 	}
 }
