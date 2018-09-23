@@ -46,9 +46,9 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
-		public PropertyDistributionType GetType()
+		public PropertyDistributionType DistributionType
 		{
-			return Internal_getType(mCachedPtr);
+			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>
@@ -107,6 +107,15 @@ namespace BansheeEngine
 			return temp;
 		}
 
+		/// <summary>Evaluates the value of the distribution.</summary>
+		/// <param name="t">
+		/// Time at which to evaluate the distribution. This is only relevant if the distribution contains gradients.
+		/// </param>
+		/// <param name="factor">
+		/// Random number generator that determines the factor. Factor determines how to interpolate between min/max value, if 
+		/// the distribution represents a range.
+		/// </param>
+		/// <returns>Evaluated color.</returns>
 		public Color Evaluate(float t, out Random factor)
 		{
 			Color temp;

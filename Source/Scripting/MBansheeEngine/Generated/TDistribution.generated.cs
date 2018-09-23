@@ -44,9 +44,9 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
-		public PropertyDistributionType GetType()
+		public PropertyDistributionType DistributionType
 		{
-			return Internal_getType(mCachedPtr);
+			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>
@@ -181,9 +181,9 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
-		public PropertyDistributionType GetType()
+		public PropertyDistributionType DistributionType
 		{
-			return Internal_getType(mCachedPtr);
+			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>
@@ -326,9 +326,9 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
-		public PropertyDistributionType GetType()
+		public PropertyDistributionType DistributionType
 		{
-			return Internal_getType(mCachedPtr);
+			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>
