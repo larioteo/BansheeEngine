@@ -11,12 +11,12 @@ namespace BansheeEditor
 
 	/// <summary>
 	/// A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. 
-	/// Label is optional. This specific implementation displays an input field for a floating point distribution.
+	/// Label is optional. This specific implementation displays a color gradient input field.
 	/// </summary>
-	public partial class GUIFloatDistributionField : GUIElement
+	public partial class GUIColorGradientField : GUIElement
 	{
-		private GUIFloatDistributionField(bool __dummy0) { }
-		protected GUIFloatDistributionField() { }
+		private GUIColorGradientField(bool __dummy0) { }
+		protected GUIColorGradientField() { }
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
 		/// <param name="labelContent">Content to display in the editor field label.</param>
@@ -25,7 +25,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(GUIContent labelContent, uint labelWidth, string style = "")
+		public GUIColorGradientField(GUIContent labelContent, uint labelWidth, string style = "")
 		{
 			Internal_create(this, ref labelContent, labelWidth, style);
 		}
@@ -36,7 +36,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(GUIContent labelContent, string style = "")
+		public GUIColorGradientField(GUIContent labelContent, string style = "")
 		{
 			Internal_create0(this, ref labelContent, style);
 		}
@@ -48,7 +48,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(LocString labelText, uint labelWidth, string style = "")
+		public GUIColorGradientField(LocString labelText, uint labelWidth, string style = "")
 		{
 			Internal_create1(this, labelText, labelWidth, style);
 		}
@@ -59,7 +59,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(LocString labelText, string style = "")
+		public GUIColorGradientField(LocString labelText, string style = "")
 		{
 			Internal_create2(this, labelText, style);
 		}
@@ -69,50 +69,38 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(string style = "")
+		public GUIColorGradientField(string style = "")
 		{
 			Internal_create3(this, style);
 		}
 
 		/// <summary>Changes the value of the field.</summary>
-		public FloatDistribution Value
+		public ColorGradient Value
 		{
 			get { return Internal_getValue(mCachedPtr); }
 			set { Internal_setValue(mCachedPtr, value); }
 		}
 
-		/// <summary>
-		/// Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution.
-		/// </summary>
-		partial void OnClicked();
-
-		/// <summary>
-		/// Triggered when the user modifies either of the non-curve (constant) values of the distribution. Only relevant if the 
-		/// distribution is not a curve distribution.
-		/// </summary>
-		partial void OnConstantModified();
+		/// <summary>Triggered when the user clicks on the gradient field.</summary>
+		public event Action OnClicked;
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern FloatDistribution Internal_getValue(IntPtr thisPtr);
+		private static extern ColorGradient Internal_getValue(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setValue(IntPtr thisPtr, FloatDistribution value);
+		private static extern void Internal_setValue(IntPtr thisPtr, ColorGradient value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create(GUIColorGradientField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create0(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, string style);
+		private static extern void Internal_create0(GUIColorGradientField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUIFloatDistributionField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create1(GUIColorGradientField managedInstance, LocString labelText, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create2(GUIFloatDistributionField managedInstance, LocString labelText, string style);
+		private static extern void Internal_create2(GUIColorGradientField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create3(GUIFloatDistributionField managedInstance, string style);
+		private static extern void Internal_create3(GUIColorGradientField managedInstance, string style);
 		private void Internal_onClicked()
 		{
-			OnClicked();
-		}
-		private void Internal_onConstantModified()
-		{
-			OnConstantModified();
+			OnClicked?.Invoke();
 		}
 	}
 

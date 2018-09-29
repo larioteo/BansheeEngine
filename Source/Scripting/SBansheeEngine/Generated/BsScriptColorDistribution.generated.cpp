@@ -25,8 +25,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptColorDistribution::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_getMinConstant", (void*)&ScriptColorDistribution::Internal_getMinConstant);
 		metaData.scriptClass->addInternalCall("Internal_getMaxConstant", (void*)&ScriptColorDistribution::Internal_getMaxConstant);
-		metaData.scriptClass->addInternalCall("Internal_getMinCurve", (void*)&ScriptColorDistribution::Internal_getMinCurve);
-		metaData.scriptClass->addInternalCall("Internal_getMaxCurve", (void*)&ScriptColorDistribution::Internal_getMaxCurve);
+		metaData.scriptClass->addInternalCall("Internal_getMinGradient", (void*)&ScriptColorDistribution::Internal_getMinGradient);
+		metaData.scriptClass->addInternalCall("Internal_getMaxGradient", (void*)&ScriptColorDistribution::Internal_getMaxGradient);
 		metaData.scriptClass->addInternalCall("Internal_evaluate", (void*)&ScriptColorDistribution::Internal_evaluate);
 		metaData.scriptClass->addInternalCall("Internal_evaluate0", (void*)&ScriptColorDistribution::Internal_evaluate0);
 
@@ -112,10 +112,10 @@ namespace bs
 		*__output = tmp__output;
 	}
 
-	MonoObject* ScriptColorDistribution::Internal_getMinCurve(ScriptColorDistribution* thisPtr)
+	MonoObject* ScriptColorDistribution::Internal_getMinGradient(ScriptColorDistribution* thisPtr)
 	{
 		SPtr<ColorGradient> tmp__output = bs_shared_ptr_new<ColorGradient>();
-		*tmp__output = thisPtr->getInternal()->getMinCurve();
+		*tmp__output = thisPtr->getInternal()->getMinGradient();
 
 		MonoObject* __output;
 		__output = ScriptColorGradient::create(tmp__output);
@@ -123,10 +123,10 @@ namespace bs
 		return __output;
 	}
 
-	MonoObject* ScriptColorDistribution::Internal_getMaxCurve(ScriptColorDistribution* thisPtr)
+	MonoObject* ScriptColorDistribution::Internal_getMaxGradient(ScriptColorDistribution* thisPtr)
 	{
 		SPtr<ColorGradient> tmp__output = bs_shared_ptr_new<ColorGradient>();
-		*tmp__output = thisPtr->getInternal()->getMaxCurve();
+		*tmp__output = thisPtr->getInternal()->getMaxGradient();
 
 		MonoObject* __output;
 		__output = ScriptColorGradient::create(tmp__output);

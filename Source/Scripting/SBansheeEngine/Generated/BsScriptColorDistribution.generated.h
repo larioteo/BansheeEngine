@@ -32,8 +32,8 @@ namespace bs
 		static PropertyDistributionType Internal_getType(ScriptColorDistribution* thisPtr);
 		static void Internal_getMinConstant(ScriptColorDistribution* thisPtr, Color* __output);
 		static void Internal_getMaxConstant(ScriptColorDistribution* thisPtr, Color* __output);
-		static MonoObject* Internal_getMinCurve(ScriptColorDistribution* thisPtr);
-		static MonoObject* Internal_getMaxCurve(ScriptColorDistribution* thisPtr);
+		static MonoObject* Internal_getMinGradient(ScriptColorDistribution* thisPtr);
+		static MonoObject* Internal_getMaxGradient(ScriptColorDistribution* thisPtr);
 		static void Internal_evaluate(ScriptColorDistribution* thisPtr, float t, float factor, Color* __output);
 		static void Internal_evaluate0(ScriptColorDistribution* thisPtr, float t, MonoObject** factor, Color* __output);
 	};

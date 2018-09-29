@@ -36,6 +36,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\GUIColorDistributionField.cs" />
     <Compile Include="GUI\GUIColorGradient.cs" />
     <Compile Include="GUI\GUIFloatDistributionField.cs" />
     <Compile Include="Inspectors\AnimationClipInspector.cs" />

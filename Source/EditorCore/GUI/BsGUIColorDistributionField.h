@@ -4,6 +4,7 @@
 
 #include "BsEditorPrerequisites.h"
 #include "GUI/BsGUIFieldBase.h"
+#include "Image/BsColorGradient.h"
 #include "Particles/BsParticleDistribution.h"
 
 namespace bs
@@ -16,17 +17,17 @@ namespace bs
 
 	/**
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
-	 * Label is optional. This specific implementation displays an input field for a floating point distribution.
+	 * Label is optional. This specific implementation displays an input field for a color distribution.
 	 */
 	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
-	GUIFloatDistributionField final : public TGUIField<GUIFloatDistributionField>
+	GUIColorDistributionField final : public TGUIField<GUIColorDistributionField>
 	{
 	public:
-		/** Style type name for the internal float fields. */
-		static constexpr const char* FLOAT_FIELD_STYLE_TYPE = "FloatField";
+		/** Style type name for the internal color fields. */
+		static constexpr const char* COLOR_FIELD_STYLE_TYPE = "ColorField";
 
-		/** Style type name for the internal curve display field. */
-		static constexpr const char* CURVES_FIELD_STYLE_TYPE = "CurvesField";
+		/** Style type name for the internal color gradient field. */
+		static constexpr const char* COLOR_GRADIENT_FIELD_STYLE_TYPE = "GradientField";
 
 		/** Style type name for the internal drop down button. */
 		static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
@@ -34,32 +35,27 @@ namespace bs
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
-		GUIFloatDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
+		GUIColorDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value of the field. */
 		BS_SCRIPT_EXPORT(pr:getter,n:Value)
-		FloatDistribution getValue() const { return mValue; }
+		ColorDistribution getValue() const { return mValue; }
 
 		/**	Changes the value of the field. */
 		BS_SCRIPT_EXPORT(pr:setter,n:Value)
-		void setValue(const FloatDistribution& value);
+		void setValue(const ColorDistribution& value);
 
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
-		/** 
-		 * Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution. 
-		 */
+		/** Triggered when the user clicks on the minimum value display for the distribution. */
 		BS_SCRIPT_EXPORT(in:true)
-		Event<void()> onClicked;
+		Event<void()> onMinClicked;
 
-		/** 
-		 * Triggered when the user modifies either of the non-curve (constant) values of the distribution. Only relevant
-		 * if the distribution is not a curve distribution.
-		 */
+		/** Triggered when the user clicks on the maximum value display for the distribution. */
 		BS_SCRIPT_EXPORT(in:true)
-		Event<void()> onConstantModified;
+		Event<void()> onMaxClicked;
 
 		/** @name Internal 
 		 *  @{
@@ -77,15 +73,18 @@ namespace bs
 		/** Rebuilds the internal GUI components for the current property type. */
 		void rebuild();
 
-		FloatDistribution mValue = 0.0f;
+		ColorDistribution mValue = Color::White;
 		GUIButton* mDropDownButton = nullptr;
-		GUIFloatField* mMinInput = nullptr;
-		GUIFloatField* mMaxInput = nullptr;
-		GUICurves* mCurveDisplay = nullptr;
+		GUIColorField* mMinColorField = nullptr;
+		GUIColorField* mMaxColorField = nullptr;
+		GUIColorGradientField* mMinGradientField = nullptr;
+		GUIColorGradientField* mMaxGradientField = nullptr;
 
-		float mMinConstant = 0.0f;
-		float mMaxConstant = 0.0f;
-		TAnimationCurve<float> mCurves[2];
+		Color mMinConstant = Color::White;
+		Color mMaxConstant = Color::White;
+		ColorGradient mMinGradient;
+		ColorGradient mMaxGradient;
+
 		SPtr<GUIContextMenu> mContextMenu;
 	};
 

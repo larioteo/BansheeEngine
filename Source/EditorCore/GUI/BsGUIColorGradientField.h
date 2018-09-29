@@ -4,7 +4,7 @@
 
 #include "BsEditorPrerequisites.h"
 #include "GUI/BsGUIFieldBase.h"
-#include "Image/BsColor.h"
+#include "Image/BsColorGradient.h"
 
 namespace bs
 {
@@ -14,30 +14,34 @@ namespace bs
 
 	/**
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
-	 * Label is optional. This specific implementation displays a color input field.
+	 * Label is optional. This specific implementation displays a color gradient input field.
 	 */
-	class BS_ED_EXPORT GUIColorField : public TGUIField<GUIColorField>
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	GUIColorGradientField final : public TGUIField<GUIColorGradientField>
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
-		/** Style type name for the internal color field. */
-		static const String& getColorInputStyleType();
+		/** Style type name for the internal color gradient field. */
+		static constexpr const char* GRADIENT_FIELD_STYLE_TYPE = "GradientField";
 
-		GUIColorField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
+		GUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value of the field. */
-		Color getValue() const { return mValue; }
+		BS_SCRIPT_EXPORT(pr:getter,n:Value)
+		ColorGradient getValue() const { return mValue; }
 
 		/**	Changes the value of the field. */
-		void setValue(const Color& value);
+		BS_SCRIPT_EXPORT(pr:setter,n:Value)
+		void setValue(const ColorGradient& value);
 
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
-		Event<void()> onClicked; /**< Triggered when the user clicks on the GUI element. */
+		BS_SCRIPT_EXPORT()
+		Event<void()> onClicked; /**< Triggered when the user clicks on the gradient field. */
 
 		/** @name Internal 
 		 *  @{
@@ -49,18 +53,16 @@ namespace bs
 		/** @} */
 
 	protected:
-		virtual ~GUIColorField();
-
 		/** @copydoc GUIElement::styleUpdated */
 		void styleUpdated() override;
 
 		/**	Triggered when the child color input field is clicked on. */
 		void clicked();
 
-		UINT32 mLabelWidth;
-		Color mValue;
-		GUILabel* mLabel;
-		GUIColor* mColor;
+		UINT32 mLabelWidth = 100;
+		ColorGradient mValue;
+		GUILabel* mLabel = nullptr;
+		GUIColorGradient* mGradient = nullptr;
 	};
 
 	/** @} */

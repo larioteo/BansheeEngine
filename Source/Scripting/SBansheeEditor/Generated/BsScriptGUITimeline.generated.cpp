@@ -26,6 +26,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getTime", (void*)&ScriptGUITimeline::Internal_getTime);
 		metaData.scriptClass->addInternalCall("Internal_getOffset0", (void*)&ScriptGUITimeline::Internal_getOffset0);
 		metaData.scriptClass->addInternalCall("Internal_getTimeForFrame", (void*)&ScriptGUITimeline::Internal_getTimeForFrame);
+		metaData.scriptClass->addInternalCall("Internal_setPadding", (void*)&ScriptGUITimeline::Internal_setPadding);
+		metaData.scriptClass->addInternalCall("Internal_getPadding", (void*)&ScriptGUITimeline::Internal_getPadding);
 
 	}
 
@@ -132,6 +134,22 @@ namespace bs
 		tmp__output = static_cast<GUITimeline*>(thisPtr->getGUIElement())->getTimeForFrame(index);
 
 		float __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	void ScriptGUITimeline::Internal_setPadding(ScriptGUIElementBaseTBase* thisPtr, uint32_t padding)
+	{
+		static_cast<GUITimeline*>(thisPtr->getGUIElement())->setPadding(padding);
+	}
+
+	uint32_t ScriptGUITimeline::Internal_getPadding(ScriptGUIElementBaseTBase* thisPtr)
+	{
+		uint32_t tmp__output;
+		tmp__output = static_cast<GUITimeline*>(thisPtr->getGUIElement())->getPadding();
+
+		uint32_t __output;
 		__output = tmp__output;
 
 		return __output;

@@ -76,18 +76,18 @@ namespace BansheeEngine
 		/// Returns the gradient representing the distribution, or the first gradient representing a gradient range.  Undefined 
 		/// if the distribution is represented by a constant or a non-gradient range.
 		/// </summary>
-		public ColorGradient GetMinCurve()
+		public ColorGradient GetMinGradient()
 		{
-			return Internal_getMinCurve(mCachedPtr);
+			return Internal_getMinGradient(mCachedPtr);
 		}
 
 		/// <summary>
-		/// Returns the curve representing the second curve of a curve range. Only defined if the distribution represents a curve 
-		/// range.
+		/// Returns the curve representing the second gradient of a gradient range. Only defined if the distribution  represents 
+		/// a gradient range.
 		/// </summary>
-		public ColorGradient GetMaxCurve()
+		public ColorGradient GetMaxGradient()
 		{
-			return Internal_getMaxCurve(mCachedPtr);
+			return Internal_getMaxGradient(mCachedPtr);
 		}
 
 		/// <summary>Evaluates the value of the distribution.</summary>
@@ -140,9 +140,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getMaxConstant(IntPtr thisPtr, out Color __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern ColorGradient Internal_getMinCurve(IntPtr thisPtr);
+		private static extern ColorGradient Internal_getMinGradient(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern ColorGradient Internal_getMaxCurve(IntPtr thisPtr);
+		private static extern ColorGradient Internal_getMaxGradient(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_evaluate(IntPtr thisPtr, float t, float factor, out Color __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]

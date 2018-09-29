@@ -3134,5 +3134,45 @@
                 "style": "EditorFieldLabel"
             }
         ]
+    },
+    {
+        "fixedHeight": true,
+        "height": 21,
+        "minWidth": 30,
+        "name": "GUIColorGradientField",
+        "subStyles": [
+            {
+                "name": "GradientField",
+                "style": "ColorGradient"
+            },
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            }
+        ]
+    },
+    {
+        "name": "GUIColorDistributionField",
+        "fixedHeight": true,
+        "height": 21,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "ColorField",
+                "style": "GUIColorField"
+            },
+            {
+                "name": "GradientField",
+                "style": "GUIColorGradientField"
+            },
+            {
+                "name": "DropDownButton",
+                "style": "Button"
+            },
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            }
+        ]
     }
 ]

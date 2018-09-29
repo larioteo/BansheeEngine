@@ -45,6 +45,13 @@ namespace BansheeEditor
 			set { Internal_setMarkedFrame(mCachedPtr, value); }
 		}
 
+		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
+		public uint Padding
+		{
+			get { return Internal_getPadding(mCachedPtr); }
+			set { Internal_setPadding(mCachedPtr, value); }
+		}
+
 		/// <summary>
 		/// Uses the assigned FPS, range and physical size to calculate the frame that is under the provided coordinates.
 		/// </summary>
@@ -103,6 +110,10 @@ namespace BansheeEditor
 		private static extern int Internal_getOffset0(IntPtr thisPtr, float time);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getTimeForFrame(IntPtr thisPtr, int index);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setPadding(IntPtr thisPtr, uint padding);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern uint Internal_getPadding(IntPtr thisPtr);
 	}
 
 	/** @} */

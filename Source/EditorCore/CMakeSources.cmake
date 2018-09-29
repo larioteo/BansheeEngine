@@ -65,6 +65,8 @@ set(BS_BANSHEEEDITOR_SRC_GUI
 	"GUI/BsGUICurves.cpp"
 	"GUI/BsGUICurvesField.cpp"
 	"GUI/BsGUIFloatDistributionField.cpp"
+	"GUI/BsGUIColorDistributionField.cpp"
+	"GUI/BsGUIColorGradientField.cpp"
 )
 
 set(BS_BANSHEEEDITOR_INC_LIBRARY
@@ -104,6 +106,8 @@ set(BS_BANSHEEEDITOR_INC_GUI
 	"GUI/BsGUICurves.h"
 	"GUI/BsGUICurvesField.h"
 	"GUI/BsGUIFloatDistributionField.h"
+	"GUI/BsGUIColorDistributionField.h"
+	"GUI/BsGUIColorGradientField.h"
 )
 
 set(BS_BANSHEEEDITOR_INC_UNDOREDO

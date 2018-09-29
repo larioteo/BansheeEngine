@@ -27,5 +27,7 @@ namespace bs
 		static float Internal_getTime(ScriptGUIElementBaseTBase* thisPtr, int32_t pixel);
 		static int32_t Internal_getOffset0(ScriptGUIElementBaseTBase* thisPtr, float time);
 		static float Internal_getTimeForFrame(ScriptGUIElementBaseTBase* thisPtr, int32_t index);
+		static void Internal_setPadding(ScriptGUIElementBaseTBase* thisPtr, uint32_t padding);
+		static uint32_t Internal_getPadding(ScriptGUIElementBaseTBase* thisPtr);
 	};
 }

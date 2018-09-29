@@ -187,6 +187,8 @@ namespace bs
 	class SelectionRenderer;
 	class DropDownWindow;
 	class ProjectSettings;
+	class GUIColorGradient;
+	class GUIColorGradientField;
 
 	static constexpr const char* EDITOR_ASSEMBLY = "MBansheeEditor";
 	static constexpr const char* SCRIPT_EDITOR_ASSEMBLY = "MScriptEditor";
