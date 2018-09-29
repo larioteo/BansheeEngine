@@ -1495,8 +1495,6 @@ namespace BansheeEditor
             Vector2 newCurvePos = relativeCurvePos * rangeScale;
             Vector2 diff = newCurvePos - relativeCurvePos;
 
-            Debug.Log(curvePos + " " + Offset + " " + currentRange + " " + newRange);
-
             Offset -= diff;
 
             UpdateScrollBarSize();

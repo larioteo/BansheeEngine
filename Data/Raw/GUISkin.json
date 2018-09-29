@@ -3087,5 +3087,52 @@
         "normal": {
             "texture": "ContainerBg.png"
         }
+    },
+    {
+        "fixedHeight": true,
+        "height": 15,
+        "margins": {
+            "bottom": 2,
+            "left": 2,
+            "right": 2,
+            "top": 2
+        },
+        "minWidth": 10,
+        "name": "ColorGradient"
+    },
+    {
+        "name": "GUICurves",
+        "minHeight": 20,
+        "margins": {
+            "bottom": 2,
+            "left": 2,
+            "right": 2,
+            "top": 2
+        },
+        "minWidth": 30
+    },
+    {
+        "name": "GUIFloatDistributionField",
+        "minHeight": 20,
+		"maxHeight": 50,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "FloatField",
+                "style": "GUIFloatField"
+            },
+            {
+                "name": "CurvesField",
+                "style": "GUICurves"
+            },
+            {
+                "name": "DropDownButton",
+                "style": "Button"
+            },
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            }
+        ]
     }
 ]

@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\GUIColorGradient.cs" />
+    <Compile Include="GUI\GUIFloatDistributionField.cs" />
     <Compile Include="Inspectors\AnimationClipInspector.cs" />
     <Compile Include="Inspectors\AnimationInspector.cs" />
     <Compile Include="Inspectors\AudioClipInspector.cs" />

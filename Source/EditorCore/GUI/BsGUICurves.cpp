@@ -11,8 +11,6 @@
 
 namespace bs
 {
-	static constexpr INT32 TIMELINE_PADDING_PX = 30;
-
 	GUITimeline::GUITimeline(const String& styleName, const GUIDimensions& dimensions)
 		:GUIElementContainer(dimensions, styleName)
 	{
@@ -56,19 +54,25 @@ namespace bs
 		_markContentAsDirty();
 	}
 
+	void GUITimeline::setPadding(UINT32 padding)
+	{
+		mPadding = padding;
+		_markContentAsDirty();
+	}
+
 	UINT32 GUITimeline::getFrame(const Vector2I& pixelCoords) const
 	{
 		const Rect2I& bounds = mLayoutData.area;
 
-		if (pixelCoords.x < (TIMELINE_PADDING_PX) || 
-			pixelCoords.x >= ((INT32)bounds.width - TIMELINE_PADDING_PX) ||
+		if (pixelCoords.x < (INT32)mPadding || 
+			pixelCoords.x >= ((INT32)bounds.width - (INT32)mPadding) ||
 			pixelCoords.y < 0 || 
 			pixelCoords.y >= (INT32)bounds.height)
 		{
 			return -1;
 		}
 
-		const Vector2I relativeCoords = pixelCoords - Vector2I(bounds.x + TIMELINE_PADDING_PX, bounds.y);
+		const Vector2I relativeCoords = pixelCoords - Vector2I(bounds.x + mPadding, bounds.y);
 
 		const float lengthPerPixel = getRange() / getDrawableWidth();
 		const float time = mOffset + relativeCoords.x * lengthPerPixel;
@@ -79,7 +83,7 @@ namespace bs
 	float GUITimeline::getTime(INT32 pixel) const
 	{
 		const Rect2I& bounds = mLayoutData.area;
-		const INT32 relativeCoords = pixel - (bounds.x + TIMELINE_PADDING_PX);
+		const INT32 relativeCoords = pixel - (bounds.x + mPadding);
 
 		const float lengthPerPixel = getRange() / getDrawableWidth();
 		return mOffset + relativeCoords * lengthPerPixel;
@@ -87,7 +91,7 @@ namespace bs
 
 	INT32 GUITimeline::getOffset(float time) const
 	{
-		return (INT32)(((time - mOffset) / getRange()) * getDrawableWidth()) + TIMELINE_PADDING_PX;
+		return (INT32)(((time - mOffset) / getRange()) * getDrawableWidth()) + mPadding;
 	}
 
 	float GUITimeline::getTimeForFrame(INT32 index) const
@@ -97,7 +101,7 @@ namespace bs
 
 	UINT32 GUITimeline::getDrawableWidth() const
 	{
-		return std::max(0, (INT32)mLayoutData.area.width - TIMELINE_PADDING_PX * 2);
+		return std::max(0, (INT32)mLayoutData.area.width - (INT32)mPadding * 2);
 	}
 
 	float GUITimeline::getRangeWithPadding() const
@@ -105,14 +109,14 @@ namespace bs
 		const float spf = 1.0f / (float)mFPS;
 
 		const float lengthPerPixel = mRange / getDrawableWidth();
-		const float range = mRange + lengthPerPixel * TIMELINE_PADDING_PX;
+		const float range = mRange + lengthPerPixel * mPadding;
 
 		return std::max(1.0f, range / spf) * spf;
 	}
 
 	void GUITimeline::drawFrameMarker(float t)
 	{
-		const INT32 xPos = (INT32)(((t - mOffset) / getRange()) * getDrawableWidth()) + TIMELINE_PADDING_PX;
+		const INT32 xPos = (INT32)(((t - mOffset) / getRange()) * getDrawableWidth()) + mPadding;
 
 		const Vector2I start(xPos, 0);
 		const Vector2I end(xPos, mLayoutData.area.height);
@@ -211,8 +215,8 @@ namespace bs
 
 		float xRange = xMax - xMin;
 
-		float yRange = (yMax - yMin) * 0.5f;
-		float yOffset = yMin + yRange;
+		float yRange = (yMax - yMin);
+		float yOffset = yMin + yRange * 0.5f;
 
 		// Add padding to y range
 		yRange *= 1.05f;
@@ -362,7 +366,7 @@ namespace bs
 		if (padding)
 			outsideHorizontal = pixelCoords.x < 0 || pixelCoords.x >= (INT32)bounds.width;
 		else
-			outsideHorizontal = pixelCoords.x < TIMELINE_PADDING_PX || pixelCoords.x >= ((INT32)bounds.width - TIMELINE_PADDING_PX);
+			outsideHorizontal = pixelCoords.x < (INT32)mPadding || pixelCoords.x >= ((INT32)bounds.width - (INT32)mPadding);
 
 		// Check if outside of curve drawing bounds
 		if (outsideHorizontal || pixelCoords.y < 0 || pixelCoords.y >= (INT32)bounds.height)
@@ -372,7 +376,7 @@ namespace bs
 		}
 
 		// Find time and value of the place under the coordinates
-		const Vector2I relativeCoords = pixelCoords - Vector2I(TIMELINE_PADDING_PX, 0);
+		const Vector2I relativeCoords = pixelCoords - Vector2I(mPadding, 0);
 
 		const float lengthPerPixel = getRange() / getDrawableWidth();
 		const float heightPerPixel = mYRange / mLayoutData.area.height;
@@ -396,7 +400,7 @@ namespace bs
 		const Vector2 relativeCurveCoords = curveCoords - Vector2(mOffset, mYOffset);
 
 		Vector2I pixelCoords = Vector2I();
-		pixelCoords.x = (int)((relativeCurveCoords.x / getRange()) * getDrawableWidth()) + TIMELINE_PADDING_PX;
+		pixelCoords.x = (int)((relativeCurveCoords.x / getRange()) * getDrawableWidth()) + mPadding;
 		pixelCoords.y = heightOffset - (int)((relativeCurveCoords.y / mYRange) * mLayoutData.area.height);
 
 		return pixelCoords;
@@ -448,7 +452,7 @@ namespace bs
 
 	void GUICurves::drawFrameMarker(float t, Color color, bool onTop)
 	{
-		const INT32 xPos = (INT32)(((t - mOffset) / getRange()) * getDrawableWidth()) + TIMELINE_PADDING_PX;
+		const INT32 xPos = (INT32)(((t - mOffset) / getRange()) * getDrawableWidth()) + mPadding;
 
 		const Vector2I start = Vector2I(xPos, 0);
 		const Vector2I end = Vector2I(xPos, mLayoutData.area.height);
@@ -533,7 +537,7 @@ namespace bs
 			const float curveValue = curve.evaluate(curveStart, false);
 
 			const Vector2I end = curveToPixelSpace(Vector2(curveStart, curveValue));
-			const Vector2I start = Vector2I(-TIMELINE_PADDING_PX, end.y);
+			const Vector2I start = Vector2I(-(INT32)mPadding, end.y);
 
 			if (start.x < end.x)
 				mCanvas->drawLine(start, end, COLOR_MID_GRAY);
@@ -637,7 +641,7 @@ namespace bs
 
 		float time = mOffset;
 		const float lengthPerPixel = mRange / getDrawableWidth();
-		time -= lengthPerPixel * TIMELINE_PADDING_PX;
+		time -= lengthPerPixel * mPadding;
 
 		INT32 keyframeIndices[] = { 0, 0 };
 
@@ -874,7 +878,7 @@ namespace bs
 		bool drawMarkers = mDrawOptions.isSet(CurveDrawOption::DrawMarkers);
 		if (drawMarkers)
 		{
-			mTickHandler.setRange(mOffset, mOffset + getRangeWithPadding(), getDrawableWidth() + TIMELINE_PADDING_PX);
+			mTickHandler.setRange(mOffset, mOffset + getRangeWithPadding(), getDrawableWidth() + mPadding);
 
 			// Draw vertical frame markers
 			const INT32 numTickLevels = (INT32)mTickHandler.getNumLevels();

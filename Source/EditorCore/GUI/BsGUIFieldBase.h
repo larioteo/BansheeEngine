@@ -41,7 +41,7 @@ namespace bs
 
 		/** @} */
 	protected:
-		virtual ~GUIFieldBase() { }
+		virtual ~GUIFieldBase() = default;
 
 		/** @copydoc GUIElementContainer::styleUpdated */
 		void styleUpdated() override;

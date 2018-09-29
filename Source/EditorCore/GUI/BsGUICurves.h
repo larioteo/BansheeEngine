@@ -118,6 +118,14 @@ namespace bs
 		BS_SCRIPT_EXPORT()
 		float getTimeForFrame(INT32 index) const;
 
+		/** Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels. */
+		BS_SCRIPT_EXPORT(pr:setter,n:Padding)
+		void setPadding(UINT32 padding);
+
+		/** @copydoc setPadding */
+		BS_SCRIPT_EXPORT(pr:getter,n:Padding)
+		UINT32 getPadding() const { return mPadding; };
+
 		/**
 		 * @name Internal
 		 * @{
@@ -155,6 +163,7 @@ namespace bs
 		float mOffset = 0.0f;
 		UINT32 mFPS = 1;
 		UINT32 mMarkedFrame = (UINT32)-1;
+		UINT32 mPadding = 30;
 	};
 
 	/** Determines how should ticks reported by <see cref="GUIGraphTicks"/> be distributed. */
