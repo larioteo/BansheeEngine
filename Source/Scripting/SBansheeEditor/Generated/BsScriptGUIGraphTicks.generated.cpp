@@ -2,7 +2,7 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "../../../EditorCore/GUI/BsGUICurves.h"
+#include "../../../EditorCore/GUI/BsGUIGraphTicks.h"
 
 namespace bs
 {

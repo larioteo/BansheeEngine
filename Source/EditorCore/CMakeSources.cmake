@@ -67,6 +67,7 @@ set(BS_BANSHEEEDITOR_SRC_GUI
 	"GUI/BsGUIFloatDistributionField.cpp"
 	"GUI/BsGUIColorDistributionField.cpp"
 	"GUI/BsGUIColorGradientField.cpp"
+	"GUI/BsGUITimeline.cpp"
 )
 
 set(BS_BANSHEEEDITOR_INC_LIBRARY
@@ -108,6 +109,8 @@ set(BS_BANSHEEEDITOR_INC_GUI
 	"GUI/BsGUIFloatDistributionField.h"
 	"GUI/BsGUIColorDistributionField.h"
 	"GUI/BsGUIColorGradientField.h"
+	"GUI/BsGUITimeline.h"
+	"GUI/BsGUIGraphTicks.h"
 )
 
 set(BS_BANSHEEEDITOR_INC_UNDOREDO
