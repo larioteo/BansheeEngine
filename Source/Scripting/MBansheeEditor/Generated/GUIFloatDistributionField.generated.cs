@@ -82,6 +82,14 @@ namespace BansheeEditor
 		}
 
 		/// <summary>
+		/// Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions.
+		/// </summary>
+		public bool HasInputFocus
+		{
+			get { return Internal_hasInputFocus(mCachedPtr); }
+		}
+
+		/// <summary>
 		/// Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution.
 		/// </summary>
 		partial void OnClicked();
@@ -92,10 +100,18 @@ namespace BansheeEditor
 		/// </summary>
 		partial void OnConstantModified();
 
+		/// <summary>
+		/// Triggered when the user confirms inputs in either of the non-curve (constant) values of the distribution. Only  
+		/// relevant if the distribution is not a curve distribution.
+		/// </summary>
+		partial void OnConstantConfirmed();
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern FloatDistribution Internal_getValue(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setValue(IntPtr thisPtr, FloatDistribution value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool Internal_hasInputFocus(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -113,6 +129,10 @@ namespace BansheeEditor
 		private void Internal_onConstantModified()
 		{
 			OnConstantModified();
+		}
+		private void Internal_onConstantConfirmed()
+		{
+			OnConstantConfirmed();
 		}
 	}
 

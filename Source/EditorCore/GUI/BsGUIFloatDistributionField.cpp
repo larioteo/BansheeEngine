@@ -91,6 +91,17 @@ namespace bs
 		rebuild();
 	}
 
+	bool GUIFloatDistributionField::hasInputFocus() const
+	{
+		if(mMinInput && mMinInput->hasInputFocus())
+			return true;
+
+		if(mMaxInput && mMaxInput->hasInputFocus())
+			return true;
+
+		return false;
+	}
+
 	void GUIFloatDistributionField::setTint(const Color& color)
 	{
 		mDropDownButton->setTint(color);
@@ -180,6 +191,7 @@ namespace bs
 
 				onConstantModified();
 			});
+			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
 			mLayout->addElement(mMinInput);
 			break;
@@ -196,6 +208,7 @@ namespace bs
 
 				onConstantModified();
 			});
+			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
 			mMaxInput->setValue(mMaxConstant);
 			mMaxInput->onValueChanged.connect([this](float value)
@@ -205,6 +218,7 @@ namespace bs
 
 				onConstantModified();
 			});
+			mMaxInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
 			mLayout->addElement(mMinInput);
 			mLayout->addElement(mMaxInput);

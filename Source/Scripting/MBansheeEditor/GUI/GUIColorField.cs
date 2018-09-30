@@ -89,9 +89,7 @@ namespace BansheeEditor
             if (Value != color)
             {
                 Value = color;
-
-                if(OnChanged != null)
-                    OnChanged(color);
+                OnChanged?.Invoke(color);
             }
         }
 

@@ -38,10 +38,31 @@ namespace bs
 		BS_SCRIPT_EXPORT()
 		void setCurveRange(const TAnimationCurve<float>& curveA, const TAnimationCurve<float>& curveB);
 
+		/** 
+		 * Returns the curve represented by the field. If the field represents a curve range this returns the minimal
+		 * curve of that range.
+		 */
+		BS_SCRIPT_EXPORT(pr:getter,n:Curve)
+		const TAnimationCurve<float>& getCurve() const;
+
+		/** 
+		 * Returns the minimal curve represented by the field containing a curve range. Returns the only available
+		 * curve if the field doesn't represent a range.
+		 */
+		BS_SCRIPT_EXPORT(pr:getter,n:MinCurve)
+		const TAnimationCurve<float>& getMinCurve() const;
+
+		/** 
+		 * Returns the maximal curve represented by the field containing a curve range. Returns the only available
+		 * curve if the field doesn't represent a range.
+		 */
+		BS_SCRIPT_EXPORT(pr:getter,n:MaxCurve)
+		const TAnimationCurve<float>& getMaxCurve() const;
+
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
-		BS_SCRIPT_EXPORT() 
+		BS_SCRIPT_EXPORT(in:true) 
 		Event<void()> onClicked; /**< Triggered when the user clicks on the GUI element. */
 
 		/** @name Internal 

@@ -5,6 +5,11 @@ namespace BansheeEditor
 {
     partial class GUIColorDistributionField
     {
+        /// <summary>
+        /// Triggered when the distribution in the field changes.
+        /// </summary>
+        public event Action OnChanged;
+
         partial void OnMinClicked()
         {
             ColorDistribution distribution = Value;
@@ -21,6 +26,8 @@ namespace BansheeEditor
                         Value = new ColorDistribution(value);
                     else
                         Value = new ColorDistribution(value, distribution.GetMaxConstant());
+
+                    OnChanged?.Invoke();
                 });
             }
             else if (distribution.DistributionType == PropertyDistributionType.Curve || 
@@ -35,6 +42,8 @@ namespace BansheeEditor
                         Value = new ColorDistribution(colorGradient);
                     else
                         Value = new ColorDistribution(colorGradient, distribution.GetMaxGradient());
+
+                    OnChanged?.Invoke();
                 });
             }
         }
@@ -51,6 +60,7 @@ namespace BansheeEditor
                         return;
 
                     Value = new ColorDistribution(distribution.GetMinConstant(), value);
+                    OnChanged?.Invoke();
                 });
             }
             else if (distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
@@ -61,6 +71,7 @@ namespace BansheeEditor
                         return;
 
                     Value = new ColorDistribution(distribution.GetMinGradient(), colorGradient);
+                    OnChanged?.Invoke();
                 });
             }
         }

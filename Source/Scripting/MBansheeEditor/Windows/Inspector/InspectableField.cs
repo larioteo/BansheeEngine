@@ -172,6 +172,18 @@ namespace BansheeEditor
                     case SerializableProperty.FieldType.Color:
                         field = new InspectableColor(parent, title, path, depth, layout, property);
                         break;
+                    case SerializableProperty.FieldType.ColorGradient:
+                        field = new InspectableColorGradient(parent, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.Curve:
+                        field = new InspectableCurve(parent, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.FloatDistribution:
+                        field = new InspectableFloatDistribution(parent, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.ColorDistribution:
+                        field = new InspectableColorDistribution(parent, title, path, depth, layout, property);
+                        break;
                     case SerializableProperty.FieldType.String:
                         field = new InspectableString(parent, title, path, depth, layout, property);
                         break;

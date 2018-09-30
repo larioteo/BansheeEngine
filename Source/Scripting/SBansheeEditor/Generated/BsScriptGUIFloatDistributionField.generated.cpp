@@ -12,18 +12,21 @@ namespace bs
 {
 	ScriptGUIFloatDistributionField::onClickedThunkDef ScriptGUIFloatDistributionField::onClickedThunk; 
 	ScriptGUIFloatDistributionField::onConstantModifiedThunkDef ScriptGUIFloatDistributionField::onConstantModifiedThunk; 
+	ScriptGUIFloatDistributionField::onConstantConfirmedThunkDef ScriptGUIFloatDistributionField::onConstantConfirmedThunk; 
 
 	ScriptGUIFloatDistributionField::ScriptGUIFloatDistributionField(MonoObject* managedInstance, GUIFloatDistributionField* value)
 		:TScriptGUIElement(managedInstance, value)
 	{
 		value->onClicked.connect(std::bind(&ScriptGUIFloatDistributionField::onClicked, this));
 		value->onConstantModified.connect(std::bind(&ScriptGUIFloatDistributionField::onConstantModified, this));
+		value->onConstantConfirmed.connect(std::bind(&ScriptGUIFloatDistributionField::onConstantConfirmed, this));
 	}
 
 	void ScriptGUIFloatDistributionField::initRuntimeData()
 	{
 		metaData.scriptClass->addInternalCall("Internal_getValue", (void*)&ScriptGUIFloatDistributionField::Internal_getValue);
 		metaData.scriptClass->addInternalCall("Internal_setValue", (void*)&ScriptGUIFloatDistributionField::Internal_setValue);
+		metaData.scriptClass->addInternalCall("Internal_hasInputFocus", (void*)&ScriptGUIFloatDistributionField::Internal_hasInputFocus);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUIFloatDistributionField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUIFloatDistributionField::Internal_create0);
 		metaData.scriptClass->addInternalCall("Internal_create1", (void*)&ScriptGUIFloatDistributionField::Internal_create1);
@@ -32,6 +35,7 @@ namespace bs
 
 		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "")->getThunk();
 		onConstantModifiedThunk = (onConstantModifiedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantModified", "")->getThunk();
+		onConstantConfirmedThunk = (onConstantConfirmedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantConfirmed", "")->getThunk();
 	}
 
 	void ScriptGUIFloatDistributionField::onClicked()
@@ -42,6 +46,11 @@ namespace bs
 	void ScriptGUIFloatDistributionField::onConstantModified()
 	{
 		MonoUtil::invokeThunk(onConstantModifiedThunk, getManagedInstance());
+	}
+
+	void ScriptGUIFloatDistributionField::onConstantConfirmed()
+	{
+		MonoUtil::invokeThunk(onConstantConfirmedThunk, getManagedInstance());
 	}
 	MonoObject* ScriptGUIFloatDistributionField::Internal_getValue(ScriptGUIFloatDistributionField* thisPtr)
 	{
@@ -61,6 +70,17 @@ namespace bs
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
 		tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIFloatDistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
+	}
+
+	bool ScriptGUIFloatDistributionField::Internal_hasInputFocus(ScriptGUIFloatDistributionField* thisPtr)
+	{
+		bool tmp__output;
+		tmp__output = static_cast<GUIFloatDistributionField*>(thisPtr->getGUIElement())->hasInputFocus();
+
+		bool __output;
+		__output = tmp__output;
+
+		return __output;
 	}
 
 	void ScriptGUIFloatDistributionField::Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)

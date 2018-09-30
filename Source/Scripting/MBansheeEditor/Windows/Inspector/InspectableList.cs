@@ -28,7 +28,7 @@ namespace BansheeEditor
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
-        /// <param name="property">Serializable property referencing the array whose contents to display.</param>
+        /// <param name="property">Serializable property referencing the list whose contents to display.</param>
         public InspectableList(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
             SerializableProperty property)
             : base(parent, title, path, SerializableProperty.FieldType.List, depth, layout, property)

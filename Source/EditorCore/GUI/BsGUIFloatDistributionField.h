@@ -48,6 +48,10 @@ namespace bs
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
+		/**	Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions. */
+		BS_SCRIPT_EXPORT(pr:getter,n:HasInputFocus)
+		bool hasInputFocus() const;
+
 		/** 
 		 * Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution. 
 		 */
@@ -60,6 +64,13 @@ namespace bs
 		 */
 		BS_SCRIPT_EXPORT(in:true)
 		Event<void()> onConstantModified;
+
+		/** 
+		 * Triggered when the user confirms inputs in either of the non-curve (constant) values of the distribution. Only 
+		 * relevant if the distribution is not a curve distribution.
+		 */
+		BS_SCRIPT_EXPORT(in:true)
+		Event<void()> onConstantConfirmed;
 
 		/** @name Internal 
 		 *  @{

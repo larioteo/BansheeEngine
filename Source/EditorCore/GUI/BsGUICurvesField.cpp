@@ -9,6 +9,8 @@ using namespace std::placeholders;
 
 namespace bs
 {
+	static const TAnimationCurve<float> EMPTY_CURVE;
+
 	GUICurvesField::GUICurvesField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 		const String& style, const GUIDimensions& dimensions, bool withLabel)
 		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
@@ -39,6 +41,31 @@ namespace bs
 		};
 
 		mCurves->setCurves(drawInfos);
+	}
+
+	const TAnimationCurve<float>& GUICurvesField::getCurve() const
+	{
+		const Vector<CurveDrawInfo>& curves = mCurves->getCurves();
+		if(!curves.empty())
+			return mCurves->getCurves()[0].curve;
+
+		return EMPTY_CURVE;
+	}
+
+	const TAnimationCurve<float>& GUICurvesField::getMinCurve() const
+	{
+		return getCurve();
+	}
+
+	const TAnimationCurve<float>& GUICurvesField::getMaxCurve() const
+	{
+		const Vector<CurveDrawInfo>& curves = mCurves->getCurves();
+		if(curves.size() > 1)
+			return mCurves->getCurves()[1].curve;
+		else if(!curves.empty())
+			return mCurves->getCurves()[0].curve;
+
+		return EMPTY_CURVE;
 	}
 
 	void GUICurvesField::setTint(const Color& color)

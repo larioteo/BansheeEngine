@@ -1,5 +1,5 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
-//**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+//**************** Copyright (c) 2018 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using BansheeEngine;
 
 namespace BansheeEditor
@@ -9,15 +9,16 @@ namespace BansheeEditor
      */
 
     /// <summary>
-    /// Displays GUI for a serializable property containing a 4D vector.
+    /// Displays GUI for a serializable property containing a floating point distribution. GUI elements will switch between
+    /// floating point and curve input depending on the distribution type. 
     /// </summary>
-    public class InspectableVector4 : InspectableField
+    public class InspectableFloatDistribution : InspectableField
     {
-        private GUIVector4Field guiField;
+        private GUIFloatDistributionField guiDistributionField;
         private InspectableState state;
 
         /// <summary>
-        /// Creates a new inspectable 4D vector GUI for the specified property.
+        /// Creates a new inspectable float distribution GUI for the specified property.
         /// </summary>
         /// <param name="parent">Parent Inspector this field belongs to.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
@@ -26,32 +27,30 @@ namespace BansheeEditor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
-        public InspectableVector4(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
-            SerializableProperty property)
-            : base(parent, title, path, SerializableProperty.FieldType.Vector4, depth, layout, property)
-        {
-
-        }
+        public InspectableFloatDistribution(Inspector parent, string title, string path, int depth, 
+            InspectableFieldLayout layout, SerializableProperty property)
+            : base(parent, title, path, SerializableProperty.FieldType.FloatDistribution, depth, layout, property)
+        { }
 
         /// <inheritoc/>
         protected internal override void Initialize(int layoutIndex)
         {
-            if (property.Type == SerializableProperty.FieldType.Vector4)
+            if (property != null)
             {
-                guiField = new GUIVector4Field(new GUIContent(title));
-                guiField.OnChanged += OnFieldValueChanged;
-                guiField.OnConfirmed += OnFieldValueConfirm;
-                guiField.OnFocusLost += OnFieldValueConfirm;
+                guiDistributionField = new GUIFloatDistributionField(new GUIContent(title));
+                guiDistributionField.OnChanged += OnFieldValueChanged;
+                guiDistributionField.OnConfirmed += OnFieldValueConfirm;
+                guiDistributionField.OnFocusLost += OnFieldValueConfirm;
 
-                layout.AddElement(layoutIndex, guiField);
+                layout.AddElement(layoutIndex, guiDistributionField);
             }
         }
 
         /// <inheritdoc/>
         public override InspectableState Refresh(int layoutIndex)
         {
-            if (guiField != null && !guiField.HasInputFocus)
-                guiField.Value = property.GetValue<Vector4>();
+            if (guiDistributionField != null && !guiDistributionField.HasInputFocus)
+                guiDistributionField.Value = property.GetValue<FloatDistribution>();
 
             InspectableState oldState = state;
             if (state.HasFlag(InspectableState.Modified))
@@ -61,17 +60,16 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Triggered when the user changes the field value.
+        /// Triggered when the user edits the distribution.
         /// </summary>
-        /// <param name="newValue">New value of the 3D vector field.</param>
-        private void OnFieldValueChanged(Vector4 newValue)
+        private void OnFieldValueChanged()
         {
-            property.SetValue(newValue);
+            property.SetValue(guiDistributionField.Value);
             state |= InspectableState.ModifyInProgress;
         }
 
         /// <summary>
-        /// Triggered when the user confirms input in the 3D vector field.
+        /// Triggered when the user confirms input in the float fields used for displaying the non-curve distribution.
         /// </summary>
         private void OnFieldValueConfirm()
         {

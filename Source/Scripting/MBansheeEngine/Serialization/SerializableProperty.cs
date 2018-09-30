@@ -37,6 +37,10 @@ namespace BansheeEngine
             List,
             Dictionary,
             RRef,
+            ColorGradient,
+            Curve,
+            FloatDistribution,
+            ColorDistribution
         }
 
         public delegate object Getter();
@@ -357,6 +361,14 @@ namespace BansheeEngine
                     return FieldType.Vector4;
                 else if (internalType == typeof (Color))
                     return FieldType.Color;
+                else if (internalType == typeof(ColorGradient))
+                    return FieldType.ColorGradient;
+                else if (internalType == typeof(AnimationCurve))
+                    return FieldType.Curve;
+                else if (internalType == typeof(FloatDistribution))
+                    return FieldType.FloatDistribution;
+                else if (internalType == typeof(ColorDistribution))
+                    return FieldType.ColorDistribution;
                 else if (internalType.IsSubclassOf(typeof (GameObject)))
                     return FieldType.GameObjectRef;
                 else if (internalType.IsSubclassOf(typeof (Resource)))

@@ -82,7 +82,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Triggered when the user clicks on the gradient field.</summary>
-		public event Action OnClicked;
+		partial void OnClicked();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ColorGradient Internal_getValue(IntPtr thisPtr);
@@ -100,7 +100,7 @@ namespace BansheeEditor
 		private static extern void Internal_create3(GUIColorGradientField managedInstance, string style);
 		private void Internal_onClicked()
 		{
-			OnClicked?.Invoke();
+			OnClicked();
 		}
 	}
 

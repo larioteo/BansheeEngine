@@ -40,7 +40,7 @@ namespace bs
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
-		BS_SCRIPT_EXPORT()
+		BS_SCRIPT_EXPORT(in:true)
 		Event<void()> onClicked; /**< Triggered when the user clicks on the gradient field. */
 
 		/** @name Internal 

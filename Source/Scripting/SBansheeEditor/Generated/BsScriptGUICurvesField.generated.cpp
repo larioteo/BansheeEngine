@@ -22,6 +22,9 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setCurve", (void*)&ScriptGUICurvesField::Internal_setCurve);
 		metaData.scriptClass->addInternalCall("Internal_setCurveRange", (void*)&ScriptGUICurvesField::Internal_setCurveRange);
+		metaData.scriptClass->addInternalCall("Internal_getCurve", (void*)&ScriptGUICurvesField::Internal_getCurve);
+		metaData.scriptClass->addInternalCall("Internal_getMinCurve", (void*)&ScriptGUICurvesField::Internal_getMinCurve);
+		metaData.scriptClass->addInternalCall("Internal_getMaxCurve", (void*)&ScriptGUICurvesField::Internal_getMaxCurve);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUICurvesField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUICurvesField::Internal_create0);
 		metaData.scriptClass->addInternalCall("Internal_create1", (void*)&ScriptGUICurvesField::Internal_create1);
@@ -55,6 +58,39 @@ namespace bs
 		scriptcurveB = ScriptTAnimationCurvefloat::toNative(curveB);
 		tmpcurveB = scriptcurveB->getInternal();
 		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setCurveRange(*tmpcurveA, *tmpcurveB);
+	}
+
+	MonoObject* ScriptGUICurvesField::Internal_getCurve(ScriptGUICurvesField* thisPtr)
+	{
+		SPtr<TAnimationCurve<float>> tmp__output = bs_shared_ptr_new<TAnimationCurve<float>>();
+		*tmp__output = static_cast<GUICurvesField*>(thisPtr->getGUIElement())->getCurve();
+
+		MonoObject* __output;
+		__output = ScriptTAnimationCurvefloat::create(tmp__output);
+
+		return __output;
+	}
+
+	MonoObject* ScriptGUICurvesField::Internal_getMinCurve(ScriptGUICurvesField* thisPtr)
+	{
+		SPtr<TAnimationCurve<float>> tmp__output = bs_shared_ptr_new<TAnimationCurve<float>>();
+		*tmp__output = static_cast<GUICurvesField*>(thisPtr->getGUIElement())->getMinCurve();
+
+		MonoObject* __output;
+		__output = ScriptTAnimationCurvefloat::create(tmp__output);
+
+		return __output;
+	}
+
+	MonoObject* ScriptGUICurvesField::Internal_getMaxCurve(ScriptGUICurvesField* thisPtr)
+	{
+		SPtr<TAnimationCurve<float>> tmp__output = bs_shared_ptr_new<TAnimationCurve<float>>();
+		*tmp__output = static_cast<GUICurvesField*>(thisPtr->getGUIElement())->getMaxCurve();
+
+		MonoObject* __output;
+		__output = ScriptTAnimationCurvefloat::create(tmp__output);
+
+		return __output;
 	}
 
 	void ScriptGUICurvesField::Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)

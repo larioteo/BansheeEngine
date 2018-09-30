@@ -74,8 +74,35 @@ namespace BansheeEditor
 			Internal_create3(this, style);
 		}
 
+		/// <summary>
+		/// Returns the curve represented by the field. If the field represents a curve range this returns the minimal curve of 
+		/// that range.
+		/// </summary>
+		public AnimationCurve Curve
+		{
+			get { return Internal_getCurve(mCachedPtr); }
+		}
+
+		/// <summary>
+		/// Returns the minimal curve represented by the field containing a curve range. Returns the only available curve if the 
+		/// field doesn't represent a range.
+		/// </summary>
+		public AnimationCurve MinCurve
+		{
+			get { return Internal_getMinCurve(mCachedPtr); }
+		}
+
+		/// <summary>
+		/// Returns the maximal curve represented by the field containing a curve range. Returns the only available curve if the 
+		/// field doesn't represent a range.
+		/// </summary>
+		public AnimationCurve MaxCurve
+		{
+			get { return Internal_getMaxCurve(mCachedPtr); }
+		}
+
 		/// <summary>Triggered when the user clicks on the GUI element.</summary>
-		public event Action OnClicked;
+		partial void OnClicked();
 
 		/// <summary>Sets an animation curve to display on the field.</summary>
 		public void SetCurve(AnimationCurve curve)
@@ -94,6 +121,12 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setCurveRange(IntPtr thisPtr, AnimationCurve curveA, AnimationCurve curveB);
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimationCurve Internal_getCurve(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimationCurve Internal_getMinCurve(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimationCurve Internal_getMaxCurve(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
@@ -105,7 +138,7 @@ namespace BansheeEditor
 		private static extern void Internal_create3(GUICurvesField managedInstance, string style);
 		private void Internal_onClicked()
 		{
-			OnClicked?.Invoke();
+			OnClicked();
 		}
 	}
 

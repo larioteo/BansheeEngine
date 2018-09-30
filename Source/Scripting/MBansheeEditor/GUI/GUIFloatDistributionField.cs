@@ -6,8 +6,15 @@ namespace BansheeEditor
     partial class GUIFloatDistributionField
     {
         /// <summary>
-        /// Callback triggered when the user clicks on the curve display in the GUI element.
+        /// Triggered when the distribution in the field changes.
         /// </summary>
+        public event Action OnChanged;
+
+        /// <summary>
+        /// Triggered whenever user confirms input in one of the floating point fields.
+        /// </summary>
+        public event Action OnConfirmed;
+
         partial void OnClicked()
         {
             FloatDistribution distribution = Value;
@@ -16,19 +23,35 @@ namespace BansheeEditor
             {
                 CurveEditorWindow.Show(distribution.GetMinCurve(), (success, curve) =>
                 {
-                    if(success)
-                        Value = new FloatDistribution(curve);
+                    if (!success)
+                        return;
+
+                    Value = new FloatDistribution(curve);
+                    OnChanged?.Invoke();
                 });
             }
             else if (distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
             {
                 CurveEditorWindow.Show(distribution.GetMinCurve(), distribution.GetMaxCurve(), 
                     (success, minCurve, maxCurve) =>
-                {
-                    if(success)
+                    {
+                        if (!success)
+                            return;
+
                         Value = new FloatDistribution(minCurve, maxCurve);
-                });
+                        OnChanged?.Invoke();
+                    });
             }
+        }
+
+        partial void OnConstantModified()
+        {
+            OnChanged?.Invoke();
+        }
+
+        partial void OnConstantConfirmed()
+        {
+            OnConfirmed?.Invoke();
         }
     }
 }

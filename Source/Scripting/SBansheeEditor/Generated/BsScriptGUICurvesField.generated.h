@@ -25,6 +25,9 @@ namespace bs
 
 		static void Internal_setCurve(ScriptGUICurvesField* thisPtr, MonoObject* curve);
 		static void Internal_setCurveRange(ScriptGUICurvesField* thisPtr, MonoObject* curveA, MonoObject* curveB);
+		static MonoObject* Internal_getCurve(ScriptGUICurvesField* thisPtr);
+		static MonoObject* Internal_getMinCurve(ScriptGUICurvesField* thisPtr);
+		static MonoObject* Internal_getMaxCurve(ScriptGUICurvesField* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
 		static void Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
