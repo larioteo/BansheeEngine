@@ -522,9 +522,8 @@ namespace bs
 		newObj->arrObjB[1].strA = "strawberry";
 		newObj->arrObjPtrB[0]->intA = 99100;
 
-		BinarySerializer bs;
-		SPtr<SerializedObject> orgSerialized = bs._encodeToIntermediate(orgObj.get());
-		SPtr<SerializedObject> newSerialized = bs._encodeToIntermediate(newObj.get());
+		SPtr<SerializedObject> orgSerialized = SerializedObject::create(*orgObj.get());
+		SPtr<SerializedObject> newSerialized = SerializedObject::create(*newObj.get());
 
 		IDiff& diffHandler = orgObj->getRTTI()->getDiffHandler();
 		SPtr<SerializedObject> objDiff = diffHandler.generateDiff(orgSerialized, newSerialized);

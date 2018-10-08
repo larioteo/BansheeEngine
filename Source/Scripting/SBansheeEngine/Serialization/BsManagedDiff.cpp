@@ -13,12 +13,10 @@ namespace bs
 	SPtr<SerializedObject> ManagedDiff::generateDiff(const SPtr<SerializedObject>& orgSerzObj,
 		const SPtr<SerializedObject>& newSerzObj, ObjectMap& objectMap)
 	{
-		BinarySerializer bs;
-
 		// Need to call GameObjectManager because GameObject handles call it during deserialization, but we don't really need it
 		GameObjectManager::instance().startDeserialization();
-		SPtr<ManagedSerializableObject> orgObj = std::static_pointer_cast<ManagedSerializableObject>(bs._decodeFromIntermediate(orgSerzObj));
-		SPtr<ManagedSerializableObject> newObj = std::static_pointer_cast<ManagedSerializableObject>(bs._decodeFromIntermediate(newSerzObj));
+		SPtr<ManagedSerializableObject> orgObj = std::static_pointer_cast<ManagedSerializableObject>(orgSerzObj->decode());
+		SPtr<ManagedSerializableObject> newObj = std::static_pointer_cast<ManagedSerializableObject>(newSerzObj->decode());
 		GameObjectManager::instance().endDeserialization();
 
 		SPtr<ManagedSerializableDiff> diff = ManagedSerializableDiff::create(orgObj, newObj);
@@ -33,7 +31,7 @@ namespace bs
 
 		SerializedEntry entry;
 		entry.fieldId = 0;
-		entry.serialized = bs._encodeToIntermediate(diff.get());
+		entry.serialized = SerializedObject::create(*diff);
 
 		subObject.entries[0] = entry;
 
@@ -45,8 +43,7 @@ namespace bs
 	{
 		SPtr<SerializedObject> diffObj = std::static_pointer_cast<SerializedObject>(serzDiff->subObjects[0].entries[0].serialized);
 
-		BinarySerializer bs;
-		SPtr<ManagedSerializableDiff> diff = std::static_pointer_cast<ManagedSerializableDiff>(bs._decodeFromIntermediate(diffObj));
+		SPtr<ManagedSerializableDiff> diff = std::static_pointer_cast<ManagedSerializableDiff>(diffObj->decode());
 		
 		if (diff != nullptr)
 		{
