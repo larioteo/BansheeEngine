@@ -3127,7 +3127,7 @@
             },
             {
                 "name": "DropDownButton",
-                "style": "Button"
+                "style": "DropDownArrowButton"
             },
             {
                 "name": "EditorFieldLabel",
@@ -3167,12 +3167,28 @@
             },
             {
                 "name": "DropDownButton",
-                "style": "Button"
+                "style": "DropDownArrowButton"
             },
             {
                 "name": "EditorFieldLabel",
                 "style": "EditorFieldLabel"
             }
         ]
+    },
+    {
+        "name": "DropDownArrowButton",
+		"fixedWidth": true,
+        "fixedHeight": true,
+		"width": 18,
+        "height": 21,
+        "normal": {
+            "texture": "DropDownArrowNormal.png"
+        },
+        "hover": {
+            "texture": "DropDownArrowHover.png"
+        },
+		"active": {
+            "texture": "DropDownArrowActive.png"
+        }
     }
 ]

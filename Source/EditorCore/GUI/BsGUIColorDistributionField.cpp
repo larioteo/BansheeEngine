@@ -229,11 +229,10 @@ namespace bs
 			break;
 		}
 
-		mDropDownButton = GUIButton::create(HString::dummy(), GUIOptions(GUIOption::fixedWidth(50)), 
-			getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
+		mDropDownButton = GUIButton::create(HString::dummy(), getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
 		mDropDownButton->onClick.connect([this]()
 		{
-			const Rect2I bounds = getBounds();
+			const Rect2I bounds = mDropDownButton->getBounds(mParentWidget->getPanel());
 			const Vector2I center(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
 			mContextMenu->open(center, *mParentWidget);

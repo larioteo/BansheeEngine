@@ -1551,6 +1551,21 @@
             "Path": "ContainerBg.png",
             "SpriteUUID": "e15e000f-416e-b09e-2194-416eee62bfa9",
             "TextureUUID": "64b57435-4bd1-f789-93b1-4bd18dfbb67e"
+        },
+        {
+            "Path": "DropDownArrowActive.png",
+            "SpriteUUID": "b2bbfc8f-47a5-8558-c4a6-47a52bbfaf77",
+            "TextureUUID": "00dd0ec4-48a0-d823-8da3-48a0024be996"
+        },
+        {
+            "Path": "DropDownArrowHover.png",
+            "SpriteUUID": "8d66a71b-4cef-1b6a-16a6-4ceff8155c2a",
+            "TextureUUID": "f3dd16f7-4150-f9ba-3ea5-4150a00cb00c"
+        },
+        {
+            "Path": "DropDownArrowNormal.png",
+            "SpriteUUID": "ec9065e4-4faa-c25b-eaa0-4faa1715356f",
+            "TextureUUID": "3a3a6257-41e7-6879-6584-41e7155ed876"
         }
     ]
 }
