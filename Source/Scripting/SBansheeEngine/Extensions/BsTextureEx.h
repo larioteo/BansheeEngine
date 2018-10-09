@@ -75,7 +75,7 @@ namespace bs
 		static SPtr<PixelData> getPixels(const HTexture& thisPtr, UINT32 face = 0, UINT32 mipLevel = 0);
 
 		/**
-		 * Reads texture pixels directly from the GPU. This is similar to GetPixels" but the texture doesn't
+		 * Reads texture pixels directly from the GPU. This is similar to GetPixels but the texture doesn't
 		 * need to be created with TextureUsage.CPUCached, and the data will contain any updates performed by
 		 * the GPU. This method can be potentially slow as it introduces a CPU-GPU synchronization point. Additionally
 		 * this method is asynchronous which means the data is not available immediately.

@@ -15,16 +15,22 @@ namespace BansheeEditor
     /// </summary>
     public class GradientPicker : ModalWindow
     {
-        private int EDITOR_HORZ_PADDING = 10;
+        private const int EDITOR_HORZ_PADDING = 10;
+        private const int TEX_WIDTH = 256;
+        private const int TEX_HEIGHT = 4;
 
         private ColorGradient gradient;
         private GradientKeyEditor editor;
-        private GUIColorGradient guiGradient;
+        private GUITexture guiGradientTexture;
         private GUICanvas overlayCanvas;
 
         private GUIPanel editorPanel;
         private GUIButton guiOK;
         private GUIButton guiCancel;
+
+        private Texture texture;
+        private SpriteTexture spriteTexture;
+
 
         private Action<bool, ColorGradient> closedCallback;
 
@@ -108,11 +114,15 @@ namespace BansheeEditor
             GUILayout guiGradientLayout = editorVertLayout.AddLayoutX();
             guiGradientLayout.AddSpace(GradientKeyEditor.RECT_WIDTH / 2);
 
-            guiGradient = new GUIColorGradient();
-            guiGradient.Gradient = gradient;
-            guiGradient.SetHeight(30);
+            texture = Texture.Create2D(TEX_WIDTH, TEX_HEIGHT);
+            spriteTexture = new SpriteTexture(texture);
 
-            guiGradientLayout.AddElement(guiGradient);
+            guiGradientTexture = new GUITexture(spriteTexture, GUITextureScaleMode.ScaleToFit);
+            guiGradientTexture.SetHeight(30);
+
+            UpdateTexture();
+
+            guiGradientLayout.AddElement(guiGradientTexture);
             guiGradientLayout.AddSpace(GradientKeyEditor.RECT_WIDTH / 2);
 
             editorVertLayout.AddSpace(10);
@@ -122,7 +132,7 @@ namespace BansheeEditor
             {
                 gradient = colorGradient;
 
-                guiGradient.Gradient = gradient;
+                UpdateTexture();
                 UpdateKeyLines();
             };
 
@@ -174,6 +184,28 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Updates the gradient texture.
+        /// </summary>
+        public void UpdateTexture()
+        {
+            const int width = 256;
+            const int height = 4;
+            Color[] colors = new Color[width * height];
+
+            float halfPixel = 0.5f / width;
+            for (int x = 0; x < width; x++)
+            {
+                Color color = gradient.Evaluate(x / (float)width + halfPixel);
+
+                for (int y = 0; y < height; y++)
+                    colors[y * width + x] = color;
+            }
+
+            texture.SetPixels(colors);
+            guiGradientTexture.SetTexture(spriteTexture);
+        }
+
+        /// <summary>
         /// Triggered when the user selects a gradient and closes the dialog.
         /// </summary>
         void OnOK()
@@ -216,7 +248,7 @@ namespace BansheeEditor
                 return;
 
             Vector2I panelPos = ScreenToKeyEditorPos(ev.ScreenPos);
-            Rect2I guiGradientBounds = guiGradient.Bounds;
+            Rect2I guiGradientBounds = guiGradientTexture.Bounds;
 
             if (guiGradientBounds.Contains(panelPos))
             {
@@ -232,7 +264,7 @@ namespace BansheeEditor
 
                     gradient = new ColorGradient(keys.ToArray());
 
-                    guiGradient.Gradient = gradient;
+                    UpdateTexture();
                     editor.Rebuild(keys);
                     UpdateKeyLines();
                 }
