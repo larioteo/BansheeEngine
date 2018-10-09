@@ -137,7 +137,11 @@ namespace BansheeEditor
         {
             InspectableField field = null;
 
-            Type customInspectable = InspectorUtility.GetCustomInspectable(property.InternalType);
+            Type type = property.InternalType;
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(RRef<>))
+                type = type.GenericTypeArguments[0];
+
+            Type customInspectable = InspectorUtility.GetCustomInspectable(type);
             if (customInspectable != null)
             {
                 field = (InspectableField) Activator.CreateInstance(customInspectable, depth, title, property);

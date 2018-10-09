@@ -38,7 +38,11 @@ namespace BansheeEditor
         {
             if (property.Type == SerializableProperty.FieldType.RRef)
             {
-                guiField = new GUIResourceField(property.InternalType, new GUIContent(title));
+                System.Type type = property.InternalType;
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(RRef<>))
+                    type = type.GenericTypeArguments[0];
+
+                guiField = new GUIResourceField(type, new GUIContent(title));
                 guiField.OnChanged += OnFieldValueChanged;
 
                 layout.AddElement(layoutIndex, guiField);

@@ -241,11 +241,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MBansheeEngine\MBansheeEngine.csproj">
-      <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>
+      <Project>{876eb338-489e-4727-84da-8cbbf0da5b5e}</Project>
       <Name>MBansheeEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">"$(ProjectDir)..\..\..\Scripts\pdb2mdb.bat" "$(TargetPath)" "$(ConfigurationName)"</PostBuildEvent>
