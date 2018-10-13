@@ -74,6 +74,8 @@ namespace bs
 			MonoUtil::freeGCHandle(mGCHandle);
 			mGCHandle = 0;
 		}
+
+		ScriptObjectBase::_onManagedInstanceDeleted(assemblyRefresh);
 	}
 
 	::MonoClass* ScriptRRefBase::bindGenericParam(::MonoClass* param)
