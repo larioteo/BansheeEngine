@@ -13,6 +13,7 @@
 #include "Wrappers/BsScriptManagedComponent.h"
 #include "BsMonoAssembly.h"
 #include "BsPlayInEditorManager.h"
+#include "Utility/BsUtility.h"
 
 namespace bs
 {
@@ -105,9 +106,13 @@ namespace bs
 		{
 			MemorySerializer ms;
 
-			GameObjectManager::instance().startDeserialization();
-			SPtr<ManagedSerializableObject> serializableObject = std::static_pointer_cast<ManagedSerializableObject>(ms.decode(data.data, data.size));
-			GameObjectManager::instance().endDeserialization();
+			CoreSerializationContext serzContext;
+			serzContext.goState = bs_shared_ptr_new<GameObjectDeserializationState>();
+
+			auto serializableObject = std::static_pointer_cast<ManagedSerializableObject>(
+				ms.decode(data.data, data.size, &serzContext));
+
+			serzContext.goState->resolve();
 
 			if (!missingType)
 			{

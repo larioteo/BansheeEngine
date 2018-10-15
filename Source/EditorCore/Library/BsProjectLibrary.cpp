@@ -601,6 +601,7 @@ namespace bs
 					dependency);
 			}
 
+
 			TaskScheduler::instance().addTask(queuedImport->importTask);
 
 			mQueuedImports[fileEntry] = queuedImport;

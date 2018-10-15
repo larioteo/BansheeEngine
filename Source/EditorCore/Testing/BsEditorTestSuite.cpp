@@ -527,7 +527,7 @@ namespace bs
 
 		IDiff& diffHandler = orgObj->getRTTI()->getDiffHandler();
 		SPtr<SerializedObject> objDiff = diffHandler.generateDiff(orgSerialized, newSerialized);
-		diffHandler.applyDiff(orgObj, objDiff);
+		diffHandler.applyDiff(orgObj, objDiff, nullptr);
 
 		BS_TEST_ASSERT(orgObj->intA == newObj->intA);
 		BS_TEST_ASSERT(orgObj->strA == newObj->strA);

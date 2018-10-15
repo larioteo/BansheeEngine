@@ -21,29 +21,15 @@ namespace bs
 	class BS_SCR_BE_EXPORT ManagedComponentRTTI : public RTTIType<ManagedComponent, Component, ManagedComponentRTTI>
 	{
 	private:
-		String& getNamespace(ManagedComponent* obj)
-		{
-			return obj->mNamespace;
-		}
-
-		void setNamespace(ManagedComponent* obj, String& val)
-		{
-			obj->mNamespace = val;
-		}
-
-		String& getTypename(ManagedComponent* obj)
-		{
-			return obj->mTypeName;
-		}
-
-		void setTypename(ManagedComponent* obj, String& val)
-		{
-			obj->mTypeName = val;
-		}
+		BS_BEGIN_RTTI_MEMBERS
+			BS_RTTI_MEMBER_PLAIN(mNamespace, 0)
+			BS_RTTI_MEMBER_PLAIN(mTypeName, 1)
+			BS_RTTI_MEMBER_PLAIN(mMissingType, 3)
+		BS_END_RTTI_MEMBERS
 
 		SPtr<ManagedSerializableObject> getObjectData(ManagedComponent* obj)
 		{
-			return any_cast<SPtr<ManagedSerializableObject>>(obj->mRTTIData);
+			return mSerializedObjectData;
 		}
 
 		void setObjectData(ManagedComponent* obj, SPtr<ManagedSerializableObject> val)
@@ -51,40 +37,21 @@ namespace bs
 			obj->mSerializedObjectData = val;
 		}
 
-		bool& getMissingType(ManagedComponent* obj)
-		{
-			return obj->mMissingType;
-		}
-
-		void setMissingType(ManagedComponent* obj, bool& val)
-		{
-			obj->mMissingType = val;
-		}
-
 	public:
 		ManagedComponentRTTI()
 		{
-			addPlainField("mNamespace", 0, &ManagedComponentRTTI::getNamespace, &ManagedComponentRTTI::setNamespace);
-			addPlainField("mTypename", 1, &ManagedComponentRTTI::getTypename, &ManagedComponentRTTI::setTypename);
 			addReflectablePtrField("mObjectData", 2, &ManagedComponentRTTI::getObjectData, &ManagedComponentRTTI::setObjectData);
-			addPlainField("mMissingType", 3, &ManagedComponentRTTI::getMissingType, &ManagedComponentRTTI::setMissingType);
 		}
 
-		void onSerializationStarted(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
+		void onSerializationStarted(IReflectable* obj, SerializationContext* context) override
 		{
 			ManagedComponent* mc = static_cast<ManagedComponent*>(obj);
 			MonoObject* managedInstance = mc->getManagedInstance();
 
 			if (managedInstance != nullptr)
-				mc->mRTTIData = ManagedSerializableObject::createFromExisting(managedInstance);
+				mSerializedObjectData = ManagedSerializableObject::createFromExisting(managedInstance);
 			else
-				mc->mRTTIData = mc->mSerializedObjectData;
-		}
-
-		void onSerializationEnded(IReflectable* obj, const UnorderedMap<String, UINT64>& params) override
-		{
-			ManagedComponent* mc = static_cast<ManagedComponent*>(obj);
-			mc->mRTTIData = nullptr;
+				mSerializedObjectData = mc->mSerializedObjectData;
 		}
 
 		const String& getRTTIName() override
@@ -102,6 +69,9 @@ namespace bs
 		{
 			return GameObjectRTTI::createGameObject<ManagedComponent>();
 		}
+
+	private:
+		SPtr<ManagedSerializableObject> mSerializedObjectData;
 	};
 
 	/** @} */

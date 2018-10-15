@@ -4,6 +4,7 @@
 #include "Scene/BsSceneObject.h"
 #include "Scene/BsComponent.h"
 #include "Serialization/BsMemorySerializer.h"
+#include "Utility/BsUtility.h"
 
 namespace bs
 {
@@ -62,7 +63,8 @@ namespace bs
 		if (mSerializedObjectParentId != 0)
 			parent = static_object_cast<SceneObject>(GameObjectManager::instance().getObject(mSerializedObjectParentId));
 
-		GameObjectManager::instance().setDeserializationMode(GODM_RestoreExternal | GODM_UseNewIds);
+		CoreSerializationContext serzContext;
+		serzContext.goState = bs_shared_ptr_new<GameObjectDeserializationState>(GODM_RestoreExternal | GODM_UseNewIds);
 
 		// Object might still only be queued for destruction, but we need to fully destroy it since we're about to replace
 		// the potentially only reference to the old object
@@ -70,7 +72,8 @@ namespace bs
 			mSceneObject->destroy(true);
 
 		MemorySerializer serializer;
-		SPtr<SceneObject> restored = std::static_pointer_cast<SceneObject>(serializer.decode(mSerializedObject, mSerializedObjectSize));
+		SPtr<SceneObject> restored = std::static_pointer_cast<SceneObject>(
+			serializer.decode(mSerializedObject, mSerializedObjectSize, &serzContext));
 
 		EditorUtility::restoreIds(restored->getHandle(), mSceneObjectProxy);
 		restored->setParent(parent);

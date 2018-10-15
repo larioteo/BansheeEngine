@@ -6,6 +6,7 @@
 #include "Wrappers/BsScriptSceneObject.h"
 #include "Scene/BsSceneObject.h"
 #include "Serialization/BsMemorySerializer.h"
+#include "Utility/BsUtility.h"
 
 namespace bs
 {
@@ -96,11 +97,12 @@ namespace bs
 
 		sceneObj->destroy(true);
 
-		GameObjectManager::instance().setDeserializationMode(GODM_RestoreExternal | GODM_UseNewIds);
+		CoreSerializationContext serzContext;
+		serzContext.goState = bs_shared_ptr_new<GameObjectDeserializationState>(GODM_RestoreExternal | GODM_UseNewIds);
 
 		MemorySerializer serializer;
 		SPtr<SceneObject> restored = std::static_pointer_cast<SceneObject>(
-			serializer.decode(thisPtr->mSerializedObject, thisPtr->mSerializedObjectSize));
+			serializer.decode(thisPtr->mSerializedObject, thisPtr->mSerializedObjectSize, &serzContext));
 
 		EditorUtility::restoreIds(restored->getHandle(), thisPtr->mSceneObjectProxy);
 		restored->setParent(parent);
