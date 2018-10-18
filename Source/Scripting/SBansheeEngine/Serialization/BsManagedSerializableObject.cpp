@@ -80,9 +80,8 @@ namespace bs
 		if (!ScriptAssemblyManager::instance().getSerializableObjectInfo(type->mTypeNamespace, type->mTypeName, currentObjInfo))
 			return nullptr;
 
-		// Never call constructor for structs. For classes we could call it if we could guarantee it always has one,
-		// but at the moment we don't call constructor for them at all (which is probably fine).
-		return currentObjInfo->mMonoClass->createInstance(false);
+		const bool construct = currentObjInfo->mMonoClass->getMethod(".ctor", 0) != nullptr;
+		return currentObjInfo->mMonoClass->createInstance(construct);
 	}
 
 	SPtr<ManagedSerializableObject> ManagedSerializableObject::createEmpty()
