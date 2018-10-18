@@ -305,10 +305,14 @@ namespace bs
 		 *								provided default import options are used.
 		 * @param[in]	forceReimport	Should the resource be reimported even if we detect no changes. This should be true
 		 *								if import options changed since last import.
+		 * @param[in]	synchronous		If true the import will happen synchronously on the calling thread. If false
+		 *								the import operation will be queued for execution on a worker thread. You
+		 *								then must call _finishQueuedImports() after the worker thread finishes to
+		 *								actually finish the import.
 		 * @return						Newly added resource entry.
 		 */
 		FileEntry* addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
-			const SPtr<ImportOptions>& importOptions = nullptr, bool forceReimport = false);
+			const SPtr<ImportOptions>& importOptions = nullptr, bool forceReimport = false, bool synchronous = false);
 
 		/**
 		 * Common code for adding a new folder entry to the library.
@@ -338,7 +342,7 @@ namespace bs
 		/**
 		 * Triggers a reimport of a resource using the provided import options, if needed. Doesn't import dependencies.
 		 *
-		 * @param[in]	file				File entry of the resource to reimport.
+		 * @param[in]	fileEntry			File entry of the resource to reimport.
 		 * @param[in]	importOptions		Optional import options to use when importing the resource. Caller must ensure 
 		 *									the import options are of the correct type for the resource in question. If null
 		 *									is provided default import options are used.
@@ -349,10 +353,15 @@ namespace bs
 		 *									resources are eventually restored, references to them will remain valid. If you
 		 *									feel that you need to clear this data, set this to true but be aware that you
 		 *									might need to re-apply those references.
-		 * @return							Returns true if the resource was queued for import, false otherwise.
+		 * @param[in]	synchronous			If true the import will happen synchronously on the calling thread. If false
+		 *									the import operation will be queued for execution on a worker thread. You
+		 *									then must call _finishQueuedImports() after the worker thread finishes to
+		 *									actually finish the import.
+		 * @return							Returns true if the resource was queued for import (or imported, if 
+		 *									synchronous), false otherwise.
 		 */
-		bool reimportResourceInternal(FileEntry* file, const SPtr<ImportOptions>& importOptions = nullptr, 
-			bool forceReimport = false, bool pruneResourceMetas = false);
+		bool reimportResourceInternal(FileEntry* fileEntry, const SPtr<ImportOptions>& importOptions = nullptr, 
+			bool forceReimport = false, bool pruneResourceMetas = false, bool synchronous = false);
 
 		/**
 		 * Creates a full hierarchy of directory entries up to the provided directory, if any are needed.
@@ -406,6 +415,24 @@ namespace bs
 
 		/** Deletes all library entries. */
 		void clearEntries();
+
+		/** 
+		 * Finalizes a queued import operation if the import task has finished (or immediately if no task is present). 
+		 *
+		 * @param[in]	fileEntry		File entry for which the import is running.
+		 * @param[in]	import			Structure containing information about the import.
+		 * @param[in]	wait			If true waits until the asynchronous import task finishes before returning. Not
+		 *								relevant if the import task is not present (synchronous import).
+		 * @return						True if the import was finalized. Will be false if the async import task has not
+		 *								yet finished and @p wait is false.
+		 */
+		bool finishQueuedImport(FileEntry* fileEntry, const QueuedImport& import, bool wait);
+
+		/** 
+		 * Checks if there are any queued imports queued for the provided file entry, and if there are waits until they
+		 * finish before returning.s
+		 */
+		void waitForQueuedImport(FileEntry* fileEntry);
 
 		static const char* LIBRARY_ENTRIES_FILENAME;
 		static const char* RESOURCE_MANIFEST_FILENAME;

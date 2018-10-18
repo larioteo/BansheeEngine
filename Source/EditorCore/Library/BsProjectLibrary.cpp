@@ -317,12 +317,12 @@ namespace bs
 	}
 
 	ProjectLibrary::FileEntry* ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
-		const SPtr<ImportOptions>& importOptions, bool forceReimport)
+		const SPtr<ImportOptions>& importOptions, bool forceReimport, bool synchronous)
 	{
 		FileEntry* newResource = bs_new<FileEntry>(filePath, filePath.getTail(), parent);
 		parent->mChildren.push_back(newResource);
 
-		reimportResourceInternal(newResource, importOptions, forceReimport);
+		reimportResourceInternal(newResource, importOptions, forceReimport, false, synchronous);
 		onEntryAdded(newResource->path);
 
 		return newResource;
@@ -410,7 +410,7 @@ namespace bs
 	}
 
 	bool ProjectLibrary::reimportResourceInternal(FileEntry* fileEntry, const SPtr<ImportOptions>& importOptions,
-		bool forceReimport, bool pruneResourceMetas)
+		bool forceReimport, bool pruneResourceMetas, bool synchronous)
 	{
 		Path metaPath = fileEntry->path;
 		metaPath.setFilename(metaPath.getFilename() + ".meta");
@@ -481,6 +481,14 @@ namespace bs
 				// running it shouldn't be canceled as dependencies still need to wait on it (since cancelling a
 				// running task doesn't actually stop it). Yet there is currently no good wait to check if task
 				// is currently running. 
+
+				// Dependency being imported async but we want the current resource right away. Wait until dependency is
+				// done otherwise when dependency finishes it will overwrite whatever we write now.
+				if(synchronous && dependency)
+				{
+					if (finishQueuedImport(fileEntry, *iterFind->second, true))
+						mQueuedImports.erase(iterFind);
+				}
 			}
 				
 			// Needs to be pass a weak pointer to worker methods since internally it holds a reference to the task itself, 
@@ -554,8 +562,13 @@ namespace bs
 					}
 				};
 
-				queuedImport->importTask = Task::create("ProjectLibraryImport", importAsync, TaskPriority::Normal,
-					dependency);
+				if(!synchronous)
+				{
+					queuedImport->importTask = Task::create("ProjectLibraryImport", importAsync, TaskPriority::Normal,
+						dependency);
+				}
+				else
+					importAsync();
 			}
 			else
 			{
@@ -597,15 +610,25 @@ namespace bs
 					}
 				};
 
-				queuedImport->importTask = Task::create("ProjectLibraryImport", importAsync, TaskPriority::Normal,
-					dependency);
+				if(!synchronous)
+				{
+					queuedImport->importTask = Task::create("ProjectLibraryImport", importAsync, TaskPriority::Normal,
+						dependency);
+				}
+				else
+					importAsync();
 			}
 
+			if(!synchronous)
+			{
+				TaskScheduler::instance().addTask(queuedImport->importTask);
+				mQueuedImports[fileEntry] = queuedImport;
+			}
 
-			TaskScheduler::instance().addTask(queuedImport->importTask);
-
-			mQueuedImports[fileEntry] = queuedImport;
 			fileEntry->lastUpdateTime = std::time(nullptr);
+
+			if(synchronous)
+				finishQueuedImport(fileEntry, *queuedImport, true);
 
 			return true;
 		}
@@ -613,149 +636,149 @@ namespace bs
 		return false;
 	}
 
+	bool ProjectLibrary::finishQueuedImport(FileEntry* fileEntry, const QueuedImport& import, bool wait)
+	{
+		if (import.importTask != nullptr && !import.importTask->isComplete())
+		{
+			if (wait)
+				import.importTask->wait();
+			else
+				return false;
+		}
+
+		// We wait on canceled task to finish and then just discard the results because any dependant tasks need to be
+		// aware this tasks exists, so we can't just remove it straight away.
+		if (import.canceled)
+			return true;
+
+		Path metaPath = fileEntry->path;
+		metaPath.setFilename(metaPath.getFilename() + ".meta");
+
+		Vector<SPtr<ProjectResourceMeta>> existingMetas;
+		if (fileEntry->meta == nullptr) // Build a brand new meta-file
+			fileEntry->meta = ProjectFileMeta::create(import.importOptions);
+		else // Existing meta-file, which needs to be updated
+		{
+			// Remove existing dependencies (they will be re-added later)
+			removeDependencies(fileEntry);
+
+			existingMetas = fileEntry->meta->getAllResourceMetaData();
+
+			fileEntry->meta->clearResourceMetaData();
+			fileEntry->meta->mImportOptions = import.importOptions;
+		}
+
+		Path internalResourcesPath = mProjectFolder;
+		internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
+
+		// See which sub-resource metas need to be updated, removed or added based on the new resource set
+		bool isFirst = true;
+		for (const auto& entry : import.resources)
+		{
+			// Entries with no resources are sub-resources that used to exist in this file, but haven't been imported
+			// this time
+			if (!entry.resource)
+				continue;
+
+			String name = entry.name;
+			Path::stripInvalid(name);
+
+			const ProjectResourceIcons icons = generatePreviewIcons(*entry.resource);
+
+			bool foundMeta = false;
+			for (auto iterMeta = existingMetas.begin(); iterMeta != existingMetas.end(); ++iterMeta)
+			{
+				const SPtr<ProjectResourceMeta>& metaEntry = *iterMeta;
+
+				if (name == metaEntry->getUniqueName())
+				{
+					// Make sure the UUID we used for saving the resource matches the current one (should always
+					// be true unless the meta-data somehow changes while the async import is happening)
+					assert(entry.uuid == metaEntry->getUUID());
+
+					HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
+
+					gResources().update(importedResource, entry.resource);
+
+					metaEntry->setPreviewIcons(icons);
+					fileEntry->meta->add(metaEntry);
+
+					iterMeta = existingMetas.erase(iterMeta);
+					foundMeta = true;
+					break;
+				}
+			}
+
+			if (!foundMeta)
+			{
+				HResource importedResource;
+
+				// Native resources are always expected to have a handle since Resources::load was called during
+				// the 'import' step
+				if (import.native)
+				{
+					importedResource = gResources()._getResourceHandle(entry.uuid);
+					gResources().update(importedResource, entry.resource);
+				}
+				else
+					importedResource = gResources()._createResourceHandle(entry.resource, entry.uuid);
+
+				SPtr<ResourceMetaData> subMeta = entry.resource->getMetaData();
+				const UINT32 typeId = entry.resource->getTypeId();
+				const UUID& UUID = importedResource.getUUID();
+
+				SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(name, UUID, typeId,
+					icons, subMeta);
+				fileEntry->meta->add(resMeta);
+			}
+
+			// Keep resource metas that we are not currently using, in case they get restored so their references
+			// don't get broken
+			if (!import.pruneMetas)
+			{
+				for (auto& metaEntry : existingMetas)
+					fileEntry->meta->addInactive(metaEntry);
+			}
+
+			// Update UUID to path mapping
+			if (isFirst)
+				mUUIDToPath[entry.uuid] = fileEntry->path;
+			else
+				mUUIDToPath[entry.uuid] = fileEntry->path + name;
+
+			isFirst = false;
+
+			// Register path in manifest
+			const String uuidStr = entry.uuid.toString();
+
+			internalResourcesPath.setFilename(uuidStr + ".asset");
+			mResourceManifest->registerResource(entry.uuid, internalResourcesPath);
+		}
+
+		// Save the meta file
+		FileEncoder fs(metaPath);
+		fs.encode(fileEntry->meta.get());
+
+		// Register any dependencies this resource depends on
+		addDependencies(fileEntry);
+
+		// Notify the outside world import is doen
+		onEntryImported(fileEntry->path);
+
+		// Queue any resources dependant on this one for import
+		reimportDependants(fileEntry->path);
+
+		return true;
+	}
+
 	void ProjectLibrary::_finishQueuedImports(bool wait)
 	{
 		for(auto iter = mQueuedImports.begin(); iter != mQueuedImports.end();)
 		{
-			SPtr<QueuedImport> queuedImport = iter->second;
-			if (!queuedImport->importTask->isComplete())
-			{
-				if (wait)
-					queuedImport->importTask->wait();
-				else
-				{
-					++iter;
-					continue;
-				}
-			}
-
-			// The task is done, we can remove it
-			FileEntry* fileEntry = iter->first;
-			iter = mQueuedImports.erase(iter);
-
-			// We wait on canceled task to finish and then just discard the results because any dependant tasks need to be
-			// aware this tasks exists, so we can't just remove it straight away.
-			if(queuedImport->canceled)
-			{
-				// Just move on to the next import...
-				continue;
-			}
-
-			Path metaPath = fileEntry->path;
-			metaPath.setFilename(metaPath.getFilename() + ".meta");
-
-			Vector<SPtr<ProjectResourceMeta>> existingMetas;
-			if(fileEntry->meta == nullptr) // Build a brand new meta-file
-				fileEntry->meta = ProjectFileMeta::create(queuedImport->importOptions);
-			else // Existing meta-file, which needs to be updated
-			{
-				// Remove existing dependencies (they will be re-added later)
-				removeDependencies(fileEntry);
-
-				existingMetas = fileEntry->meta->getAllResourceMetaData();
-
-				fileEntry->meta->clearResourceMetaData();
-				fileEntry->meta->mImportOptions = queuedImport->importOptions;
-			}
-
-			Path internalResourcesPath = mProjectFolder;
-			internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
-
-			// See which sub-resource metas need to be updated, removed or added based on the new resource set
-			bool isFirst = true;
-			for (auto& entry : queuedImport->resources)
-			{
-				// Entries with no resources are sub-resources that used to exist in this file, but haven't been imported
-				// this time
-				if(!entry.resource)
-					continue;
-
-				Path::stripInvalid(entry.name);
-
-				const ProjectResourceIcons icons = generatePreviewIcons(*entry.resource);
-
-				bool foundMeta = false;
-				for (auto iterMeta = existingMetas.begin(); iterMeta != existingMetas.end(); ++iterMeta)
-				{
-					const SPtr<ProjectResourceMeta>& metaEntry = *iterMeta;
-
-					if (entry.name == metaEntry->getUniqueName())
-					{
-						// Make sure the UUID we used for saving the resource matches the current one (should always
-						// be true unless the meta-data somehow changes while the async import is happening)
-						assert(entry.uuid == metaEntry->getUUID());
-
-						HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
-
-						gResources().update(importedResource, entry.resource);
-
-						metaEntry->setPreviewIcons(icons);
-						fileEntry->meta->add(metaEntry);
-
-						iterMeta = existingMetas.erase(iterMeta);
-						foundMeta = true;
-						break;
-					}
-				}
-
-				if (!foundMeta)
-				{
-					HResource importedResource;
-
-					// Native resources are always expected to have a handle since Resources::load was called during
-					// the 'import' step
-					if(queuedImport->native)
-					{
-						importedResource = gResources()._getResourceHandle(entry.uuid);
-						gResources().update(importedResource, entry.resource);
-					}
-					else
-						importedResource = gResources()._createResourceHandle(entry.resource, entry.uuid);
-
-					SPtr<ResourceMetaData> subMeta = entry.resource->getMetaData();
-					const UINT32 typeId = entry.resource->getTypeId();
-					const UUID& UUID = importedResource.getUUID();
-
-					SPtr<ProjectResourceMeta> resMeta = ProjectResourceMeta::create(entry.name, UUID, typeId,
-						icons, subMeta);
-					fileEntry->meta->add(resMeta);
-				}
-
-				// Keep resource metas that we are not currently using, in case they get restored so their references
-				// don't get broken
-				if (!queuedImport->pruneMetas)
-				{
-					for (auto& metaEntry : existingMetas)
-						fileEntry->meta->addInactive(metaEntry);
-				}
-
-				// Update UUID to path mapping
-				if(isFirst)
-					mUUIDToPath[entry.uuid] = fileEntry->path;
-				else
-					mUUIDToPath[entry.uuid] = fileEntry->path + entry.name;
-
-				isFirst = false;
-
-				// Register path in manifest
-				const String uuidStr = entry.uuid.toString();
-
-				internalResourcesPath.setFilename(uuidStr + ".asset");
-				mResourceManifest->registerResource(entry.uuid, internalResourcesPath);
-			}
-
-			// Save the meta file
-			FileEncoder fs(metaPath);
-			fs.encode(fileEntry->meta.get());
-
-			// Register any dependencies this resource depends on
-			addDependencies(fileEntry);
-
-			// Notify the outside world import is doen
-			onEntryImported(fileEntry->path);
-
-			// Queue any resources dependant on this one for import
-			reimportDependants(fileEntry->path);
+			if(finishQueuedImport(iter->first, *iter->second, wait))
+				iter = mQueuedImports.erase(iter);
+			else
+				++iter;
 		}
 	}
 
@@ -1037,7 +1060,18 @@ namespace bs
 
 		Path absPath = assetPath.getAbsolute(getResourcesFolder());
 		Resources::instance().save(resource, absPath, false);
-		checkForModifications(absPath);
+
+		Path parentDirPath = absPath.getParent();
+		LibraryEntry* parentEntry = findEntry(parentDirPath);
+
+		// Register parent hierarchy if not found
+		DirectoryEntry* entryParent = nullptr;
+		if (parentEntry == nullptr)
+			createInternalParentHierarchy(absPath, nullptr, &entryParent);
+		else
+			entryParent = static_cast<DirectoryEntry*>(parentEntry);
+
+		addResourceInternal(entryParent, absPath, nullptr, true, true);
 	}
 
 	void ProjectLibrary::saveEntry(const HResource& resource)
@@ -1055,7 +1089,10 @@ namespace bs
 		filePath.makeAbsolute(getResourcesFolder());
 
 		Resources::instance().save(resource, filePath, true);
-		checkForModifications(filePath);
+
+		LibraryEntry* fileEntry = findEntry(filePath);
+		if(fileEntry)
+			reimportResourceInternal(static_cast<FileEntry*>(fileEntry), nullptr, true, false, true);
 	}
 
 	void ProjectLibrary::createFolderEntry(const Path& path)
@@ -1344,6 +1381,16 @@ namespace bs
 		}
 	}
 
+	void ProjectLibrary::waitForQueuedImport(FileEntry* fileEntry)
+	{
+		const auto iterFind = mQueuedImports.find(fileEntry);
+		if (iterFind != mQueuedImports.end())
+		{
+			if (finishQueuedImport(fileEntry, *iterFind->second, true))
+				mQueuedImports.erase(iterFind);
+		}
+	}
+
 	void ProjectLibrary::setIncludeInBuild(const Path& path, bool include)
 	{
 		LibraryEntry* entry = findEntry(path);
@@ -1351,17 +1398,21 @@ namespace bs
 		if (entry == nullptr || entry->type == LibraryEntryType::Directory)
 			return;
 
-		FileEntry* resEntry = static_cast<FileEntry*>(entry);
-		if (resEntry->meta == nullptr)
+		auto fileEntry = static_cast<FileEntry*>(entry);
+
+		// Any queued imports will overwrite the meta file, so make sure they finish first
+		waitForQueuedImport(fileEntry);
+
+		if (fileEntry->meta == nullptr)
 			return;
 
-		resEntry->meta->setIncludeInBuild(include);
+		fileEntry->meta->setIncludeInBuild(include);
 
-		Path metaPath = resEntry->path;
+		Path metaPath = fileEntry->path;
 		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
 		FileEncoder fs(metaPath);
-		fs.encode(resEntry->meta.get());
+		fs.encode(fileEntry->meta.get());
 	}
 
 	void ProjectLibrary::setUserData(const Path& path, const SPtr<IReflectable>& userData)
@@ -1371,7 +1422,11 @@ namespace bs
 		if (entry == nullptr || entry->type == LibraryEntryType::Directory)
 			return;
 
-		FileEntry* fileEntry = static_cast<FileEntry*>(entry);
+		auto fileEntry = static_cast<FileEntry*>(entry);
+
+		// Any queued imports will overwrite the meta file, so make sure they finish first
+		waitForQueuedImport(fileEntry);
+
 		SPtr<ProjectResourceMeta> resMeta = findResourceMeta(path);
 		
 		if (resMeta == nullptr)
