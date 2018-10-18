@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BansheeEngine;
-using DebugUnit = System.Diagnostics.Debug;
 
 namespace BansheeEditor
 {
@@ -85,27 +84,27 @@ namespace BansheeEditor
 
             Internal_UT1_GameObjectClone(so);
 
-            System.Diagnostics.Debug.Assert(so.GetNumChildren() == 1);
+            Assert(so.GetNumChildren() == 1);
 
             for (int i = 0; i < so.GetNumChildren(); i++)
             {
                 SceneObject childSO = so.GetChild(i);
 
                 UT1_Component1 otherComponent = childSO.GetComponent<UT1_Component1>();
-                DebugUnit.Assert(otherComponent.a == 5);
-                DebugUnit.Assert(otherComponent.b == "SomeTestVal");
-                DebugUnit.Assert(otherComponent.complex.someValue == 19);
-                DebugUnit.Assert(otherComponent.complex2.anotherValue2 == "AnotherValue2");
+                Assert(otherComponent.a == 5);
+                Assert(otherComponent.b == "SomeTestVal");
+                Assert(otherComponent.complex.someValue == 19);
+                Assert(otherComponent.complex2.anotherValue2 == "AnotherValue2");
 
-                DebugUnit.Assert(otherComponent.arrA[4] == 5);
-                DebugUnit.Assert(otherComponent.arrB[4] == "ArrAnotherValue");
-                DebugUnit.Assert(otherComponent.arrComplex[4].someValue == 99);
-                DebugUnit.Assert(otherComponent.arrComplex2[4].anotherValue2 == "ArrComplex2AnotherValue");
+                Assert(otherComponent.arrA[4] == 5);
+                Assert(otherComponent.arrB[4] == "ArrAnotherValue");
+                Assert(otherComponent.arrComplex[4].someValue == 99);
+                Assert(otherComponent.arrComplex2[4].anotherValue2 == "ArrComplex2AnotherValue");
 
-                DebugUnit.Assert(otherComponent.listA[0] == 5);
-                DebugUnit.Assert(otherComponent.listB[0] == "ListAnotherValue");
-                DebugUnit.Assert(otherComponent.listComplex[1].someValue == 99);
-                DebugUnit.Assert(otherComponent.listComplex2[0].anotherValue2 == "ListComplexAnotherValue");
+                Assert(otherComponent.listA[0] == 5);
+                Assert(otherComponent.listB[0] == "ListAnotherValue");
+                Assert(otherComponent.listComplex[1].someValue == 99);
+                Assert(otherComponent.listComplex2[0].anotherValue2 == "ListComplexAnotherValue");
             }
 
             so.Destroy();
@@ -121,7 +120,7 @@ namespace BansheeEditor
 
             SerializableProperty prop = obj.Fields[0].GetProperty();
             prop.SetValue(33);
-            DebugUnit.Assert(prop.GetValue<int>() == 33);
+            Assert(prop.GetValue<int>() == 33);
 
             SerializableProperty prop2 = obj.Fields[2].GetProperty();
 
@@ -129,8 +128,8 @@ namespace BansheeEditor
             child.anotherValue2 = "potato";
             prop2.SetValue<UT1_SerzCls>(child);
 
-            DebugUnit.Assert(prop2.GetValue<UT1_SerzCls>() != null);
-            DebugUnit.Assert(prop2.GetValue<UT1_SerzCls>().anotherValue2 == "potato");
+            Assert(prop2.GetValue<UT1_SerzCls>() != null);
+            Assert(prop2.GetValue<UT1_SerzCls>().anotherValue2 == "potato");
         }
 
         /// <summary>
@@ -166,64 +165,64 @@ namespace BansheeEditor
             Internal_UT3_GenerateDiff(original, modified);
             Internal_UT3_ApplyDiff(original);
 
-            DebugUnit.Assert(original.plain1 == modified.plain1);
-            DebugUnit.Assert(original.plain2 == modified.plain2);
-            DebugUnit.Assert(original.complex.plain2 == modified.complex.plain2);
-            DebugUnit.Assert(original.complex2 == modified.complex2);
-            DebugUnit.Assert(original.complex3.plain2 == modified.complex3.plain2);
+            Assert(original.plain1 == modified.plain1);
+            Assert(original.plain2 == modified.plain2);
+            Assert(original.complex.plain2 == modified.complex.plain2);
+            Assert(original.complex2 == modified.complex2);
+            Assert(original.complex3.plain2 == modified.complex3.plain2);
 
-            DebugUnit.Assert(original.arrPlain1.Length == modified.arrPlain1.Length);
+            Assert(original.arrPlain1.Length == modified.arrPlain1.Length);
             for (int i = 0; i < original.arrPlain1.Length; i++)
-                DebugUnit.Assert(original.arrPlain1[i] == modified.arrPlain1[i]);
+                Assert(original.arrPlain1[i] == modified.arrPlain1[i]);
 
             for (int i = 0; i < original.arrPlain2.Length; i++)
-                DebugUnit.Assert(original.arrPlain2[i] == modified.arrPlain2[i]);
+                Assert(original.arrPlain2[i] == modified.arrPlain2[i]);
 
             for (int i = 0; i < original.arrComplex.Length; i++)
-                DebugUnit.Assert(original.arrComplex[i] == modified.arrComplex[i]);
+                Assert(original.arrComplex[i] == modified.arrComplex[i]);
 
-            DebugUnit.Assert(original.arrComplex2[0].plain1 == modified.arrComplex2[0].plain1);
+            Assert(original.arrComplex2[0].plain1 == modified.arrComplex2[0].plain1);
 
             for (int i = 0; i < original.listPlain1.Count; i++)
-                DebugUnit.Assert(original.listPlain1[i] == modified.listPlain1[i]);
+                Assert(original.listPlain1[i] == modified.listPlain1[i]);
 
-            DebugUnit.Assert(original.listPlain2.Count == modified.listPlain2.Count);
+            Assert(original.listPlain2.Count == modified.listPlain2.Count);
 
             for (int i = 0; i < original.listComplex.Count; i++)
-                DebugUnit.Assert(original.listComplex[i].plain1 == modified.listComplex[i].plain1);
+                Assert(original.listComplex[i].plain1 == modified.listComplex[i].plain1);
 
-            DebugUnit.Assert(original.listComplex2[1].plain2 == modified.listComplex2[1].plain2);
+            Assert(original.listComplex2[1].plain2 == modified.listComplex2[1].plain2);
 
             foreach (var entry in modified.dictPlain1)
             {
                 if (!original.dictPlain1.ContainsKey(entry.Key))
-                    DebugUnit.Assert(false);
+                    Assert(false);
 
-                DebugUnit.Assert(entry.Value == original.dictPlain1[entry.Key]);
+                Assert(entry.Value == original.dictPlain1[entry.Key]);
             }
 
             foreach (var entry in modified.dictPlain2)
             {
                 if (!original.dictPlain2.ContainsKey(entry.Key))
-                    DebugUnit.Assert(false);
+                    Assert(false);
 
-                DebugUnit.Assert(entry.Value == original.dictPlain2[entry.Key]);
+                Assert(entry.Value == original.dictPlain2[entry.Key]);
             }
 
             foreach (var entry in modified.dictComplex)
             {
                 if (!original.dictComplex.ContainsKey(entry.Key))
-                    DebugUnit.Assert(false);
+                    Assert(false);
 
-                DebugUnit.Assert(entry.Value.plain1 == original.dictComplex[entry.Key].plain1);
+                Assert(entry.Value.plain1 == original.dictComplex[entry.Key].plain1);
             }
 
             foreach (var entry in modified.dictComplex2)
             {
                 if (!original.dictComplex2.ContainsKey(entry.Key))
-                    DebugUnit.Assert(false);
+                    Assert(false);
 
-                DebugUnit.Assert(entry.Value.plain1 == original.dictComplex2[entry.Key].plain1);
+                Assert(entry.Value.plain1 == original.dictComplex2[entry.Key].plain1);
             }
         }
 
@@ -271,7 +270,7 @@ namespace BansheeEditor
                 Debug.Log(output);
             };
 
-            string oldScene = Scene.ActiveSceneUUID;
+            UUID oldScene = Scene.ActiveSceneUUID;
             Scene.Clear();
 
             try
@@ -761,9 +760,7 @@ namespace BansheeEditor
             }
             finally
             {
-                
-
-                if (!string.IsNullOrEmpty(oldScene))
+                if (!oldScene.IsEmpty())
                     Scene.Load(ProjectLibrary.GetPath(oldScene));
                 else
                     Scene.Clear();
@@ -772,7 +769,6 @@ namespace BansheeEditor
                 ProjectLibrary.Delete("unitTest4Scene_1.prefab");
                 ProjectLibrary.Delete("unitTest4Scene_2.prefab");
             }
-
             */
         }
 
