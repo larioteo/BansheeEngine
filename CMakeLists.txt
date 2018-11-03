@@ -38,7 +38,12 @@ set(GENERATE_SCRIPT_BINDINGS OFF CACHE BOOL "If true, script binding files will 
 check_and_update_binary_deps(Banshee ${PROJECT_SOURCE_DIR}/Dependencies/ ${BS_PREBUILT_DEPENDENCIES_VERSION})
 
 ## Check data dependencies
-check_and_update_builtin_assets(Banshee ${PROJECT_SOURCE_DIR}/Data ${BS_BUILTIN_ASSETS_VERSION} YES)
+check_and_update_builtin_assets(Banshee ${PROJECT_SOURCE_DIR}/Data Data ${BS_BUILTIN_ASSETS_VERSION} NO)
+		
+## Import built-in assets
+if(${BUILD_ASSETS})
+	run_import_tool(Banshee ${PROJECT_SOURCE_DIR} "--editor")
+endif()
 		
 # Generate script bindings
 include(${BSF_SOURCE_DIR}/CMake/GenerateScriptBindings.cmake)

@@ -1,4 +1,27 @@
 ﻿{
+	"Fonts": [
+		{
+			"Path": "arial.ttf",
+			"Name": "arial.ttf",
+			"Sizes": [ 8 ],
+			"Antialiasing": true,
+			"UUID": "6ce69053-00d7-4c60-a229-249b8d8fd60e"
+		},
+		{
+			"Path": "arial.ttf",
+			"Name": "arialAA.ttf",
+			"Sizes": [ 16 ],
+			"Antialiasing": true,
+			"UUID": "10999b74-d976-4116-9f72-21e489a7a8e4"
+		}
+	],
+	"GUISkin": {
+		"Path": "GUISkin.json",
+		"UUID": "ec0ea68d-efa5-4a3b-a6fc-b15aaec9689f"
+	},
+	"SplashScreen": {
+		"Path": "SplashScreen.png"
+	},
     "Icons": [
         {
             "Path": "AnimationAddEventIcon.png",
