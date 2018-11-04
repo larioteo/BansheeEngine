@@ -1,0 +1,13 @@
+Data/Icons
+Data/Shaders
+Data/Skin
+Data/.version
+Data/arial.ttf.asset
+Data/arial.ttf_8_texpage_0.asset
+Data/arialAA.ttf.asset
+Data/arialAA.ttf_16_texpage_0.asset
+Data/GUISkin.asset
+Data/Layout.asset
+Data/SplashScreen.png.asset
+Data/Timestamp.asset
+Data/ResourceManifest.asset

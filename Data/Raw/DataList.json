@@ -22,7 +22,7 @@
 	"SplashScreen": {
 		"Path": "SplashScreen.png"
 	},
-    "Icons": [
+    "SpriteIcons": [
         {
             "Path": "AnimationAddEventIcon.png",
             "SpriteUUID": "7dc84c5f-9119-4402-9e6f-50b876f80c02",
