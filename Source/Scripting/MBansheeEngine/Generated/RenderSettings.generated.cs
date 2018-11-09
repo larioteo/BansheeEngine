@@ -98,6 +98,13 @@ namespace BansheeEngine
 			set { Internal_setscreenSpaceReflections(mCachedPtr, value); }
 		}
 
+		/// <summary>Parameters used for customizing the bloom effect.</summary>
+		public BloomSettings Bloom
+		{
+			get { return Internal_getbloom(mCachedPtr); }
+			set { Internal_setbloom(mCachedPtr, value); }
+		}
+
 		/// <summary>Enables the fast approximate anti-aliasing effect.</summary>
 		public bool EnableFXAA
 		{
@@ -227,6 +234,10 @@ namespace BansheeEngine
 		private static extern ScreenSpaceReflectionsSettings Internal_getscreenSpaceReflections(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setscreenSpaceReflections(IntPtr thisPtr, ScreenSpaceReflectionsSettings value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern BloomSettings Internal_getbloom(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setbloom(IntPtr thisPtr, BloomSettings value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_getenableFXAA(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

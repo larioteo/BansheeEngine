@@ -28,6 +28,7 @@
 #include "Physics/BsPhysicsMesh.h"
 #include "Audio/BsAudioClip.h"
 #include "Animation/BsAnimationClip.h"
+#include "Particles/BsVectorField.h"
 
 #include "BsScriptTexture.generated.h"
 #include "Wrappers/BsScriptPlainText.h"
@@ -47,6 +48,7 @@
 #include "BsScriptFont.generated.h"
 #include "BsScriptSpriteTexture.generated.h"
 #include "BsScriptStringTable.generated.h"
+#include "BsScriptVectorField.generated.h"
 #include "Wrappers/BsScriptRRefBase.h"
 
 namespace bs
@@ -68,6 +70,7 @@ namespace bs
 		ADD_ENTRY(PhysicsMesh, ScriptPhysicsMesh, ScriptResourceType::PhysicsMesh)
 		ADD_ENTRY(AudioClip, ScriptAudioClip, ScriptResourceType::AudioClip)
 		ADD_ENTRY(AnimationClip, ScriptAnimationClip, ScriptResourceType::AnimationClip)
+		ADD_ENTRY(VectorField, ScriptVectorField, ScriptResourceType::VectorField)
 	LOOKUP_END
 
 #undef LOOKUP_BEGIN

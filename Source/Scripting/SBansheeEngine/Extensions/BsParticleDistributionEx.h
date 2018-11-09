@@ -21,7 +21,7 @@ namespace bs
 		BS_SCRIPT_EXPORT(e:ColorDistribution)
 		static Color evaluate(const SPtr<ColorDistribution>& thisPtr, float t, float factor);
 
-		/** @copydoc ColorDistribution::evaluate(float, Random&) */
+		/** @copydoc ColorDistribution::evaluate(float, const Random&) */
 		BS_SCRIPT_EXPORT(e:ColorDistribution)
 		static Color evaluate(const SPtr<ColorDistribution>& thisPtr, float t, Random& factor);
 	}; 

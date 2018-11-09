@@ -43,6 +43,7 @@
     <Compile Include="GUI\GUICanvas.cs" />
     <Compile Include="GUI\GUIScrollBar.cs" />
     <Compile Include="Math\Line2.cs" />
+    <Compile Include="Math\Plane.cs" />
     <Compile Include="Rendering\Material.cs" />
     <Compile Include="Serialization\ShowInInspector.cs" />
     <Compile Include="Serialization\Step.cs" />

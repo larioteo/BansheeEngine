@@ -8,7 +8,7 @@ namespace BansheeEngine
 	 *  @{
 	 */
 
-	/// <summary>Light type that determines how is light information parsed by the renderer and other systems.</summary>
+	/// <summary>Probe type that determines the shape of the probe and how is it interpreted by the renderer.</summary>
 	public enum ReflectionProbeType
 	{
 		/// <summary>

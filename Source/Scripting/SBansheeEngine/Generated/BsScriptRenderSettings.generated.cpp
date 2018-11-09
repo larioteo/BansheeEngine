@@ -5,11 +5,12 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Renderer/BsRenderSettings.h"
 #include "BsScriptAutoExposureSettings.generated.h"
 #include "BsScriptShadowSettings.generated.h"
-#include "BsScriptScreenSpaceReflectionsSettings.generated.h"
 #include "BsScriptTonemappingSettings.generated.h"
+#include "BsScriptScreenSpaceReflectionsSettings.generated.h"
 #include "BsScriptWhiteBalanceSettings.generated.h"
 #include "BsScriptColorGradingSettings.generated.h"
 #include "BsScriptDepthOfFieldSettings.generated.h"
+#include "BsScriptBloomSettings.generated.h"
 #include "BsScriptAmbientOcclusionSettings.generated.h"
 
 namespace bs
@@ -40,6 +41,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setambientOcclusion", (void*)&ScriptRenderSettings::Internal_setambientOcclusion);
 		metaData.scriptClass->addInternalCall("Internal_getscreenSpaceReflections", (void*)&ScriptRenderSettings::Internal_getscreenSpaceReflections);
 		metaData.scriptClass->addInternalCall("Internal_setscreenSpaceReflections", (void*)&ScriptRenderSettings::Internal_setscreenSpaceReflections);
+		metaData.scriptClass->addInternalCall("Internal_getbloom", (void*)&ScriptRenderSettings::Internal_getbloom);
+		metaData.scriptClass->addInternalCall("Internal_setbloom", (void*)&ScriptRenderSettings::Internal_setbloom);
 		metaData.scriptClass->addInternalCall("Internal_getenableFXAA", (void*)&ScriptRenderSettings::Internal_getenableFXAA);
 		metaData.scriptClass->addInternalCall("Internal_setenableFXAA", (void*)&ScriptRenderSettings::Internal_setenableFXAA);
 		metaData.scriptClass->addInternalCall("Internal_getexposureScale", (void*)&ScriptRenderSettings::Internal_getexposureScale);
@@ -250,6 +253,26 @@ namespace bs
 		scriptvalue = ScriptScreenSpaceReflectionsSettings::toNative(value);
 		tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->screenSpaceReflections = *tmpvalue;
+	}
+
+	MonoObject* ScriptRenderSettings::Internal_getbloom(ScriptRenderSettings* thisPtr)
+	{
+		SPtr<BloomSettings> tmp__output = bs_shared_ptr_new<BloomSettings>();
+		*tmp__output = thisPtr->getInternal()->bloom;
+
+		MonoObject* __output;
+		__output = ScriptBloomSettings::create(tmp__output);
+
+		return __output;
+	}
+
+	void ScriptRenderSettings::Internal_setbloom(ScriptRenderSettings* thisPtr, MonoObject* value)
+	{
+		SPtr<BloomSettings> tmpvalue;
+		ScriptBloomSettings* scriptvalue;
+		scriptvalue = ScriptBloomSettings::toNative(value);
+		tmpvalue = scriptvalue->getInternal();
+		thisPtr->getInternal()->bloom = *tmpvalue;
 	}
 
 	bool ScriptRenderSettings::Internal_getenableFXAA(ScriptRenderSettings* thisPtr)
