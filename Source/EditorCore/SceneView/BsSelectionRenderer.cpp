@@ -107,7 +107,8 @@ namespace bs
 
 		for(UINT32 i = 0; i < 4 ; i++)
 		{
-			mParams[i] = mat->createParamsSet(i);
+			mat->getTechnique(mTechniqueIndices[i])->compile();
+			mParams[i] = mat->createParamsSet(mTechniqueIndices[i]);
 
 			SPtr<GpuParams> params = mParams[i]->getGpuParams();
 			params->getParam(GPT_VERTEX_PROGRAM, "matWorldViewProj", mMatWorldViewProj[i]);

@@ -925,13 +925,15 @@ namespace bs
 
 		const GizmoManager::CoreInitData& initData = any_cast_ref<GizmoManager::CoreInitData>(data);
 
-		mMeshMaterials[(UINT32)GizmoMeshType::Solid] = initData.solidMat;
-		mMeshMaterials[(UINT32)GizmoMeshType::Wire] = initData.wireMat;
-		mMeshMaterials[(UINT32)GizmoMeshType::Line] = initData.lineMat;
-		mMeshMaterials[(UINT32)GizmoMeshType::Text] = initData.textMat;
-		mIconMaterial = initData.iconMat;
-		mPickingMaterials[0] = initData.pickingMat;
-		mPickingMaterials[1] = initData.alphaPickingMat;
+		const auto getAndCompile = [](const SPtr<Material>& material) { material->getTechnique(0)->compile(); return material; };
+
+		mMeshMaterials[(UINT32)GizmoMeshType::Solid] = getAndCompile(initData.solidMat);
+		mMeshMaterials[(UINT32)GizmoMeshType::Wire] = getAndCompile(initData.wireMat);
+		mMeshMaterials[(UINT32)GizmoMeshType::Line] = getAndCompile(initData.lineMat);
+		mMeshMaterials[(UINT32)GizmoMeshType::Text] = getAndCompile(initData.textMat);
+		mIconMaterial = getAndCompile(initData.iconMat);
+		mPickingMaterials[0] = getAndCompile(initData.pickingMat);
+		mPickingMaterials[1] = getAndCompile(initData.alphaPickingMat);
 
 		mMeshGizmoBuffer = gGizmoParamBlockDef.createBuffer();
 		mIconGizmoBuffer = gGizmoParamBlockDef.createBuffer();

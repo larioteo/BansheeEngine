@@ -235,8 +235,12 @@ namespace bs
 		mMaterials[(UINT32)MeshType::Line] = initData.lineMat;
 		mMaterials[(UINT32)MeshType::Solid] = initData.solidMat;
 		mMaterials[(UINT32)MeshType::Text] = initData.textMat;
-
 		mClearMaterial = initData.clearMat;
+
+		mMaterials[(UINT32)MeshType::Line]->getTechnique(0)->compile();
+		mMaterials[(UINT32)MeshType::Solid]->getTechnique(0)->compile();
+		mMaterials[(UINT32)MeshType::Text]->getTechnique(0)->compile();
+		mClearMaterial->getTechnique(0)->compile();
 
 		mParamBuffer = gHandleParamBlockDef.createBuffer();
 	}

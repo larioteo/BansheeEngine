@@ -184,7 +184,9 @@ namespace bs
 
 		mCamera = initData.camera;
 		mGridMaterial = initData.material;
-		mMaterialParams = initData.material->createParamsSet();
+		mGridMaterial->getTechnique(0)->compile();
+
+		mMaterialParams = mGridMaterial->createParamsSet();
 
 		mViewProjParam = mGridMaterial->getParamMat4("matViewProj");
 		mWorldCameraPosParam = mGridMaterial->getParamVec4("worldCameraPos");

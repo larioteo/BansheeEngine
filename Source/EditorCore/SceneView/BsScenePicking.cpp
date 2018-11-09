@@ -237,7 +237,8 @@ namespace bs
 
 	void ScenePicking::initialize()
 	{
-		// Do nothing
+		for (UINT32 i = 0; i < bs_size(mMaterials); i++)
+			mMaterials[i]->getTechnique(0)->compile();
 	}
 
 	void ScenePicking::destroy()
