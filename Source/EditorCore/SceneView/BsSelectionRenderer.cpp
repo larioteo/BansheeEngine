@@ -49,7 +49,7 @@ namespace bs
 					continue;
 
 				if (renderable->getMesh().isLoaded())
-					objects.push_back(renderable->_getRenderable()->getCore());
+					objects.push_back(renderable->_getInternal()->getCore());
 			}
 		}
 
