@@ -1,9 +1,9 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+using BansheeEngine;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using BansheeEngine;
 
 namespace BansheeEditor
 {
@@ -59,6 +59,8 @@ namespace BansheeEditor
 
         private GUIToggle rotateSnapButton;
         private GUIFloatField rotateSnapInput;
+
+        private GUIButton cameraOptionsButton;
 
         private SceneAxesGUI sceneAxesGUI;
 
@@ -183,14 +185,14 @@ namespace BansheeEditor
         {
             mainLayout = GUI.AddLayoutY();
 
-            GUIContent viewIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.View), 
+            GUIContent viewIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.View),
                 new LocEdString("View"));
-            GUIContent moveIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Move), 
+            GUIContent moveIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Move),
                 new LocEdString("Move"));
-            GUIContent rotateIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Rotate), 
+            GUIContent rotateIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Rotate),
                 new LocEdString("Rotate"));
             GUIContent scaleIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Scale),
-                new LocEdString("Scale")); 
+                new LocEdString("Scale"));
 
             GUIContent localIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Local),
                 new LocEdString("Local"));
@@ -202,9 +204,9 @@ namespace BansheeEditor
             GUIContent centerIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.Center),
                 new LocEdString("Center"));
 
-            GUIContent moveSnapIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.MoveSnap), 
+            GUIContent moveSnapIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.MoveSnap),
                 new LocEdString("Move snap"));
-            GUIContent rotateSnapIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.RotateSnap), 
+            GUIContent rotateSnapIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.RotateSnap),
                 new LocEdString("Rotate snap"));
 
             GUIToggleGroup handlesTG = new GUIToggleGroup();
@@ -227,6 +229,9 @@ namespace BansheeEditor
             rotateSnapButton = new GUIToggle(rotateSnapIcon, EditorStyles.Button, GUIOption.FlexibleWidth(35));
             rotateSnapInput = new GUIFloatField("", GUIOption.FlexibleWidth(35));
 
+            GUIContent cameraOptionsIcon = new GUIContent(EditorBuiltin.GetLibraryWindowIcon(LibraryWindowIcon.Options), new LocEdString("Camera options"));
+            cameraOptionsButton = new GUIButton(cameraOptionsIcon);
+
             viewButton.OnClick += () => OnSceneToolButtonClicked(SceneViewTool.View);
             moveButton.OnClick += () => OnSceneToolButtonClicked(SceneViewTool.Move);
             rotateButton.OnClick += () => OnSceneToolButtonClicked(SceneViewTool.Rotate);
@@ -243,6 +248,8 @@ namespace BansheeEditor
 
             rotateSnapButton.OnToggled += (bool active) => OnRotateSnapToggled(active);
             rotateSnapInput.OnChanged += (float value) => OnRotateSnapValueChanged(value);
+            
+            cameraOptionsButton.OnClick += () => OnCameraOptionsClicked();
 
             GUILayout handlesLayout = mainLayout.AddLayoutX();
             handlesLayout.AddElement(viewButton);
@@ -261,6 +268,8 @@ namespace BansheeEditor
             handlesLayout.AddSpace(10);
             handlesLayout.AddElement(rotateSnapButton);
             handlesLayout.AddElement(rotateSnapInput);
+            handlesLayout.AddSpace(10);
+            handlesLayout.AddElement(cameraOptionsButton);
 
             GUIPanel mainPanel = mainLayout.AddPanel();
             rtPanel = mainPanel.AddPanel();
@@ -284,6 +293,19 @@ namespace BansheeEditor
             frameKey = new VirtualButton(FrameBinding);
 
             UpdateRenderTexture(Width, Height - HeaderHeight);
+        }
+
+        private void OnCameraOptionsClicked()
+        {
+            Vector2I openPosition;
+            Rect2I buttonBounds = GUIUtility.CalculateBounds(cameraOptionsButton, GUI);
+
+            openPosition.x = buttonBounds.x + buttonBounds.width / 2;
+            openPosition.y = buttonBounds.y + buttonBounds.height / 2;
+
+            SceneCameraOptionsDropdown cameraOptionsDropdown = DropDownWindow.Open<SceneCameraOptionsDropdown>(GUI, openPosition);
+
+            cameraOptionsDropdown.Initialize(this, cameraController.SceneCameraOptions);
         }
 
         private void OnDestroy()
@@ -429,7 +451,7 @@ namespace BansheeEditor
                 }
             }
         }
-        
+
         /// <summary>
         /// Converts screen coordinates into coordinates relative to the scene view render texture.
         /// </summary>
@@ -463,13 +485,13 @@ namespace BansheeEditor
                         DuplicateSelection();
                     else if (VirtualInput.IsButtonDown(EditorApplication.DeleteKey))
                         DeleteSelection();
-                    else if(VirtualInput.IsButtonDown(viewToolKey))
+                    else if (VirtualInput.IsButtonDown(viewToolKey))
                         EditorApplication.ActiveSceneTool = SceneViewTool.View;
-                    else if(VirtualInput.IsButtonDown(moveToolKey))
+                    else if (VirtualInput.IsButtonDown(moveToolKey))
                         EditorApplication.ActiveSceneTool = SceneViewTool.Move;
-                    else if(VirtualInput.IsButtonDown(rotateToolKey))
+                    else if (VirtualInput.IsButtonDown(rotateToolKey))
                         EditorApplication.ActiveSceneTool = SceneViewTool.Rotate;
-                    else if(VirtualInput.IsButtonDown(scaleToolKey))
+                    else if (VirtualInput.IsButtonDown(scaleToolKey))
                         EditorApplication.ActiveSceneTool = SceneViewTool.Scale;
                 }
             }
@@ -497,7 +519,7 @@ namespace BansheeEditor
 
                 if (sceneAxesGUI.IsActive())
                     sceneAxesGUI.ClearSelection();
-            } 
+            }
             else if (Input.IsPointerButtonDown(PointerButton.Left))
             {
                 mouseDownPosition = scenePos;
@@ -516,7 +538,7 @@ namespace BansheeEditor
                         Selection.SceneObject = draggedSO;
                         EditorApplication.SetSceneDirty();
                     }
-                    
+
                     draggedSO = null;
                 }
                 else
@@ -579,7 +601,7 @@ namespace BansheeEditor
                         if (Input.IsButtonHeld(ButtonCode.Space))
                         {
                             SnapData snapData;
-                            sceneSelection.Snap(scenePos, out snapData, new SceneObject[] {draggedSO});
+                            sceneSelection.Snap(scenePos, out snapData, new SceneObject[] { draggedSO });
 
                             Quaternion q = Quaternion.FromToRotation(Vector3.YAxis, snapData.normal);
                             draggedSO.Position = snapData.position;
@@ -617,7 +639,7 @@ namespace BansheeEditor
                 {
                     if (Input.IsPointerButtonDown(PointerButton.Left))
                     {
-                        Rect2I sceneAxesGUIBounds = new Rect2I(Width - HandleAxesGUISize - HandleAxesGUIPaddingX, 
+                        Rect2I sceneAxesGUIBounds = new Rect2I(Width - HandleAxesGUISize - HandleAxesGUIPaddingX,
                             HandleAxesGUIPaddingY, HandleAxesGUISize, HandleAxesGUISize);
 
                         if (sceneAxesGUIBounds.Contains(scenePos))
@@ -640,14 +662,14 @@ namespace BansheeEditor
                             bool ctrlHeld = Input.IsButtonHeld(ButtonCode.LeftControl) ||
                                             Input.IsButtonHeld(ButtonCode.RightControl);
 
-                            sceneSelection.PickObject(scenePos, ctrlHeld, new SceneObject[] {draggedSO});
+                            sceneSelection.PickObject(scenePos, ctrlHeld, new SceneObject[] { draggedSO });
                         }
                     }
                 }
             }
             else
                 cameraController.EnableInput(false);
-            
+
             SceneHandles.BeginInput();
             sceneHandles.UpdateInput(scenePos, Input.PointerDelta);
             sceneAxesGUI.UpdateInput(scenePos);
@@ -933,7 +955,7 @@ namespace BansheeEditor
                 dragSelection = new GUITexture(null, true, EditorStylesInternal.SelectionArea);
                 selectionPanel.AddElement(dragSelection);
             }
-            
+
             dragSelectionEnd = scenePos;
 
             Rect2I selectionArea = new Rect2I();

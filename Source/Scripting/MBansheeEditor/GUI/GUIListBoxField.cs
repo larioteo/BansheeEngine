@@ -209,8 +209,7 @@ namespace BansheeEditor
         ///                       override any similar options set by style.</param>
         public GUIListBoxField(string[] elements, GUIContent title, int titleWidth = 100, params GUIOption[] options)
         {
-            GUIContent emptyContent = new GUIContent();
-            Internal_CreateInstance(this, ToLocalizedElements(elements), false, ref emptyContent, titleWidth, "", options, true);
+            Internal_CreateInstance(this, ToLocalizedElements(elements), false, ref title, titleWidth, "", options, true);
         }
 
         /// <summary>

@@ -27,15 +27,6 @@ namespace BansheeEditor
         public const string HorizontalAxisBinding = "SceneHorizontal";
         public const string VerticalAxisBinding = "SceneVertical";
         public const string ScrollAxisBinding = "SceneScroll";
-
-        private const float StartSpeed = 4.0f;
-        private const float TopSpeed = 12.0f;
-        private const float Acceleration = 1.0f;
-        private const float FastModeMultiplier = 2.0f;
-        private const float PanSpeed = 3.0f;
-        private const float ScrollSpeed = 3.0f;
-        private const float RotationalSpeed = 3.0f;
-        private readonly Degree FieldOfView = (Degree)90.0f;
         #endregion
 
         #region Fields
@@ -87,6 +78,8 @@ namespace BansheeEditor
                 }
             }
         }
+
+        public SceneCameraOptions SceneCameraOptions { get; private set; } = new SceneCameraOptions();
         #endregion
 
         #region Public methods
@@ -197,7 +190,7 @@ namespace BansheeEditor
                     float horzValue = VirtualInput.GetAxisValue(horizontalAxis);
                     float vertValue = VirtualInput.GetAxisValue(verticalAxis);
 
-                    float rotationAmount = RotationalSpeed * EditorSettings.MouseSensitivity;
+                    float rotationAmount = SceneCameraOptions.RotationalSpeed * EditorSettings.MouseSensitivity;
 
                     yaw += new Degree(horzValue * rotationAmount);
                     pitch += new Degree(vertValue * rotationAmount);
@@ -208,7 +201,7 @@ namespace BansheeEditor
                     Quaternion yRot = Quaternion.FromAxisAngle(Vector3.YAxis, yaw);
                     Quaternion xRot = Quaternion.FromAxisAngle(Vector3.XAxis, pitch);
 
-                    Quaternion camRot = yRot*xRot;
+                    Quaternion camRot = yRot * xRot;
                     camRot.Normalize();
 
                     SceneObject.Rotation = camRot;
@@ -229,9 +222,9 @@ namespace BansheeEditor
 
                         float multiplier = 1.0f;
                         if (fastMove)
-                            multiplier = FastModeMultiplier;
+                            multiplier = SceneCameraOptions.FastModeMultiplier;
 
-                        currentSpeed = MathEx.Clamp(currentSpeed + Acceleration*frameDelta, StartSpeed, TopSpeed);
+                        currentSpeed = MathEx.Clamp(currentSpeed + SceneCameraOptions.Acceleration * frameDelta, SceneCameraOptions.StartSpeed, SceneCameraOptions.TopSpeed);
                         currentSpeed *= multiplier;
                     }
                     else
@@ -242,8 +235,8 @@ namespace BansheeEditor
                     const float tooSmall = 0.0001f;
                     if (currentSpeed > tooSmall)
                     {
-                        Vector3 velocity = direction*currentSpeed;
-                        SceneObject.Move(velocity*frameDelta);
+                        Vector3 velocity = direction * currentSpeed;
+                        SceneObject.Move(velocity * frameDelta);
                     }
                 }
 
@@ -256,7 +249,7 @@ namespace BansheeEditor
                     Vector3 direction = new Vector3(horzValue, -vertValue, 0.0f);
                     direction = camera.SceneObject.Rotation.Rotate(direction);
 
-                    SceneObject.Move(direction*PanSpeed*frameDelta);
+                    SceneObject.Move(direction * SceneCameraOptions.PanSpeed * frameDelta);
                 }
             }
             else
@@ -281,7 +274,7 @@ namespace BansheeEditor
                     float scrollAmount = VirtualInput.GetAxisValue(scrollAxis);
                     if (!isOrtographic)
                     {
-                        SceneObject.Move(SceneObject.Forward*scrollAmount*ScrollSpeed);
+                        SceneObject.Move(SceneObject.Forward * scrollAmount * SceneCameraOptions.ScrollSpeed);
                     }
                     else
                     {
@@ -381,7 +374,7 @@ namespace BansheeEditor
             pitch = (Degree)eulerAngles.x;
             yaw = (Degree)eulerAngles.y;
 
-            Degree FOV = (Degree)(1.0f - animation.State.OrtographicPct)*FieldOfView;
+            Degree FOV = (Degree)(1.0f - animation.State.OrtographicPct) * SceneCameraOptions.FieldOfView;
             if (FOV < (Degree)5.0f)
             {
                 camera.ProjectionType = ProjectionType.Orthographic;
@@ -425,7 +418,7 @@ namespace BansheeEditor
         private float CalcDistanceForFrustumWidth(float frustumWidth)
         {
             if (camera.ProjectionType == ProjectionType.Perspective)
-                return (frustumWidth*0.5f)/MathEx.Tan(camera.FieldOfView*0.5f);
+                return (frustumWidth * 0.5f) / MathEx.Tan(camera.FieldOfView * 0.5f);
             else
                 return frustumWidth * 2.0f;
         }

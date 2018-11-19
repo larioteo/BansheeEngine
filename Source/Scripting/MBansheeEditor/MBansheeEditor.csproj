@@ -113,6 +113,8 @@
     <Compile Include="Windows\Scene\Gizmos\ReflectionProbeGizmo.cs" />
     <Compile Include="Windows\Scene\Handles\HandleSlider2D.cs" />
     <Compile Include="Windows\Scene\Handles\HandleSliderSphere.cs" />
+    <Compile Include="Windows\Scene\SceneCameraOptions.cs" />
+    <Compile Include="Windows\Scene\SceneCameraOptionsDropdown.cs" />
     <Compile Include="Window\DefaultSize.cs" />
     <Compile Include="Windows\DialogBox.cs" />
     <Compile Include="Utility\DragDrop.cs" />
