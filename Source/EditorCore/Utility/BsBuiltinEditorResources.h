@@ -32,7 +32,7 @@ namespace bs
 	/**	Types of icons that may be displayed in the scene window. */
 	enum class SceneWindowIcon
 	{
-		View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap
+		View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap, SceneCameraOptions
 	};
 
 	/**	Types of icons that may be displayed in the inspector window. */

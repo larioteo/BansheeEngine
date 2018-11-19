@@ -423,6 +423,10 @@ namespace bs
 			off = getGUIIcon("SceneRotateSnapIcon.png");
 			on = getGUIIcon("SceneRotateSnapIconOn.png");
 			break;
+		case SceneWindowIcon::SceneCameraOptions:
+			off = getGUIIcon("SceneCameraOptionsIcon.png");
+			on = getGUIIcon("SceneCameraOptionsIcon.png");
+			break;
 		}
 
 		GUIContentImages output;

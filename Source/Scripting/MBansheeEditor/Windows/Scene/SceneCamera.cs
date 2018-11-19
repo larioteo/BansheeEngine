@@ -71,7 +71,7 @@ namespace BansheeEditor
                     CameraState state = new CameraState();
                     state.Position = camera.SceneObject.Position;
                     state.Rotation = camera.SceneObject.Rotation;
-                    state.Ortographic = value == ProjectionType.Orthographic;
+                    state.Orthographic = value == ProjectionType.Orthographic;
                     state.FrustumWidth = frustumWidth;
 
                     SetState(state);
@@ -79,10 +79,74 @@ namespace BansheeEditor
             }
         }
 
-        public SceneCameraOptions SceneCameraOptions { get; private set; } = new SceneCameraOptions();
+        /// <summary>
+        /// The orthographic size of the scene camera.
+        /// </summary>
+        public float OrthographicSize {
+            get { return camera.OrthoHeight; }
+            set {
+                camera.OrthoHeight = value;
+                SceneCameraOptions.SetOrthographicSize(value);
+            }
+        }
+
+        /// <summary>
+        /// The field of view of the scene camera.
+        /// </summary>
+        public Degree FieldOfView {
+            get { return camera.FieldOfView; }
+            set {
+                camera.FieldOfView = value;
+                SceneCameraOptions.SetFieldOfView(value.Degrees);
+            }
+        }
+
+        /// <summary>
+        /// The near clip plane of the scene camera.
+        /// </summary>
+        public float NearClipPlane {
+            get { return camera.NearClipPlane; }
+            set {
+                camera.NearClipPlane = value;
+                SceneCameraOptions.SetNearClipPlane(value);
+            }
+        }
+
+        /// <summary>
+        /// The far clip plane of the scene camera.
+        /// </summary>
+        public float FarClipPlane {
+            get { return camera.FarClipPlane; }
+            set {
+                camera.FarClipPlane = value;
+                SceneCameraOptions.SetFarClipPlane(value);
+            }
+        }
+
+        /// <summary>
+        /// The scroll speed of the scene camera.
+        /// </summary>
+        public float ScrollSpeed
+        {
+            get { return SceneCameraOptions.ScrollSpeed; }
+            set { SceneCameraOptions.SetScrollSpeed(value); }
+        }
+
+        private SceneCameraOptions SceneCameraOptions { get; set; } = new SceneCameraOptions();
         #endregion
 
         #region Public methods
+        /// <summary>
+        /// Initializes default scene camera options.
+        /// </summary>
+        public void Initialize()
+        {
+            camera.NearClipPlane = SceneCameraOptions.NearClipPlane;
+            camera.FarClipPlane = SceneCameraOptions.FarClipPlane;
+            camera.OrthoHeight = SceneCameraOptions.OrthographicSize;
+            camera.FieldOfView = SceneCameraOptions.FieldOfView;
+        }
+
         /// <summary>
         /// Enables or disables camera controls.
         /// </summary>
@@ -117,7 +181,7 @@ namespace BansheeEditor
             CameraState state = new CameraState();
             state.Position = camera.SceneObject.Position;
             state.Rotation = Quaternion.LookRotation(axis, up);
-            state.Ortographic = camera.ProjectionType == ProjectionType.Orthographic;
+            state.Orthographic = camera.ProjectionType == ProjectionType.Orthographic;
             state.FrustumWidth = frustumWidth;
 
             SetState(state);
@@ -146,7 +210,8 @@ namespace BansheeEditor
 
         private void OnUpdate()
         {
-            bool isOrtographic = camera.ProjectionType == ProjectionType.Orthographic;
+            bool isOrthographic = camera.ProjectionType == ProjectionType.Orthographic;
+            float frameDelta = Time.FrameDelta;
 
             if (inputEnabled)
             {
@@ -184,7 +249,6 @@ namespace BansheeEditor
                     lastHideCursorState = hideCursor;
                 }
 
-                float frameDelta = Time.FrameDelta;
                 if (camActive)
                 {
                     float horzValue = VirtualInput.GetAxisValue(horizontalAxis);
@@ -272,14 +336,22 @@ namespace BansheeEditor
                 if (bounds.Contains(Input.PointerPosition))
                 {
                     float scrollAmount = VirtualInput.GetAxisValue(scrollAxis);
-                    if (!isOrtographic)
+
+                    if(scrollAmount != 0)
                     {
-                        SceneObject.Move(SceneObject.Forward * scrollAmount * SceneCameraOptions.ScrollSpeed);
-                    }
-                    else
-                    {
-                        float orthoHeight = MathEx.Max(1.0f, camera.OrthoHeight - scrollAmount);
-                        camera.OrthoHeight = orthoHeight;
+                        if (!isOrthographic)
+                        {
+                            SceneObject.Move(SceneObject.Forward * scrollAmount * SceneCameraOptions.ScrollSpeed * frameDelta);
+                        }
+                        else
+                        {
+                            float orthoHeight = MathEx.Max(1.0f, OrthographicSize - scrollAmount * frameDelta);
+
+                            if (OrthographicSize != orthoHeight)
+                            {
+                                OrthographicSize = orthoHeight;
+                            }
+                        }
                     }
                 }
             }
@@ -322,7 +394,7 @@ namespace BansheeEditor
             CameraState state = new CameraState();
             state.Position = bounds.Center - forward * distance;
             state.Rotation = Quaternion.LookRotation(forward, Vector3.YAxis);
-            state.Ortographic = camera.ProjectionType == ProjectionType.Orthographic;
+            state.Orthographic = camera.ProjectionType == ProjectionType.Orthographic;
             state.FrustumWidth = frustumWidth;
 
             SetState(state);
@@ -340,7 +412,7 @@ namespace BansheeEditor
 
             startState.Position = SceneObject.Position;
             startState.Rotation = SceneObject.Rotation;
-            startState.Ortographic = camera.ProjectionType == ProjectionType.Orthographic;
+            startState.Orthographic = camera.ProjectionType == ProjectionType.Orthographic;
             startState.FrustumWidth = frustumWidth;
 
             animation.Start(startState, state);
@@ -374,7 +446,7 @@ namespace BansheeEditor
             pitch = (Degree)eulerAngles.x;
             yaw = (Degree)eulerAngles.y;
 
-            Degree FOV = (Degree)(1.0f - animation.State.OrtographicPct) * SceneCameraOptions.FieldOfView;
+            Degree FOV = (Degree)(1.0f - animation.State.OrthographicPct) * SceneCameraOptions.FieldOfView;
             if (FOV < (Degree)5.0f)
             {
                 camera.ProjectionType = ProjectionType.Orthographic;
@@ -385,9 +457,10 @@ namespace BansheeEditor
                 camera.ProjectionType = ProjectionType.Perspective;
                 camera.FieldOfView = FOV;
             }
-
+            
             // Note: Consider having a global setting for near/far planes as changing it here might confuse the user
             float distance = CalcDistanceForFrustumWidth(frustumWidth);
+
             if (distance < 1)
             {
                 camera.NearClipPlane = 0.005f;
@@ -448,22 +521,22 @@ namespace BansheeEditor
         /// </summary>
         private struct CameraState
         {
-            private float _ortographic;
+            private float _orthographic;
 
             public Vector3 Position { get; set; }
             public Quaternion Rotation { get; set; }
             public float FrustumWidth { get; set; }
 
-            public bool Ortographic
+            public bool Orthographic
             {
-                get { return _ortographic > 0.5; }
-                set { _ortographic = value ? 1.0f : 0.0f; }
+                get { return _orthographic > 0.5; }
+                set { _orthographic = value ? 1.0f : 0.0f; }
             }
 
-            public float OrtographicPct
+            public float OrthographicPct
             {
-                get { return _ortographic; }
-                set { _ortographic = value; }
+                get { return _orthographic; }
+                set { _orthographic = value; }
             }
         }
 
@@ -505,7 +578,7 @@ namespace BansheeEditor
                 interpolated = new CameraState();
                 interpolated.Position = start.Position * (1.0f - t) + target.Position * t;
                 interpolated.Rotation = Quaternion.Slerp(start.Rotation, target.Rotation, t);
-                interpolated.OrtographicPct = start.OrtographicPct * (1.0f - t) + target.OrtographicPct * t;
+                interpolated.OrthographicPct = start.OrthographicPct * (1.0f - t) + target.OrthographicPct * t;
 
                 interpolated.FrustumWidth = start.FrustumWidth * (1.0f - t) + target.FrustumWidth * t;
             }

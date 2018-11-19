@@ -24,7 +24,7 @@ namespace BansheeEditor
     /// </summary>
     public enum SceneWindowIcon // Note: Must match C++ enum SceneWindowIcon
     {
-        View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap
+        View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap, SceneCameraOptions
     }
 
     /// <summary>

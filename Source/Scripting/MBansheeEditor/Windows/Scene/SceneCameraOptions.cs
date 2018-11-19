@@ -13,40 +13,60 @@ namespace BansheeEditor
     /// </summary>
     internal class SceneCameraOptions
     {
-        public static float[] ScrollSpeeds
-        {
-            get => new float[]
-            {
-                0.1f,
-                0.25f,
-                0.5f,
-                0.75f,
-                1f,
-                1.5f,
-                2f,
-                3f
-            };
-        }
+        public const float MinScrollSpeed = 0.1f;
+        public const float MaxScrollSpeed = 3.0f;
+        public const float MinNearClipPlane = 0.0001f;
+        public const float MaxNearClipPlane = float.MaxValue;
+        public const float MinFarClipPlane = 0.01f;
+        public const float MaxFarClipPlane = float.MaxValue;
 
         public const float StartSpeed = 4.0f;
         public const float TopSpeed = 12.0f;
-        public readonly Degree FieldOfView = (Degree)90.0f;
 
+        public Degree FieldOfView { get; private set; }
+        public float OrthographicSize { get; private set; }
         public float Acceleration { get; private set; }
         public float FastModeMultiplier { get; private set; }
         public float PanSpeed { get; private set; }
         public float ScrollSpeed { get; private set; }
         public float RotationalSpeed { get; private set; }
+        public float NearClipPlane { get; private set; }
+        public float FarClipPlane { get; private set; }
 
         public SceneCameraOptions()
         {
-            Acceleration = EditorSettings.GetFloat("SceneCameraOptions_Acceleration", 1.0f);
-            FastModeMultiplier = EditorSettings.GetFloat("SceneCameraOptions_FastModeMultiplier", 2.0f);
-            PanSpeed = EditorSettings.GetFloat("SceneCameraOptions_PanSpeed", 3.0f);
-            ScrollSpeed = EditorSettings.GetFloat("SceneCameraOptions_ScrollSpeed", 3.0f);
-            RotationalSpeed = EditorSettings.GetFloat("SceneCameraOptions_RotationalSpeed", 3.0f);
+            FieldOfView = (Degree)ProjectSettings.GetFloat("SceneCameraOptions_FieldOfView", 90.0f);
+            OrthographicSize = ProjectSettings.GetFloat("SceneCameraOptions_OrthographicSize", 10.0f);
+            Acceleration = ProjectSettings.GetFloat("SceneCameraOptions_Acceleration", 1.0f);
+            FastModeMultiplier = ProjectSettings.GetFloat("SceneCameraOptions_FastModeMultiplier", 2.0f);
+            PanSpeed = ProjectSettings.GetFloat("SceneCameraOptions_PanSpeed", 3.0f);
+            ScrollSpeed = ProjectSettings.GetFloat("SceneCameraOptions_ScrollSpeed", 3.0f);
+            RotationalSpeed = ProjectSettings.GetFloat("SceneCameraOptions_RotationalSpeed", 3.0f);
+
+            NearClipPlane = ProjectSettings.GetFloat("SceneCameraOptions_NearClipPlane", 0.05f);
+            FarClipPlane = ProjectSettings.GetFloat("SceneCameraOptions_FarClipPlane", 2500f);
         }
 
+        /// <summary>
+        /// Sets the orthographic size of the scene camera.
+        /// </summary>
+        /// <param name="orthographicSize">The orthographic size value.</param>
+        public void SetOrthographicSize(float orthographicSize)
+        {
+            OrthographicSize = orthographicSize;
+            ProjectSettings.SetFloat("SceneCameraOptions_OrthographicSize", orthographicSize);
+        }
+
+        /// <summary>
+        /// Sets the field of view of the scene camera
+        /// </summary>
+        /// <param name="fieldOfView">The field of view value.</param>
+        public void SetFieldOfView(float fieldOfView)
+        {
+            FieldOfView = (Degree)fieldOfView;
+            ProjectSettings.SetFloat("SceneCameraOptions_FieldOfView", fieldOfView);
+        }
+        
         /// <summary>
         /// Sets the acceleration of the scene camera
         /// </summary>
@@ -54,7 +74,7 @@ namespace BansheeEditor
         public void SetAcceleration(float acceleration)
         {
             Acceleration = acceleration;
-            EditorSettings.SetFloat("SceneCameraOptions_Acceleration", acceleration);
+            ProjectSettings.SetFloat("SceneCameraOptions_Acceleration", acceleration);
         }
 
         /// <summary>
@@ -64,7 +84,7 @@ namespace BansheeEditor
         public void SetFastModeMultiplier(float fastModeMultiplier)
         {
             FastModeMultiplier = fastModeMultiplier;
-            EditorSettings.SetFloat("SceneCameraOptions_FastModeMultiplier", fastModeMultiplier);
+            ProjectSettings.SetFloat("SceneCameraOptions_FastModeMultiplier", fastModeMultiplier);
         }
 
         /// <summary>
@@ -74,7 +94,7 @@ namespace BansheeEditor
         public void SetPanSpeed(float panSpeed)
         {
             PanSpeed = panSpeed;
-            EditorSettings.SetFloat("SceneCameraOptions_PanSpeed", panSpeed);
+            ProjectSettings.SetFloat("SceneCameraOptions_PanSpeed", panSpeed);
         }
 
         /// <summary>
@@ -84,7 +104,7 @@ namespace BansheeEditor
         public void SetScrollSpeed(float scrollSpeed)
         {
             ScrollSpeed = scrollSpeed;
-            EditorSettings.SetFloat("SceneCameraOptions_ScrollSpeed", scrollSpeed);
+            ProjectSettings.SetFloat("SceneCameraOptions_ScrollSpeed", scrollSpeed);
         }
 
         /// <summary>
@@ -94,7 +114,33 @@ namespace BansheeEditor
         public void SetRotationalSpeed(float rotationalSpeed)
         {
             RotationalSpeed = rotationalSpeed;
-            EditorSettings.SetFloat("SceneCameraOptions_RotationalSpeed", rotationalSpeed);
+            ProjectSettings.SetFloat("SceneCameraOptions_RotationalSpeed", rotationalSpeed);
+        }
+
+        /// <summary>
+        /// Sets the near clip plane of the camera
+        /// </summary>
+        /// <param name="value">The near clip plane value.</param>
+        public void SetNearClipPlane(float value)
+        {
+            value = MathEx.Clamp(value, MinNearClipPlane, MaxNearClipPlane);
+
+            NearClipPlane = value;
+
+            ProjectSettings.SetFloat("SceneCameraOptions_NearClipPlane", value);
+        }
+
+        /// <summary>
+        /// Sets the far clip plane of the camera
+        /// </summary>
+        /// <param name="value">The far clip plane value.</param>
+        public void SetFarClipPlane(float value)
+        {
+            value = MathEx.Clamp(value, MinFarClipPlane, MaxFarClipPlane);
+
+            FarClipPlane = value;
+
+            ProjectSettings.SetFloat("SceneCameraOptions_FarClipPlane", value);
         }
     }
 

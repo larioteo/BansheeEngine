@@ -106,6 +106,51 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Determines scene camera's orthographic size.
+        /// </summary>
+        internal float OrthographicSize
+        {
+            get { return cameraController.OrthographicSize; }
+            set { cameraController.OrthographicSize = value; }
+        }
+
+        /// <summary>
+        /// Determines scene camera's field of view.
+        /// </summary>
+        internal Degree FieldOfView
+        {
+            get { return cameraController.FieldOfView; }
+            set { cameraController.FieldOfView = value; }
+        }
+
+        /// <summary>
+        /// Determines scene camera's near clip plane.
+        /// </summary>
+        internal float NearClipPlane
+        {
+            get { return cameraController.NearClipPlane; }
+            set { cameraController.NearClipPlane = value; }
+        }
+
+        /// <summary>
+        /// Determines scene camera's far clip plane.
+        /// </summary>
+        internal float FarClipPlane
+        {
+            get { return cameraController.FarClipPlane; }
+            set { cameraController.FarClipPlane = value; }
+        }
+
+        /// <summary>
+        /// Determines scene camera's scroll speed.
+        /// </summary>
+        internal float ScrollSpeed
+        {
+            get { return cameraController.ScrollSpeed; }
+            set { cameraController.ScrollSpeed = value; }
+        }
+
+        /// <summary>
         /// Constructs a new scene window.
         /// </summary>
         internal SceneWindow()
@@ -229,7 +274,7 @@ namespace BansheeEditor
             rotateSnapButton = new GUIToggle(rotateSnapIcon, EditorStyles.Button, GUIOption.FlexibleWidth(35));
             rotateSnapInput = new GUIFloatField("", GUIOption.FlexibleWidth(35));
 
-            GUIContent cameraOptionsIcon = new GUIContent(EditorBuiltin.GetLibraryWindowIcon(LibraryWindowIcon.Options), new LocEdString("Camera options"));
+            GUIContent cameraOptionsIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.SceneCameraOptions), new LocEdString("Camera options"));
             cameraOptionsButton = new GUIButton(cameraOptionsIcon);
 
             viewButton.OnClick += () => OnSceneToolButtonClicked(SceneViewTool.View);
@@ -305,7 +350,7 @@ namespace BansheeEditor
 
             SceneCameraOptionsDropdown cameraOptionsDropdown = DropDownWindow.Open<SceneCameraOptionsDropdown>(GUI, openPosition);
 
-            cameraOptionsDropdown.Initialize(this, cameraController.SceneCameraOptions);
+            cameraOptionsDropdown.Initialize(this);
         }
 
         private void OnDestroy()
@@ -861,12 +906,12 @@ namespace BansheeEditor
                 sceneCameraSO.LookAt(new Vector3(0, 0.5f, 0));
 
                 camera.Priority = 2;
-                camera.NearClipPlane = 0.05f;
-                camera.FarClipPlane = 2500.0f;
                 camera.Viewport.ClearColor = ClearColor;
                 camera.Layers = UInt64.MaxValue & ~SceneAxesHandle.LAYER; // Don't draw scene axes in this camera
 
                 cameraController = sceneCameraSO.AddComponent<SceneCamera>();
+
+                cameraController.Initialize();
 
                 renderTextureGUI = new GUIRenderTexture(renderTexture);
                 rtPanel.AddElement(renderTextureGUI);
