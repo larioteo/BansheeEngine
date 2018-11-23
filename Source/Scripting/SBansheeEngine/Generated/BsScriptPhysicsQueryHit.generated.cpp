@@ -3,10 +3,11 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptGameObjectManager.h"
+#include "Math/BsVector3.h"
 #include "Wrappers/BsScriptVector.h"
+#include "Math/BsVector2.h"
 #include "Wrappers/BsScriptVector.h"
-#include "Wrappers/BsScriptVector.h"
-#include "Wrappers/BsScriptVector.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCollider.h"
 #include "BsScriptCCollider.generated.h"
 
 namespace bs
@@ -56,7 +57,7 @@ namespace bs
 		output.triangleIdx = value.triangleIdx;
 		ScriptComponentBase* scriptcollider = nullptr;
 		if(value.collider)
-				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider));
+			scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider));
 		MonoObject* tmpcollider;
 		if(scriptcollider != nullptr)
 			tmpcollider = scriptcollider->getManagedInstance();

@@ -4,6 +4,8 @@
 #include "Wrappers/BsScriptComponent.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Renderer/BsLight.h"
 #include "Math/BsSphere.h"
+#include "Image/BsColor.h"
+#include "Math/BsDegree.h"
 
 namespace bs
 {

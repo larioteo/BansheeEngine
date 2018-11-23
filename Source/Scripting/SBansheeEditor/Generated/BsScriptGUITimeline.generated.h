@@ -2,6 +2,7 @@
 
 #include "BsScriptEditorPrerequisites.h"
 #include "Wrappers/GUI/BsScriptGUIElement.h"
+#include "Math/BsVector2I.h"
 
 namespace bs
 {

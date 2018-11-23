@@ -12,8 +12,6 @@
 namespace bs
 {
 	struct ParticleSystemSettings;
-	class Material;
-	class Mesh;
 
 	class BS_SCR_BE_EXPORT ScriptParticleSystemSettings : public ScriptObject<ScriptParticleSystemSettings>
 	{

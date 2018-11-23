@@ -3,6 +3,8 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptComponent.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsRigidbody.h"
+#include "Math/BsVector3.h"
+#include "Math/BsQuaternion.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsCommon.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsRigidbody.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsRigidbody.h"

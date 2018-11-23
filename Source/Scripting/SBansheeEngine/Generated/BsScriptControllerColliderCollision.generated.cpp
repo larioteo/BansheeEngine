@@ -3,8 +3,9 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptGameObjectManager.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCollider.h"
 #include "BsScriptCCollider.generated.h"
-#include "Wrappers/BsScriptVector.h"
+#include "Math/BsVector3.h"
 #include "Wrappers/BsScriptVector.h"
 
 namespace bs
@@ -49,7 +50,7 @@ namespace bs
 		__ControllerColliderCollisionInterop output;
 		ScriptComponentBase* scriptcollider = nullptr;
 		if(value.collider)
-				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider));
+			scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider));
 		MonoObject* tmpcollider;
 		if(scriptcollider != nullptr)
 			tmpcollider = scriptcollider->getManagedInstance();

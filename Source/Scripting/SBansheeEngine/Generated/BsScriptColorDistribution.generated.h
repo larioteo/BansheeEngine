@@ -3,6 +3,7 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfUtility/Image/BsColorGradient.h"
+#include "Image/BsColor.h"
 #include "../../../bsf/Source/Foundation/bsfUtility/Math/BsRandom.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 

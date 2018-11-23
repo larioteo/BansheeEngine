@@ -2,7 +2,7 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "Wrappers/BsScriptVector.h"
+#include "Math/BsVector3.h"
 #include "Wrappers/BsScriptVector.h"
 
 namespace bs

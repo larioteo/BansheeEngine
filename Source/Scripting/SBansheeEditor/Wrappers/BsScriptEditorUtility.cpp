@@ -104,7 +104,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return false;
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		return so->hasFlag(SOF_Internal);
 	}
 }

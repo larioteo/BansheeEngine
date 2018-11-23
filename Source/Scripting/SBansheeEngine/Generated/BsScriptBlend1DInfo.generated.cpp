@@ -2,6 +2,7 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
 #include "BsScriptBlendClipInfo.generated.h"
 
 namespace bs

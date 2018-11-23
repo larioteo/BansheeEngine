@@ -3,7 +3,9 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptGameObjectManager.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCollider.h"
 #include "BsScriptCCollider.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Physics/BsPhysicsCommon.h"
 #include "BsScriptContactPoint.generated.h"
 
 namespace bs
@@ -68,7 +70,7 @@ namespace bs
 		{
 			ScriptComponentBase* scriptcollider = nullptr;
 			if(value.collider[i])
-						scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider[i]));
+				scriptcollider = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.collider[i]));
 				if(scriptcollider != nullptr)
 				arraycollider.set(i, scriptcollider->getManagedInstance());
 			else

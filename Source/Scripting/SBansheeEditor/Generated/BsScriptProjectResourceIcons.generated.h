@@ -3,7 +3,6 @@
 #include "BsScriptEditorPrerequisites.h"
 #include "BsScriptObject.h"
 #include "../../../EditorCore/Library/BsProjectResourceMeta.h"
-#include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 
 namespace bs
 {

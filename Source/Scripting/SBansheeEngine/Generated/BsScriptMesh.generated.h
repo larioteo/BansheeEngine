@@ -2,10 +2,13 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptResource.h"
+#include "../../../bsf/Source/Foundation/bsfCore/RenderAPI/BsSubMesh.h"
+#include "Math/BsSphere.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Mesh/BsMeshBase.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Renderer/BsRendererMeshData.h"
+#include "Math/BsAABox.h"
 
 namespace bs
 {

@@ -25,6 +25,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getMaxDistance", (void*)&ScriptCDecal::Internal_getMaxDistance);
 		metaData.scriptClass->addInternalCall("Internal_setLayer", (void*)&ScriptCDecal::Internal_setLayer);
 		metaData.scriptClass->addInternalCall("Internal_getLayer", (void*)&ScriptCDecal::Internal_getLayer);
+		metaData.scriptClass->addInternalCall("Internal_setLayerMask", (void*)&ScriptCDecal::Internal_setLayerMask);
+		metaData.scriptClass->addInternalCall("Internal_getLayerMask", (void*)&ScriptCDecal::Internal_getLayerMask);
 
 	}
 
@@ -94,6 +96,22 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getLayer();
 
 		uint64_t __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	void ScriptCDecal::Internal_setLayerMask(ScriptCDecal* thisPtr, uint32_t mask)
+	{
+		thisPtr->getHandle()->setLayerMask(mask);
+	}
+
+	uint32_t ScriptCDecal::Internal_getLayerMask(ScriptCDecal* thisPtr)
+	{
+		uint32_t tmp__output;
+		tmp__output = thisPtr->getHandle()->getLayerMask();
+
+		uint32_t __output;
 		__output = tmp__output;
 
 		return __output;

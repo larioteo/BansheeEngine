@@ -7,7 +7,6 @@
 namespace bs
 {
 	class StringTableManager;
-	class StringTable;
 
 	class BS_SCR_BE_EXPORT ScriptStringTableManager : public ScriptObject<ScriptStringTableManager>
 	{

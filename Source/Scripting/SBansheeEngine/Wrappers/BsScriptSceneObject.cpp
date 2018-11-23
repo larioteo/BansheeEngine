@@ -179,7 +179,7 @@ namespace bs
 			return nullptr;
 
 		String nativeName = MonoUtil::monoToString(name);
-		HSceneObject child = nativeInstance->getNativeSceneObject()->findChild(nativeName, recursive);
+		HSceneObject child = nativeInstance->getHandle()->findChild(nativeName, recursive);
 
 		if (child == nullptr)
 			return nullptr;
@@ -197,7 +197,7 @@ namespace bs
 		}
 
 		String nativeName = MonoUtil::monoToString(name);
-		Vector<HSceneObject> children = nativeInstance->getNativeSceneObject()->findChildren(nativeName, recursive);
+		Vector<HSceneObject> children = nativeInstance->getHandle()->findChildren(nativeName, recursive);
 
 		UINT32 numChildren = (UINT32)children.size();
 		ScriptArray output = ScriptArray::create<ScriptSceneObject>(numChildren);

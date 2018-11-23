@@ -8,7 +8,6 @@
 namespace bs
 {
 	class CReflectionProbe;
-	class Texture;
 
 	class BS_SCR_BE_EXPORT ScriptCReflectionProbe : public TScriptComponent<ScriptCReflectionProbe, CReflectionProbe>
 	{

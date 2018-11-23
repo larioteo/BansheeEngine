@@ -35,7 +35,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		soPtr->getNativeSceneObject()->breakPrefabLink();
+		soPtr->getHandle()->breakPrefabLink();
 	}
 
 	void ScriptPrefabUtility::internal_applyPrefab(ScriptSceneObject* soPtr, ScriptPrefab* prefabPtr)
@@ -43,7 +43,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		prefabPtr->getHandle()->update(soPtr->getNativeSceneObject());
+		prefabPtr->getHandle()->update(soPtr->getHandle());
 	}
 
 	void ScriptPrefabUtility::internal_revertPrefab(ScriptSceneObject* soPtr)
@@ -51,7 +51,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		PrefabUtility::revertToPrefab(soPtr->getNativeSceneObject());
+		PrefabUtility::revertToPrefab(soPtr->getHandle());
 	}
 
 	bool ScriptPrefabUtility::internal_hasPrefabLink(ScriptSceneObject* soPtr)
@@ -59,7 +59,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return false;
 
-		return !soPtr->getNativeSceneObject()->getPrefabLink(true).empty();
+		return !soPtr->getHandle()->getPrefabLink(true).empty();
 	}
 
 	MonoObject* ScriptPrefabUtility::internal_getPrefabParent(ScriptSceneObject* soPtr)
@@ -67,7 +67,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return nullptr;
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		HSceneObject parent = so->getPrefabParent();
 
 		if (parent != nullptr)
@@ -86,8 +86,8 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		HSceneObject so = soPtr->getNativeSceneObject();
-		*uuid = soPtr->getNativeSceneObject()->getPrefabLink(true);
+		HSceneObject so = soPtr->getHandle();
+		*uuid = soPtr->getHandle()->getPrefabLink(true);
 	}
 
 	void ScriptPrefabUtility::internal_UpdateFromPrefab(ScriptSceneObject* soPtr)
@@ -95,7 +95,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		HSceneObject prefabParent = so->getPrefabParent();
 
 		if(prefabParent != nullptr)
@@ -107,7 +107,7 @@ namespace bs
 		if (ScriptSceneObject::checkIfDestroyed(soPtr))
 			return;
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		PrefabUtility::recordPrefabDiff(so);
 	}
 }

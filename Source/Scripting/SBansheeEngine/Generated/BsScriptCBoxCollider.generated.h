@@ -3,6 +3,7 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptComponent.h"
 #include "BsScriptCCollider.generated.h"
+#include "Math/BsVector3.h"
 
 namespace bs
 {

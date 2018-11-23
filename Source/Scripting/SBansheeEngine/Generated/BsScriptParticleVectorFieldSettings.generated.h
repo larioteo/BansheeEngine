@@ -9,7 +9,6 @@
 namespace bs
 {
 	struct ParticleVectorFieldSettings;
-	class VectorField;
 
 	class BS_SCR_BE_EXPORT ScriptParticleVectorFieldSettings : public ScriptObject<ScriptParticleVectorFieldSettings>
 	{

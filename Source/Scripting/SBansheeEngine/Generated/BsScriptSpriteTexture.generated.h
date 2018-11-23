@@ -2,12 +2,13 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptResource.h"
+#include "Math/BsVector2.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsSpriteTexture.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Image/BsSpriteTexture.h"
 
 namespace bs
 {
 	class SpriteTexture;
-	class Texture;
 
 	class BS_SCR_BE_EXPORT ScriptSpriteTexture : public TScriptResource<ScriptSpriteTexture, SpriteTexture>
 	{

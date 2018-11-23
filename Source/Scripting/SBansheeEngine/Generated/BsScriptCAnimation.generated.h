@@ -3,11 +3,13 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptComponent.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
+#include "Math/BsAABox.h"
+#include "Math/BsVector2.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
 
 namespace bs
 {
 	class CAnimation;
-	class AnimationClip;
 	struct __Blend1DInfoInterop;
 	struct __Blend2DInfoInterop;
 

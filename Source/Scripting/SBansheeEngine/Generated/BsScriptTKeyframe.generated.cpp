@@ -2,12 +2,12 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
+#include "Math/BsQuaternion.h"
 #include "Wrappers/BsScriptQuaternion.h"
+#include "Math/BsVector3.h"
 #include "Wrappers/BsScriptVector.h"
+#include "Math/BsVector2.h"
 #include "Wrappers/BsScriptVector.h"
-#include "Wrappers/BsScriptVector.h"
-#include "Wrappers/BsScriptVector.h"
-#include "Wrappers/BsScriptQuaternion.h"
 
 namespace bs
 {

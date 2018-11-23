@@ -2,16 +2,19 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptResource.h"
+#include "Math/BsVector2.h"
 #include "../../../bsf/Source/Foundation/bsfUtility/Image/BsColorGradient.h"
+#include "Image/BsColor.h"
+#include "Math/BsMatrix4.h"
+#include "Math/BsVector4.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "Math/BsVector3.h"
+#include "Math/BsMatrix3.h"
 
 namespace bs
 {
-	class Shader;
 	class Material;
-	class Texture;
 	class MaterialEx;
-	class SpriteTexture;
 
 	class BS_SCR_BE_EXPORT ScriptMaterial : public TScriptResource<ScriptMaterial, Material>
 	{

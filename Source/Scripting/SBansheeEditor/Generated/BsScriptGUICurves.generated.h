@@ -3,7 +3,10 @@
 #include "BsScriptEditorPrerequisites.h"
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "BsScriptGUITimeline.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationUtility.h"
+#include "Math/BsVector2.h"
 #include "../../../EditorCore/GUI/BsGUICurves.h"
+#include "Math/BsVector2I.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationUtility.h"
 
 namespace bs

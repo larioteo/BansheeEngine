@@ -3,7 +3,6 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimation.h"
-#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationClip.h"
 
 namespace bs
 {

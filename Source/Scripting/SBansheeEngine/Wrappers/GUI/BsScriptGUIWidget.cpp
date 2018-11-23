@@ -54,7 +54,7 @@ namespace bs
 
 	void ScriptGUIWidget::internal_UpdateTransform(ScriptGUIWidget* thisPtr, ScriptSceneObject* parent)
 	{
-		HSceneObject parentSO = parent->getNativeSceneObject();
+		HSceneObject parentSO = parent->getHandle();
 
 		SPtr<GUIWidget> widget = thisPtr->getInternal();
 		if (!parentSO.isDestroyed() && widget != nullptr)

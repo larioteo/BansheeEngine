@@ -2,8 +2,9 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "BsScriptHString.generated.h"
-#include "BsScriptHString.generated.h"
+#include "../../../bsf/Source/Foundation/bsfEngine/GUI/BsGUIContent.h"
 #include "BsScriptGUIContentImages.generated.h"
 
 namespace bs

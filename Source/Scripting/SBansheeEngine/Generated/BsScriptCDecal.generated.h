@@ -2,11 +2,11 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptComponent.h"
+#include "Math/BsVector2.h"
 
 namespace bs
 {
 	class CDecal;
-	class Material;
 
 	class BS_SCR_BE_EXPORT ScriptCDecal : public TScriptComponent<ScriptCDecal, CDecal>
 	{
@@ -24,5 +24,7 @@ namespace bs
 		static float Internal_getMaxDistance(ScriptCDecal* thisPtr);
 		static void Internal_setLayer(ScriptCDecal* thisPtr, uint64_t layer);
 		static uint64_t Internal_getLayer(ScriptCDecal* thisPtr);
+		static void Internal_setLayerMask(ScriptCDecal* thisPtr, uint32_t mask);
+		static uint32_t Internal_getLayerMask(ScriptCDecal* thisPtr);
 	};
 }

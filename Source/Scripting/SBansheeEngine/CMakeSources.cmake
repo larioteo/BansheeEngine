@@ -87,6 +87,7 @@ set(BS_SBANSHEEENGINE_INC_WRAPPERS
 	"Wrappers/BsScriptRRefBase.h"
 	"Wrappers/BsScriptManagedComponent.h"
 	"Wrappers/BsScriptQuaternion.h"
+	"Wrappers/BsScriptPlane.h"
 )
 
 set(BS_SBANSHEEENGINE_INC_WRAPPERS_GUI
@@ -165,6 +166,7 @@ set(BS_SBANSHEEENGINE_SRC_WRAPPERS
 	"Wrappers/BsScriptResource.cpp"
 	"Wrappers/BsScriptManagedComponent.cpp"
 	"Wrappers/BsScriptQuaternion.cpp"
+	"Wrappers/BsScriptPlane.cpp"
 )
 
 set(BS_SBANSHEEENGINE_INC_SERIALIZATION

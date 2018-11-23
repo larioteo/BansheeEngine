@@ -3,8 +3,9 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "BsScriptGameObjectManager.h"
-#include "Wrappers/BsScriptVector.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Components/BsCCharacterController.h"
 #include "BsScriptCCharacterController.generated.h"
+#include "Math/BsVector3.h"
 #include "Wrappers/BsScriptVector.h"
 
 namespace bs
@@ -48,7 +49,7 @@ namespace bs
 		__ControllerControllerCollisionInterop output;
 		ScriptComponentBase* scriptcontroller = nullptr;
 		if(value.controller)
-				scriptcontroller = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.controller));
+			scriptcontroller = ScriptGameObjectManager::instance().getBuiltinScriptComponent(static_object_cast<Component>(value.controller));
 		MonoObject* tmpcontroller;
 		if(scriptcontroller != nullptr)
 			tmpcontroller = scriptcontroller->getManagedInstance();

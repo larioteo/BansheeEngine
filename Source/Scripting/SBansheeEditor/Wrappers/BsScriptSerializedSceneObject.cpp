@@ -67,7 +67,7 @@ namespace bs
 	{
 		HSceneObject sceneObj;
 		if (so != nullptr)
-			sceneObj = so->getNativeSceneObject();
+			sceneObj = so->getHandle();
 
 		new (bs_alloc<ScriptSerializedSceneObject>()) ScriptSerializedSceneObject(instance, sceneObj, hierarchy);
 	}

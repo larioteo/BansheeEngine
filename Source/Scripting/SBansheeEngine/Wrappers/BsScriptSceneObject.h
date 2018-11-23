@@ -26,7 +26,7 @@ namespace bs
 		void setNativeHandle(const HGameObject& gameObject) override;
 
 		/**	Returns the native internal scene object. */
-		HSceneObject getNativeSceneObject() const { return mSceneObject; }
+		HSceneObject getHandle() const { return mSceneObject; }
 
 		/**	Checks is the scene object wrapped by the provided interop object destroyed. */
 		static bool checkIfDestroyed(ScriptSceneObject* nativeInstance);

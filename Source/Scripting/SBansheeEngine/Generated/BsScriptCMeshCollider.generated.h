@@ -7,7 +7,6 @@
 namespace bs
 {
 	class CMeshCollider;
-	class PhysicsMesh;
 
 	class BS_SCR_BE_EXPORT ScriptCMeshCollider : public TScriptComponent<ScriptCMeshCollider, CMeshCollider, ScriptCColliderBase>
 	{

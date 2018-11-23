@@ -152,13 +152,13 @@ namespace bs
 	void ScriptUndoRedo::internal_RecordSO(ScriptSceneObject* soPtr, bool recordHierarchy, MonoString* description)
 	{
 		String nativeDescription = MonoUtil::monoToString(description);
-		CmdRecordSO::execute(soPtr->getNativeSceneObject(), recordHierarchy, nativeDescription);
+		CmdRecordSO::execute(soPtr->getHandle(), recordHierarchy, nativeDescription);
 	}
 
 	MonoObject* ScriptUndoRedo::internal_CloneSO(ScriptSceneObject* soPtr, MonoString* description)
 	{
 		String nativeDescription = MonoUtil::monoToString(description);
-		HSceneObject clone = CmdCloneSO::execute(soPtr->getNativeSceneObject(), nativeDescription);
+		HSceneObject clone = CmdCloneSO::execute(soPtr->getHandle(), nativeDescription);
 
 		ScriptSceneObject* cloneSoPtr = ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(clone);
 		return cloneSoPtr->getManagedInstance();
@@ -174,7 +174,7 @@ namespace bs
 		for (UINT32 i = 0; i < input.size(); i++)
 		{
 			ScriptSceneObject* soPtr = input.get<ScriptSceneObject*>(i);
-			HSceneObject clone = CmdCloneSO::execute(soPtr->getNativeSceneObject(), nativeDescription);
+			HSceneObject clone = CmdCloneSO::execute(soPtr->getHandle(), nativeDescription);
 
 			ScriptSceneObject* cloneSoPtr = ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(clone);
 			output.set(i, cloneSoPtr->getManagedInstance());
@@ -208,18 +208,18 @@ namespace bs
 	void ScriptUndoRedo::internal_DeleteSO(ScriptSceneObject* soPtr, MonoString* description)
 	{
 		String nativeDescription = MonoUtil::monoToString(description);
-		CmdDeleteSO::execute(soPtr->getNativeSceneObject(), nativeDescription);
+		CmdDeleteSO::execute(soPtr->getHandle(), nativeDescription);
 	}
 
 	void ScriptUndoRedo::internal_ReparentSO(ScriptSceneObject* soPtr, ScriptSceneObject* parentSOPtr, MonoString* description)
 	{
 		HSceneObject parent;
 		if (parentSOPtr != nullptr)
-			parent = parentSOPtr->getNativeSceneObject();
+			parent = parentSOPtr->getHandle();
 
 		String nativeDescription = MonoUtil::monoToString(description);
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		CmdReparentSO::execute(so, parent, nativeDescription);
 	}
 
@@ -227,7 +227,7 @@ namespace bs
 	{
 		HSceneObject parent;
 		if (parentSOPtr != nullptr)
-			parent = parentSOPtr->getNativeSceneObject();
+			parent = parentSOPtr->getHandle();
 
 		String nativeDescription = MonoUtil::monoToString(description);
 
@@ -235,7 +235,7 @@ namespace bs
 		for (UINT32 i = 0; i < input.size(); i++)
 		{
 			ScriptSceneObject* soPtr = input.get<ScriptSceneObject*>(i);
-			HSceneObject so = soPtr->getNativeSceneObject();
+			HSceneObject so = soPtr->getHandle();
 			CmdReparentSO::execute(so, parent, nativeDescription);
 		}
 	}
@@ -244,7 +244,7 @@ namespace bs
 	{
 		String nativeDescription = MonoUtil::monoToString(description);
 
-		HSceneObject so = soPtr->getNativeSceneObject();
+		HSceneObject so = soPtr->getHandle();
 		CmdBreakPrefab::execute(so, nativeDescription);
 	}
 }

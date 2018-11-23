@@ -44,14 +44,26 @@ namespace BansheeEngine
 		}
 
 		/// <summary>
-		/// Determines the layer bitfield that controls whether a system is considered visible in a specific camera.  Layer must 
-		/// match camera layer in order for the camera to render the component.
+		/// Determines the layer that controls whether a system is considered visible in a specific camera. Layer must match  
+		/// camera layer bitfield in order for the camera to render the decal.
 		/// </summary>
 		[ShowInInspector]
 		public ulong Layer
 		{
 			get { return Internal_getLayer(mCachedPtr); }
 			set { Internal_setLayer(mCachedPtr, value); }
+		}
+
+		/// <summary>
+		/// Bitfield that allows you to mask on which objects will the decal be projected onto. Only objects with the  matching 
+		/// layers will be projected onto. Note that decal layer mask only supports 32-bits and objects with layers in bits >= 32 
+		/// will always be projected onto.
+		/// </summary>
+		[ShowInInspector]
+		public uint LayerMask
+		{
+			get { return Internal_getLayerMask(mCachedPtr); }
+			set { Internal_setLayerMask(mCachedPtr, value); }
 		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -70,6 +82,10 @@ namespace BansheeEngine
 		private static extern void Internal_setLayer(IntPtr thisPtr, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ulong Internal_getLayer(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setLayerMask(IntPtr thisPtr, uint mask);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern uint Internal_getLayerMask(IntPtr thisPtr);
 	}
 
 	/** @} */

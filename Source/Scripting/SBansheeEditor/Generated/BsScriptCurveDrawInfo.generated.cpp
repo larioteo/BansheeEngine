@@ -2,10 +2,10 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
+#include "Image/BsColor.h"
 #include "Wrappers/BsScriptColor.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptTAnimationCurve.generated.h"
-#include "BsScriptTAnimationCurve.generated.h"
-#include "Wrappers/BsScriptColor.h"
 
 namespace bs
 {

@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "BsScriptResourceManager.h"
 #include "Wrappers/BsScriptRRefBase.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Image/BsTexture.h"
 #include "BsScriptTexture.generated.h"
 
 namespace bs

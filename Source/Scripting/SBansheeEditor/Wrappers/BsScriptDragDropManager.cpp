@@ -124,7 +124,7 @@ namespace bs
 		{
 			ScriptSceneObject* scriptSO = ScriptSceneObject::toNative(objectsArray.get<MonoObject*>(i));
 			if (scriptSO != nullptr)
-				sceneObjects[i] = scriptSO->getNativeSceneObject();
+				sceneObjects[i] = scriptSO->getHandle();
 		}
 
 		new (bs_alloc<ScriptSceneObjectDragDropData>()) ScriptSceneObjectDragDropData(managedInstance, sceneObjects);

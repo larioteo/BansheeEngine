@@ -4,6 +4,10 @@ using System.Runtime.InteropServices;
 
 namespace BansheeEngine
 {
+	/** @addtogroup Particles
+	 *  @{
+	 */
+
 	/// <summary>Settings used for controlling a vector field in a GPU simulated particle system.</summary>
 	public partial class ParticleVectorFieldSettings : ScriptObject
 	{
@@ -157,4 +161,6 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_settilingZ(IntPtr thisPtr, bool value);
 	}
+
+	/** @} */
 }

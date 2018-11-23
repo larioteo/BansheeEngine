@@ -3,6 +3,7 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "Wrappers/BsScriptComponent.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsCharacterController.h"
+#include "Math/BsVector3.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsCharacterController.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Physics/BsCharacterController.h"
 #include "Math/BsRadian.h"

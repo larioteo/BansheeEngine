@@ -2,12 +2,17 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
+#include "Math/BsRay.h"
+#include "Math/BsVector3.h"
+#include "Math/BsSphere.h"
+#include "Math/BsAABox.h"
+#include "Math/BsQuaternion.h"
+#include "Math/BsCapsule.h"
 
 namespace bs
 {
 	struct __PhysicsQueryHitInterop;
 	class Physics;
-	class PhysicsMesh;
 
 	class BS_SCR_BE_EXPORT ScriptPhysics : public ScriptObject<ScriptPhysics>
 	{

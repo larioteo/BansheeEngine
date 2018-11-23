@@ -11,9 +11,11 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "BsScriptObject.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 #include "Math/BsVector3.h"
 #include "Math/BsVector2.h"
 #include "Math/BsQuaternion.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
 
 namespace bs
 {
