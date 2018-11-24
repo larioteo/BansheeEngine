@@ -22,5 +22,6 @@ namespace bs
 	private:
 		static void Internal_setOptions(ScriptParticleForce* thisPtr, __PARTICLE_FORCE_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleForce* thisPtr, __PARTICLE_FORCE_DESCInterop* __output);
+		static void Internal_create(MonoObject* managedInstance, __PARTICLE_FORCE_DESCInterop* desc);
 	};
 }

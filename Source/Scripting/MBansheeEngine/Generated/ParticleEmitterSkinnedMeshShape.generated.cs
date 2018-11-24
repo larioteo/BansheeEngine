@@ -17,6 +17,12 @@ namespace BansheeEngine
 		private ParticleEmitterSkinnedMeshShape(bool __dummy0) { }
 		protected ParticleEmitterSkinnedMeshShape() { }
 
+		/// <summary>Creates a new particle emitter skinned mesh shape.</summary>
+		public ParticleEmitterSkinnedMeshShape(ParticleSkinnedMeshShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleSkinnedMeshShapeOptions Options
 		{
@@ -29,18 +35,12 @@ namespace BansheeEngine
 			set { Internal_setOptions(mCachedPtr, ref value); }
 		}
 
-		/// <summary>Creates a new particle emitter skinned mesh shape.</summary>
-		public static ParticleEmitterShape Create(ParticleSkinnedMeshShapeOptions desc)
-		{
-			return Internal_create(ref desc);
-		}
-
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleSkinnedMeshShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleSkinnedMeshShapeOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern ParticleEmitterShape Internal_create(ref ParticleSkinnedMeshShapeOptions desc);
+		private static extern void Internal_create(ParticleEmitterSkinnedMeshShape managedInstance, ref ParticleSkinnedMeshShapeOptions desc);
 	}
 
 	/** @} */

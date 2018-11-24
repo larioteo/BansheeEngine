@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_RECT_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterRectShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterRectShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterRectShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterRectShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_RECT_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_RECT_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_RECT_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterRectShape::Internal_create(MonoObject* managedInstance, __PARTICLE_RECT_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_RECT_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_RECT_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterRectShape> instance = ParticleEmitterRectShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterRectShape>())ScriptParticleEmitterRectShape(managedInstance, instance);
 	}
 }

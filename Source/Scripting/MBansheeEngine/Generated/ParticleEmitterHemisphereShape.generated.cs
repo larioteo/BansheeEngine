@@ -18,6 +18,12 @@ namespace BansheeEngine
 		private ParticleEmitterHemisphereShape(bool __dummy0) { }
 		protected ParticleEmitterHemisphereShape() { }
 
+		/// <summary>Creates a new particle emitter sphere shape.</summary>
+		public ParticleEmitterHemisphereShape(ParticleHemisphereShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleHemisphereShapeOptions Options
 		{
@@ -34,6 +40,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleHemisphereShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleHemisphereShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterHemisphereShape managedInstance, ref ParticleHemisphereShapeOptions desc);
 	}
 
 	/** @} */

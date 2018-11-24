@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_SPHERE_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterSphereShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterSphereShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterSphereShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterSphereShape::Internal_create);
 
 	}
 
@@ -47,5 +49,11 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getOptions();
 
 		*__output = tmp__output;
+	}
+
+	void ScriptParticleEmitterSphereShape::Internal_create(MonoObject* managedInstance, PARTICLE_SPHERE_SHAPE_DESC* desc)
+	{
+		SPtr<ParticleEmitterSphereShape> instance = ParticleEmitterSphereShape::create(*desc);
+		new (bs_alloc<ScriptParticleEmitterSphereShape>())ScriptParticleEmitterSphereShape(managedInstance, instance);
 	}
 }

@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_HEMISPHERE_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterHemisphereShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterHemisphereShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterHemisphereShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterHemisphereShape::Internal_create);
 
 	}
 
@@ -47,5 +49,11 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getOptions();
 
 		*__output = tmp__output;
+	}
+
+	void ScriptParticleEmitterHemisphereShape::Internal_create(MonoObject* managedInstance, PARTICLE_HEMISPHERE_SHAPE_DESC* desc)
+	{
+		SPtr<ParticleEmitterHemisphereShape> instance = ParticleEmitterHemisphereShape::create(*desc);
+		new (bs_alloc<ScriptParticleEmitterHemisphereShape>())ScriptParticleEmitterHemisphereShape(managedInstance, instance);
 	}
 }

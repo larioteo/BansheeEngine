@@ -14,6 +14,12 @@ namespace BansheeEngine
 		private ParticleCollisions(bool __dummy0) { }
 		protected ParticleCollisions() { }
 
+		/// <summary>Creates a new particle collision evolver.</summary>
+		public ParticleCollisions(ParticleCollisionsOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>
 		/// Determines a set of planes to use when using the Plane collision mode. Planes are expected to be in world  space.
 		/// </summary>
@@ -57,6 +63,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleCollisionsOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleCollisionsOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleCollisions managedInstance, ref ParticleCollisionsOptions desc);
 	}
 
 	/** @} */

@@ -14,6 +14,12 @@ namespace BansheeEngine
 		private ParticleEmitterRectShape(bool __dummy0) { }
 		protected ParticleEmitterRectShape() { }
 
+		/// <summary>Creates a new particle emitter rectangle shape.</summary>
+		public ParticleEmitterRectShape(ParticleRectShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleRectShapeOptions Options
 		{
@@ -30,6 +36,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleRectShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleRectShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterRectShape managedInstance, ref ParticleRectShapeOptions desc);
 	}
 
 	/** @} */

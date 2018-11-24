@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_ORBIT_DESC.generated.h"
+#include "BsScriptParticleOrbit.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleOrbit::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleOrbit::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleOrbit::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_ORBIT_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_ORBIT_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_ORBIT_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleOrbit::Internal_create(MonoObject* managedInstance, __PARTICLE_ORBIT_DESCInterop* desc)
+	{
+		PARTICLE_ORBIT_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_ORBIT_DESC::fromInterop(*desc);
+		SPtr<ParticleOrbit> instance = ParticleOrbit::create(tmpdesc);
+		new (bs_alloc<ScriptParticleOrbit>())ScriptParticleOrbit(managedInstance, instance);
 	}
 }

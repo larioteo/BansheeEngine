@@ -17,6 +17,16 @@ namespace BansheeEngine
 		private VectorField(bool __dummy0) { }
 		protected VectorField() { }
 
+		/// <summary>Creates a new vector field.</summary>
+		/// <param name="desc">Description of the vector field to create.</param>
+		/// <param name="values">
+		/// Values to assign to the vector field. Number of entries must match  countX * countY * countZ.
+		/// </param>
+		public VectorField(VectorFieldOptions desc, Vector3[] values)
+		{
+			Internal_create(this, ref desc, values);
+		}
+
 		/// <summary>Returns a reference wrapper for this resource.</summary>
 		public RRef<VectorField> Ref
 		{
@@ -29,6 +39,8 @@ namespace BansheeEngine
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern RRef<VectorField> Internal_GetRef(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(VectorField managedInstance, ref VectorFieldOptions desc, Vector3[] values);
 	}
 
 	/** @} */

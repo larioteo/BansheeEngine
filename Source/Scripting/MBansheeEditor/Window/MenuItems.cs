@@ -17,7 +17,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a camera component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Camera", 7050)]
+        [MenuItem("Components/Camera", 7950)]
         private static void AddCamera()
         {
             SceneObject so = Selection.SceneObject;
@@ -34,7 +34,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a renderable component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Renderable", 7049)]
+        [MenuItem("Components/Renderable", 7949)]
         private static void AddRenderable()
         {
             SceneObject so = Selection.SceneObject;
@@ -47,9 +47,39 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Adds a ParticleSystem component to the currently selected scene object.
+        /// </summary>
+        [MenuItem("Components/Particle system", 7948)]
+        private static void AddParticleSystem()
+        {
+            SceneObject so = Selection.SceneObject;
+            if (so == null)
+                return;
+
+            UndoRedo.RecordSO(so, false, "Added a Particle System component");
+            so.AddComponent<ParticleSystem>();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
+        /// Adds a Decal component to the currently selected scene object.
+        /// </summary>
+        [MenuItem("Components/Decal", 7947)]
+        private static void AddDecal()
+        {
+            SceneObject so = Selection.SceneObject;
+            if (so == null)
+                return;
+
+            UndoRedo.RecordSO(so, false, "Added a Decal component");
+            so.AddComponent<Decal>();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
         /// Adds a point light component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Radial light", 7048)]
+        [MenuItem("Components/Radial light", 7900, true)]
         private static void AddPointLight()
         {
             SceneObject so = Selection.SceneObject;
@@ -65,7 +95,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a spot light component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Spot light", 7047)]
+        [MenuItem("Components/Spot light", 7899)]
         private static void AddSpotLight()
         {
             SceneObject so = Selection.SceneObject;
@@ -81,7 +111,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a directional light component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Directional light", 7046)]
+        [MenuItem("Components/Directional light", 7898)]
         private static void AddDirectionalLight()
         {
             SceneObject so = Selection.SceneObject;
@@ -95,9 +125,54 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Adds a Skybox component to the currently selected scene object.
+        /// </summary>
+        [MenuItem("Components/Skybox", 7897)]
+        private static void AddSkybox()
+        {
+            SceneObject so = Selection.SceneObject;
+            if (so == null)
+                return;
+
+            UndoRedo.RecordSO(so, false, "Added an Skybox component");
+            so.AddComponent<Skybox>();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
+        /// Adds a ReflectionProbe component to the currently selected scene object.
+        /// </summary>
+        [MenuItem("Components/Reflection probe", 7896)]
+        private static void AddReflectionProbe()
+        {
+            SceneObject so = Selection.SceneObject;
+            if (so == null)
+                return;
+
+            UndoRedo.RecordSO(so, false, "Added an ReflectionProbe component");
+            so.AddComponent<ReflectionProbe>();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
+        /// Adds a LightProbeVolume component to the currently selected scene object.
+        /// </summary>
+        [MenuItem("Components/Light probe volume", 7895)]
+        private static void AddLightProbeVolume()
+        {
+            SceneObject so = Selection.SceneObject;
+            if (so == null)
+                return;
+
+            UndoRedo.RecordSO(so, false, "Added a Light Probe Volume component");
+            so.AddComponent<LightProbeVolume>();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
         /// Adds a GUI widget component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/GUI widget", 7045)]
+        [MenuItem("Components/GUI widget", 7850, true)]
         private static void AddGUIWidget()
         {
             SceneObject so = Selection.SceneObject;
@@ -112,7 +187,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a BoxCollider component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Box collider", 7044)]
+        [MenuItem("Components/Physics/Box collider", 7800, true)]
         private static void AddBoxCollider()
         {
             SceneObject so = Selection.SceneObject;
@@ -133,7 +208,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a SphereCollider component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Sphere collider", 7043)]
+        [MenuItem("Components/Physics/Sphere collider", 7799)]
         private static void AddSphereCollider()
         {
             SceneObject so = Selection.SceneObject;
@@ -153,7 +228,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a CapsuleCollider component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Capsule collider", 7042)]
+        [MenuItem("Components/Physics/Capsule collider", 7798)]
         private static void AddCapsuleCollider()
         {
             SceneObject so = Selection.SceneObject;
@@ -173,7 +248,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a MeshCollider component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Mesh collider", 7041)]
+        [MenuItem("Components/Physics/Mesh collider", 7797)]
         private static void AddMeshCollider()
         {
             SceneObject so = Selection.SceneObject;
@@ -193,7 +268,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a PlaneCollider component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Plane collider", 7040)]
+        [MenuItem("Components/Physics/Plane collider", 7796)]
         private static void AddPlaneCollider()
         {
             SceneObject so = Selection.SceneObject;
@@ -213,7 +288,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a Rigidbody component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Rigidbody", 7039, true)]
+        [MenuItem("Components/Physics/Rigidbody", 7750, true)]
         private static void AddRigidbody()
         {
             SceneObject so = Selection.SceneObject;
@@ -233,7 +308,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a CharacterController component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Character controller", 7038)]
+        [MenuItem("Components/Physics/Character controller", 7749)]
         private static void AddCharacterController()
         {
             SceneObject so = Selection.SceneObject;
@@ -253,7 +328,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a FixedJoint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Fixed joint", 7037, true)]
+        [MenuItem("Components/Physics/Fixed joint", 7600, true)]
         private static void AddFixedJoint()
         {
             SceneObject so = Selection.SceneObject;
@@ -273,7 +348,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a DistanceJoint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Distance joint", 7036)]
+        [MenuItem("Components/Physics/Distance joint", 7599)]
         private static void AddDistanceJoint()
         {
             SceneObject so = Selection.SceneObject;
@@ -293,7 +368,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a HingeJoint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Hinge joint", 7035)]
+        [MenuItem("Components/Physics/Hinge joint", 7598)]
         private static void AddHingeJoint()
         {
             SceneObject so = Selection.SceneObject;
@@ -313,7 +388,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a SphericalJoint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Spherical joint", 7034)]
+        [MenuItem("Components/Physics/Spherical joint", 7597)]
         private static void AddSphericalJoint()
         {
             SceneObject so = Selection.SceneObject;
@@ -333,7 +408,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a SliderJoint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/Slider joint", 7032)]
+        [MenuItem("Components/Physics/Slider joint", 7596)]
         private static void AddSliderJoint()
         {
             SceneObject so = Selection.SceneObject;
@@ -353,7 +428,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a D6Joint component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Physics/D6 joint", 7032)]
+        [MenuItem("Components/Physics/D6 joint", 7595)]
         private static void AddD6Joint()
         {
             SceneObject so = Selection.SceneObject;
@@ -373,7 +448,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds an AudioListener component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Audio/Listener", 7031)]
+        [MenuItem("Components/Audio/Listener", 7550, true)]
         private static void AddAudioListener()
         {
             SceneObject so = Selection.SceneObject;
@@ -393,7 +468,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds an AudioSource component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Audio/Source", 7030)]
+        [MenuItem("Components/Audio/Source", 7549)]
         private static void AddAudioSource()
         {
             SceneObject so = Selection.SceneObject;
@@ -413,7 +488,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds an Animation component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Animation", 7029)]
+        [MenuItem("Components/Animation", 7500, true)]
         private static void AddAnimation()
         {
             SceneObject so = Selection.SceneObject;
@@ -429,7 +504,7 @@ namespace BansheeEditor
         /// <summary>
         /// Adds a Bone component to the currently selected scene object.
         /// </summary>
-        [MenuItem("Components/Bone", 7028)]
+        [MenuItem("Components/Bone", 7499)]
         private static void AddBone()
         {
             SceneObject so = Selection.SceneObject;
@@ -441,56 +516,11 @@ namespace BansheeEditor
             EditorApplication.SetSceneDirty();
         }
 
-        /// <summary>
-        /// Adds a Skybox component to the currently selected scene object.
-        /// </summary>
-        [MenuItem("Components/Skybox", 7027)]
-        private static void AddSkybox()
-        {
-            SceneObject so = Selection.SceneObject;
-            if (so == null)
-                return;
-
-            UndoRedo.RecordSO(so, false, "Added an Skybox component");
-            so.AddComponent<Skybox>();
-            EditorApplication.SetSceneDirty();
-        }
-
-        /// <summary>
-        /// Adds a ReflectionProbe component to the currently selected scene object.
-        /// </summary>
-        [MenuItem("Components/Reflection probe", 7026)]
-        private static void AddReflectionProbe()
-        {
-            SceneObject so = Selection.SceneObject;
-            if (so == null)
-                return;
-
-            UndoRedo.RecordSO(so, false, "Added an ReflectionProbe component");
-            so.AddComponent<ReflectionProbe>();
-            EditorApplication.SetSceneDirty();
-        }
-
-        /// <summary>
-        /// Adds a LightProbeVolume component to the currently selected scene object.
-        /// </summary>
-        [MenuItem("Components/Light probe volume", 7025)]
-        private static void AddLightProbeVolume()
-        {
-            SceneObject so = Selection.SceneObject;
-            if (so == null)
-                return;
-
-            UndoRedo.RecordSO(so, false, "Added a Light Probe Volume component");
-            so.AddComponent<LightProbeVolume>();
-            EditorApplication.SetSceneDirty();
-        }
-
 
         /// <summary>
         /// Creates a new empty scene object.
         /// </summary>
-        [MenuItem("Scene Objects/Scene Object", 8051)]
+        [MenuItem("Scene Objects/Scene Object", 9000)]
         [ToolbarItem("SceneObject", ToolbarIcon.NewSceneObject, "Creates a new empty scene object", 1601, true)]
         private static void AddEmptySO()
         {
@@ -502,9 +532,9 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Creates a new scene object with a camera component.
+        /// Creates a new scene object with a Camera component.
         /// </summary>
-        [MenuItem("Scene Objects/Camera", 8050)]
+        [MenuItem("Scene Objects/Camera", 8950, true)]
         [ToolbarItem("Camera", ToolbarIcon.NewCamera, "New camera", 1600, false)]
         private static void AddCameraSO()
         {
@@ -518,9 +548,9 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Creates a new scene object with a renderable component.
+        /// Creates a new scene object with a Renderable component.
         /// </summary>
-        [MenuItem("Scene Objects/Renderable", 8049)]
+        [MenuItem("Scene Objects/Renderable", 8949)]
         [ToolbarItem("Renderable", ToolbarIcon.NewRenderable, "New renderable", 1599)]
         private static void AddRenderableSO()
         {
@@ -533,9 +563,37 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Creates a new scene object with a point light component.
+        /// Creates a new scene object with a Particle System component.
         /// </summary>
-        [MenuItem("Scene Objects/Radial light", 8048)]
+        [MenuItem("Scene Objects/Particle system", 8948)]
+        private static void AddParticleSystemSO()
+        {
+            SceneObject so = UndoRedo.CreateSO("Particle system", "Created a ParticleSystem");
+            so.AddComponent<ParticleSystem>();
+
+            Selection.SceneObject = so;
+            FocusOnHierarchyOrScene();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
+        /// Creates a new scene object with a Decal component.
+        /// </summary>
+        [MenuItem("Scene Objects/Decal", 8947)]
+        private static void AddDecalSO()
+        {
+            SceneObject so = UndoRedo.CreateSO("Decal", "Created a Decal");
+            so.AddComponent<Decal>();
+
+            Selection.SceneObject = so;
+            FocusOnHierarchyOrScene();
+            EditorApplication.SetSceneDirty();
+        }
+
+        /// <summary>
+        /// Creates a new scene object with a radial light component.
+        /// </summary>
+        [MenuItem("Scene Objects/Radial light", 8900, true)]
         [ToolbarItem("Point light", ToolbarIcon.NewPointLight, "New radial light", 1598)]
         private static void AddPointLightSO()
         {
@@ -551,7 +609,7 @@ namespace BansheeEditor
         /// <summary>
         /// Creates a new scene object with a spot light component.
         /// </summary>
-        [MenuItem("Scene Objects/Spot light", 8047)]
+        [MenuItem("Scene Objects/Spot light", 8899)]
         [ToolbarItem("Spot light", ToolbarIcon.NewSpotLight, "New spot light", 1597)]
         private static void AddSpotLightSO()
         {
@@ -567,7 +625,7 @@ namespace BansheeEditor
         /// <summary>
         /// Creates a new scene object with a directional light component.
         /// </summary>
-        [MenuItem("Scene Objects/Directional light", 8046)]
+        [MenuItem("Scene Objects/Directional light", 8898)]
         [ToolbarItem("Directional light", ToolbarIcon.NewDirLight, "New directional light", 1596)]
         private static void AddDirectionalLightSO()
         {
@@ -583,7 +641,7 @@ namespace BansheeEditor
         /// <summary>
         /// Creates a new scene object with a GUI widget component.
         /// </summary>
-        [MenuItem("Scene Objects/GUI widget", 8045)]
+        [MenuItem("Scene Objects/GUI widget", 8850, true)]
         private static void AddGUIWidgetSO()
         {
             SceneObject so = UndoRedo.CreateSO("GUIWidget", "Created a GUIWidget");
@@ -595,51 +653,9 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Creates a new scene object with a Skybox component.
-        /// </summary>
-        [MenuItem("Scene Objects/Skybox", 8044)]
-        private static void AddSkyboxSO()
-        {
-            SceneObject so = UndoRedo.CreateSO("Skybox", "Created a Skybox");
-            so.AddComponent<Skybox>();
-
-            Selection.SceneObject = so;
-            FocusOnHierarchyOrScene();
-            EditorApplication.SetSceneDirty();
-        }
-
-        /// <summary>
-        /// Creates a new scene object with a ReflectionProbe component.
-        /// </summary>
-        [MenuItem("Scene Objects/Reflection probe", 8043)]
-        private static void AddReflectionProbeSO()
-        {
-            SceneObject so = UndoRedo.CreateSO("ReflectionProbe", "Created a ReflectionProbe");
-            so.AddComponent<ReflectionProbe>();
-
-            Selection.SceneObject = so;
-            FocusOnHierarchyOrScene();
-            EditorApplication.SetSceneDirty();
-        }
-
-        /// <summary>
-        /// Creates a new scene object with a LightProbeVolume component.
-        /// </summary>
-        [MenuItem("Scene Objects/Light probe volume", 8042)]
-        private static void AddLightProbeVolumeSO()
-        {
-            SceneObject so = UndoRedo.CreateSO("LightProbeVolume", "Created a LightProbeVolume");
-            so.AddComponent<LightProbeVolume>();
-
-            Selection.SceneObject = so;
-            FocusOnHierarchyOrScene();
-            EditorApplication.SetSceneDirty();
-        }
-
-        /// <summary>
         /// Creates a new scene object with a box primitive.
         /// </summary>
-        [MenuItem("Scene Objects/3D primitives/Box", 8100)]
+        [MenuItem("Scene Objects/3D primitives/Box", 8100, true)]
         [ToolbarItem("Cube", ToolbarIcon.NewCube, "Creates a scene object with a box primitive", 1700, true)]
         private static void Add3DBox()
         {

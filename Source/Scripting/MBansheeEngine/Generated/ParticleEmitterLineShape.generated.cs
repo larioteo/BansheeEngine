@@ -14,6 +14,12 @@ namespace BansheeEngine
 		private ParticleEmitterLineShape(bool __dummy0) { }
 		protected ParticleEmitterLineShape() { }
 
+		/// <summary>Creates a new particle emitter edge shape.</summary>
+		public ParticleEmitterLineShape(ParticleLineShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleLineShapeOptions Options
 		{
@@ -30,6 +36,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleLineShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleLineShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterLineShape managedInstance, ref ParticleLineShapeOptions desc);
 	}
 
 	/** @} */

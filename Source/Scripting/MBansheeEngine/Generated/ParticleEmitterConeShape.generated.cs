@@ -18,6 +18,12 @@ namespace BansheeEngine
 		private ParticleEmitterConeShape(bool __dummy0) { }
 		protected ParticleEmitterConeShape() { }
 
+		/// <summary>Creates a new particle emitter cone shape.</summary>
+		public ParticleEmitterConeShape(ParticleConeShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleConeShapeOptions Options
 		{
@@ -34,6 +40,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleConeShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleConeShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterConeShape managedInstance, ref ParticleConeShapeOptions desc);
 	}
 
 	/** @} */

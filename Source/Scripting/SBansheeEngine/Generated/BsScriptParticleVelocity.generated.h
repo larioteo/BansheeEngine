@@ -22,5 +22,6 @@ namespace bs
 	private:
 		static void Internal_setOptions(ScriptParticleVelocity* thisPtr, __PARTICLE_VELOCITY_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleVelocity* thisPtr, __PARTICLE_VELOCITY_DESCInterop* __output);
+		static void Internal_create(MonoObject* managedInstance, __PARTICLE_VELOCITY_DESCInterop* desc);
 	};
 }

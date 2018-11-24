@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_CONE_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterConeShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterConeShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterConeShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterConeShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_CONE_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_CONE_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_CONE_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterConeShape::Internal_create(MonoObject* managedInstance, __PARTICLE_CONE_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_CONE_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_CONE_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterConeShape> instance = ParticleEmitterConeShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterConeShape>())ScriptParticleEmitterConeShape(managedInstance, instance);
 	}
 }

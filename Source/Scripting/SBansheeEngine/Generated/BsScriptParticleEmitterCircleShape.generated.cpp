@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_CIRCLE_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterCircleShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterCircleShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterCircleShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterCircleShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_CIRCLE_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_CIRCLE_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_CIRCLE_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterCircleShape::Internal_create(MonoObject* managedInstance, __PARTICLE_CIRCLE_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_CIRCLE_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_CIRCLE_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterCircleShape> instance = ParticleEmitterCircleShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterCircleShape>())ScriptParticleEmitterCircleShape(managedInstance, instance);
 	}
 }

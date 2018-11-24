@@ -22,5 +22,6 @@ namespace bs
 	private:
 		static void Internal_setOptions(ScriptParticleEmitterSphereShape* thisPtr, PARTICLE_SPHERE_SHAPE_DESC* options);
 		static void Internal_getOptions(ScriptParticleEmitterSphereShape* thisPtr, PARTICLE_SPHERE_SHAPE_DESC* __output);
+		static void Internal_create(MonoObject* managedInstance, PARTICLE_SPHERE_SHAPE_DESC* desc);
 	};
 }

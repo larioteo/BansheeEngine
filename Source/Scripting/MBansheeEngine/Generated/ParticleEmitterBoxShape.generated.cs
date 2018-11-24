@@ -17,6 +17,12 @@ namespace BansheeEngine
 		private ParticleEmitterBoxShape(bool __dummy0) { }
 		protected ParticleEmitterBoxShape() { }
 
+		/// <summary>Creates a new particle emitter box shape.</summary>
+		public ParticleEmitterBoxShape(ParticleBoxShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleBoxShapeOptions Options
 		{
@@ -33,6 +39,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleBoxShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleBoxShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterBoxShape managedInstance, ref ParticleBoxShapeOptions desc);
 	}
 
 	/** @} */

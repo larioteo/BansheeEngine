@@ -7,6 +7,7 @@
 #include "Wrappers/BsScriptPlane.h"
 #include "Wrappers/BsScriptSceneObject.h"
 #include "BsScriptPARTICLE_COLLISIONS_DESC.generated.h"
+#include "BsScriptParticleCollisions.generated.h"
 
 namespace bs
 {
@@ -29,6 +30,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getPlaneObjects", (void*)&ScriptParticleCollisions::Internal_getPlaneObjects);
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleCollisions::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleCollisions::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleCollisions::Internal_create);
 
 	}
 
@@ -127,5 +129,11 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getOptions();
 
 		*__output = tmp__output;
+	}
+
+	void ScriptParticleCollisions::Internal_create(MonoObject* managedInstance, PARTICLE_COLLISIONS_DESC* desc)
+	{
+		SPtr<ParticleCollisions> instance = ParticleCollisions::create(*desc);
+		new (bs_alloc<ScriptParticleCollisions>())ScriptParticleCollisions(managedInstance, instance);
 	}
 }

@@ -4,7 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_SKINNED_MESH_SHAPE_DESC.generated.h"
-#include "BsScriptParticleEmitterShape.generated.h"
+#include "BsScriptParticleEmitterSkinnedMeshShape.generated.h"
 
 namespace bs
 {
@@ -55,16 +55,11 @@ namespace bs
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_SKINNED_MESH_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
 	}
 
-	MonoObject* ScriptParticleEmitterSkinnedMeshShape::Internal_create(__PARTICLE_SKINNED_MESH_SHAPE_DESCInterop* desc)
+	void ScriptParticleEmitterSkinnedMeshShape::Internal_create(MonoObject* managedInstance, __PARTICLE_SKINNED_MESH_SHAPE_DESCInterop* desc)
 	{
-		SPtr<ParticleEmitterShape> tmp__output;
 		PARTICLE_SKINNED_MESH_SHAPE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_SKINNED_MESH_SHAPE_DESC::fromInterop(*desc);
-		tmp__output = ParticleEmitterSkinnedMeshShape::create(tmpdesc);
-
-		MonoObject* __output;
-		__output = ScriptParticleEmitterShape::create(tmp__output);
-
-		return __output;
+		SPtr<ParticleEmitterSkinnedMeshShape> instance = ParticleEmitterSkinnedMeshShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterSkinnedMeshShape>())ScriptParticleEmitterSkinnedMeshShape(managedInstance, instance);
 	}
 }

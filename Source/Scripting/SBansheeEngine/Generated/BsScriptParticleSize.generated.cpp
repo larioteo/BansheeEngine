@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_SIZE_DESC.generated.h"
+#include "BsScriptParticleSize.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleSize::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleSize::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleSize::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_SIZE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_SIZE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_SIZE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleSize::Internal_create(MonoObject* managedInstance, __PARTICLE_SIZE_DESCInterop* desc)
+	{
+		PARTICLE_SIZE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_SIZE_DESC::fromInterop(*desc);
+		SPtr<ParticleSize> instance = ParticleSize::create(tmpdesc);
+		new (bs_alloc<ScriptParticleSize>())ScriptParticleSize(managedInstance, instance);
 	}
 }

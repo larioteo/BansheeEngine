@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_LINE_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterLineShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterLineShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterLineShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterLineShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_LINE_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_LINE_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_LINE_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterLineShape::Internal_create(MonoObject* managedInstance, __PARTICLE_LINE_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_LINE_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_LINE_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterLineShape> instance = ParticleEmitterLineShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterLineShape>())ScriptParticleEmitterLineShape(managedInstance, instance);
 	}
 }

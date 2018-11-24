@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_TEXTURE_ANIMATION_DESC.generated.h"
+#include "BsScriptParticleTextureAnimation.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleTextureAnimation::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleTextureAnimation::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleTextureAnimation::Internal_create);
 
 	}
 
@@ -47,5 +49,11 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getOptions();
 
 		*__output = tmp__output;
+	}
+
+	void ScriptParticleTextureAnimation::Internal_create(MonoObject* managedInstance, PARTICLE_TEXTURE_ANIMATION_DESC* desc)
+	{
+		SPtr<ParticleTextureAnimation> instance = ParticleTextureAnimation::create(*desc);
+		new (bs_alloc<ScriptParticleTextureAnimation>())ScriptParticleTextureAnimation(managedInstance, instance);
 	}
 }

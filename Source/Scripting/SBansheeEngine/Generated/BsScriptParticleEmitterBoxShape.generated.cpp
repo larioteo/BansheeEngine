@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_BOX_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterBoxShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterBoxShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterBoxShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterBoxShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_BOX_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_BOX_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_BOX_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterBoxShape::Internal_create(MonoObject* managedInstance, __PARTICLE_BOX_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_BOX_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_BOX_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterBoxShape> instance = ParticleEmitterBoxShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterBoxShape>())ScriptParticleEmitterBoxShape(managedInstance, instance);
 	}
 }

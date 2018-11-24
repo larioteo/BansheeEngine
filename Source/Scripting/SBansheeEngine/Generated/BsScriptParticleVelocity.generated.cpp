@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_VELOCITY_DESC.generated.h"
+#include "BsScriptParticleVelocity.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleVelocity::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleVelocity::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleVelocity::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_VELOCITY_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_VELOCITY_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_VELOCITY_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleVelocity::Internal_create(MonoObject* managedInstance, __PARTICLE_VELOCITY_DESCInterop* desc)
+	{
+		PARTICLE_VELOCITY_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_VELOCITY_DESC::fromInterop(*desc);
+		SPtr<ParticleVelocity> instance = ParticleVelocity::create(tmpdesc);
+		new (bs_alloc<ScriptParticleVelocity>())ScriptParticleVelocity(managedInstance, instance);
 	}
 }

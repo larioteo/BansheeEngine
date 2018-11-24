@@ -18,6 +18,12 @@ namespace BansheeEngine
 		private ParticleEmitterCircleShape(bool __dummy0) { }
 		protected ParticleEmitterCircleShape() { }
 
+		/// <summary>Creates a new particle emitter circle shape.</summary>
+		public ParticleEmitterCircleShape(ParticleCircleShapeOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the shape.</summary>
 		public ParticleCircleShapeOptions Options
 		{
@@ -34,6 +40,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleCircleShapeOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleCircleShapeOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitterCircleShape managedInstance, ref ParticleCircleShapeOptions desc);
 	}
 
 	/** @} */

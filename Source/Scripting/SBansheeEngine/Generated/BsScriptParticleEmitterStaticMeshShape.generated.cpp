@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "BsScriptPARTICLE_STATIC_MESH_SHAPE_DESC.generated.h"
+#include "BsScriptParticleEmitterStaticMeshShape.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_STATIC_MESH_SHAPE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_STATIC_MESH_SHAPE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_STATIC_MESH_SHAPE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleEmitterStaticMeshShape::Internal_create(MonoObject* managedInstance, __PARTICLE_STATIC_MESH_SHAPE_DESCInterop* desc)
+	{
+		PARTICLE_STATIC_MESH_SHAPE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_STATIC_MESH_SHAPE_DESC::fromInterop(*desc);
+		SPtr<ParticleEmitterStaticMeshShape> instance = ParticleEmitterStaticMeshShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterStaticMeshShape>())ScriptParticleEmitterStaticMeshShape(managedInstance, instance);
 	}
 }

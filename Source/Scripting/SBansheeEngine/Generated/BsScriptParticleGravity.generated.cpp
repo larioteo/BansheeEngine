@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_GRAVITY_DESC.generated.h"
+#include "BsScriptParticleGravity.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleGravity::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleGravity::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleGravity::Internal_create);
 
 	}
 
@@ -47,5 +49,11 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getOptions();
 
 		*__output = tmp__output;
+	}
+
+	void ScriptParticleGravity::Internal_create(MonoObject* managedInstance, PARTICLE_GRAVITY_DESC* desc)
+	{
+		SPtr<ParticleGravity> instance = ParticleGravity::create(*desc);
+		new (bs_alloc<ScriptParticleGravity>())ScriptParticleGravity(managedInstance, instance);
 	}
 }

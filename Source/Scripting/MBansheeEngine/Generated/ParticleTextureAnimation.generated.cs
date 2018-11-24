@@ -17,6 +17,12 @@ namespace BansheeEngine
 		private ParticleTextureAnimation(bool __dummy0) { }
 		protected ParticleTextureAnimation() { }
 
+		/// <summary>Creates a new particle texture animation evolver.</summary>
+		public ParticleTextureAnimation(ParticleTextureAnimationOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the evolver.</summary>
 		public ParticleTextureAnimationOptions Options
 		{
@@ -33,6 +39,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleTextureAnimationOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleTextureAnimationOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleTextureAnimation managedInstance, ref ParticleTextureAnimationOptions desc);
 	}
 
 	/** @} */

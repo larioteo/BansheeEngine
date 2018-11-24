@@ -14,6 +14,12 @@ namespace BansheeEngine
 		private ParticleRotation(bool __dummy0) { }
 		protected ParticleRotation() { }
 
+		/// <summary>Creates a new particle rotation evolver.</summary>
+		public ParticleRotation(ParticleRotationOptions desc)
+		{
+			Internal_create(this, ref desc);
+		}
+
 		/// <summary>Options describing the evolver.</summary>
 		public ParticleRotationOptions Options
 		{
@@ -30,6 +36,8 @@ namespace BansheeEngine
 		private static extern void Internal_setOptions(IntPtr thisPtr, ref ParticleRotationOptions options);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleRotationOptions __output);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleRotation managedInstance, ref ParticleRotationOptions desc);
 	}
 
 	/** @} */

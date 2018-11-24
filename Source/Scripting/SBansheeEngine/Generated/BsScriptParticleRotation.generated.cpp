@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_ROTATION_DESC.generated.h"
+#include "BsScriptParticleRotation.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleRotation::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleRotation::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleRotation::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_ROTATION_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_ROTATION_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_ROTATION_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleRotation::Internal_create(MonoObject* managedInstance, __PARTICLE_ROTATION_DESCInterop* desc)
+	{
+		PARTICLE_ROTATION_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_ROTATION_DESC::fromInterop(*desc);
+		SPtr<ParticleRotation> instance = ParticleRotation::create(tmpdesc);
+		new (bs_alloc<ScriptParticleRotation>())ScriptParticleRotation(managedInstance, instance);
 	}
 }

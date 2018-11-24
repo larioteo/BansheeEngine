@@ -4,6 +4,7 @@
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
 #include "BsScriptPARTICLE_FORCE_DESC.generated.h"
+#include "BsScriptParticleForce.generated.h"
 
 namespace bs
 {
@@ -22,6 +23,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleForce::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleForce::Internal_getOptions);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleForce::Internal_create);
 
 	}
 
@@ -51,5 +53,13 @@ namespace bs
 		__PARTICLE_FORCE_DESCInterop interop__output;
 		interop__output = ScriptPARTICLE_FORCE_DESC::toInterop(tmp__output);
 		MonoUtil::valueCopy(__output, &interop__output, ScriptPARTICLE_FORCE_DESC::getMetaData()->scriptClass->_getInternalClass());
+	}
+
+	void ScriptParticleForce::Internal_create(MonoObject* managedInstance, __PARTICLE_FORCE_DESCInterop* desc)
+	{
+		PARTICLE_FORCE_DESC tmpdesc;
+		tmpdesc = ScriptPARTICLE_FORCE_DESC::fromInterop(*desc);
+		SPtr<ParticleForce> instance = ParticleForce::create(tmpdesc);
+		new (bs_alloc<ScriptParticleForce>())ScriptParticleForce(managedInstance, instance);
 	}
 }
