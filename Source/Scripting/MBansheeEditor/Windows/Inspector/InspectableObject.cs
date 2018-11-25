@@ -2,6 +2,7 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 using BansheeEngine;
 
 namespace BansheeEditor
@@ -25,6 +26,8 @@ namespace BansheeEditor
         private GUILayoutX guiChildLayout;
         private GUILayoutX guiTitleLayout;
         private GUILayoutX guiInternalTitleLayout;
+        private GUIButton guiCreateBtn;
+        private ContextMenu createContextMenu;
         private bool isExpanded;
         private bool forceUpdate = true;
         private State state;
@@ -44,6 +47,20 @@ namespace BansheeEditor
             : base(parent, title, path, SerializableProperty.FieldType.Object, depth, layout, property)
         {
             isExpanded = parent.Persistent.GetBool(path + "_Expanded");
+
+            // Builds a context menu that lets the user create objects to assign to this field.
+            Type[] types = GetInstantiableTypes(property.InternalType);
+            if (types.Length > 0)
+            {
+                createContextMenu = new ContextMenu();
+
+                Array.Sort(types, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+                foreach (var type in types)
+                {
+                    createContextMenu.AddItem(type.Namespace + "::" + type.Name,
+                        () => property.SetValue(Activator.CreateInstance(type)));
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -104,9 +121,9 @@ namespace BansheeEditor
                 {
                     GUIContent createIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Create), 
                         new LocEdString("Create"));
-                    GUIButton createBtn = new GUIButton(createIcon, GUIOption.FixedWidth(30));
-                    createBtn.OnClick += OnCreateButtonClicked;
-                    guiInternalTitleLayout.AddElement(createBtn);
+                    guiCreateBtn = new GUIButton(createIcon, GUIOption.FixedWidth(30));
+                    guiCreateBtn.OnClick += OnCreateButtonClicked;
+                    guiInternalTitleLayout.AddElement(guiCreateBtn);
                 }
             };
 
@@ -193,6 +210,8 @@ namespace BansheeEditor
                if (propertyValue != null)
                {
                    guiInternalTitleLayout.Destroy();
+                   guiCreateBtn = null;
+
                    BuildFilledGUI();
                    state = State.Filled;
                }
@@ -204,8 +223,9 @@ namespace BansheeEditor
 
                children.Clear();
                guiInternalTitleLayout.Destroy();
+                guiCreateBtn = null;
 
-               if (guiChildLayout != null)
+                if (guiChildLayout != null)
                {
                    guiChildLayout.Destroy();
                    guiChildLayout = null;
@@ -251,7 +271,13 @@ namespace BansheeEditor
         /// </summary>
         private void OnCreateButtonClicked()
         {
-            property.SetValue(property.CreateObjectInstance<object>());
+            if (createContextMenu == null)
+                return;
+
+            Rect2I bounds = GUIUtility.CalculateBounds(guiCreateBtn, guiInternalTitleLayout);
+            Vector2I position = new Vector2I(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+
+            createContextMenu.Open(position, guiInternalTitleLayout);
         }
 
         /// <summary>
@@ -271,6 +297,40 @@ namespace BansheeEditor
             None,
             Empty,
             Filled
+        }
+
+        /// <summary>
+        /// Returns a list of all types that can be created using the parameterless constructor and assigned to an object of
+        /// type <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type">Type to which the instantiable types need to be assignable to.</param>
+        /// <returns>List of types that can be instantiated and assigned type <paramref name="type"/></returns>
+        private static Type[] GetInstantiableTypes(Type type)
+        {
+            // Note: This could be cached
+            List<Type> output = new List<Type>();
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                Type[] assemblyTypes = assembly.GetExportedTypes();
+                foreach (var assemblyType in assemblyTypes)
+                {
+                    if (assemblyType.IsAbstract)
+                        continue;
+
+                    if (!type.IsAssignableFrom(assemblyType))
+                        continue;
+
+                    var ctor = assemblyType.GetConstructor(Type.EmptyTypes);
+                    if (ctor == null)
+                        continue;
+
+                    output.Add(assemblyType);
+                }
+            }
+
+            return output.ToArray();
         }
     }
 
