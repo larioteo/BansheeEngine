@@ -1,15 +1,18 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+using System;
 
 namespace BansheeEditor
 {
     /// <summary>
     /// Contains boolean information about a field style.
     /// </summary>
+    [Flags]
     public enum InstectableFieldStyleFlags
     {
-        None = 0,
-        UseSlider = 1,
+        None          = 0,
+        UseSlider     = 1 << 0,
+        UseLayerMask = 1 << 1
     }
 
     /// <summary>

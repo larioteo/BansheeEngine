@@ -21,6 +21,8 @@ namespace BansheeEditor
             var styleInfo = new InspectableFieldStyleInfo();
             styleInfo.RangeStyle = style.HasRange ? new InspectableFieldRangeStyle(style.RangeMin, style.RangeMax, style.DisplayAsSlider) : null;
             styleInfo.StepStyle = style.HasStep ? new InspectableFieldStepStyle(style.StepIncrement) : null;
+            styleInfo.StyleFlags |= style.DisplayAsSlider ? InstectableFieldStyleFlags.UseSlider : 0;
+            styleInfo.StyleFlags |= style.DisplayAsLayerMask ? InstectableFieldStyleFlags.UseLayerMask : 0;
 
             return styleInfo;
         }

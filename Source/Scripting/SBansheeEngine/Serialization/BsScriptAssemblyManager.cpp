@@ -190,6 +190,19 @@ namespace bs
 				if (field->hasAttribute(mBuiltin.stepAttribute))
 					fieldInfo->mFlags |= ScriptFieldFlag::Step;
 
+				if (field->hasAttribute(mBuiltin.layerMask))
+				{
+					// Layout mask attribute is only relevant for 64-bit integer types
+					if (const auto* primTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
+					{
+						if (primTypeInfo->mType == ScriptPrimitiveType::I64 ||
+							primTypeInfo->mType == ScriptPrimitiveType::U64)
+						{
+							fieldInfo->mFlags |= ScriptFieldFlag::LayerMask;
+						}
+					}
+				}
+
 				objInfo->mFieldNameToId[fieldInfo->mName] = fieldInfo->mFieldId;
 				objInfo->mFields[fieldInfo->mFieldId] = fieldInfo;
 			}
@@ -219,13 +232,26 @@ namespace bs
 
 					if (property->hasAttribute(mBuiltin.showInInspectorAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Inspectable;
+
+					if (property->hasAttribute(mBuiltin.rangeAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::Range;
+
+					if (property->hasAttribute(mBuiltin.stepAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::Step;
+
+					if (property->hasAttribute(mBuiltin.layerMask))
+					{
+						// Layout mask attribute is only relevant for 64-bit integer types
+						if (const auto* primTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
+						{
+							if (primTypeInfo->mType == ScriptPrimitiveType::I64 ||
+								primTypeInfo->mType == ScriptPrimitiveType::U64)
+							{
+								propertyInfo->mFlags |= ScriptFieldFlag::LayerMask;
+							}
+						}
+					}
 				}
-
-				if (property->hasAttribute(mBuiltin.rangeAttribute))
-					propertyInfo->mFlags |= ScriptFieldFlag::Range;
-
-				if (property->hasAttribute(mBuiltin.stepAttribute))
-					propertyInfo->mFlags |= ScriptFieldFlag::Step;
 
 				objInfo->mFieldNameToId[propertyInfo->mName] = propertyInfo->mFieldId;
 				objInfo->mFields[propertyInfo->mFieldId] = propertyInfo;
@@ -564,6 +590,10 @@ namespace bs
 		mBuiltin.stepAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "Step");
 		if (mBuiltin.stepAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Step managed class.");
+
+		mBuiltin.layerMask = bansheeEngineAssembly->getClass("BansheeEngine", "LayerMask");
+		if (mBuiltin.layerMask == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find LayerMask managed class.");
 
 		mBuiltin.componentClass = bansheeEngineAssembly->getClass("BansheeEngine", "Component");
 		if(mBuiltin.componentClass == nullptr)

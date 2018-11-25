@@ -120,8 +120,23 @@ namespace BansheeEngine
         /// <returns>Value of the property.</returns>
         public T GetValue<T>()
         {
-            if (!typeof(T).IsAssignableFrom(internalType))
-                throw new Exception("Attempted to retrieve a serializable value using an invalid type. Provided type: " + typeof(T) + ". Needed type: " + internalType);
+            // Cast if possible
+            if (typeof(T) != internalType)
+            {
+                // Note: Not checking cast operators
+                if (internalType.IsPrimitive || internalType.IsEnum)
+                {
+                    if (internalType == typeof(bool) || typeof(T) == typeof(bool))
+                        throw new Exception("Attempted to retrieve a serializable value using an invalid type. " +
+                            "Provided type: " + typeof(T) + ". Needed type: " + internalType);
+
+                    return (T) Convert.ChangeType(getter(), typeof(T));
+                }
+
+                if(!typeof(T).IsAssignableFrom(internalType))
+                    throw new Exception("Attempted to retrieve a serializable value using an invalid type. " +
+                        "Provided type: " + typeof(T) + ". Needed type: " + internalType);
+            }
 
             return (T)getter();
         }

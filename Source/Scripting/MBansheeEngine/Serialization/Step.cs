@@ -27,4 +27,6 @@ namespace BansheeEngine
         private float step;
         #pragma warning restore 0414
     }
+
+    /** @} */
 }

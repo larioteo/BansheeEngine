@@ -48,11 +48,12 @@ namespace bs
 	/**	Flags that are used to further define a field in a managed serializable object. */
 	enum class ScriptFieldFlag
 	{
-		Serializable = 0x01,
-		Inspectable = 0x02,
-		Range = 0x04,
-		Step = 0x08,
-		Animable = 0x10
+		Serializable = 1 << 0,
+		Inspectable  = 1 << 1,
+		Range        = 1 << 2,
+		Step         = 1 << 3,
+		Animable     = 1 << 4,
+		LayerMask   = 1 << 5
 	};
 
 	typedef Flags<ScriptFieldFlag> ScriptFieldFlags;

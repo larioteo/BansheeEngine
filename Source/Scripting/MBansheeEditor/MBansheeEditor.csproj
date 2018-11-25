@@ -99,6 +99,7 @@
     <Compile Include="Windows\Inspector\InspectableColorGradient.cs" />
     <Compile Include="Windows\Inspector\InspectableCurve.cs" />
     <Compile Include="Windows\Inspector\InspectableFloatDistribution.cs" />
+    <Compile Include="Windows\Inspector\InspectableLayerMask.cs" />
     <Compile Include="Windows\Inspector\InspectableRRef.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldRangeStyle.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldStepStyle.cs" />

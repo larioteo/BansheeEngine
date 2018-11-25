@@ -187,7 +187,12 @@ namespace BansheeEngine
         /// <summary>
         /// If true, number fields will be displayed as sliders instead of regular input boxes.
         /// </summary>
-        public bool DisplayAsSlider;
+        public bool DisplayAsSlider; 
+        
+        /// <summary>
+        /// If true, 64-bit fields will be displayed as a layer mask drop down menu.
+        /// </summary>
+        public bool DisplayAsLayerMask;
     }
 
     /** @} */

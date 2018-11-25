@@ -71,5 +71,6 @@ namespace bs
 		style->stepIncrement = fieldInfo->getStep();
 		style->hasStep = fieldFlags.isSet(ScriptFieldFlag::Step);
 		style->hasRange = fieldFlags.isSet(ScriptFieldFlag::Range);
+		style->displayAsLayerMask = fieldFlags.isSet(ScriptFieldFlag::LayerMask);
 	}
 }

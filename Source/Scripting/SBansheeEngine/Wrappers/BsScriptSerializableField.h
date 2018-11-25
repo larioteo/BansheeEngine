@@ -21,6 +21,7 @@ namespace bs
 		/** Minimum increment the field value can be increment/decremented by. Only relevant if @see hasStep is true. */
 		float stepIncrement; 
 		bool displayAsSlider; /**< If true, number fields will be displayed as sliders instead of regular input boxes. */
+		bool displayAsLayerMask; /**< If true, 64-bit fields will be displayed as a layer mask drop down menu. */
 	};
 
 	/**	Interop class between C++ & CLR for ManagedSerializableFieldInfo. */

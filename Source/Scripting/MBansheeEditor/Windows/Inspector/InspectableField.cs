@@ -151,24 +151,22 @@ namespace BansheeEditor
                 switch (property.Type)
                 {
                     case SerializableProperty.FieldType.Int:
-                        if (style?.RangeStyle == null || !style.RangeStyle.Slider)
-                        {
-                            field = new InspectableInt(parent, title, path, depth, layout, property, style);
-                        }
+                        if (style != null && style.StyleFlags.HasFlag(InstectableFieldStyleFlags.UseLayerMask))
+                            field = new InspectableLayerMask(parent, title, path, depth, layout, property);
                         else
                         {
-                            field = new InspectableRangedInt(parent, title, path, depth, layout, property, style);
+                            if (style?.RangeStyle == null || !style.RangeStyle.Slider)
+                                field = new InspectableInt(parent, title, path, depth, layout, property, style);
+                            else
+                                field = new InspectableRangedInt(parent, title, path, depth, layout, property, style);
                         }
+
                         break;
                     case SerializableProperty.FieldType.Float:
                         if (style?.RangeStyle == null || !style.RangeStyle.Slider)
-                        {
                             field = new InspectableFloat(parent, title, path, depth, layout, property, style);
-                        }
                         else
-                        {
                             field = new InspectableRangedFloat(parent, title, path, depth, layout, property, style);
-                        }
                         break;
                     case SerializableProperty.FieldType.Bool:
                         field = new InspectableBool(parent, title, path, depth, layout, property);
