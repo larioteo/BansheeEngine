@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterCircleShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterCircleShape::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterCircleShape::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleEmitterCircleShape::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_CIRCLE_SHAPE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_CIRCLE_SHAPE_DESC::fromInterop(*desc);
 		SPtr<ParticleEmitterCircleShape> instance = ParticleEmitterCircleShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterCircleShape>())ScriptParticleEmitterCircleShape(managedInstance, instance);
+	}
+
+	void ScriptParticleEmitterCircleShape::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleEmitterCircleShape> instance = ParticleEmitterCircleShape::create();
 		new (bs_alloc<ScriptParticleEmitterCircleShape>())ScriptParticleEmitterCircleShape(managedInstance, instance);
 	}
 }

@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleOrbit::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleOrbit::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleOrbit::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleOrbit::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_ORBIT_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_ORBIT_DESC::fromInterop(*desc);
 		SPtr<ParticleOrbit> instance = ParticleOrbit::create(tmpdesc);
+		new (bs_alloc<ScriptParticleOrbit>())ScriptParticleOrbit(managedInstance, instance);
+	}
+
+	void ScriptParticleOrbit::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleOrbit> instance = ParticleOrbit::create();
 		new (bs_alloc<ScriptParticleOrbit>())ScriptParticleOrbit(managedInstance, instance);
 	}
 }

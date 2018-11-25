@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleRotation* thisPtr, __PARTICLE_ROTATION_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleRotation* thisPtr, __PARTICLE_ROTATION_DESCInterop* __output);
 		static void Internal_create(MonoObject* managedInstance, __PARTICLE_ROTATION_DESCInterop* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

@@ -12,12 +12,17 @@ namespace BansheeEngine
 	public partial class ParticleForce : ParticleEvolver
 	{
 		private ParticleForce(bool __dummy0) { }
-		protected ParticleForce() { }
 
 		/// <summary>Creates a new particle force evolver.</summary>
 		public ParticleForce(ParticleForceOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle force evolver.</summary>
+		public ParticleForce()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the evolver.</summary>
@@ -38,6 +43,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleForceOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleForce managedInstance, ref ParticleForceOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleForce managedInstance);
 	}
 
 	/** @} */

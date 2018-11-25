@@ -28,5 +28,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleCollisions* thisPtr, PARTICLE_COLLISIONS_DESC* options);
 		static void Internal_getOptions(ScriptParticleCollisions* thisPtr, PARTICLE_COLLISIONS_DESC* __output);
 		static void Internal_create(MonoObject* managedInstance, PARTICLE_COLLISIONS_DESC* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

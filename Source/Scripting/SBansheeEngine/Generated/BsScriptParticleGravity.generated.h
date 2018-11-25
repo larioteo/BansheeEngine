@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleGravity* thisPtr, PARTICLE_GRAVITY_DESC* options);
 		static void Internal_getOptions(ScriptParticleGravity* thisPtr, PARTICLE_GRAVITY_DESC* __output);
 		static void Internal_create(MonoObject* managedInstance, PARTICLE_GRAVITY_DESC* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

@@ -55,5 +55,6 @@ namespace bs
 		static float Internal_getFlipU(ScriptParticleEmitter* thisPtr);
 		static void Internal_setFlipV(ScriptParticleEmitter* thisPtr, float value);
 		static float Internal_getFlipV(ScriptParticleEmitter* thisPtr);
+		static void Internal_create(MonoObject* managedInstance);
 	};
 }

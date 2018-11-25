@@ -12,12 +12,17 @@ namespace BansheeEngine
 	public partial class ParticleCollisions : ParticleEvolver
 	{
 		private ParticleCollisions(bool __dummy0) { }
-		protected ParticleCollisions() { }
 
 		/// <summary>Creates a new particle collision evolver.</summary>
 		public ParticleCollisions(ParticleCollisionsOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle collision evolver.</summary>
+		public ParticleCollisions()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>
@@ -65,6 +70,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleCollisionsOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleCollisions managedInstance, ref ParticleCollisionsOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleCollisions managedInstance);
 	}
 
 	/** @} */

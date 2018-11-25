@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleVelocity::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleVelocity::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleVelocity::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleVelocity::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_VELOCITY_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_VELOCITY_DESC::fromInterop(*desc);
 		SPtr<ParticleVelocity> instance = ParticleVelocity::create(tmpdesc);
+		new (bs_alloc<ScriptParticleVelocity>())ScriptParticleVelocity(managedInstance, instance);
+	}
+
+	void ScriptParticleVelocity::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleVelocity> instance = ParticleVelocity::create();
 		new (bs_alloc<ScriptParticleVelocity>())ScriptParticleVelocity(managedInstance, instance);
 	}
 }

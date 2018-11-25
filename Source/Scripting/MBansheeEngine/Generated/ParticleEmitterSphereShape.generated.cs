@@ -16,12 +16,17 @@ namespace BansheeEngine
 	public partial class ParticleEmitterSphereShape : ParticleEmitterShape
 	{
 		private ParticleEmitterSphereShape(bool __dummy0) { }
-		protected ParticleEmitterSphereShape() { }
 
 		/// <summary>Creates a new particle emitter sphere shape.</summary>
 		public ParticleEmitterSphereShape(ParticleSphereShapeOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle emitter sphere shape.</summary>
+		public ParticleEmitterSphereShape()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the shape.</summary>
@@ -42,6 +47,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleSphereShapeOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleEmitterSphereShape managedInstance, ref ParticleSphereShapeOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleEmitterSphereShape managedInstance);
 	}
 
 	/** @} */

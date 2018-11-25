@@ -12,12 +12,17 @@ namespace BansheeEngine
 	public partial class ParticleVelocity : ParticleEvolver
 	{
 		private ParticleVelocity(bool __dummy0) { }
-		protected ParticleVelocity() { }
 
 		/// <summary>Creates a new particle velocity evolver.</summary>
 		public ParticleVelocity(ParticleVelocityOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle velocity evolver.</summary>
+		public ParticleVelocity()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the evolver.</summary>
@@ -38,6 +43,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleVelocityOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleVelocity managedInstance, ref ParticleVelocityOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleVelocity managedInstance);
 	}
 
 	/** @} */

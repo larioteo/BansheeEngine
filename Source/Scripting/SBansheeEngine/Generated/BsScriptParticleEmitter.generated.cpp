@@ -8,6 +8,7 @@
 #include "BsScriptTDistribution.generated.h"
 #include "BsScriptTDistribution.generated.h"
 #include "BsScriptColorDistribution.generated.h"
+#include "BsScriptParticleEmitter.generated.h"
 
 namespace bs
 {
@@ -48,6 +49,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getFlipU", (void*)&ScriptParticleEmitter::Internal_getFlipU);
 		metaData.scriptClass->addInternalCall("Internal_setFlipV", (void*)&ScriptParticleEmitter::Internal_setFlipV);
 		metaData.scriptClass->addInternalCall("Internal_getFlipV", (void*)&ScriptParticleEmitter::Internal_getFlipV);
+		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitter::Internal_create);
 
 	}
 
@@ -352,5 +354,11 @@ namespace bs
 		__output = tmp__output;
 
 		return __output;
+	}
+
+	void ScriptParticleEmitter::Internal_create(MonoObject* managedInstance)
+	{
+		SPtr<ParticleEmitter> instance = ParticleEmitter::create();
+		new (bs_alloc<ScriptParticleEmitter>())ScriptParticleEmitter(managedInstance, instance);
 	}
 }

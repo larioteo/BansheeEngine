@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleColor::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleColor::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleColor::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleColor::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_COLOR_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_COLOR_DESC::fromInterop(*desc);
 		SPtr<ParticleColor> instance = ParticleColor::create(tmpdesc);
+		new (bs_alloc<ScriptParticleColor>())ScriptParticleColor(managedInstance, instance);
+	}
+
+	void ScriptParticleColor::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleColor> instance = ParticleColor::create();
 		new (bs_alloc<ScriptParticleColor>())ScriptParticleColor(managedInstance, instance);
 	}
 }

@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleEmitterRectShape* thisPtr, __PARTICLE_RECT_SHAPE_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleEmitterRectShape* thisPtr, __PARTICLE_RECT_SHAPE_DESCInterop* __output);
 		static void Internal_create(MonoObject* managedInstance, __PARTICLE_RECT_SHAPE_DESCInterop* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleSize::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleSize::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleSize::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleSize::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_SIZE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_SIZE_DESC::fromInterop(*desc);
 		SPtr<ParticleSize> instance = ParticleSize::create(tmpdesc);
+		new (bs_alloc<ScriptParticleSize>())ScriptParticleSize(managedInstance, instance);
+	}
+
+	void ScriptParticleSize::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleSize> instance = ParticleSize::create();
 		new (bs_alloc<ScriptParticleSize>())ScriptParticleSize(managedInstance, instance);
 	}
 }

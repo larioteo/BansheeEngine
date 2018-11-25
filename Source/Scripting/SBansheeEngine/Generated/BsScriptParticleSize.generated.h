@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleSize* thisPtr, __PARTICLE_SIZE_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleSize* thisPtr, __PARTICLE_SIZE_DESCInterop* __output);
 		static void Internal_create(MonoObject* managedInstance, __PARTICLE_SIZE_DESCInterop* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

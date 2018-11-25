@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleGravity::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleGravity::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleGravity::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleGravity::Internal_create0);
 
 	}
 
@@ -54,6 +55,12 @@ namespace bs
 	void ScriptParticleGravity::Internal_create(MonoObject* managedInstance, PARTICLE_GRAVITY_DESC* desc)
 	{
 		SPtr<ParticleGravity> instance = ParticleGravity::create(*desc);
+		new (bs_alloc<ScriptParticleGravity>())ScriptParticleGravity(managedInstance, instance);
+	}
+
+	void ScriptParticleGravity::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleGravity> instance = ParticleGravity::create();
 		new (bs_alloc<ScriptParticleGravity>())ScriptParticleGravity(managedInstance, instance);
 	}
 }

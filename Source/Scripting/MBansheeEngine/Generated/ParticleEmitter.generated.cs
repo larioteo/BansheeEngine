@@ -12,7 +12,12 @@ namespace BansheeEngine
 	public partial class ParticleEmitter : ScriptObject
 	{
 		private ParticleEmitter(bool __dummy0) { }
-		protected ParticleEmitter() { }
+
+		/// <summary>Creates a new emitter.</summary>
+		public ParticleEmitter()
+		{
+			Internal_create(this);
+		}
 
 		/// <summary>Shape over which to emit the particles.</summary>
 		public ParticleEmitterShape Shape
@@ -208,6 +213,8 @@ namespace BansheeEngine
 		private static extern void Internal_setFlipV(IntPtr thisPtr, float value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getFlipV(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create(ParticleEmitter managedInstance);
 	}
 
 	/** @} */

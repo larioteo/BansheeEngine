@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleOrbit* thisPtr, __PARTICLE_ORBIT_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleOrbit* thisPtr, __PARTICLE_ORBIT_DESCInterop* __output);
 		static void Internal_create(MonoObject* managedInstance, __PARTICLE_ORBIT_DESCInterop* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

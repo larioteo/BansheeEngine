@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleForce::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleForce::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleForce::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleForce::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_FORCE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_FORCE_DESC::fromInterop(*desc);
 		SPtr<ParticleForce> instance = ParticleForce::create(tmpdesc);
+		new (bs_alloc<ScriptParticleForce>())ScriptParticleForce(managedInstance, instance);
+	}
+
+	void ScriptParticleForce::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleForce> instance = ParticleForce::create();
 		new (bs_alloc<ScriptParticleForce>())ScriptParticleForce(managedInstance, instance);
 	}
 }

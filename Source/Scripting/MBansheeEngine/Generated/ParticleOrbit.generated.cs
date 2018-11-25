@@ -14,12 +14,17 @@ namespace BansheeEngine
 	public partial class ParticleOrbit : ParticleEvolver
 	{
 		private ParticleOrbit(bool __dummy0) { }
-		protected ParticleOrbit() { }
 
 		/// <summary>Creates a new particle orbit evolver.</summary>
 		public ParticleOrbit(ParticleOrbitOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle orbit evolver.</summary>
+		public ParticleOrbit()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the evolver.</summary>
@@ -40,6 +45,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleOrbitOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleOrbit managedInstance, ref ParticleOrbitOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleOrbit managedInstance);
 	}
 
 	/** @} */

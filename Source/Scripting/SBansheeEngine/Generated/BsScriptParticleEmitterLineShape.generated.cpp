@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterLineShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterLineShape::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterLineShape::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleEmitterLineShape::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_LINE_SHAPE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_LINE_SHAPE_DESC::fromInterop(*desc);
 		SPtr<ParticleEmitterLineShape> instance = ParticleEmitterLineShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterLineShape>())ScriptParticleEmitterLineShape(managedInstance, instance);
+	}
+
+	void ScriptParticleEmitterLineShape::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleEmitterLineShape> instance = ParticleEmitterLineShape::create();
 		new (bs_alloc<ScriptParticleEmitterLineShape>())ScriptParticleEmitterLineShape(managedInstance, instance);
 	}
 }

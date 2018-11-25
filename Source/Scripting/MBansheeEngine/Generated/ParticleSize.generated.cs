@@ -12,12 +12,17 @@ namespace BansheeEngine
 	public partial class ParticleSize : ParticleEvolver
 	{
 		private ParticleSize(bool __dummy0) { }
-		protected ParticleSize() { }
 
 		/// <summary>Creates a new particle size evolver.</summary>
 		public ParticleSize(ParticleSizeOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle size evolver.</summary>
+		public ParticleSize()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the evolver.</summary>
@@ -38,6 +43,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleSizeOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleSize managedInstance, ref ParticleSizeOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleSize managedInstance);
 	}
 
 	/** @} */

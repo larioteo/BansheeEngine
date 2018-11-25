@@ -12,12 +12,17 @@ namespace BansheeEngine
 	public partial class ParticleRotation : ParticleEvolver
 	{
 		private ParticleRotation(bool __dummy0) { }
-		protected ParticleRotation() { }
 
 		/// <summary>Creates a new particle rotation evolver.</summary>
 		public ParticleRotation(ParticleRotationOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle rotation evolver.</summary>
+		public ParticleRotation()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the evolver.</summary>
@@ -38,6 +43,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleRotationOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleRotation managedInstance, ref ParticleRotationOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleRotation managedInstance);
 	}
 
 	/** @} */

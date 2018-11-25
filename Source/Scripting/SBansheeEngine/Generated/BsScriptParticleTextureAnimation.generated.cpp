@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleTextureAnimation::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleTextureAnimation::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleTextureAnimation::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleTextureAnimation::Internal_create0);
 
 	}
 
@@ -54,6 +55,12 @@ namespace bs
 	void ScriptParticleTextureAnimation::Internal_create(MonoObject* managedInstance, PARTICLE_TEXTURE_ANIMATION_DESC* desc)
 	{
 		SPtr<ParticleTextureAnimation> instance = ParticleTextureAnimation::create(*desc);
+		new (bs_alloc<ScriptParticleTextureAnimation>())ScriptParticleTextureAnimation(managedInstance, instance);
+	}
+
+	void ScriptParticleTextureAnimation::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleTextureAnimation> instance = ParticleTextureAnimation::create();
 		new (bs_alloc<ScriptParticleTextureAnimation>())ScriptParticleTextureAnimation(managedInstance, instance);
 	}
 }

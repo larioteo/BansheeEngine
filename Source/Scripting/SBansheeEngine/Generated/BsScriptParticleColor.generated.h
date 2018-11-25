@@ -23,5 +23,6 @@ namespace bs
 		static void Internal_setOptions(ScriptParticleColor* thisPtr, __PARTICLE_COLOR_DESCInterop* options);
 		static void Internal_getOptions(ScriptParticleColor* thisPtr, __PARTICLE_COLOR_DESCInterop* __output);
 		static void Internal_create(MonoObject* managedInstance, __PARTICLE_COLOR_DESCInterop* desc);
+		static void Internal_create0(MonoObject* managedInstance);
 	};
 }

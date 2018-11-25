@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleRotation::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleRotation::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleRotation::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleRotation::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_ROTATION_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_ROTATION_DESC::fromInterop(*desc);
 		SPtr<ParticleRotation> instance = ParticleRotation::create(tmpdesc);
+		new (bs_alloc<ScriptParticleRotation>())ScriptParticleRotation(managedInstance, instance);
+	}
+
+	void ScriptParticleRotation::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleRotation> instance = ParticleRotation::create();
 		new (bs_alloc<ScriptParticleRotation>())ScriptParticleRotation(managedInstance, instance);
 	}
 }

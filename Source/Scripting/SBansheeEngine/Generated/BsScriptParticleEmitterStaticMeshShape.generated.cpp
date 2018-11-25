@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleEmitterStaticMeshShape::Internal_create0);
 
 	}
 
@@ -60,6 +61,12 @@ namespace bs
 		PARTICLE_STATIC_MESH_SHAPE_DESC tmpdesc;
 		tmpdesc = ScriptPARTICLE_STATIC_MESH_SHAPE_DESC::fromInterop(*desc);
 		SPtr<ParticleEmitterStaticMeshShape> instance = ParticleEmitterStaticMeshShape::create(tmpdesc);
+		new (bs_alloc<ScriptParticleEmitterStaticMeshShape>())ScriptParticleEmitterStaticMeshShape(managedInstance, instance);
+	}
+
+	void ScriptParticleEmitterStaticMeshShape::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleEmitterStaticMeshShape> instance = ParticleEmitterStaticMeshShape::create();
 		new (bs_alloc<ScriptParticleEmitterStaticMeshShape>())ScriptParticleEmitterStaticMeshShape(managedInstance, instance);
 	}
 }

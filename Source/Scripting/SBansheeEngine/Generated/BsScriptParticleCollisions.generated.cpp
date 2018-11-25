@@ -31,6 +31,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleCollisions::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleCollisions::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleCollisions::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleCollisions::Internal_create0);
 
 	}
 
@@ -134,6 +135,12 @@ namespace bs
 	void ScriptParticleCollisions::Internal_create(MonoObject* managedInstance, PARTICLE_COLLISIONS_DESC* desc)
 	{
 		SPtr<ParticleCollisions> instance = ParticleCollisions::create(*desc);
+		new (bs_alloc<ScriptParticleCollisions>())ScriptParticleCollisions(managedInstance, instance);
+	}
+
+	void ScriptParticleCollisions::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleCollisions> instance = ParticleCollisions::create();
 		new (bs_alloc<ScriptParticleCollisions>())ScriptParticleCollisions(managedInstance, instance);
 	}
 }

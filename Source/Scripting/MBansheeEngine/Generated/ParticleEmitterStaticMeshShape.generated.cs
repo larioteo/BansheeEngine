@@ -15,12 +15,17 @@ namespace BansheeEngine
 	public partial class ParticleEmitterStaticMeshShape : ParticleEmitterShape
 	{
 		private ParticleEmitterStaticMeshShape(bool __dummy0) { }
-		protected ParticleEmitterStaticMeshShape() { }
 
 		/// <summary>Creates a new particle emitter static mesh shape.</summary>
 		public ParticleEmitterStaticMeshShape(ParticleStaticMeshShapeOptions desc)
 		{
 			Internal_create(this, ref desc);
+		}
+
+		/// <summary>Creates a new particle emitter static mesh shape.</summary>
+		public ParticleEmitterStaticMeshShape()
+		{
+			Internal_create0(this);
 		}
 
 		/// <summary>Options describing the shape.</summary>
@@ -41,6 +46,8 @@ namespace BansheeEngine
 		private static extern void Internal_getOptions(IntPtr thisPtr, out ParticleStaticMeshShapeOptions __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(ParticleEmitterStaticMeshShape managedInstance, ref ParticleStaticMeshShapeOptions desc);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(ParticleEmitterStaticMeshShape managedInstance);
 	}
 
 	/** @} */

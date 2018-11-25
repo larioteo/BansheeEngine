@@ -24,6 +24,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setOptions", (void*)&ScriptParticleEmitterHemisphereShape::Internal_setOptions);
 		metaData.scriptClass->addInternalCall("Internal_getOptions", (void*)&ScriptParticleEmitterHemisphereShape::Internal_getOptions);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptParticleEmitterHemisphereShape::Internal_create);
+		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptParticleEmitterHemisphereShape::Internal_create0);
 
 	}
 
@@ -54,6 +55,12 @@ namespace bs
 	void ScriptParticleEmitterHemisphereShape::Internal_create(MonoObject* managedInstance, PARTICLE_HEMISPHERE_SHAPE_DESC* desc)
 	{
 		SPtr<ParticleEmitterHemisphereShape> instance = ParticleEmitterHemisphereShape::create(*desc);
+		new (bs_alloc<ScriptParticleEmitterHemisphereShape>())ScriptParticleEmitterHemisphereShape(managedInstance, instance);
+	}
+
+	void ScriptParticleEmitterHemisphereShape::Internal_create0(MonoObject* managedInstance)
+	{
+		SPtr<ParticleEmitterHemisphereShape> instance = ParticleEmitterHemisphereShape::create();
 		new (bs_alloc<ScriptParticleEmitterHemisphereShape>())ScriptParticleEmitterHemisphereShape(managedInstance, instance);
 	}
 }
