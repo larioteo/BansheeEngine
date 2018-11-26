@@ -7,6 +7,7 @@ namespace BansheeEditor
     /** @addtogroup Scene-Editor
      *  @{
      */
+
     /// <summary>
     /// Options used by the scene camera.
     /// </summary>
@@ -96,4 +97,6 @@ namespace BansheeEditor
             EditorSettings.SetFloat("SceneCameraOptions_RotationalSpeed", rotationalSpeed);
         }
     }
+
+    /** @} */
 }
