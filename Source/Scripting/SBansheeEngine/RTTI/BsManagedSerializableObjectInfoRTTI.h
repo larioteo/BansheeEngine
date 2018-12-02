@@ -352,6 +352,7 @@ namespace bs
 			BS_RTTI_MEMBER_PLAIN(mTypeNamespace, 1)
 			BS_RTTI_MEMBER_PLAIN(mValueType, 2)
 			BS_RTTI_MEMBER_PLAIN(mTypeId, 4)
+			BS_RTTI_MEMBER_PLAIN(mFlags, 5)
 		BS_END_RTTI_MEMBERS
 
 	public:

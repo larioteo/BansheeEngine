@@ -80,6 +80,9 @@ namespace bs
 		if (!ScriptAssemblyManager::instance().getSerializableObjectInfo(type->mTypeNamespace, type->mTypeName, currentObjInfo))
 			return nullptr;
 
+		if(!currentObjInfo->mTypeInfo->mFlags.isSet(ScriptTypeFlag::Serializable))
+			return nullptr;
+
 		const bool construct = currentObjInfo->mMonoClass->getMethod(".ctor", 0) != nullptr;
 		return currentObjInfo->mMonoClass->createInstance(construct);
 	}

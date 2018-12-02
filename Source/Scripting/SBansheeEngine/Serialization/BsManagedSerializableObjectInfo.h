@@ -53,17 +53,27 @@ namespace bs
 		Range        = 1 << 2,
 		Step         = 1 << 3,
 		Animable     = 1 << 4,
-		LayerMask   = 1 << 5
+		LayerMask    = 1 << 5
 	};
 
 	typedef Flags<ScriptFieldFlag> ScriptFieldFlags;
 	BS_FLAGS_OPERATORS(ScriptFieldFlag);
 
+	/** Flags that are used to further desribe a type of a managed serializable object. */
+	enum class ScriptTypeFlag
+	{
+		Serializable = 1 << 0,
+		Inspectable  = 1 << 1
+	};
+
+	typedef Flags<ScriptTypeFlag> ScriptTypeFlags;
+	BS_FLAGS_OPERATORS(ScriptTypeFlag);
+
 	/**	Contains information about a type of a managed serializable object. */
 	class BS_SCR_BE_EXPORT ManagedSerializableTypeInfo : public IReflectable
 	{
 	public:
-		virtual ~ManagedSerializableTypeInfo() {}
+		virtual ~ManagedSerializableTypeInfo() = default;
 
 		/**	Checks if the current type matches the provided type. */
 		virtual bool matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const = 0;
@@ -180,6 +190,7 @@ namespace bs
 		String mTypeNamespace;
 		String mTypeName;
 		bool mValueType;
+		ScriptTypeFlags mFlags;
 		UINT32 mTypeId;
 
 		/************************************************************************/

@@ -113,8 +113,15 @@ namespace bs
 		const Vector<MonoClass*>& allClasses = curAssembly->getAllClasses();
 		for(auto& curClass : allClasses)
 		{
-			if ((curClass->isSubClassOf(mBuiltin.componentClass) || curClass->isSubClassOf(resourceClass) ||
-				curClass->hasAttribute(mBuiltin.serializeObjectAttribute)) && 
+			const bool isSerializable = 
+				curClass->isSubClassOf(mBuiltin.componentClass) || 
+				curClass->isSubClassOf(resourceClass) ||
+				curClass->hasAttribute(mBuiltin.serializeObjectAttribute);
+
+			const bool isInspectable =
+				curClass->hasAttribute(mBuiltin.showInInspectorAttribute);
+
+			if ((isSerializable || isInspectable) &&
 				curClass != mBuiltin.componentClass && curClass != resourceClass &&
 				curClass != mBuiltin.managedComponentClass && curClass != managedResourceClass)
 			{
@@ -122,6 +129,12 @@ namespace bs
 				typeInfo->mTypeNamespace = curClass->getNamespace();
 				typeInfo->mTypeName = curClass->getTypeName();
 				typeInfo->mTypeId = mUniqueTypeId++;
+
+				if(isSerializable)
+					typeInfo->mFlags |= ScriptTypeFlag::Serializable;
+
+				if(isSerializable || isInspectable)
+					typeInfo->mFlags |= ScriptTypeFlag::Inspectable;
 
 				MonoPrimitiveType monoPrimitiveType = MonoUtil::getPrimitiveType(curClass->_getInternalClass());
 
@@ -157,6 +170,15 @@ namespace bs
 				if (typeInfo == nullptr)
 					continue;
 
+				bool typeIsSerializable = true;
+				bool typeIsInspectable = true;
+
+				if(const auto* objTypeInfo = rtti_cast<ManagedSerializableTypeInfoObject>(typeInfo.get()))
+				{
+					typeIsSerializable = objTypeInfo->mFlags.isSet(ScriptTypeFlag::Serializable);
+					typeIsInspectable = typeIsSerializable || objTypeInfo->mFlags.isSet(ScriptTypeFlag::Inspectable);
+				}
+
 				SPtr<ManagedSerializableFieldInfo> fieldInfo = bs_shared_ptr_new<ManagedSerializableFieldInfo>();
 				fieldInfo->mFieldId = mUniqueFieldId++;
 				fieldInfo->mName = field->getName();
@@ -167,20 +189,20 @@ namespace bs
 				MonoMemberVisibility visibility = field->getVisibility();
 				if (visibility == MonoMemberVisibility::Public)
 				{
-					if (!field->hasAttribute(mBuiltin.dontSerializeFieldAttribute))
+					if (typeIsSerializable && !field->hasAttribute(mBuiltin.dontSerializeFieldAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (!field->hasAttribute(mBuiltin.hideInInspectorAttribute))
+					if (typeIsInspectable && !field->hasAttribute(mBuiltin.hideInInspectorAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Inspectable;
 
 					fieldInfo->mFlags |= ScriptFieldFlag::Animable;
 				}
 				else
 				{
-					if (field->hasAttribute(mBuiltin.serializeFieldAttribute))
+					if (typeIsSerializable && field->hasAttribute(mBuiltin.serializeFieldAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (field->hasAttribute(mBuiltin.showInInspectorAttribute))
+					if (typeIsInspectable && field->hasAttribute(mBuiltin.showInInspectorAttribute))
 						fieldInfo->mFlags |= ScriptFieldFlag::Inspectable;
 				}
 
@@ -214,6 +236,15 @@ namespace bs
 				if (typeInfo == nullptr)
 					continue;
 
+				bool typeIsSerializable = true;
+				bool typeIsInspectable = true;
+
+				if(const auto* objTypeInfo = rtti_cast<ManagedSerializableTypeInfoObject>(typeInfo.get()))
+				{
+					typeIsSerializable = objTypeInfo->mFlags.isSet(ScriptTypeFlag::Serializable);
+					typeIsInspectable = typeIsSerializable || objTypeInfo->mFlags.isSet(ScriptTypeFlag::Inspectable);
+				}
+
 				SPtr<ManagedSerializablePropertyInfo> propertyInfo = bs_shared_ptr_new<ManagedSerializablePropertyInfo>();
 				propertyInfo->mFieldId = mUniqueFieldId++;
 				propertyInfo->mName = property->getName();
@@ -227,10 +258,10 @@ namespace bs
 					if (visibility == MonoMemberVisibility::Public)
 						propertyInfo->mFlags |= ScriptFieldFlag::Animable;
 
-					if (property->hasAttribute(mBuiltin.serializeFieldAttribute))
+					if (typeIsSerializable && property->hasAttribute(mBuiltin.serializeFieldAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Serializable;
 
-					if (property->hasAttribute(mBuiltin.showInInspectorAttribute))
+					if (typeIsInspectable && property->hasAttribute(mBuiltin.showInInspectorAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Inspectable;
 
 					if (property->hasAttribute(mBuiltin.rangeAttribute))

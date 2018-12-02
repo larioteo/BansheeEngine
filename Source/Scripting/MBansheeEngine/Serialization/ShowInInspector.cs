@@ -11,10 +11,10 @@ namespace BansheeEngine
     /// <summary>
     /// Attribute that forces a field or a property to be visible in the inspector window in editor. Normally public fields
     /// are show in the inspector by default, and you can use this attribute to show private/protected/internal fields, or
-    /// to show properties (never shown by default) as well. Member must be in a serializable object otherwise this
-    /// attribute has no effect, and the type of the field/property must be a serializable type.
+    /// to show properties (never shown by default) as well. Type of the field/property must be a serializable type or
+    /// a type marked with this attribute itself.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class ShowInInspector : Attribute
     {
     }
