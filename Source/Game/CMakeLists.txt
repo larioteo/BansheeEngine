@@ -8,6 +8,9 @@ else()
 	add_executable(Game ${BS_GAME_SRC})
 endif()
 
+# Common flags
+add_common_flags(Game)
+
 # Includes
 target_include_directories(Game PRIVATE "./")
 

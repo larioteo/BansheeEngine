@@ -10,6 +10,9 @@ endif()
 # Target
 add_library(EditorCore SHARED ${BS_BANSHEEEDITOR_SRC})
 
+# Common flags
+add_common_flags(EditorCore)
+
 # Includes
 target_include_directories(EditorCore PUBLIC "./")
 

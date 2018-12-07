@@ -57,7 +57,7 @@ namespace BansheeEditor
                 Array.Sort(types, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
                 foreach (var type in types)
                 {
-                    createContextMenu.AddItem(type.Namespace + "::" + type.Name,
+                    createContextMenu.AddItem(type.Namespace + "." + type.Name,
                         () => property.SetValue(Activator.CreateInstance(type)));
                 }
             }

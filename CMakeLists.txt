@@ -41,8 +41,8 @@ check_and_update_binary_deps(Banshee ${PROJECT_SOURCE_DIR}/Dependencies/ ${BS_PR
 check_and_update_builtin_assets(Banshee ${PROJECT_SOURCE_DIR}/Data/Raw Raw ${BS_BUILTIN_ASSETS_VERSION} NO)
 		
 ## Import built-in assets
-if(${BUILD_ASSETS})
-	run_import_tool(Banshee ${PROJECT_SOURCE_DIR} "--editor")
+if(${INCLUDE_ASSET_PACKAGING_SCRIPTS})
+	add_run_asset_import_target(EditorBuiltinAssets ${PROJECT_SOURCE_DIR}/Data ${PROJECT_SOURCE_DIR} "--editor")
 endif()
 
 ## Fetch built-in assets

@@ -7,7 +7,7 @@
 #include "Wrappers/BsScriptRRefBase.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Material/BsMaterial.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Mesh/BsMesh.h"
-#include "Wrappers/BsScriptPlane.h"
+#include "Wrappers/BsScriptVector.h"
 
 namespace bs
 {
@@ -30,8 +30,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setorientation", (void*)&ScriptParticleSystemSettings::Internal_setorientation);
 		metaData.scriptClass->addInternalCall("Internal_getorientationLockY", (void*)&ScriptParticleSystemSettings::Internal_getorientationLockY);
 		metaData.scriptClass->addInternalCall("Internal_setorientationLockY", (void*)&ScriptParticleSystemSettings::Internal_setorientationLockY);
-		metaData.scriptClass->addInternalCall("Internal_getorientationPlane", (void*)&ScriptParticleSystemSettings::Internal_getorientationPlane);
-		metaData.scriptClass->addInternalCall("Internal_setorientationPlane", (void*)&ScriptParticleSystemSettings::Internal_setorientationPlane);
+		metaData.scriptClass->addInternalCall("Internal_getorientationPlaneNormal", (void*)&ScriptParticleSystemSettings::Internal_getorientationPlaneNormal);
+		metaData.scriptClass->addInternalCall("Internal_setorientationPlaneNormal", (void*)&ScriptParticleSystemSettings::Internal_setorientationPlaneNormal);
 		metaData.scriptClass->addInternalCall("Internal_getsortMode", (void*)&ScriptParticleSystemSettings::Internal_getsortMode);
 		metaData.scriptClass->addInternalCall("Internal_setsortMode", (void*)&ScriptParticleSystemSettings::Internal_setsortMode);
 		metaData.scriptClass->addInternalCall("Internal_getduration", (void*)&ScriptParticleSystemSettings::Internal_getduration);
@@ -180,19 +180,19 @@ namespace bs
 		thisPtr->getInternal()->orientationLockY = value;
 	}
 
-	void ScriptParticleSystemSettings::Internal_getorientationPlane(ScriptParticleSystemSettings* thisPtr, Plane* __output)
+	void ScriptParticleSystemSettings::Internal_getorientationPlaneNormal(ScriptParticleSystemSettings* thisPtr, Vector3* __output)
 	{
-		Plane tmp__output;
-		tmp__output = thisPtr->getInternal()->orientationPlane;
+		Vector3 tmp__output;
+		tmp__output = thisPtr->getInternal()->orientationPlaneNormal;
 
 		*__output = tmp__output;
 
 
 	}
 
-	void ScriptParticleSystemSettings::Internal_setorientationPlane(ScriptParticleSystemSettings* thisPtr, Plane* value)
+	void ScriptParticleSystemSettings::Internal_setorientationPlaneNormal(ScriptParticleSystemSettings* thisPtr, Vector3* value)
 	{
-		thisPtr->getInternal()->orientationPlane = *value;
+		thisPtr->getInternal()->orientationPlaneNormal = *value;
 	}
 
 	ParticleSortMode ScriptParticleSystemSettings::Internal_getsortMode(ScriptParticleSystemSettings* thisPtr)

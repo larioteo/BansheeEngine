@@ -71,19 +71,19 @@ namespace BansheeEngine
 		}
 
 		/// <summary>
-		/// Determines a plane to orient particles towards. Only used if particle orientation mode is set to  
+		/// Determines a normal of the plane to orient particles towards. Only used if particle orientation mode is set to  
 		/// ParticleOrientation::Plane.
 		/// </summary>
 		[ShowInInspector]
-		public Plane OrientationPlane
+		public Vector3 OrientationPlaneNormal
 		{
 			get
 			{
-				Plane temp;
-				Internal_getorientationPlane(mCachedPtr, out temp);
+				Vector3 temp;
+				Internal_getorientationPlaneNormal(mCachedPtr, out temp);
 				return temp;
 			}
-			set { Internal_setorientationPlane(mCachedPtr, ref value); }
+			set { Internal_setorientationPlaneNormal(mCachedPtr, ref value); }
 		}
 
 		/// <summary>
@@ -211,9 +211,9 @@ namespace BansheeEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setorientationLockY(IntPtr thisPtr, bool value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_getorientationPlane(IntPtr thisPtr, out Plane __output);
+		private static extern void Internal_getorientationPlaneNormal(IntPtr thisPtr, out Vector3 __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setorientationPlane(IntPtr thisPtr, ref Plane value);
+		private static extern void Internal_setorientationPlaneNormal(IntPtr thisPtr, ref Vector3 value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ParticleSortMode Internal_getsortMode(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]

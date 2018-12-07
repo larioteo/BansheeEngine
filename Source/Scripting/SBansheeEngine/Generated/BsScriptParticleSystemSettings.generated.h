@@ -6,8 +6,8 @@
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleSystem.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleSystem.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleSystem.h"
+#include "Math/BsVector3.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleSystem.h"
-#include "Math/BsPlane.h"
 
 namespace bs
 {
@@ -38,8 +38,8 @@ namespace bs
 		static void Internal_setorientation(ScriptParticleSystemSettings* thisPtr, ParticleOrientation value);
 		static bool Internal_getorientationLockY(ScriptParticleSystemSettings* thisPtr);
 		static void Internal_setorientationLockY(ScriptParticleSystemSettings* thisPtr, bool value);
-		static void Internal_getorientationPlane(ScriptParticleSystemSettings* thisPtr, Plane* __output);
-		static void Internal_setorientationPlane(ScriptParticleSystemSettings* thisPtr, Plane* value);
+		static void Internal_getorientationPlaneNormal(ScriptParticleSystemSettings* thisPtr, Vector3* __output);
+		static void Internal_setorientationPlaneNormal(ScriptParticleSystemSettings* thisPtr, Vector3* value);
 		static ParticleSortMode Internal_getsortMode(ScriptParticleSystemSettings* thisPtr);
 		static void Internal_setsortMode(ScriptParticleSystemSettings* thisPtr, ParticleSortMode value);
 		static float Internal_getduration(ScriptParticleSystemSettings* thisPtr);

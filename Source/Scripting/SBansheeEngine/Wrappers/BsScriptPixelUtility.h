@@ -35,7 +35,8 @@ namespace bs
 		static MonoObject* internal_compress(MonoObject* source, CompressionOptions* options);
 		static MonoArray* internal_generateMipmaps(MonoObject* source, MipMapGenOptions* options);
 		static MonoObject* internal_scale(MonoObject* source, PixelVolume* newSize, PixelUtil::Filter filter);
-		static void internal_applyGamma(MonoObject* source, float gamma);
+		static void internal_linearToSRGB(MonoObject* source);
+		static void internal_SRGBToLinear(MonoObject* source);
 	};
 
 	/** @} */

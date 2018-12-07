@@ -10,6 +10,9 @@ add_library(SBansheeEngine SHARED
 	${BS_GENERATED_ENGINE_H_FILES} 
 	${BS_GENERATED_ENGINE_CPP_FILES})
 
+# Common flags
+add_common_flags(SBansheeEngine)
+	
 # Includes
 set(SBansheeEngine_INC 
 	"./"

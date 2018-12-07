@@ -142,13 +142,22 @@ namespace BansheeEngine
         }
 
         /// <summary>
-        /// Applies gamma correction to the pixels in the provided buffer.
+        /// Converts pixel data in linear space to one in sRGB space. Only converts the RGB components.
         /// </summary>
-        /// <param name="source">Source pixels to gamma correct.</param>
-        /// <param name="gamma">Gamma value to apply.</param>
-        public static void ApplyGamma(PixelData source, float gamma)
+        /// <param name="source">Pixels to convert.</param>
+        public static void LinearToSRGB(PixelData source)
         {
-            Internal_ApplyGamma(source, gamma);
+            Internal_LinearToSRGB(source);
+
+        }
+
+        /// <summary>
+        /// Converts pixel data in sRGB space to one in linear space. Only converts the RGB components.
+        /// </summary>
+        /// <param name="source">Pixels to convert.</param>
+        public static void SRGBToLinear(PixelData source)
+        {
+            Internal_SRGBToLinear(source);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -182,7 +191,10 @@ namespace BansheeEngine
         private static extern PixelData Internal_Scale(PixelData source, ref PixelVolume newSize, ScaleFilter filter);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_ApplyGamma(PixelData source, float gamma);
+        private static extern void Internal_LinearToSRGB(PixelData source);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SRGBToLinear(PixelData source);
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ namespace BansheeEngine
 		ViewPlane = 0,
 		/// <summary>Orient towards view (camera) position.</summary>
 		ViewPosition = 1,
-		/// <summary>Orient with a user-provided plane.</summary>
+		/// <summary>Orient with a user-provided axis.</summary>
 		Plane = 2
 	}
 

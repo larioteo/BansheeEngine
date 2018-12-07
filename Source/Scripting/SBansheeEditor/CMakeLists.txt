@@ -10,6 +10,9 @@ add_library(SBansheeEditor SHARED
 	${BS_GENERATED_EDITOR_H_FILES} 
 	${BS_GENERATED_EDITOR_CPP_FILES})
 
+# Common flags
+add_common_flags(SBansheeEditor)
+	
 # Includes
 set(SBansheeEditor_INC 
 	"./"

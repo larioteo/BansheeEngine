@@ -8,6 +8,9 @@ else()
 	add_executable(Banshee3D ${BS_BANSHEE3D_SRC})
 endif()
 
+# Common flags
+add_common_flags(Banshee3D)
+
 # Includes
 target_include_directories(Banshee3D PRIVATE "./")
 

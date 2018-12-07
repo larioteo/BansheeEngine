@@ -25,7 +25,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_Compress", (void*)&ScriptPixelUtility::internal_compress);
 		metaData.scriptClass->addInternalCall("Internal_GenerateMipmaps", (void*)&ScriptPixelUtility::internal_generateMipmaps);
 		metaData.scriptClass->addInternalCall("Internal_Scale", (void*)&ScriptPixelUtility::internal_scale);
-		metaData.scriptClass->addInternalCall("Internal_ApplyGamma", (void*)&ScriptPixelUtility::internal_applyGamma);
+		metaData.scriptClass->addInternalCall("Internal_LinearToSRGB", (void*)&ScriptPixelUtility::internal_linearToSRGB);
+		metaData.scriptClass->addInternalCall("Internal_SRGBToLinear", (void*)&ScriptPixelUtility::internal_SRGBToLinear);
 	}
 
 	void ScriptPixelUtility::internal_getMemorySize(UINT32 width, UINT32 height, UINT32 depth, PixelFormat format, UINT32* value)
@@ -127,13 +128,23 @@ namespace bs
 		return ScriptPixelData::create(outputData);
 	}
 
-	void ScriptPixelUtility::internal_applyGamma(MonoObject* source, float gamma)
+	void ScriptPixelUtility::internal_linearToSRGB(MonoObject* source)
 	{
 		ScriptPixelData* sourceScriptPixelData = ScriptPixelData::toNative(source);
 		if (sourceScriptPixelData == nullptr)
 			return;
 
 		SPtr<PixelData> pixelData = sourceScriptPixelData->getInternal();
-		PixelUtil::applyGamma(pixelData->getData(), gamma, pixelData->getSize(), PixelUtil::getNumElemBits(pixelData->getFormat()));
+		PixelUtil::SRGBToLinear(*pixelData);
+	}
+
+	void ScriptPixelUtility::internal_SRGBToLinear(MonoObject* source)
+	{
+		ScriptPixelData* sourceScriptPixelData = ScriptPixelData::toNative(source);
+		if (sourceScriptPixelData == nullptr)
+			return;
+
+		SPtr<PixelData> pixelData = sourceScriptPixelData->getInternal();
+		PixelUtil::SRGBToLinear(*pixelData);
 	}
 }
