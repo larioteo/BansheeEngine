@@ -321,24 +321,12 @@ namespace BansheeEngine
                         }
                         break;
                     case SerializableProperty.FieldType.Vector4:
-                        if (internalType == typeof(Vector4))
+                        setter = f =>
                         {
-                            setter = f =>
-                            {
-                                Vector4 value = property.GetValue<Vector4>();
-                                value[elementIdx] = f;
-                                property.SetValue(value);
-                            };
-                        }
-                        else if (internalType == typeof(Quaternion))
-                        {
-                            setter = f =>
-                            {
-                                Quaternion value = property.GetValue<Quaternion>();
-                                value[elementIdx] = f;
-                                property.SetValue(value);
-                            };
-                        }
+                            Vector4 value = property.GetValue<Vector4>();
+                            value[elementIdx] = f;
+                            property.SetValue(value);
+                        };
                         break;
                     case SerializableProperty.FieldType.Color:
                         if (internalType == typeof(Color))

@@ -40,7 +40,8 @@ namespace BansheeEngine
             ColorGradient,
             Curve,
             FloatDistribution,
-            ColorDistribution
+            ColorDistribution,
+            Quaternion
         }
 
         public delegate object Getter();
@@ -373,7 +374,7 @@ namespace BansheeEngine
                 else if (internalType == typeof (Vector4))
                     return FieldType.Vector4;
                 else if (internalType == typeof(Quaternion))
-                    return FieldType.Vector4;
+                    return FieldType.Quaternion;
                 else if (internalType == typeof (Color))
                     return FieldType.Color;
                 else if (internalType == typeof(ColorGradient))

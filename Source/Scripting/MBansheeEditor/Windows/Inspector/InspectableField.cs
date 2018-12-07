@@ -198,6 +198,9 @@ namespace BansheeEditor
                     case SerializableProperty.FieldType.Vector4:
                         field = new InspectableVector4(parent, title, path, depth, layout, property);
                         break;
+                    case SerializableProperty.FieldType.Quaternion:
+                        field = new InspectableQuaternion(parent, title, path, depth, layout, property);
+                        break;
                     case SerializableProperty.FieldType.Resource:
                         field = new InspectableResource(parent, title, path, depth, layout, property);
                         break;

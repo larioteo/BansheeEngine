@@ -1422,20 +1422,10 @@ namespace BansheeEditor
                     break;
                 case SerializableProperty.FieldType.Vector4:
                     {
-                        if (property.InternalType == typeof(Vector4))
-                        {
-                            Vector4 value = property.GetValue<Vector4>();
+                        Vector4 value = property.GetValue<Vector4>();
 
-                            for (int i = 0; i < 4; i++)
-                                action(value[i], i);
-                        }
-                        else if (property.InternalType == typeof(Quaternion))
-                        {
-                            Quaternion value = property.GetValue<Quaternion>();
-
-                            for (int i = 0; i < 4; i++)
-                                action(value[i], i);
-                        }
+                        for (int i = 0; i < 4; i++)
+                            action(value[i], i);
                     }
                     break;
                 case SerializableProperty.FieldType.Color:
@@ -1504,24 +1494,12 @@ namespace BansheeEditor
                     break;
                 case SerializableProperty.FieldType.Vector4:
                     {
-                        if (property.InternalType == typeof(Vector4))
-                        {
-                            Vector4 value = new Vector4();
+                        Vector4 value = new Vector4();
 
-                            for (int i = 0; i < 4; i++)
-                                value[i] = action(i);
+                        for (int i = 0; i < 4; i++)
+                            value[i] = action(i);
 
-                            property.SetValue(value);
-                        }
-                        else if (property.InternalType == typeof(Quaternion))
-                        {
-                            Quaternion value = new Quaternion();
-
-                            for (int i = 0; i < 4; i++)
-                                value[i] = action(i);
-
-                            property.SetValue(value);
-                        }
+                        property.SetValue(value);
                     }
                     break;
                 case SerializableProperty.FieldType.Color:
