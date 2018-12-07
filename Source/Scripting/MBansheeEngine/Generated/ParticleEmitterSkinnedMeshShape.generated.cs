@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Particle emitter shape that emits particles from a surface of a skinned (animated) mesh. Particles can be emitted from 
 	/// mesh vertices, edges or triangles. If information about normals exists, particles will also inherit the normals.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterSkinnedMeshShape : ParticleEmitterShape
 	{
 		private ParticleEmitterSkinnedMeshShape(bool __dummy0) { }
@@ -29,6 +30,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleSkinnedMeshShapeOptions Options
 		{
 			get

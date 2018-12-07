@@ -16,6 +16,7 @@ namespace BansheeEngine
 	/// for rougher (more glossy rather than mirror-like) surfaces. Those surfaces require a higher number of samples to 
 	/// achieve the glossy look, so we instead fall back to refl. probes which are pre-filtered and can be quickly sampled.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ScreenSpaceReflectionsSettings : ScriptObject
 	{
 		private ScreenSpaceReflectionsSettings(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Enables or disables the SSR effect.</summary>
+		[ShowInInspector]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -37,6 +39,7 @@ namespace BansheeEngine
 		/// precision. This results in higher quality, as well as a higher performance requirement. Valid range is [0, 4], 
 		/// default is 2.
 		/// </summary>
+		[ShowInInspector]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }
@@ -44,6 +47,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Intensity of the screen space reflections. Valid range is [0, 1]. Default is 1 (100%).</summary>
+		[ShowInInspector]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -54,6 +58,7 @@ namespace BansheeEngine
 		/// Roughness at which screen space reflections start fading out and become replaced with refl. probes. Valid range is 
 		/// [0, 1]. Default is 0.8.
 		/// </summary>
+		[ShowInInspector]
 		public float MaxRoughness
 		{
 			get { return Internal_getmaxRoughness(mCachedPtr); }

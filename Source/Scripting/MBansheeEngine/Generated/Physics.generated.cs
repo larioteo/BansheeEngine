@@ -9,12 +9,14 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Provides global physics settings, factory methods for physics objects and scene queries.</summary>
+	[ShowInInspector]
 	public partial class Physics : ScriptObject
 	{
 		private Physics(bool __dummy0) { }
 		protected Physics() { }
 
 		/// <summary>Determines the global gravity value for all objects in the scene.</summary>
+		[ShowInInspector]
 		public static Vector3 Gravity
 		{
 			get
@@ -27,6 +29,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Checks is the physics simulation update currently in progress.</summary>
+		[ShowInInspector]
 		public static bool IsUpdateInProgress
 		{
 			get { return Internal__isUpdateInProgress(); }

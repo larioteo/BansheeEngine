@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Particle emitter shape that emits particles from a line segment.</summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterLineShape : ParticleEmitterShape
 	{
 		private ParticleEmitterLineShape(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleLineShapeOptions Options
 		{
 			get

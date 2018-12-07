@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// the standard physics model to handle various issues with manually moving kinematic objects. Uses a capsule to 
 	/// represent the character's bounds.
 	/// </summary>
+	[ShowInInspector]
 	public partial class CharacterController : Component
 	{
 		private CharacterController(bool __dummy0) { }

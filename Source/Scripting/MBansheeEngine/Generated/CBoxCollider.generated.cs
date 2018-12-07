@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Collider with box geometry.</summary>
+	[ShowInInspector]
 	public partial class BoxCollider : Collider
 	{
 		private BoxCollider(bool __dummy0) { }

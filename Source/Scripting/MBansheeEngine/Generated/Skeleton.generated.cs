@@ -9,12 +9,14 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Contains information about bones required for skeletal animation.</summary>
+	[ShowInInspector]
 	public partial class Skeleton : ScriptObject
 	{
 		private Skeleton(bool __dummy0) { }
 		protected Skeleton() { }
 
 		/// <summary>Returns the total number of bones in the skeleton.</summary>
+		[ShowInInspector]
 		public uint NumBones
 		{
 			get { return Internal_getNumBones(mCachedPtr); }

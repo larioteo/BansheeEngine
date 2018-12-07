@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Used for string localization. Stores strings and their translations in various languages.</summary>
+	[ShowInInspector]
 	public partial class StringTable : Resource
 	{
 		private StringTable(bool __dummy0) { }
@@ -26,12 +27,14 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a total number of strings in the table.</summary>
+		[ShowInInspector]
 		public uint NumStrings
 		{
 			get { return Internal_getNumStrings(mCachedPtr); }
 		}
 
 		/// <summary>Returns all identifiers that the string table contains localized strings for.</summary>
+		[ShowInInspector]
 		public string[] Identifiers
 		{
 			get { return Internal_getIdentifiers(mCachedPtr); }

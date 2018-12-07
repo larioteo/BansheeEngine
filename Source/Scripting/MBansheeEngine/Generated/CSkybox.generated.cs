@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Allows you to specify an environment map to use for sampling radiance of the sky.</summary>
+	[ShowInInspector]
 	public partial class Skybox : Component
 	{
 		private Skybox(bool __dummy0) { }

@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Settings that control the bloom effect. Bloom adds an extra highlight to bright areas of the scene.</summary>
+	[ShowInInspector]
 	public partial class BloomSettings : ScriptObject
 	{
 		private BloomSettings(bool __dummy0) { }
@@ -19,6 +20,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Enables or disables the bloom effect.</summary>
+		[ShowInInspector]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -29,6 +31,7 @@ namespace BansheeEngine
 		/// Quality of the bloom effect. Higher values will use higher resolution texture for calculating bloom, at the cost of 
 		/// lower performance. Valid range is [0, 3], default is 2.
 		/// </summary>
+		[ShowInInspector]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }
@@ -40,6 +43,7 @@ namespace BansheeEngine
 		/// luminance below this value will be ignored for the purposes of bloom. The value represents luminance after it is 
 		/// scaled by exposure. Set to zero or negative to disable the threshold and include all pixels in the calculations.
 		/// </summary>
+		[ShowInInspector]
 		public float Threshold
 		{
 			get { return Internal_getthreshold(mCachedPtr); }
@@ -49,6 +53,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Determines the intensity of the bloom effect. Ideally should be in [0, 4] range but higher values are allowed.
 		/// </summary>
+		[ShowInInspector]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -58,6 +63,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Tint color to apply to the bloom highlight. A pure white means the bloom inherits the underlying scene color.
 		/// </summary>
+		[ShowInInspector]
 		public Color Tint
 		{
 			get

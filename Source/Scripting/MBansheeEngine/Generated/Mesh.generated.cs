@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Primary class for holding geometry. Stores data in the form of vertex buffers and optionally an index buffer, which  
 	/// may be bound to the pipeline for drawing. May contain multiple sub-meshes.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Mesh : Resource
 	{
 		private Mesh(bool __dummy0) { }
@@ -100,24 +101,28 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Gets the skeleton required for animation of this mesh, if any is available.</summary>
+		[ShowInInspector]
 		public Skeleton Skeleton
 		{
 			get { return Internal_getSkeleton(mCachedPtr); }
 		}
 
 		/// <summary>Returns an object containing all shapes used for morph animation, if any are available.</summary>
+		[ShowInInspector]
 		public MorphShapes MorphShapes
 		{
 			get { return Internal_getMorphShapes(mCachedPtr); }
 		}
 
 		/// <summary>Returns all sub-meshes contained in the mesh.</summary>
+		[ShowInInspector]
 		public SubMesh[] SubMeshes
 		{
 			get { return Internal_getSubMeshes(mCachedPtr); }
 		}
 
 		/// <summary>Returns the number of sub-meshes contained in this mesh.</summary>
+		[ShowInInspector]
 		public uint SubMeshCount
 		{
 			get { return Internal_getSubMeshCount(mCachedPtr); }
@@ -127,6 +132,7 @@ namespace BansheeEngine
 		/// Accesses the vertex and index data of the mesh. If reading, mesh must have been created with the MeshUsage::CPUCached 
 		/// flag. If writing the caller must ensure the data matches mesh's vertex/index counts, vertex layout and index format.
 		/// </summary>
+		[ShowInInspector]
 		public MeshData MeshData
 		{
 			get { return Internal_getMeshData(mCachedPtr); }

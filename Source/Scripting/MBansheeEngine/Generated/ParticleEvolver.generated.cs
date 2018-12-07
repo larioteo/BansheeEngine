@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Updates properties of all active particles in a particle system in some way.</summary>
+	[ShowInInspector]
 	public partial class ParticleEvolver : ScriptObject
 	{
 		private ParticleEvolver(bool __dummy0) { }

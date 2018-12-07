@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Wraps Decal as a Component.</summary>
+	[ShowInInspector]
 	public partial class Decal : Component
 	{
 		private Decal(bool __dummy0) { }

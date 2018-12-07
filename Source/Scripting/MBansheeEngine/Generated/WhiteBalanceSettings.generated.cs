@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Settings that control white balance post-process.</summary>
+	[ShowInInspector]
 	public partial class WhiteBalanceSettings : ScriptObject
 	{
 		private WhiteBalanceSettings(bool __dummy0) { }
@@ -23,6 +24,7 @@ namespace BansheeEngine
 		///
 		/// Moves along the Planckian locus. In range [1500.0f, 15000.0f].
 		/// </summary>
+		[ShowInInspector]
 		public float Temperature
 		{
 			get { return Internal_gettemperature(mCachedPtr); }
@@ -36,6 +38,7 @@ namespace BansheeEngine
 		///
 		/// In range [-1.0f, 1.0f].
 		/// </summary>
+		[ShowInInspector]
 		public float Tint
 		{
 			get { return Internal_gettint(mCachedPtr); }

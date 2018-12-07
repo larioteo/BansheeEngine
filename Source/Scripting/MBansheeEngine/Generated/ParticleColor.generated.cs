@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Changes the color of the particles over the particle lifetime.</summary>
+	[ShowInInspector]
 	public partial class ParticleColor : ParticleEvolver
 	{
 		private ParticleColor(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleColorOptions Options
 		{
 			get

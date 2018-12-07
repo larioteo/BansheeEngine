@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>A collider with sphere geometry.</summary>
+	[ShowInInspector]
 	public partial class SphereCollider : Collider
 	{
 		private SphereCollider(bool __dummy0) { }

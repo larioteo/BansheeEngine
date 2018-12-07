@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Material that controls how objects are rendered. It is represented by a shader and parameters used to set up that 
 	/// shader. It provides a simple interface for manipulating the parameters.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Material : Resource
 	{
 		private Material(bool __dummy0) { }
@@ -38,6 +39,7 @@ namespace BansheeEngine
 		/// Sets a shader that will be used by the material. Material will be initialized using all compatible techniques from 
 		/// the shader. Shader must be set before doing any other operations with the material.
 		/// </summary>
+		[ShowInInspector]
 		public RRef<Shader> Shader
 		{
 			get { return Internal_getShader(mCachedPtr); }

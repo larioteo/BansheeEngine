@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Particle emitter shape that emits particles from the surface of a rectangle.</summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterRectShape : ParticleEmitterShape
 	{
 		private ParticleEmitterRectShape(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleRectShapeOptions Options
 		{
 			get

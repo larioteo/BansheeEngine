@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Applies gravity to the particles.</summary>
+	[ShowInInspector]
 	public partial class ParticleGravity : ParticleEvolver
 	{
 		private ParticleGravity(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleGravityOptions Options
 		{
 			get

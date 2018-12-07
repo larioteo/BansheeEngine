@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// volume or a proportion of the volume depending on the thickness parameter. All particles will have normals pointing 
 	/// outwards in a spherical direction.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterSphereShape : ParticleEmitterShape
 	{
 		private ParticleEmitterSphereShape(bool __dummy0) { }
@@ -30,6 +31,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleSphereShapeOptions Options
 		{
 			get

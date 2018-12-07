@@ -14,6 +14,7 @@ namespace BansheeEngine
 	/// thread for updating attached scene objects and bones (if skeleton is attached), or the data is made available for 
 	/// manual queries in the case of generic animation.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Animation : Component
 	{
 		private Animation(bool __dummy0) { }

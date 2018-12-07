@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Represents a three dimensional field of vectors. It is represented by spatial bounds which are split into a grid of 
 	/// values with user-defined density, where each grid cell is assigned a vector.
 	/// </summary>
+	[ShowInInspector]
 	public partial class VectorField : Resource
 	{
 		private VectorField(bool __dummy0) { }

@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Provides functionality for particle texture animation. Uses the sprite texture assigned to the particle's material to 
 	/// determine animation properties.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleTextureAnimation : ParticleEvolver
 	{
 		private ParticleTextureAnimation(bool __dummy0) { }
@@ -29,6 +30,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleTextureAnimationOptions Options
 		{
 			get

@@ -9,12 +9,14 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Generic settings used for controlling a ParticleSystem.</summary>
+	[ShowInInspector]
 	public partial class ParticleSystemSettings : ScriptObject
 	{
 		private ParticleSystemSettings(bool __dummy0) { }
 		protected ParticleSystemSettings() { }
 
 		/// <summary>Material to render the particles with.</summary>
+		[ShowInInspector]
 		public RRef<Material> Material
 		{
 			get { return Internal_getmaterial(mCachedPtr); }
@@ -22,6 +24,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Mesh used for representing individual particles when using the Mesh rendering mode.</summary>
+		[ShowInInspector]
 		public RRef<Mesh> Mesh
 		{
 			get { return Internal_getmesh(mCachedPtr); }
@@ -33,6 +36,7 @@ namespace BansheeEngine
 		/// performance cost. GPU simulation ignores any provided evolvers and instead uses ParticleGpuSimulationSettings to 
 		/// customize the GPU simulation.
 		/// </summary>
+		[ShowInInspector]
 		public bool GpuSimulation
 		{
 			get { return Internal_getgpuSimulation(mCachedPtr); }
@@ -40,6 +44,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines in which space are particles in.</summary>
+		[ShowInInspector]
 		public ParticleSimulationSpace SimulationSpace
 		{
 			get { return Internal_getsimulationSpace(mCachedPtr); }
@@ -47,6 +52,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines how are particles oriented when rendering.</summary>
+		[ShowInInspector]
 		public ParticleOrientation Orientation
 		{
 			get { return Internal_getorientation(mCachedPtr); }
@@ -57,6 +63,7 @@ namespace BansheeEngine
 		/// Determines should the particles only be allowed to orient themselves around the Y axis, or freely. Ignored if using 
 		/// the Plane orientation mode.
 		/// </summary>
+		[ShowInInspector]
 		public bool OrientationLockY
 		{
 			get { return Internal_getorientationLockY(mCachedPtr); }
@@ -67,6 +74,7 @@ namespace BansheeEngine
 		/// Determines a plane to orient particles towards. Only used if particle orientation mode is set to  
 		/// ParticleOrientation::Plane.
 		/// </summary>
+		[ShowInInspector]
 		public Plane OrientationPlane
 		{
 			get
@@ -82,6 +90,7 @@ namespace BansheeEngine
 		/// Determines how (and if) are particles sorted. Sorting controls in what order are particles rendered.  If GPU 
 		/// simulation is enabled only distance based sorting is supported.
 		/// </summary>
+		[ShowInInspector]
 		public ParticleSortMode SortMode
 		{
 			get { return Internal_getsortMode(mCachedPtr); }
@@ -92,6 +101,7 @@ namespace BansheeEngine
 		/// Determines the time period during which the system runs, in seconds. This effects evaluation of distributions with 
 		/// curves using particle system time for evaluation.
 		/// </summary>
+		[ShowInInspector]
 		public float Duration
 		{
 			get { return Internal_getduration(mCachedPtr); }
@@ -99,6 +109,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines should the particle system time wrap around once it reaches its duration.</summary>
+		[ShowInInspector]
 		public bool IsLooping
 		{
 			get { return Internal_getisLooping(mCachedPtr); }
@@ -110,6 +121,7 @@ namespace BansheeEngine
 		/// simulation is enabled, and instead particle count is instead only limited by the size of the internal buffers (shared 
 		/// between all particle systems).
 		/// </summary>
+		[ShowInInspector]
 		public uint MaxParticles
 		{
 			get { return Internal_getmaxParticles(mCachedPtr); }
@@ -120,6 +132,7 @@ namespace BansheeEngine
 		/// Determines should an automatic seed be used for the internal random number generator. This ensures the particle 
 		/// system yields different results each time it is ran.
 		/// </summary>
+		[ShowInInspector]
 		public bool UseAutomaticSeed
 		{
 			get { return Internal_getuseAutomaticSeed(mCachedPtr); }
@@ -130,6 +143,7 @@ namespace BansheeEngine
 		/// Determines the seed to use for the internal random number generator. Allows you to guarantee identical behaviour 
 		/// between different runs. Only relevant if automatic seed is disabled.
 		/// </summary>
+		[ShowInInspector]
 		public uint ManualSeed
 		{
 			get { return Internal_getmanualSeed(mCachedPtr); }
@@ -141,6 +155,7 @@ namespace BansheeEngine
 		/// Bounds are used primarily for culling purposes. Note that automatic bounds are not supported when GPU simulation is 
 		/// enabled.
 		/// </summary>
+		[ShowInInspector]
 		public bool UseAutomaticBounds
 		{
 			get { return Internal_getuseAutomaticBounds(mCachedPtr); }
@@ -151,6 +166,7 @@ namespace BansheeEngine
 		/// Custom bounds to use them <see cref="useAutomaticBounds"/> is disabled. The bounds are in the simulation space of the 
 		/// particle system.
 		/// </summary>
+		[ShowInInspector]
 		public AABox CustomBounds
 		{
 			get
@@ -163,6 +179,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines how is each particle represented on the screen.</summary>
+		[ShowInInspector]
 		public ParticleRenderMode RenderMode
 		{
 			get { return Internal_getrenderMode(mCachedPtr); }

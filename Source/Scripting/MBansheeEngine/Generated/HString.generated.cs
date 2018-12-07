@@ -16,6 +16,7 @@ namespace BansheeEngine
 	///
 	/// Use {0}, {1}, etc. in the string value for values that might change dynamically.
 	/// </summary>
+	[ShowInInspector]
 	public partial class LocString : ScriptObject
 	{
 		private LocString(bool __dummy0) { }

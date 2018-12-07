@@ -15,6 +15,7 @@ namespace BansheeEditor
 	/// coordinates along which ticks should be positioned. Ticks are reported as multiple separate levels with different 
 	/// strengths, depending on how close their distribution is to the upper valid range.
 	/// </summary>
+	[ShowInInspector]
 	public partial class GUIGraphTicks : ScriptObject
 	{
 		private GUIGraphTicks(bool __dummy0) { }
@@ -28,6 +29,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Number of tick levels that will be generated.</summary>
+		[ShowInInspector]
 		public uint NumLevels
 		{
 			get { return Internal_getNumLevels(mCachedPtr); }

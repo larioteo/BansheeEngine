@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Specifies a color as a distribution, which can include a constant color, random color range or a color gradient.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ColorDistribution : ScriptObject
 	{
 		private ColorDistribution(bool __dummy0) { }
@@ -46,6 +47,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
+		[ShowInInspector]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }

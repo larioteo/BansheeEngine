@@ -16,6 +16,7 @@ namespace BansheeEngine
 	/// The particle system requires you to specify at least one ParticleEmitter, which controls how are new particles 
 	/// generated. You will also want to specify one or more ParticleEvolver%s, which change particle properties over time.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleSystem : Component
 	{
 		private ParticleSystem(bool __dummy0) { }

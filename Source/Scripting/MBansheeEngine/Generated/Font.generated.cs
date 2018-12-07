@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Font resource containing data about textual characters and how to render text. Contains one or multiple font  bitmaps, 
 	/// each for a specific size.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Font : Resource
 	{
 		private Font(bool __dummy0) { }

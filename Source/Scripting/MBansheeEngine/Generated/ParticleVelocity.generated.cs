@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Applies linear velocity to the particles.</summary>
+	[ShowInInspector]
 	public partial class ParticleVelocity : ParticleEvolver
 	{
 		private ParticleVelocity(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleVelocityOptions Options
 		{
 			get

@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Render target specialization that allows you to render into one or multiple textures. Such textures can then be used 
 	/// in other operations as GPU program input.
 	/// </summary>
+	[ShowInInspector]
 	public partial class RenderTexture : RenderTarget
 	{
 		private RenderTexture(bool __dummy0) { }
@@ -64,18 +65,21 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the primary color surface that contains rendered color data.</summary>
+		[ShowInInspector]
 		public Texture ColorSurface
 		{
 			get { return Internal_getColorSurface(mCachedPtr); }
 		}
 
 		/// <summary>Returns all the color surfaces.</summary>
+		[ShowInInspector]
 		public Texture[] ColorSurfaces
 		{
 			get { return Internal_getColorSurfaces(mCachedPtr); }
 		}
 
 		/// <summary>Returns the depth/stencil surface that contains rendered depth and stencil data.</summary>
+		[ShowInInspector]
 		public Texture DepthStencilSurface
 		{
 			get { return Internal_getDepthStencilSurface(mCachedPtr); }

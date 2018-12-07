@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Joint that removes all but a single translational degree of freedom. Bodies are allowed to move along a single axis.
 	/// </summary>
+	[ShowInInspector]
 	public partial class SliderJoint : Joint
 	{
 		private SliderJoint(bool __dummy0) { }

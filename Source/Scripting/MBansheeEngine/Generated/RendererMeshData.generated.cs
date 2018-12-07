@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Contains mesh vertex and index data used for initializing, updating and reading mesh data from Mesh.
 	/// </summary>
+	[ShowInInspector]
 	public partial class MeshData : ScriptObject
 	{
 		private MeshData(bool __dummy0) { }
@@ -22,6 +23,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all vertex positions. Only valid if the vertex layout contains vertex positions.</summary>
+		[ShowInInspector]
 		public Vector3[] Positions
 		{
 			get { return Internal_getPositions(mCachedPtr); }
@@ -29,6 +31,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all vertex normals. Only valid if the vertex layout contains vertex normals.</summary>
+		[ShowInInspector]
 		public Vector3[] Normals
 		{
 			get { return Internal_getNormals(mCachedPtr); }
@@ -36,6 +39,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all vertex tangents. Only valid if the vertex layout contains vertex tangents.</summary>
+		[ShowInInspector]
 		public Vector4[] Tangents
 		{
 			get { return Internal_getTangents(mCachedPtr); }
@@ -43,6 +47,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all vertex colors. Only valid if the vertex layout contains vertex colors.</summary>
+		[ShowInInspector]
 		public Color[] Colors
 		{
 			get { return Internal_getColors(mCachedPtr); }
@@ -53,6 +58,7 @@ namespace BansheeEngine
 		/// An array of all vertex texture coordinates in the UV0 channel. Only valid if the vertex layout contains UV0 
 		/// coordinates.
 		/// </summary>
+		[ShowInInspector]
 		public Vector2[] UV0
 		{
 			get { return Internal_getUV0(mCachedPtr); }
@@ -63,6 +69,7 @@ namespace BansheeEngine
 		/// An array of all vertex texture coordinates in the UV1 channel. Only valid if the vertex layout contains UV1 
 		/// coordinates.
 		/// </summary>
+		[ShowInInspector]
 		public Vector2[] UV1
 		{
 			get { return Internal_getUV1(mCachedPtr); }
@@ -70,6 +77,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all vertex bone weights. Only valid if the vertex layout contains bone weights.</summary>
+		[ShowInInspector]
 		public BoneWeight[] BoneWeights
 		{
 			get { return Internal_getBoneWeights(mCachedPtr); }
@@ -77,6 +85,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>An array of all indices.</summary>
+		[ShowInInspector]
 		public uint[] Indices
 		{
 			get { return Internal_getIndices(mCachedPtr); }
@@ -84,12 +93,14 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the number of vertices contained in the mesh.</summary>
+		[ShowInInspector]
 		public int VertexCount
 		{
 			get { return Internal_getVertexCount(mCachedPtr); }
 		}
 
 		/// <summary>Returns the number of indices contained in the mesh.</summary>
+		[ShowInInspector]
 		public int IndexCount
 		{
 			get { return Internal_getIndexCount(mCachedPtr); }

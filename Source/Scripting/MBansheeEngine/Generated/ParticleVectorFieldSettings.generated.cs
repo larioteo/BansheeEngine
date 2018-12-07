@@ -9,12 +9,14 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Settings used for controlling a vector field in a GPU simulated particle system.</summary>
+	[ShowInInspector]
 	public partial class ParticleVectorFieldSettings : ScriptObject
 	{
 		private ParticleVectorFieldSettings(bool __dummy0) { }
 		protected ParticleVectorFieldSettings() { }
 
 		/// <summary>Vector field resource used for influencing the particles.</summary>
+		[ShowInInspector]
 		public RRef<VectorField> VectorField
 		{
 			get { return Internal_getvectorField(mCachedPtr); }
@@ -22,6 +24,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Intensity of the forces and velocities applied by the vector field.</summary>
+		[ShowInInspector]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -33,6 +36,7 @@ namespace BansheeEngine
 		/// snapped to the exact velocity of the value in the field, and if set to 0 the field will not influence particle 
 		/// velocities directly.
 		/// </summary>
+		[ShowInInspector]
 		public float Tightness
 		{
 			get { return Internal_gettightness(mCachedPtr); }
@@ -42,6 +46,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Scale to apply to the vector field bounds. This is multiplied with the bounds of the vector field resource.
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Scale
 		{
 			get
@@ -57,6 +62,7 @@ namespace BansheeEngine
 		/// Amount of to move the vector field by relative to the parent particle system. This is added to the bounds provided in 
 		/// the vector field resource.
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Offset
 		{
 			get
@@ -69,6 +75,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Initial rotation of the vector field.</summary>
+		[ShowInInspector]
 		public Quaternion Rotation
 		{
 			get
@@ -84,6 +91,7 @@ namespace BansheeEngine
 		/// Determines the amount to rotate the vector field every second, in degrees, around XYZ axis respectively.  Evaluated 
 		/// over the particle system lifetime.
 		/// </summary>
+		[ShowInInspector]
 		public Vector3Distribution RotationRate
 		{
 			get { return Internal_getrotationRate(mCachedPtr); }
@@ -94,6 +102,7 @@ namespace BansheeEngine
 		/// Determines should the field influence particles outside of the field bounds. If true the field will be tiled 
 		/// infinitely in the X direction.
 		/// </summary>
+		[ShowInInspector]
 		public bool TilingX
 		{
 			get { return Internal_gettilingX(mCachedPtr); }
@@ -104,6 +113,7 @@ namespace BansheeEngine
 		/// Determines should the field influence particles outside of the field bounds. If true the field will be tiled 
 		/// infinitely in the Y direction.
 		/// </summary>
+		[ShowInInspector]
 		public bool TilingY
 		{
 			get { return Internal_gettilingY(mCachedPtr); }
@@ -114,6 +124,7 @@ namespace BansheeEngine
 		/// Determines should the field influence particles outside of the field bounds. If true the field will be tiled 
 		/// infinitely in the Z direction.
 		/// </summary>
+		[ShowInInspector]
 		public bool TilingZ
 		{
 			get { return Internal_gettilingZ(mCachedPtr); }

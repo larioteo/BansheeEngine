@@ -13,6 +13,7 @@ namespace BansheeEditor
 	/// A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. 
 	/// Label is optional. This specific implementation displays an animation curve or a range between two animation curves.
 	/// </summary>
+	[ShowInInspector]
 	public partial class GUICurvesField : GUIElement
 	{
 		private GUICurvesField(bool __dummy0) { }
@@ -78,6 +79,7 @@ namespace BansheeEditor
 		/// Returns the curve represented by the field. If the field represents a curve range this returns the minimal curve of 
 		/// that range.
 		/// </summary>
+		[ShowInInspector]
 		public AnimationCurve Curve
 		{
 			get { return Internal_getCurve(mCachedPtr); }
@@ -87,6 +89,7 @@ namespace BansheeEditor
 		/// Returns the minimal curve represented by the field containing a curve range. Returns the only available curve if the 
 		/// field doesn't represent a range.
 		/// </summary>
+		[ShowInInspector]
 		public AnimationCurve MinCurve
 		{
 			get { return Internal_getMinCurve(mCachedPtr); }
@@ -96,6 +99,7 @@ namespace BansheeEditor
 		/// Returns the maximal curve represented by the field containing a curve range. Returns the only available curve if the 
 		/// field doesn't represent a range.
 		/// </summary>
+		[ShowInInspector]
 		public AnimationCurve MaxCurve
 		{
 			get { return Internal_getMaxCurve(mCachedPtr); }

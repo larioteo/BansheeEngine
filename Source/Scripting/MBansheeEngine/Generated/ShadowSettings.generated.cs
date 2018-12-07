@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Various options that control shadow rendering for a specific view.</summary>
+	[ShowInInspector]
 	public partial class ShadowSettings : ScriptObject
 	{
 		private ShadowSettings(bool __dummy0) { }
@@ -23,6 +24,7 @@ namespace BansheeEngine
 		/// quality shadows nearer to the viewer, as the shadow map resolution isn't being used up on far away portions of the 
 		/// scene. In world units (meters).
 		/// </summary>
+		[ShowInInspector]
 		public float DirectionalShadowDistance
 		{
 			get { return Internal_getdirectionalShadowDistance(mCachedPtr); }
@@ -34,6 +36,7 @@ namespace BansheeEngine
 		/// individual cascade has less area to cover, but can significantly increase performance cost, as well as a minor 
 		/// increase in memory cost. Valid range is roughly [1, 6].
 		/// </summary>
+		[ShowInInspector]
 		public uint NumCascades
 		{
 			get { return Internal_getnumCascades(mCachedPtr); }
@@ -47,6 +50,7 @@ namespace BansheeEngine
 		/// resolution shadows). Higher values increase the size disparity between near and far cascades at an exponential rate. 
 		/// Valid range is roughly [1, 4].
 		/// </summary>
+		[ShowInInspector]
 		public float CascadeDistributionExponent
 		{
 			get { return Internal_getcascadeDistributionExponent(mCachedPtr); }
@@ -57,6 +61,7 @@ namespace BansheeEngine
 		/// Determines the number of samples used for percentage closer shadow map filtering. Higher values yield higher quality 
 		/// shadows, at the cost of performance. Valid range is [1, 4].
 		/// </summary>
+		[ShowInInspector]
 		public uint ShadowFilteringQuality
 		{
 			get { return Internal_getshadowFilteringQuality(mCachedPtr); }

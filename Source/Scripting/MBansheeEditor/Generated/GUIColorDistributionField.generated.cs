@@ -13,6 +13,7 @@ namespace BansheeEditor
 	/// A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. 
 	/// Label is optional. This specific implementation displays an input field for a color distribution.
 	/// </summary>
+	[ShowInInspector]
 	public partial class GUIColorDistributionField : GUIElement
 	{
 		private GUIColorDistributionField(bool __dummy0) { }
@@ -75,6 +76,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Changes the value of the field.</summary>
+		[ShowInInspector]
 		public ColorDistribution Value
 		{
 			get { return Internal_getValue(mCachedPtr); }

@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Rotates the particles over the particle lifetime.</summary>
+	[ShowInInspector]
 	public partial class ParticleRotation : ParticleEvolver
 	{
 		private ParticleRotation(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleRotationOptions Options
 		{
 			get

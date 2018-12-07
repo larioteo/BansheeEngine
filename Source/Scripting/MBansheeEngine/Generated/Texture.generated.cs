@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Abstract class representing a texture. Specific render systems have their own Texture implementations. Internally 
 	/// represented as one or more surfaces with pixels in a certain number of dimensions, backed by a hardware buffer.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Texture : Resource
 	{
 		private Texture(bool __dummy0) { }
@@ -29,36 +30,42 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the pixel format for the texture surface.</summary>
+		[ShowInInspector]
 		public PixelFormat PixelFormat
 		{
 			get { return Internal_getPixelFormat(mCachedPtr); }
 		}
 
 		/// <summary>Returns a value that signals the engine in what way is the texture expected to be used.</summary>
+		[ShowInInspector]
 		public TextureUsage Usage
 		{
 			get { return Internal_getUsage(mCachedPtr); }
 		}
 
 		/// <summary>Gets the type of texture.</summary>
+		[ShowInInspector]
 		public TextureType Type
 		{
 			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>Returns the width of the texture.</summary>
+		[ShowInInspector]
 		public uint Width
 		{
 			get { return Internal_getWidth(mCachedPtr); }
 		}
 
 		/// <summary>Returns the height of the texture.</summary>
+		[ShowInInspector]
 		public uint Height
 		{
 			get { return Internal_getHeight(mCachedPtr); }
 		}
 
 		/// <summary>Returns the depth of the texture (only applicable for 3D textures).</summary>
+		[ShowInInspector]
 		public uint Depth
 		{
 			get { return Internal_getDepth(mCachedPtr); }
@@ -68,12 +75,14 @@ namespace BansheeEngine
 		/// Determines does the texture contain gamma corrected data. If true then the GPU will automatically convert the  pixels 
 		/// to linear space before reading from the texture, and convert them to gamma space when writing to the texture.
 		/// </summary>
+		[ShowInInspector]
 		public bool GammaSpace
 		{
 			get { return Internal_getGammaCorrection(mCachedPtr); }
 		}
 
 		/// <summary>Gets the number of samples used for multisampling (0 or 1 if multisampling is not used).</summary>
+		[ShowInInspector]
 		public uint SampleCount
 		{
 			get { return Internal_getSampleCount(mCachedPtr); }
@@ -83,6 +92,7 @@ namespace BansheeEngine
 		/// Gets the number of mipmaps to be used for this texture. This number excludes the top level map (which is always 
 		/// assumed to be present).
 		/// </summary>
+		[ShowInInspector]
 		public uint MipMapCount
 		{
 			get { return Internal_getMipmapCount(mCachedPtr); }

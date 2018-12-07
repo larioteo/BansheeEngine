@@ -13,12 +13,14 @@ namespace BansheeEngine
 	/// which are blended together depending on frame animation. Each channel is then additively blended together depending on 
 	/// some weight.
 	/// </summary>
+	[ShowInInspector]
 	public partial class MorphShapes : ScriptObject
 	{
 		private MorphShapes(bool __dummy0) { }
 		protected MorphShapes() { }
 
 		/// <summary>Returns a list of all morph channels in the morph animation.</summary>
+		[ShowInInspector]
 		public MorphChannel[] Channels
 		{
 			get { return Internal_getChannels(mCachedPtr); }

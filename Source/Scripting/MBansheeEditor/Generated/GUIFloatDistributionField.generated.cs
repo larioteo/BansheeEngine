@@ -13,6 +13,7 @@ namespace BansheeEditor
 	/// A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. 
 	/// Label is optional. This specific implementation displays an input field for a floating point distribution.
 	/// </summary>
+	[ShowInInspector]
 	public partial class GUIFloatDistributionField : GUIElement
 	{
 		private GUIFloatDistributionField(bool __dummy0) { }
@@ -75,6 +76,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Changes the value of the field.</summary>
+		[ShowInInspector]
 		public FloatDistribution Value
 		{
 			get { return Internal_getValue(mCachedPtr); }
@@ -84,6 +86,7 @@ namespace BansheeEditor
 		/// <summary>
 		/// Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions.
 		/// </summary>
+		[ShowInInspector]
 		public bool HasInputFocus
 		{
 			get { return Internal_hasInputFocus(mCachedPtr); }

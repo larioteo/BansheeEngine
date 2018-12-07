@@ -9,12 +9,14 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Contains textures and data about every character for a bitmap font of a specific size.</summary>
+	[ShowInInspector]
 	public partial class FontBitmap : ScriptObject
 	{
 		private FontBitmap(bool __dummy0) { }
 		protected FontBitmap() { }
 
 		/// <summary>Font size for which the data is contained.</summary>
+		[ShowInInspector]
 		public uint Size
 		{
 			get { return Internal_getsize(mCachedPtr); }
@@ -22,6 +24,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Y offset to the baseline on which the characters are placed, in pixels.</summary>
+		[ShowInInspector]
 		public int BaselineOffset
 		{
 			get { return Internal_getbaselineOffset(mCachedPtr); }
@@ -29,6 +32,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Height of a single line of the font, in pixels.</summary>
+		[ShowInInspector]
 		public uint LineHeight
 		{
 			get { return Internal_getlineHeight(mCachedPtr); }
@@ -36,6 +40,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Character to use when data for a character is missing.</summary>
+		[ShowInInspector]
 		public CharDesc MissingGlyph
 		{
 			get
@@ -48,6 +53,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Width of a space in pixels.</summary>
+		[ShowInInspector]
 		public uint SpaceWidth
 		{
 			get { return Internal_getspaceWidth(mCachedPtr); }
@@ -55,6 +61,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Textures in which the character's pixels are stored.</summary>
+		[ShowInInspector]
 		public RRef<Texture>[] TexturePages
 		{
 			get { return Internal_gettexturePages(mCachedPtr); }

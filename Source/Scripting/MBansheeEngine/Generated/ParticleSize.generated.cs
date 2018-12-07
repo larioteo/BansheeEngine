@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Changes the size of the particles over the particle lifetime.</summary>
+	[ShowInInspector]
 	public partial class ParticleSize : ParticleEvolver
 	{
 		private ParticleSize(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleSizeOptions Options
 		{
 			get

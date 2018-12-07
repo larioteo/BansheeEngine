@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Contains definitions of GPU programs used for rendering, as well as a set of global parameters to control those  
 	/// programs.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Shader : Resource
 	{
 		private Shader(bool __dummy0) { }
@@ -24,6 +25,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns information about all parameters available in the shader.</summary>
+		[ShowInInspector]
 		public ShaderParameter[] Parameters
 		{
 			get { return Internal_getParameters(mCachedPtr); }

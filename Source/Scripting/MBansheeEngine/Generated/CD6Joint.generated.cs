@@ -14,6 +14,7 @@ namespace BansheeEngine
 	/// example for slider), twist constraint (rotating around X) and swing constraint (rotating around Y and Z). It also 
 	/// allows you to constrain limits to only specific axes or completely lock specific axes.
 	/// </summary>
+	[ShowInInspector]
 	public partial class D6Joint : Joint
 	{
 		private D6Joint(bool __dummy0) { }

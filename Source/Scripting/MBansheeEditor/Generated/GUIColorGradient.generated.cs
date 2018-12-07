@@ -10,6 +10,7 @@ namespace BansheeEditor
 	 */
 
 	/// <summary>GUI element that displays a color gradient.</summary>
+	[ShowInInspector]
 	public partial class GUIColorGradient : GUIElement
 	{
 		private GUIColorGradient(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Color gradient to display.</summary>
+		[ShowInInspector]
 		public ColorGradient Gradient
 		{
 			get { return Internal_getGradient(mCachedPtr); }

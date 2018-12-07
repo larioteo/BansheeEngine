@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// can collide with. - Trigger: Static geometry that can't be collided with but will report touch events. - Dynamic: 
 	/// Dynamic geometry that is a part of a Rigidbody. A set of colliders defines the shape of the parent  rigidbody.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Collider : Component
 	{
 		private Collider(bool __dummy0) { }

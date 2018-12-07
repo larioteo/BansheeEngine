@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Collider with a capsule geometry.</summary>
+	[ShowInInspector]
 	public partial class CapsuleCollider : Collider
 	{
 		private CapsuleCollider(bool __dummy0) { }

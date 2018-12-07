@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Represents a physics mesh that can be used with a MeshCollider. Physics mesh can be a generic triangle mesh or a 
 	/// convex mesh. Convex meshes are limited to 255 faces.
 	/// </summary>
+	[ShowInInspector]
 	public partial class PhysicsMesh : Resource
 	{
 		private PhysicsMesh(bool __dummy0) { }
@@ -35,12 +36,14 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the physics mesh.</summary>
+		[ShowInInspector]
 		public PhysicsMeshType Type
 		{
 			get { return Internal_getType(mCachedPtr); }
 		}
 
 		/// <summary>Returns the mesh's indices and vertices.</summary>
+		[ShowInInspector]
 		public MeshData MeshData
 		{
 			get { return Internal_getMeshData(mCachedPtr); }

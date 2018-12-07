@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Settings that control screen space ambient occlusion.</summary>
+	[ShowInInspector]
 	public partial class AmbientOcclusionSettings : ScriptObject
 	{
 		private AmbientOcclusionSettings(bool __dummy0) { }
@@ -19,6 +20,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Enables or disabled the screen space ambient occlusion effect.</summary>
+		[ShowInInspector]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -31,6 +33,7 @@ namespace BansheeEngine
 		/// or noise because of low sampling precision. Usually best to keep at around a meter, valid range is roughly [0.05, 
 		/// 5.0].
 		/// </summary>
+		[ShowInInspector]
 		public float Radius
 		{
 			get { return Internal_getradius(mCachedPtr); }
@@ -42,6 +45,7 @@ namespace BansheeEngine
 		/// be lost in areas where occlusion isn't high. Value is in millimeters. Usually best to keep at a few dozen 
 		/// millimeters, valid range is roughly [0, 200].
 		/// </summary>
+		[ShowInInspector]
 		public float Bias
 		{
 			get { return Internal_getbias(mCachedPtr); }
@@ -52,6 +56,7 @@ namespace BansheeEngine
 		/// Distance (in view space, in meters) after which AO starts fading out. The fade process will happen over the range as 
 		/// specified by <see cref="fadeRange"/>.
 		/// </summary>
+		[ShowInInspector]
 		public float FadeDistance
 		{
 			get { return Internal_getfadeDistance(mCachedPtr); }
@@ -62,6 +67,7 @@ namespace BansheeEngine
 		/// Range (in view space, in meters) in which AO fades out from 100% to 0%. AO starts fading out after the distance 
 		/// specified in <see cref="fadeDistance"/>.
 		/// </summary>
+		[ShowInInspector]
 		public float FadeRange
 		{
 			get { return Internal_getfadeRange(mCachedPtr); }
@@ -72,6 +78,7 @@ namespace BansheeEngine
 		/// Linearly scales the intensity of the AO effect. Values less than 1 make the AO effect less pronounced, and vice 
 		/// versa. Valid range is roughly [0.2, 2].
 		/// </summary>
+		[ShowInInspector]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -83,6 +90,7 @@ namespace BansheeEngine
 		/// control and will cause the darkening to ramp up exponentially. Valid range is roughly [1, 4], where 1 means no extra 
 		/// darkening will occur.
 		/// </summary>
+		[ShowInInspector]
 		public float Power
 		{
 			get { return Internal_getpower(mCachedPtr); }
@@ -93,6 +101,7 @@ namespace BansheeEngine
 		/// Quality level of generated ambient occlusion. In range [0, 4]. Higher levels yield higher quality AO at the cost of 
 		/// performance.
 		/// </summary>
+		[ShowInInspector]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }

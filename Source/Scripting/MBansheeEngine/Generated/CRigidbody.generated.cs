@@ -16,6 +16,7 @@ namespace BansheeEngine
 	/// The shape and mass of a rigidbody is governed by its colliders. You must attach at least one collider for the  
 	/// rigidbody to be valid.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Rigidbody : Component
 	{
 		private Rigidbody(bool __dummy0) { }

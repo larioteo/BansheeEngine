@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Illuminates a portion of the scene covered by the light.</summary>
+	[ShowInInspector]
 	public partial class Light : Component
 	{
 		private Light(bool __dummy0) { }

@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Component that maps animation for specific bone also be applied to the SceneObject this component is attached to.  The 
 	/// component will attach to the first found parent Animation component.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Bone : Component
 	{
 		private Bone(bool __dummy0) { }

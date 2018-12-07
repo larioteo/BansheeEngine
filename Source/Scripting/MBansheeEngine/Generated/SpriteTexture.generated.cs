@@ -14,6 +14,7 @@ namespace BansheeEngine
 	/// for multiple sprites (texture atlasing). Sprite textures also allow you to specify sprite sheet animation by varying 
 	/// which portion of the UV is selected over time.
 	/// </summary>
+	[ShowInInspector]
 	public partial class SpriteTexture : Resource
 	{
 		private SpriteTexture(bool __dummy0) { }
@@ -38,6 +39,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines the internal texture that the sprite texture references.</summary>
+		[ShowInInspector]
 		public RRef<Texture> Texture
 		{
 			get { return Internal_getTexture(mCachedPtr); }
@@ -45,12 +47,14 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns width of the sprite texture in pixels.</summary>
+		[ShowInInspector]
 		public uint Width
 		{
 			get { return Internal_getWidth(mCachedPtr); }
 		}
 
 		/// <summary>Returns height of the sprite texture in pixels.</summary>
+		[ShowInInspector]
 		public uint Height
 		{
 			get { return Internal_getHeight(mCachedPtr); }
@@ -60,6 +64,7 @@ namespace BansheeEngine
 		/// Determines the offset into the referenced texture where the sprite starts. The offset is in UV coordinates, in range 
 		/// [0, 1].
 		/// </summary>
+		[ShowInInspector]
 		public Vector2 Offset
 		{
 			get
@@ -74,6 +79,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Determines the size of the sprite in the referenced texture. Size is in UV coordinates, range [0, 1].
 		/// </summary>
+		[ShowInInspector]
 		public Vector2 Scale
 		{
 			get
@@ -89,6 +95,7 @@ namespace BansheeEngine
 		/// Sets properties describing sprite animation. The animation splits the sprite area into a grid of sub-images which can 
 		/// be evaluated over time. In order to view the animation you must also enable playback through setAnimationPlayback().
 		/// </summary>
+		[ShowInInspector]
 		public SpriteSheetGridAnimation Animation
 		{
 			get
@@ -101,6 +108,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines if and how should the sprite animation play.</summary>
+		[ShowInInspector]
 		public SpriteAnimationPlayback AnimationPlayback
 		{
 			get { return Internal_getAnimationPlayback(mCachedPtr); }

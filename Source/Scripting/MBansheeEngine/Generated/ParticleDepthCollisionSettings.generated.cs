@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Controls depth buffer collisions for GPU simulated particles.</summary>
+	[ShowInInspector]
 	public partial class ParticleDepthCollisionSettings : ScriptObject
 	{
 		private ParticleDepthCollisionSettings(bool __dummy0) { }
@@ -19,6 +20,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines if depth collisions are enabled.</summary>
+		[ShowInInspector]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -29,6 +31,7 @@ namespace BansheeEngine
 		/// Determines the elasticity (bounciness) of the particle collision. Lower values make the collision less bouncy and 
 		/// higher values more.
 		/// </summary>
+		[ShowInInspector]
 		public float Restitution
 		{
 			get { return Internal_getrestitution(mCachedPtr); }
@@ -39,6 +42,7 @@ namespace BansheeEngine
 		/// Determines how much velocity should a particle lose after a collision, in percent of its current velocity. In range 
 		/// [0, 1].
 		/// </summary>
+		[ShowInInspector]
 		public float Dampening
 		{
 			get { return Internal_getdampening(mCachedPtr); }
@@ -46,6 +50,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Scale which to apply to particle size in order to determine the collision radius.</summary>
+		[ShowInInspector]
 		public float RadiusScale
 		{
 			get { return Internal_getradiusScale(mCachedPtr); }

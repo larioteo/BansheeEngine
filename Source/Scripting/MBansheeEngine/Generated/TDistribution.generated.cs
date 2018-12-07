@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Specifies a value as a distribution, which can include a constant value, random range or a curve.</summary>
+	[ShowInInspector]
 	public partial class FloatDistribution : ScriptObject
 	{
 		private FloatDistribution(bool __dummy0) { }
@@ -44,6 +45,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
+		[ShowInInspector]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -146,6 +148,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Specifies a value as a distribution, which can include a constant value, random range or a curve.</summary>
+	[ShowInInspector]
 	public partial class Vector3Distribution : ScriptObject
 	{
 		private Vector3Distribution(bool __dummy0) { }
@@ -181,6 +184,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
+		[ShowInInspector]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -291,6 +295,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Specifies a value as a distribution, which can include a constant value, random range or a curve.</summary>
+	[ShowInInspector]
 	public partial class Vector2Distribution : ScriptObject
 	{
 		private Vector2Distribution(bool __dummy0) { }
@@ -326,6 +331,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the type of the represented distribution.</summary>
+		[ShowInInspector]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }

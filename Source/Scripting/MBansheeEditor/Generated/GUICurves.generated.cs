@@ -10,6 +10,7 @@ namespace BansheeEditor
 	 */
 
 	/// <summary>GUI element that displays one or multiple curves.</summary>
+	[ShowInInspector]
 	public partial class GUICurves : GUITimeline
 	{
 		private GUICurves(bool __dummy0) { }
@@ -37,6 +38,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Animation curves to display.</summary>
+		[ShowInInspector]
 		public CurveDrawInfo[] Curves
 		{
 			get { return Internal_getCurves(mCachedPtr); }

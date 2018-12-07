@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Contains animation curves for translation/rotation/scale of scene objects/skeleton bones, as well as curves for 
 	/// generic property animation.
 	/// </summary>
+	[ShowInInspector]
 	public partial class AnimationClip : Resource
 	{
 		private AnimationClip(bool __dummy0, bool __dummy1) { }
@@ -54,6 +55,7 @@ namespace BansheeEngine
 		/// A set of all curves stored in the animation. Returned value will not be updated if the animation clip curves are 
 		/// added or removed, as it is a copy of clip's internal values.
 		/// </summary>
+		[ShowInInspector]
 		public AnimationCurves Curves
 		{
 			get { return Internal_getCurves(mCachedPtr); }
@@ -61,6 +63,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>A set of all events to be triggered as the animation is playing.</summary>
+		[ShowInInspector]
 		public AnimationEvent[] Events
 		{
 			get { return Internal_getEvents(mCachedPtr); }
@@ -72,12 +75,14 @@ namespace BansheeEngine
 		/// curves manually, instead of through the normal animation process. This property is only available if animation clip 
 		/// was imported with root motion import enabled.
 		/// </summary>
+		[ShowInInspector]
 		public RootMotion RootMotion
 		{
 			get { return Internal_getRootMotion(mCachedPtr); }
 		}
 
 		/// <summary>Checks if animation clip has root motion curves separate from the normal animation curves.</summary>
+		[ShowInInspector]
 		public bool HasRootMotion
 		{
 			get { return Internal_hasRootMotion(mCachedPtr); }
@@ -87,12 +92,14 @@ namespace BansheeEngine
 		/// Checks are the curves contained within the clip additive. Additive clips are intended to be added on top of other 
 		/// clips.
 		/// </summary>
+		[ShowInInspector]
 		public bool IsAddtive
 		{
 			get { return Internal_isAdditive(mCachedPtr); }
 		}
 
 		/// <summary>Returns the length of the animation clip, in seconds.</summary>
+		[ShowInInspector]
 		public float Length
 		{
 			get { return Internal_getLength(mCachedPtr); }
@@ -103,6 +110,7 @@ namespace BansheeEngine
 		/// or curves directly since unevenly spaced keyframes are supported. But it can be of value when determining the 
 		/// original sample rate of an imported animation or similar.
 		/// </summary>
+		[ShowInInspector]
 		public uint SampleRate
 		{
 			get { return Internal_getSampleRate(mCachedPtr); }

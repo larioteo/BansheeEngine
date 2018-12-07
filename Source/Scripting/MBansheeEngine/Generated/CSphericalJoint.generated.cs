@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// Essentially this ensures that the anchor points of the two bodies are always coincident. Bodies are allowed to rotate 
 	/// around the anchor points, and their rotatation can be limited by an elliptical cone.
 	/// </summary>
+	[ShowInInspector]
 	public partial class SphericalJoint : Joint
 	{
 		private SphericalJoint(bool __dummy0) { }

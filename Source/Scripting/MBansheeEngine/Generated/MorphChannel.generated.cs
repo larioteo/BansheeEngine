@@ -13,18 +13,21 @@ namespace BansheeEngine
 	/// determines at what point is that shape blended. As the channel percent moves from 0 to 1, different shapes will be 
 	/// blended with those before or after them, depending on their weight.
 	/// </summary>
+	[ShowInInspector]
 	public partial class MorphChannel : ScriptObject
 	{
 		private MorphChannel(bool __dummy0) { }
 		protected MorphChannel() { }
 
 		/// <summary>Returns the unique name of the channel.</summary>
+		[ShowInInspector]
 		public string Name
 		{
 			get { return Internal_getName(mCachedPtr); }
 		}
 
 		/// <summary>Returns all morph shapes within this channel, in order from lowest to highest.</summary>
+		[ShowInInspector]
 		public MorphShape[] Shapes
 		{
 			get { return Internal_getShapes(mCachedPtr); }

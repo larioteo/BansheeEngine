@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Material that controls how two physical objects interact with each other. Materials of both objects are used during 
 	/// their interaction and their combined values are used.
 	/// </summary>
+	[ShowInInspector]
 	public partial class PhysicsMaterial : Resource
 	{
 		private PhysicsMaterial(bool __dummy0) { }
@@ -45,6 +46,7 @@ namespace BansheeEngine
 		/// Controls friction when two in-contact objects are not moving lateral to each other (for example how difficult  it is 
 		/// to get an object moving from a static state while it is in contact with other object(s)).
 		/// </summary>
+		[ShowInInspector]
 		public float StaticFriction
 		{
 			get { return Internal_getStaticFriction(mCachedPtr); }
@@ -55,6 +57,7 @@ namespace BansheeEngine
 		/// Controls friction when two in-contact objects are moving lateral to each other (for example how quickly does an 
 		/// object slow down when sliding along another object).
 		/// </summary>
+		[ShowInInspector]
 		public float DynamicFriction
 		{
 			get { return Internal_getDynamicFriction(mCachedPtr); }
@@ -65,6 +68,7 @@ namespace BansheeEngine
 		/// Controls "bounciness" of an object during a collision. Value of 1 means the collision is elastic, and value of 0  
 		/// means the value is inelastic. Must be in [0, 1] range.
 		/// </summary>
+		[ShowInInspector]
 		public float Restitution
 		{
 			get { return Internal_getRestitutionCoefficient(mCachedPtr); }

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 namespace BansheeEngine
 {
 	/// <summary>Settings that control color grading post-process.</summary>
+	[ShowInInspector]
 	public partial class ColorGradingSettings : ScriptObject
 	{
 		private ColorGradingSettings(bool __dummy0) { }
@@ -13,6 +14,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Saturation to be applied during color grading. Larger values increase vibrancy of the image. In range [0.0f, 2.0f].
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Saturation
 		{
 			get
@@ -28,6 +30,7 @@ namespace BansheeEngine
 		/// Contrast to be applied during color grading. Larger values increase difference between light and dark areas of the 
 		/// image. In range [0.0f, 2.0f].
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Contrast
 		{
 			get
@@ -42,6 +45,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Gain to be applied during color grading. Simply increases all color values by an equal scale. In range [0.0f, 2.0f].
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Gain
 		{
 			get
@@ -56,6 +60,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Gain to be applied during color grading. Simply offsets all color values by an equal amount. In range [-1.0f, 1.0f].
 		/// </summary>
+		[ShowInInspector]
 		public Vector3 Offset
 		{
 			get

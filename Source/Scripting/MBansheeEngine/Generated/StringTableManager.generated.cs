@@ -12,12 +12,14 @@ namespace BansheeEngine
 	/// Manages string tables used for localizing text. Allows you to add and remove different tables and change the active  
 	/// language.
 	/// </summary>
+	[ShowInInspector]
 	public partial class StringTables : ScriptObject
 	{
 		private StringTables(bool __dummy0) { }
 		protected StringTables() { }
 
 		/// <summary>Determines the currently active language. Any newly created strings will use this value.</summary>
+		[ShowInInspector]
 		public static Language ActiveLanguage
 		{
 			get { return Internal_getActiveLanguage(); }

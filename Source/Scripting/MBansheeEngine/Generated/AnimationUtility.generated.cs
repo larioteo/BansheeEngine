@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Helper class for dealing with animations, animation clips and curves.</summary>
+	[ShowInInspector]
 	public partial class AnimationUtility : ScriptObject
 	{
 		private AnimationUtility(bool __dummy0) { }

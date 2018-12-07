@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Handles spawning of new particles using the specified parameters and shape.</summary>
+	[ShowInInspector]
 	public partial class ParticleEmitter : ScriptObject
 	{
 		private ParticleEmitter(bool __dummy0) { }
@@ -20,6 +21,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Shape over which to emit the particles.</summary>
+		[ShowInInspector]
 		public ParticleEmitterShape Shape
 		{
 			get { return Internal_getShape(mCachedPtr); }
@@ -27,6 +29,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines the number of particles that are emitted every second.</summary>
+		[ShowInInspector]
 		public FloatDistribution EmissionRate
 		{
 			get { return Internal_getEmissionRate(mCachedPtr); }
@@ -34,6 +37,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines discrete intervals to emit particles.</summary>
+		[ShowInInspector]
 		public ParticleBurst[] EmissionBursts
 		{
 			get { return Internal_getEmissionBursts(mCachedPtr); }
@@ -41,6 +45,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines the lifetime of particles when they are initially spawned, in seconds.</summary>
+		[ShowInInspector]
 		public FloatDistribution InitialLifetime
 		{
 			get { return Internal_getInitialLifetime(mCachedPtr); }
@@ -51,6 +56,7 @@ namespace BansheeEngine
 		/// Sets the initial speed of the particles, in meters/second. The speed is applied along the particle's velocity 
 		/// direction, which is determined by the emission shape and potentially other properties.
 		/// </summary>
+		[ShowInInspector]
 		public FloatDistribution InitialSpeed
 		{
 			get { return Internal_getInitialSpeed(mCachedPtr); }
@@ -61,6 +67,7 @@ namespace BansheeEngine
 		/// Determines the size of the particles when initially spawned. The size is applied uniformly in all dimensions. Only 
 		/// used if 3D size is disabled.
 		/// </summary>
+		[ShowInInspector]
 		public FloatDistribution InitialSize
 		{
 			get { return Internal_getInitialSize(mCachedPtr); }
@@ -71,6 +78,7 @@ namespace BansheeEngine
 		/// Determines the size of the particles when initially spawned. Size can be specified for each dimension separately. 
 		/// Only used if 3D size is enabled.
 		/// </summary>
+		[ShowInInspector]
 		public Vector3Distribution InitialSize3D
 		{
 			get { return Internal_getInitialSize3D(mCachedPtr); }
@@ -81,6 +89,7 @@ namespace BansheeEngine
 		/// Determines should the initial particle size be applied uniformly (if disabled), or evaluated separately for each 
 		/// dimension (if enabled).
 		/// </summary>
+		[ShowInInspector]
 		public bool Use3DSize
 		{
 			get { return Internal_getUse3DSize(mCachedPtr); }
@@ -91,6 +100,7 @@ namespace BansheeEngine
 		/// Determines the rotation of the particles when initially spawned, in degrees. The rotation is applied around the  
 		/// particle's local Z axis. Only used if 3D rotation is disabled.
 		/// </summary>
+		[ShowInInspector]
 		public FloatDistribution InitialRotation
 		{
 			get { return Internal_getInitialRotation(mCachedPtr); }
@@ -100,6 +110,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Determines the rotation of the particles when initially spawned, in Euler angles. Only used if 3D rotation is enabled.
 		/// </summary>
+		[ShowInInspector]
 		public Vector3Distribution InitialRotation3D
 		{
 			get { return Internal_getInitialRotation3D(mCachedPtr); }
@@ -110,6 +121,7 @@ namespace BansheeEngine
 		/// Determines should the initial particle rotation be a single angle applied around a Z axis (if disabled), or a  set of 
 		/// Euler angles that allow you to rotate around every axis (if enabled).
 		/// </summary>
+		[ShowInInspector]
 		public bool Use3DRotation
 		{
 			get { return Internal_getUse3DRotation(mCachedPtr); }
@@ -117,6 +129,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Determines the initial color (in RGB channels) and transparency (in A channel) of particles.</summary>
+		[ShowInInspector]
 		public ColorDistribution InitialColor
 		{
 			get { return Internal_getInitialColor(mCachedPtr); }
@@ -127,6 +140,7 @@ namespace BansheeEngine
 		/// Determines a range of values determining a random offset to apply to particle position after it has been emitted.  
 		/// Offset will be randomly selected in all three axes in range [-value, value].
 		/// </summary>
+		[ShowInInspector]
 		public float RandomOffset
 		{
 			get { return Internal_getRandomOffset(mCachedPtr); }
@@ -137,6 +151,7 @@ namespace BansheeEngine
 		/// Determines should particle U texture coordinate be randomly flipped, mirroring the image. The value represents a 
 		/// percent of particles that should be flipped, in range [0, 1].
 		/// </summary>
+		[ShowInInspector]
 		public float FlipU
 		{
 			get { return Internal_getFlipU(mCachedPtr); }
@@ -147,6 +162,7 @@ namespace BansheeEngine
 		/// Determines should particle V texture coordinate be randomly flipped, mirroring the image. The value represents a 
 		/// percent of particles that should be flipped, in range [0, 1].
 		/// </summary>
+		[ShowInInspector]
 		public float FlipV
 		{
 			get { return Internal_getFlipV(mCachedPtr); }

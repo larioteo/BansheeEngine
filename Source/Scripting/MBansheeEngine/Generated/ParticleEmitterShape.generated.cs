@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Base class from all emitter shapes. Emitter shapes determine the position and direction of newly created particles.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterShape : ScriptObject
 	{
 		private ParticleEmitterShape(bool __dummy0) { }

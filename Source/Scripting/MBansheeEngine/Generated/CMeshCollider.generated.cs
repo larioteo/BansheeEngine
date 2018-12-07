@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>A collider represented by an arbitrary mesh.</summary>
+	[ShowInInspector]
 	public partial class MeshCollider : Collider
 	{
 		private MeshCollider(bool __dummy0) { }

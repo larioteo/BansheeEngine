@@ -15,6 +15,7 @@ namespace BansheeEngine
 	/// Whether or not an audio source is spatial is controlled by the assigned AudioClip. The volume and the pitch of a 
 	/// spatial audio source is controlled by its position and the AudioListener's position/direction/velocity.
 	/// </summary>
+	[ShowInInspector]
 	public partial class AudioSource : Component
 	{
 		private AudioSource(bool __dummy0) { }

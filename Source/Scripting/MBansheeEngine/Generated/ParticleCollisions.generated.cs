@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Particle evolver that allows particles to collide with the world.</summary>
+	[ShowInInspector]
 	public partial class ParticleCollisions : ParticleEvolver
 	{
 		private ParticleCollisions(bool __dummy0) { }
@@ -28,6 +29,7 @@ namespace BansheeEngine
 		/// <summary>
 		/// Determines a set of planes to use when using the Plane collision mode. Planes are expected to be in world  space.
 		/// </summary>
+		[ShowInInspector]
 		public Plane[] Planes
 		{
 			get { return Internal_getPlanes(mCachedPtr); }
@@ -38,6 +40,7 @@ namespace BansheeEngine
 		/// Determines a set of objects whose transforms to derive the collision planes from. Objects can move in the world and 
 		/// collision planes will be updated automatically. Object's negative Z axis is considered to be plane normal.
 		/// </summary>
+		[ShowInInspector]
 		public SceneObject[] PlaneObjects
 		{
 			get { return Internal_getPlaneObjects(mCachedPtr); }
@@ -45,6 +48,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleCollisionsOptions Options
 		{
 			get

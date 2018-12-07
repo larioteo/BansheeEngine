@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Generates pseudo random numbers using the Xorshift128 algorithm. Suitable for high performance requirements.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Random : ScriptObject
 	{
 		private Random(bool __dummy0) { }

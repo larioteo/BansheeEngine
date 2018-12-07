@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// controling the radial arc of the emitted portion of the volume, as well as thickness of the cone emission volume. All 
 	/// particles will have random normals within the distribution of the cone.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterConeShape : ParticleEmitterShape
 	{
 		private ParticleEmitterConeShape(bool __dummy0) { }
@@ -30,6 +31,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleConeShapeOptions Options
 		{
 			get

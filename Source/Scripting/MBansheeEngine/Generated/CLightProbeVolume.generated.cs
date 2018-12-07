@@ -15,6 +15,7 @@ namespace BansheeEngine
 	///
 	/// The volume can never have less than 4 probes.
 	/// </summary>
+	[ShowInInspector]
 	public partial class LightProbeVolume : Component
 	{
 		private LightProbeVolume(bool __dummy0) { }

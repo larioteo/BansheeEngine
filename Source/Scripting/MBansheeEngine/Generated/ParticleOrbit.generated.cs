@@ -11,6 +11,7 @@ namespace BansheeEngine
 	/// <summary>
 	/// Moves particles so that their sprites orbit their center according to the provided offset and rotation values.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleOrbit : ParticleEvolver
 	{
 		private ParticleOrbit(bool __dummy0) { }
@@ -28,6 +29,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleOrbitOptions Options
 		{
 			get

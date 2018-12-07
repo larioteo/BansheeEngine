@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>A collider with plane geometry. Plane colliders cannot be a part of non-kinematic rigidbodies.</summary>
+	[ShowInInspector]
 	public partial class PlaneCollider : Collider
 	{
 		private PlaneCollider(bool __dummy0) { }

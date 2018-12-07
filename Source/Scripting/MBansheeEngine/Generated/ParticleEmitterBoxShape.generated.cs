@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Particle emitter shape that emits particles from an axis aligned box. Particles can be emitted from box volume, 
 	/// surface or edges. All particles have their normals set to positive Z direction.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterBoxShape : ParticleEmitterShape
 	{
 		private ParticleEmitterBoxShape(bool __dummy0) { }
@@ -29,6 +30,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleBoxShapeOptions Options
 		{
 			get

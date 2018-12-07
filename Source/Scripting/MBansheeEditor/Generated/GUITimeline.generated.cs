@@ -12,12 +12,14 @@ namespace BansheeEditor
 	/// <summary>
 	/// Base class that can be implemented by GUI elements needing to elements along draw a horizontal timeline.
 	/// </summary>
+	[ShowInInspector]
 	public partial class GUITimeline : GUIElement
 	{
 		private GUITimeline(bool __dummy0) { }
 		protected GUITimeline() { }
 
 		/// <summary>Determines the range of values to display on the timeline, in seconds.</summary>
+		[ShowInInspector]
 		public float Range
 		{
 			get { return Internal_getRange(mCachedPtr); }
@@ -25,6 +27,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Determines the offset at which the displayed timeline values start at, in seconds.</summary>
+		[ShowInInspector]
 		public float Offset
 		{
 			get { return Internal_getOffset(mCachedPtr); }
@@ -32,6 +35,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Number of frames per second, used for frame selection and marking.</summary>
+		[ShowInInspector]
 		public uint FPS
 		{
 			get { return Internal_getFPS(mCachedPtr); }
@@ -39,6 +43,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Frame to display the frame marker on. Set to -1 to clear the frame marker.</summary>
+		[ShowInInspector]
 		public uint MarkedFrame
 		{
 			get { return Internal_setMarkedFrame0(mCachedPtr); }
@@ -46,6 +51,7 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
+		[ShowInInspector]
 		public uint Padding
 		{
 			get { return Internal_getPadding(mCachedPtr); }

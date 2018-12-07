@@ -13,6 +13,7 @@ namespace BansheeEngine
 	/// emit only from circle edge, the entire surface or just a part of the surface. Using the arc parameter you can emit 
 	/// from a specific angular portion of the circle.
 	/// </summary>
+	[ShowInInspector]
 	public partial class ParticleEmitterCircleShape : ParticleEmitterShape
 	{
 		private ParticleEmitterCircleShape(bool __dummy0) { }
@@ -30,6 +31,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the shape.</summary>
+		[ShowInInspector]
 		public ParticleCircleShapeOptions Options
 		{
 			get

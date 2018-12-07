@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
 	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
 	/// </summary>
+	[ShowInInspector]
 	public partial class AnimationCurve : ScriptObject
 	{
 		private AnimationCurve(bool __dummy0) { }
@@ -25,6 +26,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		[ShowInInspector]
 		public KeyFrame[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -62,6 +64,7 @@ namespace BansheeEngine
 	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
 	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Vector3Curve : ScriptObject
 	{
 		private Vector3Curve(bool __dummy0) { }
@@ -75,6 +78,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		[ShowInInspector]
 		public KeyFrameVec3[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -114,6 +118,7 @@ namespace BansheeEngine
 	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
 	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
 	/// </summary>
+	[ShowInInspector]
 	public partial class Vector2Curve : ScriptObject
 	{
 		private Vector2Curve(bool __dummy0) { }
@@ -127,6 +132,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		[ShowInInspector]
 		public KeyFrameVec2[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -166,6 +172,7 @@ namespace BansheeEngine
 	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
 	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
 	/// </summary>
+	[ShowInInspector]
 	public partial class QuaternionCurve : ScriptObject
 	{
 		private QuaternionCurve(bool __dummy0) { }
@@ -179,6 +186,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		[ShowInInspector]
 		public KeyFrameQuat[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -218,6 +226,7 @@ namespace BansheeEngine
 	/// Animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve. The spline 
 	/// can be evaluated at any time, and uses caching to speed up multiple sequential evaluations.
 	/// </summary>
+	[ShowInInspector]
 	public partial class IntegerCurve : ScriptObject
 	{
 		private IntegerCurve(bool __dummy0) { }
@@ -231,6 +240,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
+		[ShowInInspector]
 		public KeyFrameInt[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }

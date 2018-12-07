@@ -9,6 +9,7 @@ namespace BansheeEngine
 	 */
 
 	/// <summary>Applies an arbitrary force to the particles.</summary>
+	[ShowInInspector]
 	public partial class ParticleForce : ParticleEvolver
 	{
 		private ParticleForce(bool __dummy0) { }
@@ -26,6 +27,7 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Options describing the evolver.</summary>
+		[ShowInInspector]
 		public ParticleForceOptions Options
 		{
 			get

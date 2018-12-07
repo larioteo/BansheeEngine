@@ -12,6 +12,7 @@ namespace BansheeEngine
 	/// Audio clip stores audio data in a compressed or uncompressed format. Clips can be provided to audio sources or other 
 	/// audio methods to be played.
 	/// </summary>
+	[ShowInInspector]
 	public partial class AudioClip : Resource
 	{
 		private AudioClip(bool __dummy0) { }
@@ -24,48 +25,56 @@ namespace BansheeEngine
 		}
 
 		/// <summary>Returns the size of a single sample, in bits.</summary>
+		[ShowInInspector]
 		public uint BitDepth
 		{
 			get { return Internal_getBitDepth(mCachedPtr); }
 		}
 
 		/// <summary>Returns how many samples per second is the audio encoded in.</summary>
+		[ShowInInspector]
 		public uint SampleRate
 		{
 			get { return Internal_getFrequency(mCachedPtr); }
 		}
 
 		/// <summary>Returns the number of channels provided by the clip.</summary>
+		[ShowInInspector]
 		public uint NumChannels
 		{
 			get { return Internal_getNumChannels(mCachedPtr); }
 		}
 
 		/// <summary>Returns in which format is audio data stored in.</summary>
+		[ShowInInspector]
 		public AudioFormat Format
 		{
 			get { return Internal_getFormat(mCachedPtr); }
 		}
 
 		/// <summary>Returns how is the audio data read/decoded.</summary>
+		[ShowInInspector]
 		public AudioReadMode ReadMode
 		{
 			get { return Internal_getReadMode(mCachedPtr); }
 		}
 
 		/// <summary>Returns the length of the audio clip, in seconds.</summary>
+		[ShowInInspector]
 		public float Duration
 		{
 			get { return Internal_getLength(mCachedPtr); }
 		}
 
 		/// <summary>Returns the total number of samples in the clip (includes all channels).</summary>
+		[ShowInInspector]
 		public uint NumSamples
 		{
 			get { return Internal_getNumSamples(mCachedPtr); }
 		}
 
 		/// <summary>Determines will the clip be played a spatial 3D sound, or as a normal sound (for example music).</summary>
+		[ShowInInspector]
 		public bool Is3D
 		{
 			get { return Internal_is3D(mCachedPtr); }
