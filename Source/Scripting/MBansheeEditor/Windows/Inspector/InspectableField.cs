@@ -222,6 +222,9 @@ namespace BansheeEditor
                     case SerializableProperty.FieldType.Dictionary:
                         field = new InspectableDictionary(parent, title, path, depth, layout, property);
                         break;
+                    case SerializableProperty.FieldType.Enum:
+                        field = new InspectableEnum(parent, title, path, depth, layout, property);
+                        break;
                 }
             }
 

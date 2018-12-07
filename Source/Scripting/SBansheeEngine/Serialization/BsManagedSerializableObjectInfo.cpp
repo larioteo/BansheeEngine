@@ -342,6 +342,45 @@ namespace bs
 		return ManagedSerializableTypeInfoPrimitive::getRTTIStatic();
 	}
 
+	bool ManagedSerializableTypeInfoEnum::matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const
+	{
+		if(const auto enumTypeInfo = rtti_cast<ManagedSerializableTypeInfoEnum>(typeInfo.get()))
+		{
+			return
+				enumTypeInfo->mTypeNamespace == mTypeNamespace &&
+				enumTypeInfo->mTypeName == mTypeName &&
+				enumTypeInfo->mUnderlyingType == mUnderlyingType;
+		}
+
+		return false;
+	}
+
+	bool ManagedSerializableTypeInfoEnum::isTypeLoaded() const
+	{
+		MonoClass* klass = MonoManager::instance().findClass(mTypeNamespace, mTypeName);
+		return klass != nullptr;
+	}
+
+	::MonoClass* ManagedSerializableTypeInfoEnum::getMonoClass() const
+	{
+		MonoClass* klass = MonoManager::instance().findClass(mTypeNamespace, mTypeName);
+
+		if(klass)
+			return klass->_getInternalClass();
+
+		return nullptr;
+	}
+
+	RTTITypeBase* ManagedSerializableTypeInfoEnum::getRTTIStatic()
+	{
+		return ManagedSerializableTypeInfoEnumRTTI::instance();
+	}
+
+	RTTITypeBase* ManagedSerializableTypeInfoEnum::getRTTI() const
+	{
+		return ManagedSerializableTypeInfoEnum::getRTTIStatic();
+	}
+
 	bool ManagedSerializableTypeInfoRef::matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const
 	{
 		if (!rtti_is_of_type<ManagedSerializableTypeInfoRef>(typeInfo))

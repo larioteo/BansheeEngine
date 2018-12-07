@@ -123,6 +123,32 @@ namespace bs
 		RTTITypeBase* getRTTI() const override;
 	};
 
+	/**	Contains information about a type of a managed serializable enum. */
+	class BS_SCR_BE_EXPORT ManagedSerializableTypeInfoEnum : public ManagedSerializableTypeInfo
+	{
+	public:
+		/** @copydoc ManagedSerializableTypeInfo::matches */
+		bool matches(const SPtr<ManagedSerializableTypeInfo>& typeInfo) const override;
+
+		/** @copydoc ManagedSerializableTypeInfo::isTypeLoaded */
+		bool isTypeLoaded() const override;
+
+		/** @copydoc ManagedSerializableTypeInfo::getMonoClass */
+		::MonoClass* getMonoClass() const override;
+
+		ScriptPrimitiveType mUnderlyingType;
+		String mTypeNamespace;
+		String mTypeName;
+
+		/************************************************************************/
+		/* 								RTTI		                     		*/
+		/************************************************************************/
+	public:
+		friend class ManagedSerializableTypeInfoEnumRTTI;
+		static RTTITypeBase* getRTTIStatic();
+		RTTITypeBase* getRTTI() const override;
+	};
+
 	/**	Contains information about a type of a managed serializable game object or resourcee. */
 	class BS_SCR_BE_EXPORT ManagedSerializableTypeInfoRef : public ManagedSerializableTypeInfo
 	{

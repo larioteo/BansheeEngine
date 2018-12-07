@@ -328,86 +328,88 @@ namespace bs
 			monoPrimitiveType = MonoUtil::getEnumPrimitiveType(monoClass->_getInternalClass());
 
 		//  Determine field type
+		//// Check for simple types or enums first
+		ScriptPrimitiveType scriptPrimitiveType = ScriptPrimitiveType::U32;
+		bool isSimpleType = false;
 		switch(monoPrimitiveType)
 		{
 		case MonoPrimitiveType::Boolean:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::Bool;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::Bool;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::Char:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::Char;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::Char;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::I8:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::I8;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::I8;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::U8:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::U8;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::U8;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::I16:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::I16;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::I16;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::U16:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::U16;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::U16;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::I32:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::I32;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::I32;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::U32:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::U32;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::U32;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::I64:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::I64;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::I64;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::U64:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::U64;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::U64;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::String:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::String;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::String;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::R32:
-			{
-				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::Float;
-				return typeInfo;
-			}
+			scriptPrimitiveType = ScriptPrimitiveType::Float;
+			isSimpleType = true;
+			break;
 		case MonoPrimitiveType::R64:
+			scriptPrimitiveType = ScriptPrimitiveType::Double;
+			isSimpleType = true;
+			break;
+		default:
+			break;
+		};
+
+		if(isSimpleType)
+		{
+			if(!isEnum)
 			{
 				SPtr<ManagedSerializableTypeInfoPrimitive> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoPrimitive>();
-				typeInfo->mType = ScriptPrimitiveType::Double;
+				typeInfo->mType = scriptPrimitiveType;
 				return typeInfo;
 			}
+			else
+			{
+				SPtr<ManagedSerializableTypeInfoEnum> typeInfo = bs_shared_ptr_new<ManagedSerializableTypeInfoEnum>();
+				typeInfo->mUnderlyingType = scriptPrimitiveType;
+				typeInfo->mTypeNamespace = monoClass->getNamespace();
+				typeInfo->mTypeName = monoClass->getTypeName();
+				return typeInfo;
+			}
+		}
+
+		//// Check complex types
+		switch(monoPrimitiveType)
+		{
 		case MonoPrimitiveType::Class:
 			if(monoClass->isSubClassOf(ScriptResource::getMetaData()->scriptClass)) // Resource
 			{

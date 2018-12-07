@@ -177,6 +177,7 @@ namespace bs
 		TID_SerializableFieldInfo = 50051,
 		TID_SerializablePropertyInfo = 50052,
 		TID_SerializableTypeInfoRRef = 50053,
+		TID_SerializableTypeInfoEnum = 50054,
 	};
 
 	/** Information about a builtin component wrapped as a script object. */

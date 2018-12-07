@@ -41,7 +41,8 @@ namespace BansheeEngine
             Curve,
             FloatDistribution,
             ColorDistribution,
-            Quaternion
+            Quaternion,
+            Enum
         }
 
         public delegate object Getter();
@@ -149,8 +150,24 @@ namespace BansheeEngine
         /// <param name="value">New value to assign to the property.</param>
         public void SetValue<T>(T value)
         {
-            if (!typeof(T).IsAssignableFrom(internalType))
-                throw new Exception("Attempted to set a serializable value using an invalid type. Provided type: " + typeof(T) + ". Needed type: " + internalType);
+            // Cast if possible
+            if (typeof(T) != internalType)
+            {
+                // Note: Not checking cast operators
+                if (internalType.IsPrimitive || internalType.IsEnum)
+                {
+                    if (internalType == typeof(bool) || typeof(T) == typeof(bool))
+                        throw new Exception("Attempted to set a serializable value using an invalid type. " +
+                            "Provided type: " + typeof(T) + ". Needed type: " + internalType);
+
+                   setter((T) Convert.ChangeType(getter(), typeof(T)));
+                   return;
+                }
+
+                if (!typeof(T).IsAssignableFrom(internalType))
+                    throw new Exception("Attempted to set a serializable value using an invalid type. " +
+                        "Provided type: " + typeof(T) + ". Needed type: " + internalType);
+            }
 
             setter(value);
         }
@@ -343,7 +360,9 @@ namespace BansheeEngine
         {
             if (!internalType.IsArray)
             {
-                if (internalType == typeof (Byte))
+                if (internalType.IsEnum)
+                    return FieldType.Enum;
+                else if (internalType == typeof (Byte))
                     return FieldType.Int;
                 else if (internalType == typeof (SByte))
                     return FieldType.Int;

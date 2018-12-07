@@ -282,6 +282,37 @@ namespace bs
 		}
 	};
 
+	class BS_SCR_BE_EXPORT ManagedSerializableTypeInfoEnumRTTI : public RTTIType<ManagedSerializableTypeInfoEnum, ManagedSerializableTypeInfo, ManagedSerializableTypeInfoEnumRTTI>
+	{
+	private:
+		BS_BEGIN_RTTI_MEMBERS
+			BS_RTTI_MEMBER_PLAIN(mUnderlyingType, 0)
+			BS_RTTI_MEMBER_PLAIN(mTypeNamespace, 1)
+			BS_RTTI_MEMBER_PLAIN(mTypeName, 2)
+		BS_END_RTTI_MEMBERS
+
+	public:
+		ManagedSerializableTypeInfoEnumRTTI()
+			:mInitMembers(this)
+		{ }
+
+		const String& getRTTIName() override
+		{
+			static String name = "ScriptSerializableTypeInfoEnum";
+			return name;
+		}
+
+		UINT32 getRTTIId() override
+		{
+			return TID_SerializableTypeInfoEnum;
+		}
+
+		SPtr<IReflectable> newRTTIObject() override
+		{
+			return bs_shared_ptr_new<ManagedSerializableTypeInfoEnum>();
+		}
+	};
+
 	class BS_SCR_BE_EXPORT ManagedSerializableTypeInfoRefRTTI : public RTTIType<ManagedSerializableTypeInfoRef, ManagedSerializableTypeInfo, ManagedSerializableTypeInfoRefRTTI>
 	{
 	private:

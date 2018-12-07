@@ -31,6 +31,16 @@ namespace bs
 		return false;
 	}
 
+	bool isPrimitiveOrEnumType(const SPtr<ManagedSerializableTypeInfo>& typeInfo, ScriptPrimitiveType underlyingType)
+	{
+		if(const auto primitiveTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
+			return primitiveTypeInfo->mType == underlyingType;
+		else if(const auto enumTypeInfo = rtti_cast<ManagedSerializableTypeInfoEnum>(typeInfo.get()))
+			return enumTypeInfo->mUnderlyingType == underlyingType;
+
+		return false;
+	}
+
 	ManagedSerializableFieldKey::ManagedSerializableFieldKey()
 		:mTypeId(0), mFieldId(0)
 	{ }
@@ -66,10 +76,16 @@ namespace bs
 
 	SPtr<ManagedSerializableFieldData> ManagedSerializableFieldData::create(const SPtr<ManagedSerializableTypeInfo>& typeInfo, MonoObject* value, bool allowNull)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
+		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive || typeInfo->getTypeId() == TID_SerializableTypeInfoEnum)
 		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			switch (primitiveTypeInfo->mType)
+			ScriptPrimitiveType primitiveType = ScriptPrimitiveType::I32;
+
+			if(auto primitiveTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
+				primitiveType = primitiveTypeInfo->mType;
+			else if(auto enumTypeInfo = rtti_cast<ManagedSerializableTypeInfoEnum>(typeInfo.get()))
+				primitiveType = enumTypeInfo->mUnderlyingType;
+
+			switch (primitiveType)
 			{
 			case ScriptPrimitiveType::Bool:
 				{
@@ -331,12 +347,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataBool::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::Bool)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::Bool))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -344,12 +356,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataChar::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::Char)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::Char))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -357,12 +365,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataI8::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::I8)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I8))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -370,12 +374,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataU8::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::U8)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U8))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -383,12 +383,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataI16::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::I16)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I16))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -396,12 +392,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataU16::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::U16)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U16))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -409,12 +401,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataI32::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::I32)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I32))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -422,12 +410,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataU32::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::U32)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U32))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -435,12 +419,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataI64::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::I64)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I64))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -448,12 +428,8 @@ namespace bs
 
 	void* ManagedSerializableFieldDataU64::getValue(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if(typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if(primitiveTypeInfo->mType == ScriptPrimitiveType::U64)
-				return &value;
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U64))
+			return &value;
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -680,12 +656,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataBool::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::Bool)
-				return MonoUtil::box(MonoUtil::getBoolClass(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::Bool))
+			return MonoUtil::box(MonoUtil::getBoolClass(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -693,12 +665,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataChar::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::Char)
-				return MonoUtil::box(MonoUtil::getCharClass(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::Char))
+			return MonoUtil::box(MonoUtil::getCharClass(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -706,12 +674,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataI8::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::I8)
-				return MonoUtil::box(MonoUtil::getSByteClass(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I8))
+			return MonoUtil::box(MonoUtil::getSByteClass(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -719,12 +683,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataU8::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::U8)
-				return MonoUtil::box(MonoUtil::getByteClass(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U8))
+			return MonoUtil::box(MonoUtil::getByteClass(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -732,12 +692,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataI16::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::I16)
-				return MonoUtil::box(MonoUtil::getINT16Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I16))
+			return MonoUtil::box(MonoUtil::getINT16Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -745,12 +701,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataU16::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::U16)
-				return MonoUtil::box(MonoUtil::getUINT16Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U16))
+			return MonoUtil::box(MonoUtil::getUINT16Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -758,12 +710,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataI32::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::I32)
-				return MonoUtil::box(MonoUtil::getINT32Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I32))
+			return MonoUtil::box(MonoUtil::getINT32Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -771,12 +719,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataU32::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::U32)
-				return MonoUtil::box(MonoUtil::getUINT32Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U32))
+			return MonoUtil::box(MonoUtil::getUINT32Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -784,12 +728,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataI64::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::I64)
-				return MonoUtil::box(MonoUtil::getINT64Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::I64))
+			return MonoUtil::box(MonoUtil::getINT64Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;
@@ -797,12 +737,8 @@ namespace bs
 
 	MonoObject* ManagedSerializableFieldDataU64::getValueBoxed(const SPtr<ManagedSerializableTypeInfo>& typeInfo)
 	{
-		if (typeInfo->getTypeId() == TID_SerializableTypeInfoPrimitive)
-		{
-			auto primitiveTypeInfo = std::static_pointer_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo);
-			if (primitiveTypeInfo->mType == ScriptPrimitiveType::U64)
-				return MonoUtil::box(MonoUtil::getUINT64Class(), &value);
-		}
+		if(isPrimitiveOrEnumType(typeInfo, ScriptPrimitiveType::U64))
+			return MonoUtil::box(MonoUtil::getUINT64Class(), &value);
 
 		BS_EXCEPT(InvalidParametersException, "Requesting an invalid type in serializable field.");
 		return nullptr;

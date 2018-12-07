@@ -135,7 +135,7 @@ namespace bs
 			return;
 
 		SPtr<PixelData> pixelData = sourceScriptPixelData->getInternal();
-		PixelUtil::SRGBToLinear(*pixelData);
+		PixelUtil::linearToSRGB(*pixelData);
 	}
 
 	void ScriptPixelUtility::internal_SRGBToLinear(MonoObject* source)
