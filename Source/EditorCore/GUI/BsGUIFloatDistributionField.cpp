@@ -2,9 +2,12 @@
 //**************** Copyright (c) 2018 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "GUI/BsGUIFloatDistributionField.h"
 #include "GUI/BsGUILayout.h"
+#include "GUI/BsGUILayoutY.h"
 #include "GUI/BsGUILabel.h"
 #include "GUI/BsGUIColor.h"
 #include "GUI/BsGUIFloatField.h"
+#include "GUI/BsGUIVector2Field.h"
+#include "GUI/BsGUIVector3Field.h"
 #include "GUI/BsGUICurves.h"
 #include "GUI/BsGUIButton.h"
 #include "GUI/BsGUIContextMenu.h"
@@ -14,7 +17,17 @@ using namespace std::placeholders;
 
 namespace bs
 {
-	GUIFloatDistributionField::GUIFloatDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
+	namespace impl
+	{
+		template<class T>
+		bool isVertical() { return true; }
+
+		template<>
+		bool isVertical<float>() { return false; }
+	}
+
+	template<class T, class SELF>
+	TGUIDistributionField<T, SELF>::TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
@@ -22,32 +35,42 @@ namespace bs
 
 		mContextMenu->addMenuItem("Constant", [this]()
 		{
-			mValue = FloatDistribution(mMinConstant);
+			mValue = TDistribution<T>(mMinConstant);
 			rebuild();
 		}, 50);
 
 		mContextMenu->addMenuItem("Range", [this]()
 		{
-			mValue = FloatDistribution(mMinConstant, mMaxConstant);
+			mValue = TDistribution<T>(mMinConstant, mMaxConstant);
 			rebuild();
 		}, 40);
 
 		mContextMenu->addMenuItem("Curve", [this]()
 		{
-			mValue = FloatDistribution(mCurves[0]);
+			TAnimationCurve<T> combinedCurve;
+			AnimationUtility::combineCurve<T>(mMinCurve, combinedCurve);
+
+			mValue = TDistribution<T>(combinedCurve);
 			rebuild();
 		}, 30);
 
 		mContextMenu->addMenuItem("Curve range", [this]()
 		{
-			mValue = FloatDistribution(mCurves[0], mCurves[1]);
+			TAnimationCurve<T> combinedCurveMin;
+			AnimationUtility::combineCurve<T>(mMinCurve, combinedCurveMin);
+
+			TAnimationCurve<T> combinedCurveMax;
+			AnimationUtility::combineCurve<T>(mMaxCurve, combinedCurveMax);
+
+			mValue = TDistribution<T>(combinedCurveMin, combinedCurveMax);
 			rebuild();
 		}, 20);
 
 		rebuild();
 	}
 
-	void GUIFloatDistributionField::setValue(const FloatDistribution& value)
+	template<class T, class SELF>
+	void TGUIDistributionField<T, SELF>::setValue(const TDistribution<T>& value)
 	{
 		mValue = value;
 
@@ -57,41 +80,63 @@ namespace bs
 		case PDT_Constant:
 			mMinConstant = mValue.getMinConstant();
 			mMaxConstant = mMinConstant;
-			mCurves[0] = TAnimationCurve<float>({
-				{ mMinConstant, 0.0f, 0.0f, 0.0f}, 
-				{ mMinConstant, 0.0f, 0.0f, 1.0f}});
-			mCurves[1] = TAnimationCurve<float>({
-				{ mMinConstant, 0.0f, 0.0f, 0.0f}, 
-				{ mMinConstant, 0.0f, 0.0f, 1.0f}});
+
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				mMinCurve[i] = TAnimationCurve<float>({
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
+
+				mMaxCurve[1] = TAnimationCurve<float>({
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
+			}
+
 			break;
 		case PDT_RandomRange: 
 			mMinConstant = mValue.getMinConstant();
 			mMaxConstant = mValue.getMaxConstant();
-			mCurves[0] = TAnimationCurve<float>({
-				{ mMinConstant, 0.0f, 0.0f, 0.0f}, 
-				{ mMinConstant, 0.0f, 0.0f, 1.0f}});
-			mCurves[1] = TAnimationCurve<float>({
-				{ mMaxConstant, 0.0f, 0.0f, 0.0f}, 
-				{ mMaxConstant, 0.0f, 0.0f, 1.0f}});
+
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				mMinCurve[i] = TAnimationCurve<float>({
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
+					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
+
+				mMaxCurve[1] = TAnimationCurve<float>({
+					{ TCurveProperties<T>::getComponent(mMaxConstant, i), 0.0f, 0.0f, 0.0f},
+					{ TCurveProperties<T>::getComponent(mMaxConstant, i), 0.0f, 0.0f, 1.0f} });
+			}
 			break;
-		case PDT_Curve: 
-			mCurves[0] = mValue.getMinCurve();
-			mCurves[1] = mValue.getMinCurve();
-			mMinConstant = mCurves[0].evaluate(0.0f);
-			mMaxConstant = mCurves[1].evaluate(0.0f);
+		case PDT_Curve:
+			AnimationUtility::splitCurve(mValue.getMinCurve(), mMinCurve);
+			AnimationUtility::splitCurve(mValue.getMinCurve(), mMaxCurve);
+
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
+				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
+			}
+
 			break;
 		case PDT_RandomCurveRange: 
-			mCurves[0] = mValue.getMinCurve();
-			mCurves[1] = mValue.getMaxCurve();
-			mMinConstant = mCurves[0].evaluate(0.0f);
-			mMaxConstant = mCurves[1].evaluate(0.0f);
+			AnimationUtility::splitCurve(mValue.getMinCurve(), mMinCurve);
+			AnimationUtility::splitCurve(mValue.getMaxCurve(), mMaxCurve);
+
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
+				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
+			}
+
 			break;
 		}
 
 		rebuild();
 	}
 
-	bool GUIFloatDistributionField::hasInputFocus() const
+	template<class T, class SELF>
+	bool TGUIDistributionField<T, SELF>::hasInputFocus() const
 	{
 		if(mMinInput && mMinInput->hasInputFocus())
 			return true;
@@ -102,7 +147,8 @@ namespace bs
 		return false;
 	}
 
-	void GUIFloatDistributionField::setTint(const Color& color)
+	template<class T, class SELF>
+	void TGUIDistributionField<T, SELF>::setTint(const Color& color)
 	{
 		mDropDownButton->setTint(color);
 
@@ -115,11 +161,15 @@ namespace bs
 		if(mMaxInput)
 			mMaxInput->setTint(color);
 
-		if(mCurveDisplay)
-			mCurveDisplay->setTint(color);
+		for(int i = 0; i < NumComponents; i++)
+		{
+			if(mCurveDisplay[i])
+				mCurveDisplay[i]->setTint(color);
+		}
 	}
 
-	Vector2I GUIFloatDistributionField::_getOptimalSize() const
+	template<class T, class SELF>
+	Vector2I TGUIDistributionField<T, SELF>::_getOptimalSize() const
 	{
 		Vector2I optimalsize = mDropDownButton->_getOptimalSize();
 
@@ -129,28 +179,58 @@ namespace bs
 			optimalsize.y = std::max(optimalsize.y, mLabel->_getOptimalSize().y);
 		}
 
-		if(mMinInput)
+		if(impl::isVertical<T>())
 		{
-			optimalsize.x += mMinInput->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMinInput->_getOptimalSize().y);
-		}
+			if (mMinInput)
+			{
+				optimalsize.x = std::max(optimalsize.x, mMinInput->_getOptimalSize().x);
+				optimalsize.y += mMinInput->_getOptimalSize().y;
+			}
 
-		if(mMaxInput)
-		{
-			optimalsize.x += mMaxInput->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMaxInput->_getOptimalSize().y);
-		}
+			if (mMaxInput)
+			{
+				optimalsize.x = std::max(optimalsize.x, mMaxInput->_getOptimalSize().x);
+				optimalsize.y += mMaxInput->_getOptimalSize().y;
+			}
 
-		if(mCurveDisplay)
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				if (mCurveDisplay[i])
+				{
+					optimalsize.x = std::max(optimalsize.x, 50);
+					optimalsize.y += mCurveDisplay[i]->_getOptimalSize().y;
+				}
+			}
+		}
+		else
 		{
-			optimalsize.x += mCurveDisplay->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, 50);
+			if (mMinInput)
+			{
+				optimalsize.x += mMinInput->_getOptimalSize().x;
+				optimalsize.y = std::max(optimalsize.y, mMinInput->_getOptimalSize().y);
+			}
+
+			if (mMaxInput)
+			{
+				optimalsize.x += mMaxInput->_getOptimalSize().x;
+				optimalsize.y = std::max(optimalsize.y, mMaxInput->_getOptimalSize().y);
+			}
+
+			for(UINT32 i = 0; i < NumComponents; i++)
+			{
+				if (mCurveDisplay[i])
+				{
+					optimalsize.x += mCurveDisplay[i]->_getOptimalSize().x;
+					optimalsize.y = std::max(optimalsize.y, 50);
+				}
+			}
 		}
 
 		return optimalsize;
 	}
 
-	void GUIFloatDistributionField::styleUpdated()
+	template<class T, class SELF>
+	void TGUIDistributionField<T, SELF>::styleUpdated()
 	{
 		mDropDownButton->setStyle(getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
 
@@ -163,11 +243,15 @@ namespace bs
 		if (mMaxInput)
 			mMaxInput->setStyle(getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
-		if (mCurveDisplay)
-			mCurveDisplay->setStyle(getSubStyleName(CURVES_FIELD_STYLE_TYPE));
+		for(int i = 0; i < NumComponents; i++)
+		{
+			if (mCurveDisplay[i])
+				mCurveDisplay[i]->setStyle(getSubStyleName(CURVES_FIELD_STYLE_TYPE));
+		}
 	}
 
-	void GUIFloatDistributionField::rebuild()
+	template<class T, class SELF>
+	void TGUIDistributionField<T, SELF>::rebuild()
 	{
 		if(mLabel)
 			mLayout->removeElement(mLabel);
@@ -175,88 +259,104 @@ namespace bs
 		mLayout->clear();
 		mLayout->addElement(mLabel);
 
+		GUILayout* valueLayout;
+		
+		if(impl::isVertical<T>())
+			valueLayout = mLayout->addNewElement<GUILayoutY>();
+		else
+			valueLayout = mLayout;
+
 		switch (mValue.getType())
 		{
 		default:
 		case PDT_Constant:
-			mMinInput = GUIFloatField::create(HString("Constant"), 50, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput = GUIConstantType::create(HString("Constant"), 50, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 			mMaxInput = nullptr;
-			mCurveDisplay = nullptr;
+
+			for(int i = 0; i < NumComponents; i++)
+				mCurveDisplay[i] = nullptr;
 
 			mMinInput->setValue(mMinConstant);
-			mMinInput->onValueChanged.connect([this](float value)
+			mMinInput->onValueChanged.connect([this](T value)
 			{
 				mMinConstant = value;
-				mValue = FloatDistribution(value);
+				mValue = TDistribution<T>(value);
 
 				onConstantModified();
 			});
 			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
-			mLayout->addElement(mMinInput);
+			valueLayout->addElement(mMinInput);
 			break;
 		case PDT_RandomRange: 
-			mMinInput = GUIFloatField::create(HString("Min."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
-			mMaxInput = GUIFloatField::create(HString("Max."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
-			mCurveDisplay = nullptr;
+			mMinInput = GUIConstantType::create(HString("Min."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMaxInput = GUIConstantType::create(HString("Max."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+
+			for(int i = 0; i < NumComponents; i++)
+				mCurveDisplay[i] = nullptr;
 
 			mMinInput->setValue(mMinConstant);
-			mMinInput->onValueChanged.connect([this](float value)
+			mMinInput->onValueChanged.connect([this](T value)
 			{
 				mMinConstant = value;
-				mValue = FloatDistribution(value, mMaxConstant);
+				mValue = TDistribution<T>(value, mMaxConstant);
 
 				onConstantModified();
 			});
 			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
 			mMaxInput->setValue(mMaxConstant);
-			mMaxInput->onValueChanged.connect([this](float value)
+			mMaxInput->onValueChanged.connect([this](T value)
 			{
 				mMaxConstant = value;
-				mValue = FloatDistribution(mMinConstant, value);
+				mValue = TDistribution<T>(mMinConstant, value);
 
 				onConstantModified();
 			});
 			mMaxInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
-			mLayout->addElement(mMinInput);
-			mLayout->addElement(mMaxInput);
+			valueLayout->addElement(mMinInput);
+			valueLayout->addElement(mMaxInput);
 			break;
 		case PDT_Curve: 
 			mMinInput = nullptr;
 			mMaxInput = nullptr;
-			mCurveDisplay = GUICurves::create(CurveDrawOption::DrawMarkers, 
-				getSubStyleName(CURVES_FIELD_STYLE_TYPE));
 
-			mCurveDisplay->setCurves(
-				{
-					CurveDrawInfo(mValue.getMinCurve(), Color::BansheeOrange)
-				});
+			for(int i = 0; i < NumComponents; i++)
+			{
+				mCurveDisplay[i] = GUICurves::create(CurveDrawOption::DrawMarkers, getSubStyleName(CURVES_FIELD_STYLE_TYPE));
+				mCurveDisplay[i]->setCurves({ CurveDrawInfo(mMinCurve[i], Color::BansheeOrange) });
 
-			mCurveDisplay->setPadding(3);
-			mCurveDisplay->centerAndZoom();
-			mCurveDisplay->onClicked.connect([this](){ onClicked(); });
+				mCurveDisplay[i]->setPadding(3);
+				mCurveDisplay[i]->centerAndZoom();
+				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
 
-			mLayout->addElement(mCurveDisplay);
+				valueLayout->addElement(mCurveDisplay[i]);
+			}
+
 			break;
 		case PDT_RandomCurveRange: 
 			mMinInput = nullptr;
 			mMaxInput = nullptr;
-			mCurveDisplay = GUICurves::create(CurveDrawOption::DrawMarkers | CurveDrawOption::DrawRange, 
-				getSubStyleName(CURVES_FIELD_STYLE_TYPE));
 
-			mCurveDisplay->setCurves(
-				{
-					CurveDrawInfo(mValue.getMinCurve(), Color::BansheeOrange),
-					CurveDrawInfo(mValue.getMaxCurve(), Color::Red)
-				});
+			for(int i = 0; i < NumComponents; i++)
+			{
+				mCurveDisplay[i] = GUICurves::create(CurveDrawOption::DrawMarkers | CurveDrawOption::DrawRange,
+					getSubStyleName(CURVES_FIELD_STYLE_TYPE));
 
-			mCurveDisplay->setPadding(3);
-			mCurveDisplay->centerAndZoom();
-			mCurveDisplay->onClicked.connect([this](){ onClicked(); });
+				mCurveDisplay[i]->setCurves(
+					{
+						CurveDrawInfo(mMinCurve[i], Color::BansheeOrange),
+						CurveDrawInfo(mMaxCurve[i], Color::Red)
+					});
 
-			mLayout->addElement(mCurveDisplay);
+				mCurveDisplay[i]->setPadding(3);
+				mCurveDisplay[i]->centerAndZoom();
+				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
+
+				valueLayout->addElement(mCurveDisplay[i]);
+			}
+
 			break;
 		}
 
@@ -273,9 +373,25 @@ namespace bs
 		mLayout->addElement(mDropDownButton);
 	}
 
+	template class BS_ED_EXPORT TGUIDistributionField<float, GUIFloatDistributionField>;
+	template class BS_ED_EXPORT TGUIDistributionField<Vector2, GUIVector2DistributionField>;
+	template class BS_ED_EXPORT TGUIDistributionField<Vector3, GUIVector3DistributionField>;
+
 	const String& GUIFloatDistributionField::getGUITypeName()
 	{
 		static String typeName = "GUIFloatDistributionField";
+		return typeName;
+	}
+
+	const String& GUIVector2DistributionField::getGUITypeName()
+	{
+		static String typeName = "GUIVector2DistributionField";
+		return typeName;
+	}
+
+	const String& GUIVector3DistributionField::getGUITypeName()
+	{
+		static String typeName = "GUIVector3DistributionField";
 		return typeName;
 	}
 }

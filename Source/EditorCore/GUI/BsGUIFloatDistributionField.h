@@ -5,22 +5,47 @@
 #include "BsEditorPrerequisites.h"
 #include "GUI/BsGUIFieldBase.h"
 #include "Particles/BsParticleDistribution.h"
+#include "Animation/BsAnimationUtility.h"
 
 namespace bs
 {
 	class GUICurves;
 
-	/** @addtogroup GUI-Editor
+	/** @addtogroup GUI-Editor-Internal
 	 *  @{
 	 */
 
-	/**
-	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
-	 * Label is optional. This specific implementation displays an input field for a floating point distribution.
-	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
-	GUIFloatDistributionField final : public TGUIField<GUIFloatDistributionField>
+	namespace impl
 	{
+		template<class T>
+		struct TGUIDistributionMeta { };
+
+		template<>
+		struct TGUIDistributionMeta<float>
+		{
+			using ConstantField = GUIFloatField;
+		};
+
+		template<>
+		struct TGUIDistributionMeta<Vector2>
+		{
+			using ConstantField = GUIVector2Field;
+		};
+
+		template<>
+		struct TGUIDistributionMeta<Vector3>
+		{
+			using ConstantField = GUIVector3Field;
+		};
+	}
+
+	/** Templated common class for all GUI distribution field types. */
+	template<class T, class SELF>
+	class BS_ED_EXPORT TGUIDistributionField : public TGUIField<SELF>
+	{
+		using GUIConstantType = typename impl::TGUIDistributionMeta<T>::ConstantField;
+		enum { NumComponents = TCurveProperties<T>::NumComponents };
+
 	public:
 		/** Style type name for the internal float fields. */
 		static constexpr const char* FLOAT_FIELD_STYLE_TYPE = "FloatField";
@@ -31,19 +56,16 @@ namespace bs
 		/** Style type name for the internal drop down button. */
 		static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
 
-		/** Returns type name of the GUI element used for finding GUI element styles. */
-		static const String& getGUITypeName();
-
-		GUIFloatDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
+		TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value of the field. */
 		BS_SCRIPT_EXPORT(pr:getter,n:Value)
-		FloatDistribution getValue() const { return mValue; }
+		TDistribution<T> getValue() const { return mValue; }
 
 		/**	Changes the value of the field. */
 		BS_SCRIPT_EXPORT(pr:setter,n:Value)
-		void setValue(const FloatDistribution& value);
+		void setValue(const TDistribution<T>& value);
 
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
@@ -54,9 +76,10 @@ namespace bs
 
 		/** 
 		 * Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution. 
+		 * Provides the sequential index of the clicked curve (0 - x, 1 - y, 2 - z).
 		 */
 		BS_SCRIPT_EXPORT(in:true)
-		Event<void()> onClicked;
+		Event<void(INT32)> onClicked;
 
 		/** 
 		 * Triggered when the user modifies either of the non-curve (constant) values of the distribution. Only relevant
@@ -88,16 +111,65 @@ namespace bs
 		/** Rebuilds the internal GUI components for the current property type. */
 		void rebuild();
 
-		FloatDistribution mValue = 0.0f;
+		TDistribution<T> mValue = TCurveProperties<T>::getZero();
 		GUIButton* mDropDownButton = nullptr;
-		GUIFloatField* mMinInput = nullptr;
-		GUIFloatField* mMaxInput = nullptr;
-		GUICurves* mCurveDisplay = nullptr;
+		GUIConstantType* mMinInput = nullptr;
+		GUIConstantType* mMaxInput = nullptr;
+		GUICurves* mCurveDisplay[NumComponents] = { };
 
-		float mMinConstant = 0.0f;
-		float mMaxConstant = 0.0f;
-		TAnimationCurve<float> mCurves[2];
+		T mMinConstant = TCurveProperties<T>::getZero();
+		T mMaxConstant = TCurveProperties<T>::getZero();
+		TAnimationCurve<float> mMinCurve[NumComponents];
+		TAnimationCurve<float> mMaxCurve[NumComponents];
 		SPtr<GUIContextMenu> mContextMenu;
+	};
+
+	/** @} */
+
+	/** @addtogroup GUI-Editor
+	 *  @{
+	 */
+
+	/**
+	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
+	 * Label is optional. This specific implementation displays an input field for a floating point distribution.
+	 */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	GUIFloatDistributionField final : public TGUIDistributionField<float, GUIFloatDistributionField>
+	{
+	public:
+		using TGUIDistributionField::TGUIDistributionField;
+
+		/** Returns type name of the GUI element used for finding GUI element styles. */
+		static const String& getGUITypeName();
+	};
+	
+	/**
+	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
+	 * Label is optional. This specific implementation displays an input field for a 2D vector distribution.
+	 */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	GUIVector2DistributionField final : public TGUIDistributionField<Vector2, GUIVector2DistributionField>
+	{
+	public:
+		using TGUIDistributionField::TGUIDistributionField;
+
+		/** Returns type name of the GUI element used for finding GUI element styles. */
+		static const String& getGUITypeName();
+	};
+
+	/**
+	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
+	 * Label is optional. This specific implementation displays an input field for a 3D vector distribution.
+	 */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	GUIVector3DistributionField final : public TGUIDistributionField<Vector3, GUIVector3DistributionField>
+	{
+	public:
+		using TGUIDistributionField::TGUIDistributionField;
+
+		/** Returns type name of the GUI element used for finding GUI element styles. */
+		static const String& getGUITypeName();
 	};
 
 	/** @} */

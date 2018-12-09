@@ -183,6 +183,12 @@ namespace BansheeEditor
                     case SerializableProperty.FieldType.FloatDistribution:
                         field = new InspectableFloatDistribution(parent, title, path, depth, layout, property);
                         break;
+                    case SerializableProperty.FieldType.Vector2Distribution:
+                        field = new InspectableVector2Distribution(parent, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.Vector3Distribution:
+                        field = new InspectableVector3Distribution(parent, title, path, depth, layout, property);
+                        break;
                     case SerializableProperty.FieldType.ColorDistribution:
                         field = new InspectableColorDistribution(parent, title, path, depth, layout, property);
                         break;

@@ -15,7 +15,7 @@ namespace BansheeEditor
         /// </summary>
         public event Action OnConfirmed;
 
-        partial void OnClicked()
+        partial void OnClicked(int component)
         {
             FloatDistribution distribution = Value;
 

@@ -42,7 +42,9 @@ namespace BansheeEngine
             FloatDistribution,
             ColorDistribution,
             Quaternion,
-            Enum
+            Enum,
+            Vector2Distribution,
+            Vector3Distribution
         }
 
         public delegate object Getter();
@@ -402,6 +404,10 @@ namespace BansheeEngine
                     return FieldType.Curve;
                 else if (internalType == typeof(FloatDistribution))
                     return FieldType.FloatDistribution;
+                else if (internalType == typeof(Vector2Distribution))
+                    return FieldType.Vector2Distribution;
+                else if (internalType == typeof(Vector3Distribution))
+                    return FieldType.Vector3Distribution;
                 else if (internalType == typeof(ColorDistribution))
                     return FieldType.ColorDistribution;
                 else if (internalType.IsSubclassOf(typeof (GameObject)))

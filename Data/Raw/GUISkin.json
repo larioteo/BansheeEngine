@@ -3136,6 +3136,54 @@
         ]
     },
     {
+        "name": "GUIVector2DistributionField",
+        "minHeight": 40,
+		"maxHeight": 100,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "FloatField",
+                "style": "GUIFloatField"
+            },
+            {
+                "name": "CurvesField",
+                "style": "GUICurves"
+            },
+            {
+                "name": "DropDownButton",
+                "style": "DropDownArrowButton"
+            },
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            }
+        ]
+    },
+    {
+        "name": "GUIVector3DistributionField",
+        "minHeight": 60,
+		"maxHeight": 150,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "FloatField",
+                "style": "GUIFloatField"
+            },
+            {
+                "name": "CurvesField",
+                "style": "GUICurves"
+            },
+            {
+                "name": "DropDownButton",
+                "style": "DropDownArrowButton"
+            },
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            }
+        ]
+    },
+    {
         "fixedHeight": true,
         "height": 21,
         "minWidth": 30,

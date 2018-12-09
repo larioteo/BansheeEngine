@@ -22,8 +22,10 @@ namespace bs
 
 		static MonoObject* Internal_eulerToQuaternionCurve(MonoObject* eulerCurve);
 		static MonoObject* Internal_quaternionToEulerCurve(MonoObject* quatCurve);
-		static MonoArray* Internal_splitCurve(MonoObject* compoundCurve);
-		static MonoObject* Internal_combineCurve(MonoArray* curveComponents);
+		static MonoArray* Internal_splitCurve3D(MonoObject* compoundCurve);
+		static MonoObject* Internal_combineCurve3D(MonoArray* curveComponents);
+		static MonoArray* Internal_splitCurve2D(MonoObject* compoundCurve);
+		static MonoObject* Internal_combineCurve2D(MonoArray* curveComponents);
 		static void Internal_calculateRange(MonoArray* curves, float* xMin, float* xMax, float* yMin, float* yMax);
 	};
 }

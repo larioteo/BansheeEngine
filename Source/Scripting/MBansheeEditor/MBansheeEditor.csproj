@@ -41,6 +41,8 @@
     <Compile Include="GUI\GUIColorGradientField.cs" />
     <Compile Include="GUI\GUICurvesField.cs" />
     <Compile Include="GUI\GUIFloatDistributionField.cs" />
+    <Compile Include="GUI\GUIVector2DistributionField.cs" />
+    <Compile Include="GUI\GUIVector3DistributionField.cs" />
     <Compile Include="Inspectors\AnimationClipInspector.cs" />
     <Compile Include="Inspectors\AnimationInspector.cs" />
     <Compile Include="Inspectors\AudioClipInspector.cs" />
@@ -103,6 +105,8 @@
     <Compile Include="Windows\Inspector\InspectableLayerMask.cs" />
     <Compile Include="Windows\Inspector\InspectableQuaternion.cs" />
     <Compile Include="Windows\Inspector\InspectableRRef.cs" />
+    <Compile Include="Windows\Inspector\InspectableVector2Distribution.cs" />
+    <Compile Include="Windows\Inspector\InspectableVector3Distribution.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldRangeStyle.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldStepStyle.cs" />
     <Compile Include="Windows\Inspector\Style\InspectableFieldStyle.cs" />

@@ -7,15 +7,15 @@
 
 namespace bs
 {
-	class GUIFloatDistributionField;
+	class GUIVector3DistributionField;
 	struct __GUIContentInterop;
 
-	class BS_SCR_BED_EXPORT ScriptGUIFloatDistributionField : public TScriptGUIElement<ScriptGUIFloatDistributionField>
+	class BS_SCR_BED_EXPORT ScriptGUIVector3DistributionField : public TScriptGUIElement<ScriptGUIVector3DistributionField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIFloatDistributionField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIVector3DistributionField")
 
-		ScriptGUIFloatDistributionField(MonoObject* managedInstance, GUIFloatDistributionField* value);
+		ScriptGUIVector3DistributionField(MonoObject* managedInstance, GUIVector3DistributionField* value);
 
 	private:
 		void onClicked(int32_t p0);
@@ -29,9 +29,9 @@ namespace bs
 		typedef void(BS_THUNKCALL *onConstantConfirmedThunkDef) (MonoObject*, MonoException**);
 		static onConstantConfirmedThunkDef onConstantConfirmedThunk;
 
-		static MonoObject* Internal_getValue(ScriptGUIFloatDistributionField* thisPtr);
-		static void Internal_setValue(ScriptGUIFloatDistributionField* thisPtr, MonoObject* value);
-		static bool Internal_hasInputFocus(ScriptGUIFloatDistributionField* thisPtr);
+		static MonoObject* Internal_getValue(ScriptGUIVector3DistributionField* thisPtr);
+		static void Internal_setValue(ScriptGUIVector3DistributionField* thisPtr, MonoObject* value);
+		static bool Internal_hasInputFocus(ScriptGUIVector3DistributionField* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
 		static void Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);

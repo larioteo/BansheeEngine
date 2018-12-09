@@ -17,7 +17,7 @@ namespace bs
 	ScriptGUIFloatDistributionField::ScriptGUIFloatDistributionField(MonoObject* managedInstance, GUIFloatDistributionField* value)
 		:TScriptGUIElement(managedInstance, value)
 	{
-		value->onClicked.connect(std::bind(&ScriptGUIFloatDistributionField::onClicked, this));
+		value->onClicked.connect(std::bind(&ScriptGUIFloatDistributionField::onClicked, this, std::placeholders::_1));
 		value->onConstantModified.connect(std::bind(&ScriptGUIFloatDistributionField::onConstantModified, this));
 		value->onConstantConfirmed.connect(std::bind(&ScriptGUIFloatDistributionField::onConstantConfirmed, this));
 	}
@@ -33,14 +33,14 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_create2", (void*)&ScriptGUIFloatDistributionField::Internal_create2);
 		metaData.scriptClass->addInternalCall("Internal_create3", (void*)&ScriptGUIFloatDistributionField::Internal_create3);
 
-		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "")->getThunk();
+		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "int")->getThunk();
 		onConstantModifiedThunk = (onConstantModifiedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantModified", "")->getThunk();
 		onConstantConfirmedThunk = (onConstantConfirmedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantConfirmed", "")->getThunk();
 	}
 
-	void ScriptGUIFloatDistributionField::onClicked()
+	void ScriptGUIFloatDistributionField::onClicked(int32_t p0)
 	{
-		MonoUtil::invokeThunk(onClickedThunk, getManagedInstance());
+		MonoUtil::invokeThunk(onClickedThunk, getManagedInstance(), p0);
 	}
 
 	void ScriptGUIFloatDistributionField::onConstantModified()

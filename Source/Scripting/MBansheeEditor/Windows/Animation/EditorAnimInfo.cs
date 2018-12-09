@@ -141,7 +141,7 @@ namespace BansheeEditor
                         }
 
                         // Convert compound curve to three per-component curves
-                        AnimationCurve[] componentCurves = AnimationUtility.SplitCurve(curveEntry.curve);
+                        AnimationCurve[] componentCurves = AnimationUtility.SplitCurve3D(curveEntry.curve);
 
                         FieldAnimCurves fieldCurves = new FieldAnimCurves();
                         fieldCurves.type = SerializableProperty.FieldType.Vector3;
@@ -382,7 +382,7 @@ namespace BansheeEditor
 
                     NamedVector3Curve curve = new NamedVector3Curve();
                     curve.name = curvePath;
-                    curve.curve = AnimationUtility.CombineCurve(new[]
+                    curve.curve = AnimationUtility.CombineCurve3D(new[]
                     {
                         new AnimationCurve(kvp.Value.curveInfos[0].curve.KeyFrames),
                         new AnimationCurve(kvp.Value.curveInfos[1].curve.KeyFrames),
