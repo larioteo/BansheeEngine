@@ -5,37 +5,30 @@
 #include "GUI/BsGUILayoutY.h"
 #include "GUI/BsGUIFloatField.h"
 #include "GUI/BsGUILabel.h"
+#include "GUI/BsGUISpace.h"
 
 using namespace std::placeholders;
 
 namespace bs
 {
-	const UINT32 GUIVector2Field::ELEMENT_LABEL_WIDTH = 10;
+	const UINT32 GUIVector2Field::ELEMENT_LABEL_WIDTH = 15;
 
 	GUIVector2Field::GUIVector2Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel),
 		mFieldX(nullptr), mFieldY(nullptr)
 	{
-		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
+		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getXFieldStyleType()));
+		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getYFieldStyleType()));
 
 		mFieldX->onValueChanged.connect(std::bind(&GUIVector2Field::valueChanged, this, _1));
 		mFieldY->onValueChanged.connect(std::bind(&GUIVector2Field::valueChanged, this, _1));
 		mFieldX->onConfirm.connect(std::bind(&GUIVector2Field::inputConfirmed, this));
 		mFieldY->onConfirm.connect(std::bind(&GUIVector2Field::inputConfirmed, this));
 
-		mLayout->removeElement(mLabel);
-
-		GUILayout* layout = mLayout->addNewElement<GUILayoutY>();
-
-		layout->addElement(mLabel);
-		mLabel->resetDimensions();
-
-		GUILayout* elementLayout = layout->addNewElement<GUILayoutX>();
-
-		elementLayout->addElement(mFieldX);
-		elementLayout->addElement(mFieldY);
+		mLayout->addElement(mFieldX);
+		mLayout->addNewElement<GUIFixedSpace>(5);
+		mLayout->addElement(mFieldY);
 	}
 
 	Vector2 GUIVector2Field::getValue() const
@@ -83,8 +76,8 @@ namespace bs
 		if (mLabel != nullptr)
 			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
 
-		mFieldX->setStyle(getSubStyleName(getFloatFieldStyleType()));
-		mFieldY->setStyle(getSubStyleName(getFloatFieldStyleType()));
+		mFieldX->setStyle(getSubStyleName(getXFieldStyleType()));
+		mFieldY->setStyle(getSubStyleName(getYFieldStyleType()));
 	}
 
 	const String& GUIVector2Field::getGUITypeName()
@@ -93,9 +86,15 @@ namespace bs
 		return typeName;
 	}
 
-	const String& GUIVector2Field::getFloatFieldStyleType()
+	const String& GUIVector2Field::getXFieldStyleType()
 	{
-		static String LABEL_STYLE_TYPE = "EditorFloatField";
+		static String LABEL_STYLE_TYPE = "XFloatField";
+		return LABEL_STYLE_TYPE;
+	}
+
+	const String& GUIVector2Field::getYFieldStyleType()
+	{
+		static String LABEL_STYLE_TYPE = "YFloatField";
 		return LABEL_STYLE_TYPE;
 	}
 }

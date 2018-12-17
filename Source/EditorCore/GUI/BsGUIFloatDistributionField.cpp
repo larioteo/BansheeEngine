@@ -36,12 +36,14 @@ namespace bs
 		mContextMenu->addMenuItem("Constant", [this]()
 		{
 			mValue = TDistribution<T>(mMinConstant);
+			mPropertyType = PDT_Constant;
 			rebuild();
 		}, 50);
 
 		mContextMenu->addMenuItem("Range", [this]()
 		{
 			mValue = TDistribution<T>(mMinConstant, mMaxConstant);
+			mPropertyType = PDT_RandomRange;
 			rebuild();
 		}, 40);
 
@@ -51,6 +53,7 @@ namespace bs
 			AnimationUtility::combineCurve<T>(mMinCurve, combinedCurve);
 
 			mValue = TDistribution<T>(combinedCurve);
+			mPropertyType = PDT_Curve;
 			rebuild();
 		}, 30);
 
@@ -63,6 +66,7 @@ namespace bs
 			AnimationUtility::combineCurve<T>(mMaxCurve, combinedCurveMax);
 
 			mValue = TDistribution<T>(combinedCurveMin, combinedCurveMax);
+			mPropertyType = PDT_RandomCurveRange;
 			rebuild();
 		}, 20);
 
@@ -74,7 +78,7 @@ namespace bs
 	{
 		mValue = value;
 
-		switch (mValue.getType())
+		switch (mPropertyType)
 		{
 		default:
 		case PDT_Constant:
@@ -87,10 +91,12 @@ namespace bs
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
 
-				mMaxCurve[1] = TAnimationCurve<float>({
+				mMaxCurve[i] = TAnimationCurve<float>({
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
 			}
+
+			mMinInput->setValue(mMinConstant);
 
 			break;
 		case PDT_RandomRange: 
@@ -103,10 +109,14 @@ namespace bs
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 0.0f},
 					{ TCurveProperties<T>::getComponent(mMinConstant, i), 0.0f, 0.0f, 1.0f} });
 
-				mMaxCurve[1] = TAnimationCurve<float>({
+				mMaxCurve[i] = TAnimationCurve<float>({
 					{ TCurveProperties<T>::getComponent(mMaxConstant, i), 0.0f, 0.0f, 0.0f},
 					{ TCurveProperties<T>::getComponent(mMaxConstant, i), 0.0f, 0.0f, 1.0f} });
 			}
+
+			mMinInput->setValue(mMinConstant);
+			mMaxInput->setValue(mMaxConstant);
+
 			break;
 		case PDT_Curve:
 			AnimationUtility::splitCurve(mValue.getMinCurve(), mMinCurve);
@@ -116,6 +126,8 @@ namespace bs
 			{
 				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
 				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
+
+				mCurveDisplay[i]->setCurves({ CurveDrawInfo(mMinCurve[i], Color::BansheeOrange) });
 			}
 
 			break;
@@ -127,12 +139,16 @@ namespace bs
 			{
 				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
 				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
+
+				mCurveDisplay[i]->setCurves(
+					{
+						CurveDrawInfo(mMinCurve[i], Color::BansheeOrange),
+						CurveDrawInfo(mMaxCurve[i], Color::Red)
+					});	
 			}
 
 			break;
 		}
-
-		rebuild();
 	}
 
 	template<class T, class SELF>
@@ -171,34 +187,34 @@ namespace bs
 	template<class T, class SELF>
 	Vector2I TGUIDistributionField<T, SELF>::_getOptimalSize() const
 	{
-		Vector2I optimalsize = mDropDownButton->_getOptimalSize();
-
-		if(mLabel)
-		{
-			optimalsize.x += mLabel->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mLabel->_getOptimalSize().y);
-		}
+		Vector2I optimalsize = Vector2I::ZERO;
 
 		if(impl::isVertical<T>())
 		{
 			if (mMinInput)
 			{
-				optimalsize.x = std::max(optimalsize.x, mMinInput->_getOptimalSize().x);
-				optimalsize.y += mMinInput->_getOptimalSize().y;
+				Vector2I elemOptimal = mMinInput->_calculateLayoutSizeRange().optimal;
+
+				optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+				optimalsize.y += elemOptimal.y;
 			}
 
 			if (mMaxInput)
 			{
-				optimalsize.x = std::max(optimalsize.x, mMaxInput->_getOptimalSize().x);
-				optimalsize.y += mMaxInput->_getOptimalSize().y;
+				Vector2I elemOptimal = mMaxInput->_calculateLayoutSizeRange().optimal;
+
+				optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+				optimalsize.y += elemOptimal.y;
 			}
 
 			for(UINT32 i = 0; i < NumComponents; i++)
 			{
 				if (mCurveDisplay[i])
 				{
-					optimalsize.x = std::max(optimalsize.x, 50);
-					optimalsize.y += mCurveDisplay[i]->_getOptimalSize().y;
+					Vector2I elemOptimal = mCurveDisplay[i]->_calculateLayoutSizeRange().optimal;
+
+					optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+					optimalsize.y += elemOptimal.y;
 				}
 			}
 		}
@@ -206,24 +222,42 @@ namespace bs
 		{
 			if (mMinInput)
 			{
-				optimalsize.x += mMinInput->_getOptimalSize().x;
-				optimalsize.y = std::max(optimalsize.y, mMinInput->_getOptimalSize().y);
+				Vector2I elemOptimal = mMinInput->_calculateLayoutSizeRange().optimal;
+
+				optimalsize.x += elemOptimal.x;
+				optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
 			}
 
 			if (mMaxInput)
 			{
-				optimalsize.x += mMaxInput->_getOptimalSize().x;
-				optimalsize.y = std::max(optimalsize.y, mMaxInput->_getOptimalSize().y);
+				Vector2I elemOptimal = mMaxInput->_calculateLayoutSizeRange().optimal;
+
+				optimalsize.x += elemOptimal.x;
+				optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
 			}
 
 			for(UINT32 i = 0; i < NumComponents; i++)
 			{
 				if (mCurveDisplay[i])
 				{
-					optimalsize.x += mCurveDisplay[i]->_getOptimalSize().x;
-					optimalsize.y = std::max(optimalsize.y, 50);
+					Vector2I elemOptimal = mCurveDisplay[i]->_calculateLayoutSizeRange().optimal;
+
+					optimalsize.x += elemOptimal.x;
+					optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
 				}
 			}
+		}
+		
+		Vector2I dropDownSize = mDropDownButton->_calculateLayoutSizeRange().optimal;
+		optimalsize.x += dropDownSize.x;
+		optimalsize.y = std::max(optimalsize.y, dropDownSize.y);
+
+		if (mLabel)
+		{
+			Vector2I elemOptimal = mLabel->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x += elemOptimal.x;
+			optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
 		}
 
 		return optimalsize;
@@ -270,7 +304,7 @@ namespace bs
 		{
 		default:
 		case PDT_Constant:
-			mMinInput = GUIConstantType::create(HString("Constant"), 50, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 			mMaxInput = nullptr;
 
 			for(int i = 0; i < NumComponents; i++)

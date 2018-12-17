@@ -24,6 +24,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_getValue", (void*)&ScriptGUIColorDistributionField::Internal_getValue);
 		metaData.scriptClass->addInternalCall("Internal_setValue", (void*)&ScriptGUIColorDistributionField::Internal_setValue);
+		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptGUIColorDistributionField::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUIColorDistributionField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUIColorDistributionField::Internal_create0);
 		metaData.scriptClass->addInternalCall("Internal_create1", (void*)&ScriptGUIColorDistributionField::Internal_create1);
@@ -61,6 +62,17 @@ namespace bs
 		scriptvalue = ScriptColorDistribution::toNative(value);
 		tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIColorDistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
+	}
+
+	PropertyDistributionType ScriptGUIColorDistributionField::Internal_getType(ScriptGUIColorDistributionField* thisPtr)
+	{
+		PropertyDistributionType tmp__output;
+		tmp__output = static_cast<GUIColorDistributionField*>(thisPtr->getGUIElement())->getType();
+
+		PropertyDistributionType __output;
+		__output = tmp__output;
+
+		return __output;
 	}
 
 	void ScriptGUIColorDistributionField::Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)

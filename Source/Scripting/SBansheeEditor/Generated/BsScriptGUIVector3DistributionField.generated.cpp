@@ -26,6 +26,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_getValue", (void*)&ScriptGUIVector3DistributionField::Internal_getValue);
 		metaData.scriptClass->addInternalCall("Internal_setValue", (void*)&ScriptGUIVector3DistributionField::Internal_setValue);
+		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptGUIVector3DistributionField::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_hasInputFocus", (void*)&ScriptGUIVector3DistributionField::Internal_hasInputFocus);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUIVector3DistributionField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUIVector3DistributionField::Internal_create0);
@@ -70,6 +71,17 @@ namespace bs
 		scriptvalue = ScriptTDistributionVector3::toNative(value);
 		tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIVector3DistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
+	}
+
+	PropertyDistributionType ScriptGUIVector3DistributionField::Internal_getType(ScriptGUIVector3DistributionField* thisPtr)
+	{
+		PropertyDistributionType tmp__output;
+		tmp__output = static_cast<GUIVector3DistributionField*>(thisPtr->getGUIElement())->getType();
+
+		PropertyDistributionType __output;
+		__output = tmp__output;
+
+		return __output;
 	}
 
 	bool ScriptGUIVector3DistributionField::Internal_hasInputFocus(ScriptGUIVector3DistributionField* thisPtr)

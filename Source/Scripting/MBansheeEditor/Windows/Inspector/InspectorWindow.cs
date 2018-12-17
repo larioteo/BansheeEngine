@@ -72,15 +72,9 @@ namespace BansheeEditor
         private GUIEnumField soMobility;
         private GUILayout soPrefabLayout;
         private bool soHasPrefab;
-        private GUIFloatField soPosX;
-        private GUIFloatField soPosY;
-        private GUIFloatField soPosZ;
-        private GUIFloatField soRotX;
-        private GUIFloatField soRotY;
-        private GUIFloatField soRotZ;
-        private GUIFloatField soScaleX;
-        private GUIFloatField soScaleY;
-        private GUIFloatField soScaleZ;
+        private GUIVector3Field soPos;
+        private GUIVector3Field soRot;
+        private GUIVector3Field soScale;
 
         private Rect2I[] dropAreas = new Rect2I[0];
 
@@ -274,89 +268,26 @@ namespace BansheeEditor
 
             soPrefabLayout = sceneObjectLayout.AddLayoutX();
 
-            GUILayoutX positionLayout = sceneObjectLayout.AddLayoutX();
-            GUILabel positionLbl = new GUILabel(new LocEdString("Position"), GUIOption.FixedWidth(50));
-            soPosX = new GUIFloatField(new LocEdString("X"), 10, "", GUIOption.FixedWidth(60));
-            soPosY = new GUIFloatField(new LocEdString("Y"), 10, "", GUIOption.FixedWidth(60));
-            soPosZ = new GUIFloatField(new LocEdString("Z"), 10, "", GUIOption.FixedWidth(60));
+            soPos = new GUIVector3Field(new LocEdString("Position"), 50);
+            sceneObjectLayout.AddElement(soPos);
 
-            soPosX.OnChanged += (x) => OnPositionChanged(0, x);
-            soPosY.OnChanged += (y) => OnPositionChanged(1, y);
-            soPosZ.OnChanged += (z) => OnPositionChanged(2, z);
+            soPos.OnChanged += OnPositionChanged;
+            soPos.OnConfirmed += OnModifyConfirm;
+            soPos.OnFocusLost += OnModifyConfirm;
 
-            soPosX.OnConfirmed += OnModifyConfirm;
-            soPosY.OnConfirmed += OnModifyConfirm;
-            soPosZ.OnConfirmed += OnModifyConfirm;
+            soRot = new GUIVector3Field(new LocEdString("Rotation"), 50);
+            sceneObjectLayout.AddElement(soRot);
 
-            soPosX.OnFocusLost += OnModifyConfirm;
-            soPosY.OnFocusLost += OnModifyConfirm;
-            soPosZ.OnFocusLost += OnModifyConfirm;
+            soRot.OnChanged += OnRotationChanged;
+            soRot.OnConfirmed += OnModifyConfirm;
+            soRot.OnFocusLost += OnModifyConfirm;
 
-            positionLayout.AddElement(positionLbl);
-            positionLayout.AddElement(soPosX);
-            positionLayout.AddSpace(10);
-            positionLayout.AddFlexibleSpace();
-            positionLayout.AddElement(soPosY);
-            positionLayout.AddSpace(10);
-            positionLayout.AddFlexibleSpace();
-            positionLayout.AddElement(soPosZ);
-            positionLayout.AddFlexibleSpace();
+            soScale = new GUIVector3Field(new LocEdString("Scale"), 50);
+            sceneObjectLayout.AddElement(soScale);
 
-            GUILayoutX rotationLayout = sceneObjectLayout.AddLayoutX();
-            GUILabel rotationLbl = new GUILabel(new LocEdString("Rotation"), GUIOption.FixedWidth(50));
-            soRotX = new GUIFloatField(new LocEdString("X"), 10, "", GUIOption.FixedWidth(60));
-            soRotY = new GUIFloatField(new LocEdString("Y"), 10, "", GUIOption.FixedWidth(60));
-            soRotZ = new GUIFloatField(new LocEdString("Z"), 10, "", GUIOption.FixedWidth(60));
-
-            soRotX.OnChanged += (x) => OnRotationChanged(0, x);
-            soRotY.OnChanged += (y) => OnRotationChanged(1, y);
-            soRotZ.OnChanged += (z) => OnRotationChanged(2, z);
-
-            soRotX.OnConfirmed += OnModifyConfirm;
-            soRotY.OnConfirmed += OnModifyConfirm;
-            soRotZ.OnConfirmed += OnModifyConfirm;
-
-            soRotX.OnFocusLost += OnModifyConfirm;
-            soRotY.OnFocusLost += OnModifyConfirm;
-            soRotZ.OnFocusLost += OnModifyConfirm;
-
-            rotationLayout.AddElement(rotationLbl);
-            rotationLayout.AddElement(soRotX);
-            rotationLayout.AddSpace(10);
-            rotationLayout.AddFlexibleSpace();
-            rotationLayout.AddElement(soRotY);
-            rotationLayout.AddSpace(10);
-            rotationLayout.AddFlexibleSpace();
-            rotationLayout.AddElement(soRotZ);
-            rotationLayout.AddFlexibleSpace();
-
-            GUILayoutX scaleLayout = sceneObjectLayout.AddLayoutX();
-            GUILabel scaleLbl = new GUILabel(new LocEdString("Scale"), GUIOption.FixedWidth(50));
-            soScaleX = new GUIFloatField(new LocEdString("X"), 10, "", GUIOption.FixedWidth(60));
-            soScaleY = new GUIFloatField(new LocEdString("Y"), 10, "", GUIOption.FixedWidth(60));
-            soScaleZ = new GUIFloatField(new LocEdString("Z"), 10, "", GUIOption.FixedWidth(60));
-
-            soScaleX.OnChanged += (x) => OnScaleChanged(0, x);
-            soScaleY.OnChanged += (y) => OnScaleChanged(1, y);
-            soScaleZ.OnChanged += (z) => OnScaleChanged(2, z);
-
-            soScaleX.OnConfirmed += OnModifyConfirm;
-            soScaleY.OnConfirmed += OnModifyConfirm;
-            soScaleZ.OnConfirmed += OnModifyConfirm;
-
-            soScaleX.OnFocusLost += OnModifyConfirm;
-            soScaleY.OnFocusLost += OnModifyConfirm;
-            soScaleZ.OnFocusLost += OnModifyConfirm;
-
-            scaleLayout.AddElement(scaleLbl);
-            scaleLayout.AddElement(soScaleX);
-            scaleLayout.AddSpace(10);
-            scaleLayout.AddFlexibleSpace();
-            scaleLayout.AddElement(soScaleY);
-            scaleLayout.AddSpace(10);
-            scaleLayout.AddFlexibleSpace();
-            scaleLayout.AddElement(soScaleZ);
-            scaleLayout.AddFlexibleSpace();
+            soScale.OnChanged += OnScaleChanged;
+            soScale.OnConfirmed += OnModifyConfirm;
+            soScale.OnFocusLost += OnModifyConfirm;
 
             sceneObjectLayout.AddFlexibleSpace();
 
@@ -443,32 +374,14 @@ namespace BansheeEditor
 
             Vector3 scale = activeSO.LocalScale;
 
-            if(!soPosX.HasInputFocus)
-                soPosX.Value = position.x;
+            if (!soPos.HasInputFocus)
+                soPos.Value = position;
 
-            if (!soPosY.HasInputFocus)
-                soPosY.Value = position.y;
+            if (!soRot.HasInputFocus)
+                soRot.Value = angles;
 
-            if (!soPosZ.HasInputFocus)
-                soPosZ.Value = position.z;
-
-            if (!soRotX.HasInputFocus)
-                soRotX.Value = angles.x;
-
-            if (!soRotY.HasInputFocus)
-                soRotY.Value = angles.y;
-
-            if (!soRotZ.HasInputFocus)
-                soRotZ.Value = angles.z;
-
-            if (!soScaleX.HasInputFocus)
-                soScaleX.Value = scale.x;
-
-            if (!soScaleY.HasInputFocus)
-                soScaleY.Value = scale.y;
-
-            if (!soScaleZ.HasInputFocus)
-                soScaleZ.Value = scale.z;
+            if (!soScale.HasInputFocus)
+                soScale.Value = scale;
         }
 
         private void OnInitialize()
@@ -747,15 +660,9 @@ namespace BansheeEditor
             soMobility = null;
             soPrefabLayout = null;
             soHasPrefab = false;
-            soPosX = null;
-            soPosY = null;
-            soPosZ = null;
-            soRotX = null;
-            soRotY = null;
-            soRotZ = null;
-            soScaleX = null;
-            soScaleY = null;
-            soScaleZ = null;
+            soPos = null;
+            soRot = null;
+            soScale = null;
             dropAreas = new Rect2I[0];
 
             activeResourcePath = null;
@@ -808,25 +715,16 @@ namespace BansheeEditor
         /// Triggered when the position value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="idx">Index of the coordinate that was changed.</param>
         /// <param name="value">New value of the field.</param>
-        private void OnPositionChanged(int idx, float value)
+        private void OnPositionChanged(Vector3 value)
         {
             if (activeSO == null)
                 return;
 
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
-            {
-                Vector3 position = activeSO.Position;
-                position[idx] = value;
-                activeSO.Position = position;
-            }
+                activeSO.Position = value;
             else
-            {
-                Vector3 position = activeSO.LocalPosition;
-                position[idx] = value;
-                activeSO.LocalPosition = position;
-            }
+                activeSO.LocalPosition = value;
 
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();
@@ -836,25 +734,16 @@ namespace BansheeEditor
         /// Triggered when the rotation value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="idx">Index of the euler angle that was changed (0 - X, 1 - Y, 2 - Z).</param>
         /// <param name="value">New value of the field.</param>
-        private void OnRotationChanged(int idx, float value)
+        private void OnRotationChanged(Vector3 value)
         {
             if (activeSO == null)
                 return;
 
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
-            {
-                Vector3 angles = activeSO.Rotation.ToEuler();
-                angles[idx] = value;
-                activeSO.Rotation = Quaternion.FromEuler(angles);
-            }
+                activeSO.Rotation = Quaternion.FromEuler(value);
             else
-            {
-                Vector3 angles = activeSO.LocalRotation.ToEuler();
-                angles[idx] = value;
-                activeSO.LocalRotation = Quaternion.FromEuler(angles);
-            }
+                activeSO.LocalRotation = Quaternion.FromEuler(value);
 
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();
@@ -864,16 +753,13 @@ namespace BansheeEditor
         /// Triggered when the scale value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="idx">Index of the coordinate that was changed.</param>
         /// <param name="value">New value of the field.</param>
-        private void OnScaleChanged(int idx, float value)
+        private void OnScaleChanged(Vector3 value)
         {
             if (activeSO == null)
                 return;
 
-            Vector3 scale = activeSO.LocalScale;
-            scale[idx] = value;
-            activeSO.LocalScale = scale;
+            activeSO.LocalScale = value;
 
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();

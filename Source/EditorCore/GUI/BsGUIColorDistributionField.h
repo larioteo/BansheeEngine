@@ -46,6 +46,10 @@ namespace bs
 		BS_SCRIPT_EXPORT(pr:setter,n:Value)
 		void setValue(const ColorDistribution& value);
 
+		/** Returns the type of the currently selected distribution. */
+		BS_SCRIPT_EXPORT(pr:getter,n:DistributionType)
+		PropertyDistributionType getType() const { return mPropertyType; }
+
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
@@ -79,6 +83,7 @@ namespace bs
 		GUIColorField* mMaxColorField = nullptr;
 		GUIColorGradientField* mMinGradientField = nullptr;
 		GUIColorGradientField* mMaxGradientField = nullptr;
+		PropertyDistributionType mPropertyType = PDT_Constant;
 
 		Color mMinConstant = Color::White;
 		Color mMaxConstant = Color::White;

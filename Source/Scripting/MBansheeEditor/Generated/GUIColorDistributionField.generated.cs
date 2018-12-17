@@ -83,6 +83,13 @@ namespace BansheeEditor
 			set { Internal_setValue(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns the type of the currently selected distribution.</summary>
+		[ShowInInspector]
+		public PropertyDistributionType DistributionType
+		{
+			get { return Internal_getType(mCachedPtr); }
+		}
+
 		/// <summary>Triggered when the user clicks on the minimum value display for the distribution.</summary>
 		partial void OnMinClicked();
 
@@ -93,6 +100,8 @@ namespace BansheeEditor
 		private static extern ColorDistribution Internal_getValue(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setValue(IntPtr thisPtr, ColorDistribution value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern PropertyDistributionType Internal_getType(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(GUIColorDistributionField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]

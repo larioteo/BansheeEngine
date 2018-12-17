@@ -4,6 +4,7 @@
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 
 namespace bs
 {
@@ -28,6 +29,7 @@ namespace bs
 
 		static MonoObject* Internal_getValue(ScriptGUIColorDistributionField* thisPtr);
 		static void Internal_setValue(ScriptGUIColorDistributionField* thisPtr, MonoObject* value);
+		static PropertyDistributionType Internal_getType(ScriptGUIColorDistributionField* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
 		static void Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);

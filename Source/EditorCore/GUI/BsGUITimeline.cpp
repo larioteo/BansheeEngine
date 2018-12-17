@@ -7,6 +7,7 @@
 #include "GUI/BsGUICanvas.h"
 #include "Math/BsLine2.h"
 #include "GUI/BsGUIWidget.h"
+#include "GUI/BsGUITexture.h"
 
 namespace bs
 {
@@ -14,7 +15,12 @@ namespace bs
 		:GUIElementContainer(dimensions, styleName)
 	{
 		mCanvas = GUICanvas::create();
+		mBackground = GUITexture::create(getSubStyleName(BACKGROUND_STYLE_TYPE));
+
+		mBackground->_setElementDepth(255);
+
 		_registerChildElement(mCanvas);
+		_registerChildElement(mBackground);
 	}
 
 	const String& GUITimeline::getGUITypeName()
@@ -131,6 +137,8 @@ namespace bs
 
 	void GUITimeline::_updateLayoutInternal(const GUILayoutData& data)
 	{
+		mBackground->_setLayoutData(data);
+
 		mCanvas->_setLayoutData(data);
 		mCanvas->_updateLayoutInternal(data);
 	}
@@ -143,5 +151,6 @@ namespace bs
 	void GUITimeline::styleUpdated()
 	{
 		mCanvas->setStyle(GUICanvas::getGUITypeName());
+		mBackground->setStyle(getSubStyleName(BACKGROUND_STYLE_TYPE));
 	}
 }

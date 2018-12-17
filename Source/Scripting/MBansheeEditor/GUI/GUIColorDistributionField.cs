@@ -14,8 +14,8 @@ namespace BansheeEditor
         {
             ColorDistribution distribution = Value;
 
-            if (distribution.DistributionType == PropertyDistributionType.Constant ||
-                distribution.DistributionType == PropertyDistributionType.RandomRange)
+            if (DistributionType == PropertyDistributionType.Constant ||
+                DistributionType == PropertyDistributionType.RandomRange)
             {
                 ColorPicker.Show(distribution.GetMinConstant(), (success, value) =>
                 {
@@ -30,8 +30,8 @@ namespace BansheeEditor
                     OnChanged?.Invoke();
                 });
             }
-            else if (distribution.DistributionType == PropertyDistributionType.Curve || 
-                     distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
+            else if (DistributionType == PropertyDistributionType.Curve || 
+                     DistributionType == PropertyDistributionType.RandomCurveRange)
             {
                 GradientPicker.Show(distribution.GetMinGradient(), (success, colorGradient) =>
                 {
@@ -52,7 +52,7 @@ namespace BansheeEditor
         {
             ColorDistribution distribution = Value;
 
-            if (distribution.DistributionType == PropertyDistributionType.RandomRange)
+            if (DistributionType == PropertyDistributionType.RandomRange)
             {
                 ColorPicker.Show(distribution.GetMaxConstant(), (success, value) =>
                 {
@@ -63,7 +63,7 @@ namespace BansheeEditor
                     OnChanged?.Invoke();
                 });
             }
-            else if (distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
+            else if (DistributionType == PropertyDistributionType.RandomCurveRange)
             {
                 GradientPicker.Show(distribution.GetMaxGradient(), (success, colorGradient) =>
                 {

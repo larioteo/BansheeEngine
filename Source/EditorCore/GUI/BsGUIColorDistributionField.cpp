@@ -23,24 +23,28 @@ namespace bs
 		mContextMenu->addMenuItem("Constant", [this]()
 		{
 			mValue = ColorDistribution(mMinConstant);
+			mPropertyType = PDT_Constant;
 			rebuild();
 		}, 50);
 
 		mContextMenu->addMenuItem("Range", [this]()
 		{
 			mValue = ColorDistribution(mMinConstant, mMaxConstant);
+			mPropertyType = PDT_RandomRange;
 			rebuild();
 		}, 40);
 
 		mContextMenu->addMenuItem("Gradient", [this]()
 		{
 			mValue = ColorDistribution(mMinGradient);
+			mPropertyType = PDT_Curve;
 			rebuild();
 		}, 30);
 
 		mContextMenu->addMenuItem("Gradient range", [this]()
 		{
 			mValue = ColorDistribution(mMinGradient, mMaxGradient);
+			mPropertyType = PDT_RandomCurveRange;
 			rebuild();
 		}, 20);
 
@@ -51,7 +55,7 @@ namespace bs
 	{
 		mValue = value;
 
-		switch (mValue.getType())
+		switch (mPropertyType)
 		{
 		default:
 		case PDT_Constant:
@@ -59,28 +63,36 @@ namespace bs
 			mMaxConstant = mMinConstant;
 			mMinGradient = mMinConstant;
 			mMaxGradient = mMinConstant;
+
+			mMinColorField->setValue(mMinConstant);
 			break;
 		case PDT_RandomRange: 
 			mMinConstant = mValue.getMinConstant();
 			mMaxConstant = mValue.getMaxConstant();
 			mMinGradient = mMinConstant;
 			mMaxGradient = mMaxConstant;
+
+			mMinColorField->setValue(mMinConstant);
+			mMaxColorField->setValue(mMaxConstant);
 			break;
 		case PDT_Curve: 
 			mMinGradient = mValue.getMinGradient();
 			mMaxGradient = mMinGradient;
 			mMinConstant = Color::fromRGBA(mMinGradient.evaluate(0.0f));
 			mMaxConstant = Color::fromRGBA(mMaxGradient.evaluate(0.0f));
+
+			mMinGradientField->setValue(mMinGradient);
 			break;
 		case PDT_RandomCurveRange: 
 			mMinGradient = mValue.getMinGradient();
 			mMaxGradient = mValue.getMaxGradient();
 			mMinConstant = Color::fromRGBA(mMinGradient.evaluate(0.0f));
 			mMaxConstant = Color::fromRGBA(mMaxGradient.evaluate(0.0f));
+
+			mMinGradientField->setValue(mMinGradient);
+			mMaxGradientField->setValue(mMaxGradient);
 			break;
 		}
-
-		rebuild();
 	}
 
 	void GUIColorDistributionField::setTint(const Color& color)
@@ -168,11 +180,11 @@ namespace bs
 		mLayout->clear();
 		mLayout->addElement(mLabel);
 
-		switch (mValue.getType())
+		switch (mPropertyType)
 		{
 		default:
 		case PDT_Constant:
-			mMinColorField = GUIColorField::create(HString("Constant"), 50, GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
+			mMinColorField = GUIColorField::create(GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
 			mMaxColorField = nullptr;
 			mMinGradientField = nullptr;
 			mMaxGradientField = nullptr;

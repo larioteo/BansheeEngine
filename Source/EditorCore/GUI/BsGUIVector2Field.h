@@ -22,8 +22,11 @@ namespace bs
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
-		/** Style type name for the internal input boxes. */
-		static const String& getFloatFieldStyleType();
+		/** Style type name for the internal X input box. */
+		static const String& getXFieldStyleType();
+
+		/** Style type name for the internal Y input box. */
+		static const String& getYFieldStyleType();
 
 		GUIVector2Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
@@ -38,12 +41,12 @@ namespace bs
 		bool hasInputFocus() const;
 
 		/** @copydoc GUIElement::setTint */
-		virtual void setTint(const Color& color) override;
+		void setTint(const Color& color) override;
 
 		Event<void(const Vector2&)> onValueChanged; /**< Triggers when the field value changes. */
 		Event<void()> onConfirm; /**< Triggered when the user hits the Enter key with the input box in focus. */
 	protected:
-		virtual ~GUIVector2Field() { }
+		virtual ~GUIVector2Field() = default;
 
 	protected:
 		static const UINT32 ELEMENT_LABEL_WIDTH;

@@ -67,6 +67,10 @@ namespace bs
 		BS_SCRIPT_EXPORT(pr:setter,n:Value)
 		void setValue(const TDistribution<T>& value);
 
+		/** Returns the type of the currently selected distribution. */
+		BS_SCRIPT_EXPORT(pr:getter,n:DistributionType)
+		PropertyDistributionType getType() const { return mPropertyType; }
+
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
 
@@ -116,6 +120,7 @@ namespace bs
 		GUIConstantType* mMinInput = nullptr;
 		GUIConstantType* mMaxInput = nullptr;
 		GUICurves* mCurveDisplay[NumComponents] = { };
+		PropertyDistributionType mPropertyType = PDT_Constant;
 
 		T mMinConstant = TCurveProperties<T>::getZero();
 		T mMaxConstant = TCurveProperties<T>::getZero();

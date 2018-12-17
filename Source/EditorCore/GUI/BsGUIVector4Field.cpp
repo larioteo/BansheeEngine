@@ -5,21 +5,22 @@
 #include "GUI/BsGUILayoutY.h"
 #include "GUI/BsGUIFloatField.h"
 #include "GUI/BsGUILabel.h"
+#include "GUI/BsGUISpace.h"
 
 using namespace std::placeholders;
 
 namespace bs
 {
-	const UINT32 GUIVector4Field::ELEMENT_LABEL_WIDTH = 10;
+	const UINT32 GUIVector4Field::ELEMENT_LABEL_WIDTH = 15;
 
 	GUIVector4Field::GUIVector4Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel), mFieldX(nullptr), mFieldY(nullptr)
 	{
-		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldZ = GUIFloatField::create(HString("Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
-		mFieldW = GUIFloatField::create(HString("W"), ELEMENT_LABEL_WIDTH, getSubStyleName(getFloatFieldStyleType()));
+		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getXFieldStyleType()));
+		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getYFieldStyleType()));
+		mFieldZ = GUIFloatField::create(HString("Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(getZFieldStyleType()));
+		mFieldW = GUIFloatField::create(HString("W"), ELEMENT_LABEL_WIDTH, getSubStyleName(getWFieldStyleType()));
 
 		mFieldX->onValueChanged.connect(std::bind(&GUIVector4Field::valueChanged, this, _1));
 		mFieldY->onValueChanged.connect(std::bind(&GUIVector4Field::valueChanged, this, _1));
@@ -40,8 +41,11 @@ namespace bs
 		GUILayout* elementLayout = layout->addNewElement<GUILayoutX>();
 
 		elementLayout->addElement(mFieldX);
+		elementLayout->addNewElement<GUIFixedSpace>(5);
 		elementLayout->addElement(mFieldY);
+		elementLayout->addNewElement<GUIFixedSpace>(5);
 		elementLayout->addElement(mFieldZ);
+		elementLayout->addNewElement<GUIFixedSpace>(5);
 		elementLayout->addElement(mFieldW);
 	}
 
@@ -85,10 +89,10 @@ namespace bs
 		if (mLabel != nullptr)
 			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
 
-		mFieldX->setStyle(getSubStyleName(getFloatFieldStyleType()));
-		mFieldY->setStyle(getSubStyleName(getFloatFieldStyleType()));
-		mFieldZ->setStyle(getSubStyleName(getFloatFieldStyleType()));
-		mFieldW->setStyle(getSubStyleName(getFloatFieldStyleType()));
+		mFieldX->setStyle(getSubStyleName(getXFieldStyleType()));
+		mFieldY->setStyle(getSubStyleName(getYFieldStyleType()));
+		mFieldZ->setStyle(getSubStyleName(getZFieldStyleType()));
+		mFieldW->setStyle(getSubStyleName(getWFieldStyleType()));
 	}
 
 	void GUIVector4Field::valueChanged(float newValue)
@@ -108,9 +112,27 @@ namespace bs
 		return typeName;
 	}
 
-	const String& GUIVector4Field::getFloatFieldStyleType()
+	const String& GUIVector4Field::getXFieldStyleType()
 	{
-		static String LABEL_STYLE_TYPE = "EditorFloatField";
+		static String LABEL_STYLE_TYPE = "XFloatField";
+		return LABEL_STYLE_TYPE;
+	}
+
+	const String& GUIVector4Field::getYFieldStyleType()
+	{
+		static String LABEL_STYLE_TYPE = "YFloatField";
+		return LABEL_STYLE_TYPE;
+	}
+
+	const String& GUIVector4Field::getZFieldStyleType()
+	{
+		static String LABEL_STYLE_TYPE = "ZFloatField";
+		return LABEL_STYLE_TYPE;
+	}
+
+	const String& GUIVector4Field::getWFieldStyleType()
+	{
+		static String LABEL_STYLE_TYPE = "WFloatField";
 		return LABEL_STYLE_TYPE;
 	}
 }

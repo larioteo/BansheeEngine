@@ -4,9 +4,9 @@
 #include "BsMonoUtil.h"
 #include "../../../EditorCore/GUI/BsGUIFloatDistributionField.h"
 #include "BsScriptTDistribution.generated.h"
+#include "BsScriptHString.generated.h"
 #include "BsScriptGUIContent.generated.h"
 #include "../../../EditorCore/GUI/BsGUIFloatDistributionField.h"
-#include "BsScriptHString.generated.h"
 
 namespace bs
 {
@@ -26,6 +26,7 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_getValue", (void*)&ScriptGUIFloatDistributionField::Internal_getValue);
 		metaData.scriptClass->addInternalCall("Internal_setValue", (void*)&ScriptGUIFloatDistributionField::Internal_setValue);
+		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptGUIFloatDistributionField::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_hasInputFocus", (void*)&ScriptGUIFloatDistributionField::Internal_hasInputFocus);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUIFloatDistributionField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUIFloatDistributionField::Internal_create0);
@@ -70,6 +71,17 @@ namespace bs
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
 		tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIFloatDistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
+	}
+
+	PropertyDistributionType ScriptGUIFloatDistributionField::Internal_getType(ScriptGUIFloatDistributionField* thisPtr)
+	{
+		PropertyDistributionType tmp__output;
+		tmp__output = static_cast<GUIFloatDistributionField*>(thisPtr->getGUIElement())->getType();
+
+		PropertyDistributionType __output;
+		__output = tmp__output;
+
+		return __output;
 	}
 
 	bool ScriptGUIFloatDistributionField::Internal_hasInputFocus(ScriptGUIFloatDistributionField* thisPtr)

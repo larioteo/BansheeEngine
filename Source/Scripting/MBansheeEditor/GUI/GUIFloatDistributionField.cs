@@ -19,7 +19,7 @@ namespace BansheeEditor
         {
             FloatDistribution distribution = Value;
 
-            if (distribution.DistributionType == PropertyDistributionType.Curve)
+            if (DistributionType == PropertyDistributionType.Curve)
             {
                 CurveEditorWindow.Show(distribution.GetMinCurve(), (success, curve) =>
                 {
@@ -30,7 +30,7 @@ namespace BansheeEditor
                     OnChanged?.Invoke();
                 });
             }
-            else if (distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
+            else if (DistributionType == PropertyDistributionType.RandomCurveRange)
             {
                 CurveEditorWindow.Show(distribution.GetMinCurve(), distribution.GetMaxCurve(), 
                     (success, minCurve, maxCurve) =>

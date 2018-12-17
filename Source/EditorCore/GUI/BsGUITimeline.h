@@ -20,6 +20,9 @@ namespace bs
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
+		/** Style type name for the internal background image. */
+		static constexpr const char* BACKGROUND_STYLE_TYPE = "Background";
+
 		/**	Determines the range of values to display on the timeline, in seconds. */
 		BS_SCRIPT_EXPORT(pr:setter,n:Range)
 		void setRange(float range);
@@ -128,6 +131,7 @@ namespace bs
 		void styleUpdated() override;
 
 		GUICanvas* mCanvas = nullptr;
+		GUITexture* mBackground = nullptr;
 
 		float mRange = 20.0f;
 		float mOffset = 0.0f;

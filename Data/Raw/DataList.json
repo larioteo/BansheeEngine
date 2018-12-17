@@ -18,6 +18,15 @@
                 16
             ],
             "UUID": "10999b74-d976-4116-9f72-21e489a7a8e4"
+        },
+        {
+            "Antialiasing": true,
+            "Name": "arialBold.ttf",
+            "Path": "arialbd.ttf",
+            "Sizes": [
+                8
+            ],
+            "UUID": "3d111a58-012b-11e9-8eb2-f2801f1b9fd1"
         }
     ],
     "GUISkin": {
@@ -924,6 +933,31 @@
             "Path": "DropDownArrowNormal.png",
             "SpriteUUID": "ec9065e4-4faa-c25b-eaa0-4faa1715356f",
             "TextureUUID": "3a3a6257-41e7-6879-6584-41e7155ed876"
+        },
+        {
+            "Path": "ButtonAddOnBlue.png",
+            "SpriteUUID": "84497ab7-4902-b14c-739f-490242a9737d",
+            "TextureUUID": "4699fb83-4d2e-648f-17bc-4d2e6a66436c"
+        },
+        {
+            "Path": "ButtonAddOnGray.png",
+            "SpriteUUID": "b0b76e49-4410-e62a-1b8c-44104cb1156f",
+            "TextureUUID": "0a2c209c-492f-b733-9e9a-492f7a22d93c"
+        },
+        {
+            "Path": "ButtonAddOnGreen.png",
+            "SpriteUUID": "b3332e90-42d6-f017-26b9-42d6cf767541",
+            "TextureUUID": "2162e96f-4123-1ff4-3aba-4123ce0136d8"
+        },
+        {
+            "Path": "ButtonAddOnRed.png",
+            "SpriteUUID": "eaeba18a-45a1-69d7-a8bd-45a17ce1f21c",
+            "TextureUUID": "4c196334-49db-4e84-85b6-49db4545b997"
+        },
+        {
+            "Path": "CurveBg.png",
+            "SpriteUUID": "fd9eebd6-48d6-13d8-a2ae-48d6080e2142",
+            "TextureUUID": "a00466ae-43c2-5460-b49d-43c2f66fe13a"
         }
     ],
     "SplashScreen": {

@@ -22,8 +22,17 @@ namespace bs
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
-		/** Style type name for the internal input boxes. */
-		static const String& getFloatFieldStyleType();
+		/** Style type name for the internal X input box. */
+		static const String& getXFieldStyleType();
+
+		/** Style type name for the internal Y input box. */
+		static const String& getYFieldStyleType();
+
+		/** Style type name for the internal Z input box. */
+		static const String& getZFieldStyleType();
+
+		/** Style type name for the internal W input box. */
+		static const String& getWFieldStyleType();
 
 		GUIVector4Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);

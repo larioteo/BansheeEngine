@@ -19,7 +19,7 @@ namespace BansheeEditor
         {
             Vector3Distribution distribution = Value;
 
-            if (distribution.DistributionType == PropertyDistributionType.Curve)
+            if (DistributionType == PropertyDistributionType.Curve)
             {
                 AnimationCurve[] curves = AnimationUtility.SplitCurve3D(distribution.GetMinCurve());
                 if (component < curves.Length)
@@ -37,7 +37,7 @@ namespace BansheeEditor
                     });
                 }
             }
-            else if (distribution.DistributionType == PropertyDistributionType.RandomCurveRange)
+            else if (DistributionType == PropertyDistributionType.RandomCurveRange)
             {
                 AnimationCurve[] minCurves = AnimationUtility.SplitCurve3D(distribution.GetMinCurve());
                 AnimationCurve[] maxCurves = AnimationUtility.SplitCurve3D(distribution.GetMaxCurve());

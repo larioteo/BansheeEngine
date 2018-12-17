@@ -150,7 +150,7 @@ namespace bs
 
 		mDefaultFont = gResources().load<Font>(BuiltinDataFolder + (DefaultFontFilename + ".asset"));
 		mDefaultAAFont = gResources().load<Font>(BuiltinDataFolder + (DefaultAAFontFilename + ".asset"));
-		mSkin = gResources().load<GUISkin>(BuiltinDataFolder + (GUISkinFile + ".asset"));
+		mSkin = gResources().load<GUISkin>(BuiltinDataFolder + (GUISkinFile + ".json.asset"));
 	}
 
 	HSpriteTexture BuiltinEditorResources::getGUIIcon(const String& name) const

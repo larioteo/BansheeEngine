@@ -4,6 +4,7 @@
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 
 namespace bs
 {
@@ -31,6 +32,7 @@ namespace bs
 
 		static MonoObject* Internal_getValue(ScriptGUIVector3DistributionField* thisPtr);
 		static void Internal_setValue(ScriptGUIVector3DistributionField* thisPtr, MonoObject* value);
+		static PropertyDistributionType Internal_getType(ScriptGUIVector3DistributionField* thisPtr);
 		static bool Internal_hasInputFocus(ScriptGUIVector3DistributionField* thisPtr);
 		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);

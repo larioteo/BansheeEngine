@@ -28,7 +28,7 @@ add_subdirectory(${BSF_SOURCE_DIR})
 
 set (BS_PREBUILT_DEPENDENCIES_VERSION 24)
 set (BS_SRC_DEPENDENCIES_VERSION 15)
-set (BS_BUILTIN_ASSETS_VERSION 12)
+set (BS_BUILTIN_ASSETS_VERSION 13)
 
 # Options
 set(GENERATE_SCRIPT_BINDINGS OFF CACHE BOOL "If true, script binding files will be generated. Script bindings are required for the project to build properly, however they take a while to generate. If you are sure the script bindings are up to date, you can turn off their generation (temporarily) to speed up the build.")
@@ -42,7 +42,8 @@ check_and_update_builtin_assets(Banshee ${PROJECT_SOURCE_DIR}/Data/Raw Raw ${BS_
 		
 ## Import built-in assets
 if(${INCLUDE_ASSET_PACKAGING_SCRIPTS})
-	add_run_asset_import_target(EditorBuiltinAssets ${PROJECT_SOURCE_DIR}/Data ${PROJECT_SOURCE_DIR} "--editor")
+	add_run_asset_import_target(EditorBuiltinAssets ${PROJECT_SOURCE_DIR}/Data ${BSF_SOURCE_DIR}/.. "--editor")
+	add_upload_assets_target(EditorBuiltinAssets "BansheeCompiledData_Master" ${PROJECT_SOURCE_DIR}/Data Raw/DataPackageContents.txt)
 endif()
 
 ## Fetch built-in assets

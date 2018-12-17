@@ -83,6 +83,13 @@ namespace BansheeEditor
 			set { Internal_setValue(mCachedPtr, value); }
 		}
 
+		/// <summary>Returns the type of the currently selected distribution.</summary>
+		[ShowInInspector]
+		public PropertyDistributionType DistributionType
+		{
+			get { return Internal_getType(mCachedPtr); }
+		}
+
 		/// <summary>
 		/// Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions.
 		/// </summary>
@@ -114,6 +121,8 @@ namespace BansheeEditor
 		private static extern Vector2Distribution Internal_getValue(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setValue(IntPtr thisPtr, Vector2Distribution value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern PropertyDistributionType Internal_getType(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_hasInputFocus(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
