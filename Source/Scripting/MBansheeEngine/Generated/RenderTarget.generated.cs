@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Width of the render target, in pixels.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Width
 		{
 			get { return Internal_getWidth(mCachedPtr); }
@@ -24,6 +25,7 @@ namespace BansheeEngine
 
 		/// <summary>Height of the render target, in pixels.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Height
 		{
 			get { return Internal_getHeight(mCachedPtr); }
@@ -31,6 +33,7 @@ namespace BansheeEngine
 
 		/// <summary>True if pixels written to the render target will be gamma corrected.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool GammaCorrection
 		{
 			get { return Internal_getGammaCorrection(mCachedPtr); }
@@ -41,6 +44,7 @@ namespace BansheeEngine
 		/// priority will be rendered before ones with lower priority.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public int Priority
 		{
 			get { return Internal_getPriority(mCachedPtr); }
@@ -49,6 +53,7 @@ namespace BansheeEngine
 
 		/// <summary>Controls how many samples are used for multisampling. (0 or 1 if multisampling is not used).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SampleCount
 		{
 			get { return Internal_getSampleCount(mCachedPtr); }

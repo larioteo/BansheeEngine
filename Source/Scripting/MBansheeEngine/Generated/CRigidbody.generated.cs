@@ -27,6 +27,7 @@ namespace BansheeEngine
 		/// RigidbodyFlag::AutoTensors is turned off. Value of zero means the object is immovable (but can be rotated).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Mass
 		{
 			get { return Internal_getMass(mCachedPtr); }
@@ -39,6 +40,7 @@ namespace BansheeEngine
 		/// move the object and have other dynamic objects respond correctly (meaning it will push other objects).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool IsKinematic
 		{
 			get { return Internal_getIsKinematic(mCachedPtr); }
@@ -50,6 +52,7 @@ namespace BansheeEngine
 		/// physics system.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool IsSleeping
 		{
 			get { return Internal_isSleeping(mCachedPtr); }
@@ -59,6 +62,7 @@ namespace BansheeEngine
 		/// Determines a threshold of force and torque under which the object will be considered to be put to sleep.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float SleepThreshold
 		{
 			get { return Internal_getSleepThreshold(mCachedPtr); }
@@ -67,6 +71,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines whether or not the rigidbody will have the global gravity force applied to it.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool UseGravity
 		{
 			get { return Internal_getUseGravity(mCachedPtr); }
@@ -75,6 +80,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the linear velocity of the body.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Velocity
 		{
 			get
@@ -88,6 +94,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the angular velocity of the body.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 AngularVelocity
 		{
 			get
@@ -103,6 +110,7 @@ namespace BansheeEngine
 		/// Determines the linear drag of the body. Higher drag values means the object resists linear movement more.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Drag
 		{
 			get { return Internal_getDrag(mCachedPtr); }
@@ -113,6 +121,7 @@ namespace BansheeEngine
 		/// Determines the angular drag of the body. Higher drag values means the object resists angular movement more.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float AngularDrag
 		{
 			get { return Internal_getAngularDrag(mCachedPtr); }
@@ -125,6 +134,7 @@ namespace BansheeEngine
 		/// if RigidbodyFlag::AutoTensors is turned off.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 InertiaTensor
 		{
 			get
@@ -138,6 +148,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the maximum angular velocity of the rigidbody. Velocity will be clamped to this value.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MaxAngularVelocity
 		{
 			get { return Internal_getMaxAngularVelocity(mCachedPtr); }
@@ -148,6 +159,7 @@ namespace BansheeEngine
 		/// Determines the rigidbody's center of mass position. Only relevant if RigibodyFlag::AutoTensors is turned off.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 CenterOfMassPosition
 		{
 			get
@@ -163,6 +175,7 @@ namespace BansheeEngine
 		/// Determines the rigidbody's center of mass rotation. Only relevant if RigibodyFlag::AutoTensors is turned off.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Quaternion CenterOfMassRotation
 		{
 			get
@@ -179,6 +192,7 @@ namespace BansheeEngine
 		/// numerical stability of the simulation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint PositionSolverCount
 		{
 			get { return Internal_getPositionSolverCount(mCachedPtr); }
@@ -190,6 +204,7 @@ namespace BansheeEngine
 		/// numerical stability of the simulation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint VelocitySolverCount
 		{
 			get { return Internal_getVelocitySolverCount(mCachedPtr); }
@@ -198,6 +213,7 @@ namespace BansheeEngine
 
 		/// <summary>Sets a value that determines which (if any) collision events are reported.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public CollisionReportMode CollisionReportMode
 		{
 			get { return Internal_getCollisionReportMode(mCachedPtr); }
@@ -206,6 +222,7 @@ namespace BansheeEngine
 
 		/// <summary>Flags that control the behaviour of the rigidbody.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RigidbodyFlag Flags
 		{
 			get { return Internal_getFlags(mCachedPtr); }

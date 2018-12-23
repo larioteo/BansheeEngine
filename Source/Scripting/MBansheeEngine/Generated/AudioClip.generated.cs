@@ -26,6 +26,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the size of a single sample, in bits.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint BitDepth
 		{
 			get { return Internal_getBitDepth(mCachedPtr); }
@@ -33,6 +34,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns how many samples per second is the audio encoded in.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SampleRate
 		{
 			get { return Internal_getFrequency(mCachedPtr); }
@@ -40,6 +42,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the number of channels provided by the clip.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumChannels
 		{
 			get { return Internal_getNumChannels(mCachedPtr); }
@@ -47,6 +50,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns in which format is audio data stored in.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AudioFormat Format
 		{
 			get { return Internal_getFormat(mCachedPtr); }
@@ -54,6 +58,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns how is the audio data read/decoded.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AudioReadMode ReadMode
 		{
 			get { return Internal_getReadMode(mCachedPtr); }
@@ -61,6 +66,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the length of the audio clip, in seconds.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Duration
 		{
 			get { return Internal_getLength(mCachedPtr); }
@@ -68,6 +74,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the total number of samples in the clip (includes all channels).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumSamples
 		{
 			get { return Internal_getNumSamples(mCachedPtr); }
@@ -75,6 +82,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines will the clip be played a spatial 3D sound, or as a normal sound (for example music).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Is3D
 		{
 			get { return Internal_is3D(mCachedPtr); }

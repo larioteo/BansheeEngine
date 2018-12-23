@@ -22,7 +22,7 @@ namespace BansheeEditor
                     if (!success)
                         return;
 
-                    if (distribution.DistributionType == PropertyDistributionType.Constant)
+                    if (DistributionType == PropertyDistributionType.Constant)
                         Value = new ColorDistribution(value);
                     else
                         Value = new ColorDistribution(value, distribution.GetMaxConstant());
@@ -38,7 +38,7 @@ namespace BansheeEditor
                     if (!success)
                         return;
 
-                    if(distribution.DistributionType == PropertyDistributionType.Curve)
+                    if(DistributionType == PropertyDistributionType.Curve)
                         Value = new ColorDistribution(colorGradient);
                     else
                         Value = new ColorDistribution(colorGradient, distribution.GetMaxGradient());

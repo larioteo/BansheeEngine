@@ -80,6 +80,7 @@ namespace BansheeEditor
 		/// that range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AnimationCurve Curve
 		{
 			get { return Internal_getCurve(mCachedPtr); }
@@ -90,6 +91,7 @@ namespace BansheeEditor
 		/// field doesn't represent a range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AnimationCurve MinCurve
 		{
 			get { return Internal_getMinCurve(mCachedPtr); }
@@ -100,6 +102,7 @@ namespace BansheeEditor
 		/// field doesn't represent a range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AnimationCurve MaxCurve
 		{
 			get { return Internal_getMaxCurve(mCachedPtr); }

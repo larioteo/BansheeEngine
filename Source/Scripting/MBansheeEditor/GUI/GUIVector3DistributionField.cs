@@ -34,6 +34,7 @@ namespace BansheeEditor
                         Vector3Curve compoundCurve = AnimationUtility.CombineCurve3D(curves);
                         Value = new Vector3Distribution(compoundCurve);
                         OnChanged?.Invoke();
+                        OnConfirmed?.Invoke();
                     });
                 }
             }
@@ -58,6 +59,7 @@ namespace BansheeEditor
 
                             Value = new Vector3Distribution(minCompoundCurves, maxCompoundCurves);
                             OnChanged?.Invoke();
+                            OnConfirmed?.Invoke();
                         });
                 }
             }

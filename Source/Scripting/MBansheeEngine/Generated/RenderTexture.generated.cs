@@ -66,6 +66,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the primary color surface that contains rendered color data.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Texture ColorSurface
 		{
 			get { return Internal_getColorSurface(mCachedPtr); }
@@ -73,6 +74,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns all the color surfaces.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Texture[] ColorSurfaces
 		{
 			get { return Internal_getColorSurfaces(mCachedPtr); }
@@ -80,6 +82,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the depth/stencil surface that contains rendered depth and stencil data.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Texture DepthStencilSurface
 		{
 			get { return Internal_getDepthStencilSurface(mCachedPtr); }

@@ -12,13 +12,59 @@ namespace BansheeEngine
     /// <summary>
     /// Flags that are used to define properties of a single field in a managed object.
     /// </summary>
-    internal enum SerializableFieldAttributes // Note: Must match C++ enum ScriptFieldFlags
+    public enum SerializableFieldAttributes // Note: Must match C++ enum ScriptFieldFlags
     {
-        Serializable = 0x01,
-        Inspectable = 0x02,
-        Ranged = 0x04,
-        Stepped = 0x08,
-        Animable = 0x10
+        /// <summary>
+        /// Field will be automatically serialized.
+        /// </summary>
+        Serializable  = 1 << 0,
+
+        /// <summary>
+        /// Field will be visible in the default inspector.
+        /// </summary>
+        Inspectable   = 1 << 1,
+
+        /// <summary>
+        /// Integer or floating point field with min/max range.
+        /// </summary>
+        Ranged        = 1 << 2,
+
+        /// <summary>
+        /// Integer or floating point field with a minimum increment/decrement step.
+        /// </summary>
+        Stepped       = 1 << 3,
+
+        /// <summary>
+        /// Field can be animated through the animation window.
+        /// </summary>
+        Animable      = 1 << 4,
+
+        /// <summary>
+        /// Integer field rendered as a layer selection dropdown.
+        /// </summary>
+        LayerMask     = 1 << 5,
+
+        /// <summary>
+        /// Field containing a reference type being passed by copy instead of by reference.
+        /// </summary>
+        PassByCopy    = 1 << 6,
+
+        /// <summary>
+        /// Field containing a reference type that should never be null.
+        /// </summary>
+        NotNull       = 1 << 7,
+
+        /// <summary>
+        /// Field represents a property that wraps a native object. Getters and setters of such a property issue calls into
+        /// native code to update the native object.
+        /// </summary>
+        NativeWrapper = 1 << 8,
+
+        /// <summary>
+        /// When a field changes those changes need to be applied to the parent object by calling the field setter. Only
+        /// applicable to properties containing reference types.
+        /// </summary>
+        ApplyOnDirty = 1 << 9
     }
 
     /// <summary>
@@ -48,6 +94,11 @@ namespace BansheeEngine
             this.internalType = internalType;
         }
 
+        public SerializableFieldAttributes Flags
+        {
+            get { return (SerializableFieldAttributes) flags; }
+        }
+
         /// <summary>
         /// Returns the type of data contained in the field.
         /// </summary>
@@ -70,30 +121,6 @@ namespace BansheeEngine
         public string Name
         {
             get { return name; }
-        }
-
-        /// <summary>
-        /// Returns true if the field will be visible in the default inspector.
-        /// </summary>
-        public bool Inspectable
-        {
-            get { return (flags & (byte)SerializableFieldAttributes.Inspectable) != 0; }
-        }
-
-        /// <summary>
-        /// Returns true if the field will be automatically serialized.
-        /// </summary>
-        public bool Serializable
-        {
-            get { return (flags & (byte)SerializableFieldAttributes.Serializable) != 0; }
-        }
-
-        /// <summary>
-        /// Returns true if the field can be animated.
-        /// </summary>
-        public bool Animable
-        {
-            get { return (flags & (byte)SerializableFieldAttributes.Animable) != 0; }
         }
 
         /// <summary>

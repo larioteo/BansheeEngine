@@ -30,6 +30,7 @@ namespace BansheeEditor
 
 		/// <summary>Number of tick levels that will be generated.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumLevels
 		{
 			get { return Internal_getNumLevels(mCachedPtr); }

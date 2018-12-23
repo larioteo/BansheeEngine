@@ -22,6 +22,7 @@ namespace BansheeEngine
 
 		/// <summary>Shape over which to emit the particles.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleEmitterShape Shape
 		{
 			get { return Internal_getShape(mCachedPtr); }
@@ -30,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the number of particles that are emitted every second.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public FloatDistribution EmissionRate
 		{
 			get { return Internal_getEmissionRate(mCachedPtr); }
@@ -38,6 +40,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines discrete intervals to emit particles.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleBurst[] EmissionBursts
 		{
 			get { return Internal_getEmissionBursts(mCachedPtr); }
@@ -46,6 +49,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the lifetime of particles when they are initially spawned, in seconds.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public FloatDistribution InitialLifetime
 		{
 			get { return Internal_getInitialLifetime(mCachedPtr); }
@@ -57,6 +61,7 @@ namespace BansheeEngine
 		/// direction, which is determined by the emission shape and potentially other properties.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public FloatDistribution InitialSpeed
 		{
 			get { return Internal_getInitialSpeed(mCachedPtr); }
@@ -68,6 +73,7 @@ namespace BansheeEngine
 		/// used if 3D size is disabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public FloatDistribution InitialSize
 		{
 			get { return Internal_getInitialSize(mCachedPtr); }
@@ -79,6 +85,7 @@ namespace BansheeEngine
 		/// Only used if 3D size is enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3Distribution InitialSize3D
 		{
 			get { return Internal_getInitialSize3D(mCachedPtr); }
@@ -90,6 +97,7 @@ namespace BansheeEngine
 		/// dimension (if enabled).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Use3DSize
 		{
 			get { return Internal_getUse3DSize(mCachedPtr); }
@@ -101,6 +109,7 @@ namespace BansheeEngine
 		/// particle's local Z axis. Only used if 3D rotation is disabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public FloatDistribution InitialRotation
 		{
 			get { return Internal_getInitialRotation(mCachedPtr); }
@@ -111,6 +120,7 @@ namespace BansheeEngine
 		/// Determines the rotation of the particles when initially spawned, in Euler angles. Only used if 3D rotation is enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3Distribution InitialRotation3D
 		{
 			get { return Internal_getInitialRotation3D(mCachedPtr); }
@@ -122,6 +132,7 @@ namespace BansheeEngine
 		/// Euler angles that allow you to rotate around every axis (if enabled).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Use3DRotation
 		{
 			get { return Internal_getUse3DRotation(mCachedPtr); }
@@ -130,6 +141,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the initial color (in RGB channels) and transparency (in A channel) of particles.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ColorDistribution InitialColor
 		{
 			get { return Internal_getInitialColor(mCachedPtr); }
@@ -141,6 +153,7 @@ namespace BansheeEngine
 		/// Offset will be randomly selected in all three axes in range [-value, value].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float RandomOffset
 		{
 			get { return Internal_getRandomOffset(mCachedPtr); }
@@ -152,6 +165,7 @@ namespace BansheeEngine
 		/// percent of particles that should be flipped, in range [0, 1].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FlipU
 		{
 			get { return Internal_getFlipU(mCachedPtr); }
@@ -163,6 +177,7 @@ namespace BansheeEngine
 		/// percent of particles that should be flipped, in range [0, 1].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FlipV
 		{
 			get { return Internal_getFlipV(mCachedPtr); }

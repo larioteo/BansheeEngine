@@ -21,6 +21,7 @@ namespace BansheeEditor
 
         private object propertyValue;
         private List<InspectableField> children = new List<InspectableField>();
+        private InspectableFieldStyleInfo style;
 
         private GUILayoutY guiLayout;
         private GUILayoutX guiChildLayout;
@@ -42,10 +43,12 @@ namespace BansheeEditor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the object whose contents to display.</param>
+        /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         public InspectableObject(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
-            SerializableProperty property)
+            SerializableProperty property, InspectableFieldStyleInfo style)
             : base(parent, title, path, SerializableProperty.FieldType.Object, depth, layout, property)
         {
+            this.style = style;
             isExpanded = parent.Persistent.GetBool(path + "_Expanded");
 
             // Builds a context menu that lets the user create objects to assign to this field.
@@ -101,6 +104,13 @@ namespace BansheeEditor
                 currentIndex += children[i].GetNumLayoutElements();
             }
 
+            if (state.HasFlag(InspectableState.Modified))
+            {
+                if (style.StyleFlags.HasFlag(InspectableFieldStyleFlags.CopiedAsValue) ||
+                    style.StyleFlags.HasFlag(InspectableFieldStyleFlags.ApplyOnDirty))
+                    property.SetValue(propertyValue);
+            }
+
             return state;
         }
 
@@ -137,15 +147,25 @@ namespace BansheeEditor
                guiFoldout.OnToggled += OnFoldoutToggled;
                guiInternalTitleLayout.AddElement(guiFoldout);
 
-               GUIContent clearIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear), 
-                   new LocEdString("Clear"));
-               GUIButton clearBtn = new GUIButton(clearIcon, GUIOption.FixedWidth(20));
-               clearBtn.OnClick += OnClearButtonClicked;
-               guiInternalTitleLayout.AddElement(clearBtn);
+               if (!style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NotNull))
+               {
+                   GUIContent clearIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear),
+                       new LocEdString("Clear"));
+                   GUIButton clearBtn = new GUIButton(clearIcon, GUIOption.FixedWidth(20));
+                   clearBtn.OnClick += OnClearButtonClicked;
+                   guiInternalTitleLayout.AddElement(clearBtn);
+               }
 
                if (isExpanded)
                {
-                   SerializableObject serializableObject = property.GetObject();
+                   SerializableObject serializableObject;
+
+                   // Note: Make sure to use the same object instance if it's copied as value
+                   if(style.StyleFlags.HasFlag(InspectableFieldStyleFlags.CopiedAsValue))
+                       serializableObject = new SerializableObject(propertyValue);
+                   else
+                       serializableObject = property.GetObject();
+
                    SerializableField[] fields = serializableObject.Fields;
 
                    if (fields.Length > 0)
@@ -174,7 +194,7 @@ namespace BansheeEditor
                        int currentIndex = 0;
                        foreach (var field in fields)
                        {
-                           if (!field.Inspectable)
+                           if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
                                continue;
 
                            string childPath = path + "/" + field.Name;
@@ -223,9 +243,9 @@ namespace BansheeEditor
 
                children.Clear();
                guiInternalTitleLayout.Destroy();
-                guiCreateBtn = null;
+               guiCreateBtn = null;
 
-                if (guiChildLayout != null)
+               if (guiChildLayout != null)
                {
                    guiChildLayout.Destroy();
                    guiChildLayout = null;

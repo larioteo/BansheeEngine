@@ -21,6 +21,7 @@ namespace BansheeEngine
 		/// rigidbody.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<PhysicsMesh> Mesh
 		{
 			get { return Internal_getMesh(mCachedPtr); }

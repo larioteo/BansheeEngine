@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Material to render the particles with.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Material> Material
 		{
 			get { return Internal_getmaterial(mCachedPtr); }
@@ -25,6 +26,7 @@ namespace BansheeEngine
 
 		/// <summary>Mesh used for representing individual particles when using the Mesh rendering mode.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Mesh> Mesh
 		{
 			get { return Internal_getmesh(mCachedPtr); }
@@ -37,6 +39,7 @@ namespace BansheeEngine
 		/// customize the GPU simulation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool GpuSimulation
 		{
 			get { return Internal_getgpuSimulation(mCachedPtr); }
@@ -45,6 +48,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines in which space are particles in.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleSimulationSpace SimulationSpace
 		{
 			get { return Internal_getsimulationSpace(mCachedPtr); }
@@ -53,6 +57,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines how are particles oriented when rendering.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleOrientation Orientation
 		{
 			get { return Internal_getorientation(mCachedPtr); }
@@ -64,6 +69,7 @@ namespace BansheeEngine
 		/// the Plane orientation mode.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool OrientationLockY
 		{
 			get { return Internal_getorientationLockY(mCachedPtr); }
@@ -75,6 +81,7 @@ namespace BansheeEngine
 		/// ParticleOrientation::Plane.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 OrientationPlaneNormal
 		{
 			get
@@ -91,6 +98,7 @@ namespace BansheeEngine
 		/// simulation is enabled only distance based sorting is supported.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleSortMode SortMode
 		{
 			get { return Internal_getsortMode(mCachedPtr); }
@@ -102,6 +110,7 @@ namespace BansheeEngine
 		/// curves using particle system time for evaluation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Duration
 		{
 			get { return Internal_getduration(mCachedPtr); }
@@ -110,6 +119,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines should the particle system time wrap around once it reaches its duration.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool IsLooping
 		{
 			get { return Internal_getisLooping(mCachedPtr); }
@@ -122,6 +132,7 @@ namespace BansheeEngine
 		/// between all particle systems).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint MaxParticles
 		{
 			get { return Internal_getmaxParticles(mCachedPtr); }
@@ -133,6 +144,7 @@ namespace BansheeEngine
 		/// system yields different results each time it is ran.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool UseAutomaticSeed
 		{
 			get { return Internal_getuseAutomaticSeed(mCachedPtr); }
@@ -144,6 +156,7 @@ namespace BansheeEngine
 		/// between different runs. Only relevant if automatic seed is disabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint ManualSeed
 		{
 			get { return Internal_getmanualSeed(mCachedPtr); }
@@ -156,6 +169,7 @@ namespace BansheeEngine
 		/// enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool UseAutomaticBounds
 		{
 			get { return Internal_getuseAutomaticBounds(mCachedPtr); }
@@ -167,6 +181,7 @@ namespace BansheeEngine
 		/// particle system.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AABox CustomBounds
 		{
 			get
@@ -180,6 +195,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines how is each particle represented on the screen.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleRenderMode RenderMode
 		{
 			get { return Internal_getrenderMode(mCachedPtr); }

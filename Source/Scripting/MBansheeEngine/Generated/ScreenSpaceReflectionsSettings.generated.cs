@@ -28,6 +28,7 @@ namespace BansheeEngine
 
 		/// <summary>Enables or disables the SSR effect.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -40,6 +41,7 @@ namespace BansheeEngine
 		/// default is 2.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }
@@ -48,6 +50,7 @@ namespace BansheeEngine
 
 		/// <summary>Intensity of the screen space reflections. Valid range is [0, 1]. Default is 1 (100%).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -59,6 +62,7 @@ namespace BansheeEngine
 		/// [0, 1]. Default is 0.8.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MaxRoughness
 		{
 			get { return Internal_getmaxRoughness(mCachedPtr); }

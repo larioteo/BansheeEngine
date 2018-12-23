@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Curves for animating scene object's position.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public NamedVector3Curve[] Position
 		{
 			get { return Internal_getPositionCurves(mCachedPtr); }
@@ -29,6 +30,7 @@ namespace BansheeEngine
 
 		/// <summary>Curves for animating scene object's rotation.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public NamedQuaternionCurve[] Rotation
 		{
 			get { return Internal_getRotationCurves(mCachedPtr); }
@@ -37,6 +39,7 @@ namespace BansheeEngine
 
 		/// <summary>Curves for animating scene object's scale.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public NamedVector3Curve[] Scale
 		{
 			get { return Internal_getScaleCurves(mCachedPtr); }
@@ -45,6 +48,7 @@ namespace BansheeEngine
 
 		/// <summary>Curves for animating generic component properties.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public NamedFloatCurve[] Generic
 		{
 			get { return Internal_getGenericCurves(mCachedPtr); }

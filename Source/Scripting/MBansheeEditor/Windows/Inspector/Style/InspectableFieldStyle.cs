@@ -21,8 +21,23 @@ namespace BansheeEditor
             var styleInfo = new InspectableFieldStyleInfo();
             styleInfo.RangeStyle = style.HasRange ? new InspectableFieldRangeStyle(style.RangeMin, style.RangeMax, style.DisplayAsSlider) : null;
             styleInfo.StepStyle = style.HasStep ? new InspectableFieldStepStyle(style.StepIncrement) : null;
-            styleInfo.StyleFlags |= style.DisplayAsSlider ? InstectableFieldStyleFlags.UseSlider : 0;
-            styleInfo.StyleFlags |= style.DisplayAsLayerMask ? InstectableFieldStyleFlags.UseLayerMask : 0;
+            styleInfo.StyleFlags |= style.DisplayAsSlider ? InspectableFieldStyleFlags.UseSlider : 0;
+            styleInfo.StyleFlags |= style.DisplayAsLayerMask ? InspectableFieldStyleFlags.UseLayerMask : 0;
+            styleInfo.StyleFlags |= field.Flags.HasFlag(SerializableFieldAttributes.PassByCopy)
+                ? InspectableFieldStyleFlags.CopiedAsValue
+                : 0;
+
+            styleInfo.StyleFlags |= field.Flags.HasFlag(SerializableFieldAttributes.NotNull)
+                ? InspectableFieldStyleFlags.NotNull
+                : 0;
+
+            styleInfo.StyleFlags |= field.Flags.HasFlag(SerializableFieldAttributes.NativeWrapper)
+                ? InspectableFieldStyleFlags.NativeWrapper
+                : 0;
+
+            styleInfo.StyleFlags |= field.Flags.HasFlag(SerializableFieldAttributes.ApplyOnDirty)
+                ? InspectableFieldStyleFlags.ApplyOnDirty
+                : 0;
 
             return styleInfo;
         }

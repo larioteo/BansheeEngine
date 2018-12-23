@@ -22,6 +22,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the current rotation of the joint around the X axis.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Radian Twist
 		{
 			get
@@ -34,6 +35,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the current rotation of the joint around the Y axis.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Radian SwingY
 		{
 			get
@@ -46,6 +48,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the current rotation of the joint around the Z axis.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Radian SwingZ
 		{
 			get
@@ -58,6 +61,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the linear limit used for constraining translation degrees of freedom.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public LimitLinear LimitLinear
 		{
 			get
@@ -73,6 +77,7 @@ namespace BansheeEngine
 		/// Determines the angular limit used for constraining the twist (rotation around X) degree of freedom.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public LimitAngularRange LimitTwist
 		{
 			get
@@ -88,6 +93,7 @@ namespace BansheeEngine
 		/// Determines the cone limit used for constraining the swing (rotation around Y and Z) degree of freedom.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public LimitConeRange LimitSwing
 		{
 			get
@@ -101,6 +107,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the drive's target position relative to the joint's first body.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 DrivePosition
 		{
 			get
@@ -113,6 +120,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the drive's target rotation relative to the joint's first body.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Quaternion DriveRotation
 		{
 			get
@@ -125,6 +133,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the drive's target linear velocity.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 DriveLinearVelocity
 		{
 			get
@@ -137,6 +146,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the drive's target angular velocity.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 DriveAngularVelocity
 		{
 			get

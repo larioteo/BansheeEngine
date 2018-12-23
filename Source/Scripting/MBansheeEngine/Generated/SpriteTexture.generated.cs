@@ -40,6 +40,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the internal texture that the sprite texture references.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Texture> Texture
 		{
 			get { return Internal_getTexture(mCachedPtr); }
@@ -48,6 +49,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns width of the sprite texture in pixels.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Width
 		{
 			get { return Internal_getWidth(mCachedPtr); }
@@ -55,6 +57,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns height of the sprite texture in pixels.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Height
 		{
 			get { return Internal_getHeight(mCachedPtr); }
@@ -65,6 +68,7 @@ namespace BansheeEngine
 		/// [0, 1].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2 Offset
 		{
 			get
@@ -80,6 +84,7 @@ namespace BansheeEngine
 		/// Determines the size of the sprite in the referenced texture. Size is in UV coordinates, range [0, 1].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2 Scale
 		{
 			get
@@ -96,6 +101,7 @@ namespace BansheeEngine
 		/// be evaluated over time. In order to view the animation you must also enable playback through setAnimationPlayback().
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public SpriteSheetGridAnimation Animation
 		{
 			get
@@ -109,6 +115,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines if and how should the sprite animation play.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public SpriteAnimationPlayback AnimationPlayback
 		{
 			get { return Internal_getAnimationPlayback(mCachedPtr); }

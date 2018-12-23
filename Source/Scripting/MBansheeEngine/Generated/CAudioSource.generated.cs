@@ -23,6 +23,7 @@ namespace BansheeEngine
 
 		/// <summary>Audio clip to play.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<AudioClip> Clip
 		{
 			get { return Internal_getClip(mCachedPtr); }
@@ -31,6 +32,7 @@ namespace BansheeEngine
 
 		/// <summary>Volume of the audio played from this source, in [0, 1] range.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Volume
 		{
 			get { return Internal_getVolume(mCachedPtr); }
@@ -39,6 +41,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the pitch of the played audio. 1 is the default.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Pitch
 		{
 			get { return Internal_getPitch(mCachedPtr); }
@@ -47,6 +50,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines whether the audio clip should loop when it finishes playing.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Loop
 		{
 			get { return Internal_getIsLooping(mCachedPtr); }
@@ -59,6 +63,7 @@ namespace BansheeEngine
 		/// lower priority.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Priority
 		{
 			get { return Internal_getPriority(mCachedPtr); }
@@ -70,6 +75,7 @@ namespace BansheeEngine
 		/// is heard at full volume. Once farther away the audio starts attenuating.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MinDistance
 		{
 			get { return Internal_getMinDistance(mCachedPtr); }
@@ -80,6 +86,7 @@ namespace BansheeEngine
 		/// Attenuation that controls how quickly does audio volume drop off as the listener moves further from the source.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Attenuation
 		{
 			get { return Internal_getAttenuation(mCachedPtr); }
@@ -91,6 +98,7 @@ namespace BansheeEngine
 		/// start at. The time is in seconds, in range [0, clipLength].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Time
 		{
 			get { return Internal_getTime(mCachedPtr); }
@@ -99,6 +107,7 @@ namespace BansheeEngine
 
 		/// <summary>Sets whether playback should start as soon as the component is enabled.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool PlayOnStart
 		{
 			get { return Internal_getPlayOnStart(mCachedPtr); }
@@ -107,6 +116,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the current state of the audio playback (playing/paused/stopped).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AudioSourceState State
 		{
 			get { return Internal_getState(mCachedPtr); }

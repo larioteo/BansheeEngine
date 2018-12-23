@@ -24,6 +24,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all vertex positions. Only valid if the vertex layout contains vertex positions.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3[] Positions
 		{
 			get { return Internal_getPositions(mCachedPtr); }
@@ -32,6 +33,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all vertex normals. Only valid if the vertex layout contains vertex normals.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3[] Normals
 		{
 			get { return Internal_getNormals(mCachedPtr); }
@@ -40,6 +42,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all vertex tangents. Only valid if the vertex layout contains vertex tangents.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector4[] Tangents
 		{
 			get { return Internal_getTangents(mCachedPtr); }
@@ -48,6 +51,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all vertex colors. Only valid if the vertex layout contains vertex colors.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Color[] Colors
 		{
 			get { return Internal_getColors(mCachedPtr); }
@@ -59,6 +63,7 @@ namespace BansheeEngine
 		/// coordinates.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2[] UV0
 		{
 			get { return Internal_getUV0(mCachedPtr); }
@@ -70,6 +75,7 @@ namespace BansheeEngine
 		/// coordinates.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2[] UV1
 		{
 			get { return Internal_getUV1(mCachedPtr); }
@@ -78,6 +84,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all vertex bone weights. Only valid if the vertex layout contains bone weights.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public BoneWeight[] BoneWeights
 		{
 			get { return Internal_getBoneWeights(mCachedPtr); }
@@ -86,6 +93,7 @@ namespace BansheeEngine
 
 		/// <summary>An array of all indices.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint[] Indices
 		{
 			get { return Internal_getIndices(mCachedPtr); }
@@ -94,6 +102,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the number of vertices contained in the mesh.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public int VertexCount
 		{
 			get { return Internal_getVertexCount(mCachedPtr); }
@@ -101,6 +110,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the number of indices contained in the mesh.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public int IndexCount
 		{
 			get { return Internal_getIndexCount(mCachedPtr); }

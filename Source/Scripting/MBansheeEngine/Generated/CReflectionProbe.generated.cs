@@ -20,6 +20,7 @@ namespace BansheeEngine
 
 		/// <summary>Changes the type of the probe.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ReflectionProbeType Type
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -28,6 +29,7 @@ namespace BansheeEngine
 
 		/// <summary>Sets the radius of a sphere reflection probe.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Radius
 		{
 			get { return Internal_getRadius(mCachedPtr); }
@@ -36,6 +38,7 @@ namespace BansheeEngine
 
 		/// <summary>Sets the extents of a box reflection probe. Determines range of influence.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Extents
 		{
 			get
@@ -52,6 +55,7 @@ namespace BansheeEngine
 		/// To re-enable auto-generation call this with a null parameter.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Texture> CustomTexture
 		{
 			get { return Internal_getCustomTexture(mCachedPtr); }

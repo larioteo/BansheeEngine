@@ -37,6 +37,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the type of the physics mesh.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PhysicsMeshType Type
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -44,6 +45,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the mesh's indices and vertices.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public MeshData MeshData
 		{
 			get { return Internal_getMeshData(mCachedPtr); }

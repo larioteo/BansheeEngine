@@ -34,6 +34,7 @@ namespace BansheeEditor
                         Vector2Curve compoundCurve = AnimationUtility.CombineCurve2D(curves);
                         Value = new Vector2Distribution(compoundCurve);
                         OnChanged?.Invoke();
+                        OnConfirmed?.Invoke();
                     });
                 }
             }
@@ -58,6 +59,7 @@ namespace BansheeEditor
 
                             Value = new Vector2Distribution(minCompoundCurves, maxCompoundCurves);
                             OnChanged?.Invoke();
+                            OnConfirmed?.Invoke();
                         });
                 }
             }

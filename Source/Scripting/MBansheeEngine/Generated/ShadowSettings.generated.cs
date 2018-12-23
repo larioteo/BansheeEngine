@@ -25,6 +25,7 @@ namespace BansheeEngine
 		/// scene. In world units (meters).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float DirectionalShadowDistance
 		{
 			get { return Internal_getdirectionalShadowDistance(mCachedPtr); }
@@ -37,6 +38,7 @@ namespace BansheeEngine
 		/// increase in memory cost. Valid range is roughly [1, 6].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumCascades
 		{
 			get { return Internal_getnumCascades(mCachedPtr); }
@@ -51,6 +53,7 @@ namespace BansheeEngine
 		/// Valid range is roughly [1, 4].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float CascadeDistributionExponent
 		{
 			get { return Internal_getcascadeDistributionExponent(mCachedPtr); }
@@ -62,6 +65,7 @@ namespace BansheeEngine
 		/// shadows, at the cost of performance. Valid range is [1, 4].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint ShadowFilteringQuality
 		{
 			get { return Internal_getshadowFilteringQuality(mCachedPtr); }

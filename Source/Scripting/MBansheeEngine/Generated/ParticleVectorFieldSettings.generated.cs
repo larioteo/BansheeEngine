@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Vector field resource used for influencing the particles.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<VectorField> VectorField
 		{
 			get { return Internal_getvectorField(mCachedPtr); }
@@ -25,6 +26,7 @@ namespace BansheeEngine
 
 		/// <summary>Intensity of the forces and velocities applied by the vector field.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -37,6 +39,7 @@ namespace BansheeEngine
 		/// velocities directly.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Tightness
 		{
 			get { return Internal_gettightness(mCachedPtr); }
@@ -47,6 +50,7 @@ namespace BansheeEngine
 		/// Scale to apply to the vector field bounds. This is multiplied with the bounds of the vector field resource.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Scale
 		{
 			get
@@ -63,6 +67,7 @@ namespace BansheeEngine
 		/// the vector field resource.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Offset
 		{
 			get
@@ -76,6 +81,7 @@ namespace BansheeEngine
 
 		/// <summary>Initial rotation of the vector field.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Quaternion Rotation
 		{
 			get
@@ -92,6 +98,7 @@ namespace BansheeEngine
 		/// over the particle system lifetime.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3Distribution RotationRate
 		{
 			get { return Internal_getrotationRate(mCachedPtr); }
@@ -103,6 +110,7 @@ namespace BansheeEngine
 		/// infinitely in the X direction.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool TilingX
 		{
 			get { return Internal_gettilingX(mCachedPtr); }
@@ -114,6 +122,7 @@ namespace BansheeEngine
 		/// infinitely in the Y direction.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool TilingY
 		{
 			get { return Internal_gettilingY(mCachedPtr); }
@@ -125,6 +134,7 @@ namespace BansheeEngine
 		/// infinitely in the Z direction.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool TilingZ
 		{
 			get { return Internal_gettilingZ(mCachedPtr); }

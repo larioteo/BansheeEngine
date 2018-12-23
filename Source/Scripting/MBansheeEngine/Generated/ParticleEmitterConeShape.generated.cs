@@ -32,6 +32,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the shape.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleConeShapeOptions Options
 		{
 			get

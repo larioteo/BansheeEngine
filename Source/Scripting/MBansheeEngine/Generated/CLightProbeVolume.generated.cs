@@ -23,6 +23,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the volume that's used for adding probes in a uniform grid pattern.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AABox GridVolume
 		{
 			get
@@ -35,6 +36,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the cell count that's used for determining the density of probes within a grid volume.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3I CellCount
 		{
 			get

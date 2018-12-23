@@ -129,7 +129,7 @@ namespace BansheeEditor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the array whose contents to display.</param>
-        /// <param name="style">Information related the field style</param>
+        /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         /// <returns>Inspectable field implementation that can be used for displaying the GUI for a serializable property
         ///          of the provided type.</returns>
         public static InspectableField CreateInspectable(Inspector parent, string title, string path, int layoutIndex, 
@@ -151,7 +151,7 @@ namespace BansheeEditor
                 switch (property.Type)
                 {
                     case SerializableProperty.FieldType.Int:
-                        if (style != null && style.StyleFlags.HasFlag(InstectableFieldStyleFlags.UseLayerMask))
+                        if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.UseLayerMask))
                             field = new InspectableLayerMask(parent, title, path, depth, layout, property);
                         else
                         {
@@ -217,10 +217,10 @@ namespace BansheeEditor
                         field = new InspectableGameObjectRef(parent, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Object:
-                        field = new InspectableObject(parent, title, path, depth, layout, property);
+                        field = new InspectableObject(parent, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.Array:
-                        field = new InspectableArray(parent, title, path, depth, layout, property);
+                        field = new InspectableArray(parent, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.List:
                         field = new InspectableList(parent, title, path, depth, layout, property);

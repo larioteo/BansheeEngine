@@ -20,6 +20,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the viewport used by the camera.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Viewport Viewport
 		{
 			get { return Internal_getViewport(mCachedPtr); }
@@ -30,6 +31,7 @@ namespace BansheeEngine
 		/// horizontal axis. Vertical FOV is calculated from the horizontal FOV and the aspect ratio.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Radian FieldOfView
 		{
 			get
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// will not be rendered. Decreasing this value decreases depth buffer precision.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float NearClipPlane
 		{
 			get { return Internal_getNearClipDistance(mCachedPtr); }
@@ -57,6 +60,7 @@ namespace BansheeEngine
 		/// not be rendered. Increasing this value decreases depth buffer precision.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FarClipPlane
 		{
 			get { return Internal_getFarClipDistance(mCachedPtr); }
@@ -65,6 +69,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the current viewport aspect ratio (width / height).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float AspectRatio
 		{
 			get { return Internal_getAspectRatio(mCachedPtr); }
@@ -76,6 +81,7 @@ namespace BansheeEngine
 		/// this matrix depends on currently used render system.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Matrix4 ProjMatrix
 		{
 			get
@@ -88,6 +94,7 @@ namespace BansheeEngine
 
 		/// <summary>Gets the camera view matrix. Used for positioning/orienting the camera.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Matrix4 ViewMatrix
 		{
 			get
@@ -103,6 +110,7 @@ namespace BansheeEngine
 		/// 2D plane.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ProjectionType ProjectionType
 		{
 			get { return Internal_getProjectionType(mCachedPtr); }
@@ -114,6 +122,7 @@ namespace BansheeEngine
 		/// calculated from the aspect ratio. Value is specified in world units.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float OrthoHeight
 		{
 			get { return Internal_getOrthoWindowHeight(mCachedPtr); }
@@ -125,6 +134,7 @@ namespace BansheeEngine
 		/// calculated from the aspect ratio. Value is specified in world units.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float OrthoWidth
 		{
 			get { return Internal_getOrthoWindowWidth(mCachedPtr); }
@@ -136,6 +146,7 @@ namespace BansheeEngine
 		/// rendering to the same render target. Higher value means the camera will be rendered sooner.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public int Priority
 		{
 			get { return Internal_getPriority(mCachedPtr); }
@@ -144,6 +155,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines layer bitfield that is used when determining which object should the camera render.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ulong Layers
 		{
 			get { return Internal_getLayers(mCachedPtr); }
@@ -154,6 +166,7 @@ namespace BansheeEngine
 		/// Determines number of samples to use when rendering to this camera. Values larger than 1 will enable MSAA rendering.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SampleCount
 		{
 			get { return Internal_getMSAACount(mCachedPtr); }
@@ -165,6 +178,7 @@ namespace BansheeEngine
 		/// will be enabled, and what properties will those effects use.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RenderSettings RenderSettings
 		{
 			get { return Internal_getRenderSettings(mCachedPtr); }
@@ -176,6 +190,7 @@ namespace BansheeEngine
 		/// displayed to the user.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Main
 		{
 			get { return Internal_isMain(mCachedPtr); }

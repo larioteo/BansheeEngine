@@ -24,6 +24,7 @@ namespace BansheeEngine
 		/// but collision events will still be reported.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Trigger
 		{
 			get { return Internal_getIsTrigger(mCachedPtr); }
@@ -36,6 +37,7 @@ namespace BansheeEngine
 		/// automatically).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Mass
 		{
 			get { return Internal_getMass(mCachedPtr); }
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// Determines the physical material of the collider. The material determines how objects hitting the collider  behave.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<PhysicsMaterial> Material
 		{
 			get { return Internal_getMaterial(mCachedPtr); }
@@ -61,6 +64,7 @@ namespace BansheeEngine
 		/// Also see setRestOffset().
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float ContactOffset
 		{
 			get { return Internal_getContactOffset(mCachedPtr); }
@@ -75,6 +79,7 @@ namespace BansheeEngine
 		/// Also see setContactOffset().
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float RestOffset
 		{
 			get { return Internal_getRestOffset(mCachedPtr); }
@@ -83,6 +88,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the layer of the collider. Layer controls with which objects will the collider collide.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ulong Layer
 		{
 			get { return Internal_getLayer(mCachedPtr); }
@@ -91,6 +97,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines which (if any) collision events are reported.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public CollisionReportMode CollisionReportMode
 		{
 			get { return Internal_getCollisionReportMode(mCachedPtr); }

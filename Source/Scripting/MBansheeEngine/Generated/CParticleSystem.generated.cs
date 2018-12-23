@@ -24,6 +24,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines general purpose settings that apply to the particle system.</summary>
 		[ShowInInspector]
+		[PassByCopy]
+		[NativeWrapper]
 		public ParticleSystemSettings Settings
 		{
 			get { return Internal_getSettings(mCachedPtr); }
@@ -32,6 +34,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines settings that control particle GPU simulation.</summary>
 		[ShowInInspector]
+		[PassByCopy]
+		[NativeWrapper]
 		public ParticleGpuSimulationSettings GpuSimulationSettings
 		{
 			get { return Internal_getGpuSimulationSettings(mCachedPtr); }
@@ -43,6 +47,7 @@ namespace BansheeEngine
 		/// system must have at least one emitter.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleEmitter[] Emitters
 		{
 			get { return Internal_getEmitters(mCachedPtr); }
@@ -54,6 +59,7 @@ namespace BansheeEngine
 		/// simulated particles.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleEvolver[] Evolvers
 		{
 			get { return Internal_getEvolvers(mCachedPtr); }
@@ -65,6 +71,7 @@ namespace BansheeEngine
 		/// match camera layer in order for the camera to render the component.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ulong Layer
 		{
 			get { return Internal_getLayer(mCachedPtr); }

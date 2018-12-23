@@ -212,7 +212,7 @@ namespace bs
 				if (field->hasAttribute(mBuiltin.stepAttribute))
 					fieldInfo->mFlags |= ScriptFieldFlag::Step;
 
-				if (field->hasAttribute(mBuiltin.layerMask))
+				if (field->hasAttribute(mBuiltin.layerMaskAttribute))
 				{
 					// Layout mask attribute is only relevant for 64-bit integer types
 					if (const auto* primTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
@@ -224,6 +224,9 @@ namespace bs
 						}
 					}
 				}
+
+				if(field->hasAttribute(mBuiltin.notNullAttribute))
+					fieldInfo->mFlags |= ScriptFieldFlag::NotNull;
 
 				objInfo->mFieldNameToId[fieldInfo->mName] = fieldInfo->mFieldId;
 				objInfo->mFields[fieldInfo->mFieldId] = fieldInfo;
@@ -270,7 +273,7 @@ namespace bs
 					if (property->hasAttribute(mBuiltin.stepAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::Step;
 
-					if (property->hasAttribute(mBuiltin.layerMask))
+					if (property->hasAttribute(mBuiltin.layerMaskAttribute))
 					{
 						// Layout mask attribute is only relevant for 64-bit integer types
 						if (const auto* primTypeInfo = rtti_cast<ManagedSerializableTypeInfoPrimitive>(typeInfo.get()))
@@ -282,6 +285,18 @@ namespace bs
 							}
 						}
 					}
+
+					if (property->hasAttribute(mBuiltin.notNullAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::NotNull;
+
+					if (property->hasAttribute(mBuiltin.passByCopyAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::PassByCopy;
+
+					if (property->hasAttribute(mBuiltin.applyOnDirtyAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::ApplyOnDirty;
+
+					if (property->hasAttribute(mBuiltin.nativeWrapperAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::NativeWrapper;
 				}
 
 				objInfo->mFieldNameToId[propertyInfo->mName] = propertyInfo->mFieldId;
@@ -624,9 +639,25 @@ namespace bs
 		if (mBuiltin.stepAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Step managed class.");
 
-		mBuiltin.layerMask = bansheeEngineAssembly->getClass("BansheeEngine", "LayerMask");
-		if (mBuiltin.layerMask == nullptr)
+		mBuiltin.layerMaskAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "LayerMask");
+		if (mBuiltin.layerMaskAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find LayerMask managed class.");
+
+		mBuiltin.nativeWrapperAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "NativeWrapper");
+		if (mBuiltin.nativeWrapperAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find NativeWrapper managed class.");
+
+		mBuiltin.notNullAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "NotNull");
+		if (mBuiltin.notNullAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find NotNull managed class.");
+
+		mBuiltin.passByCopyAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "PassByCopy");
+		if (mBuiltin.passByCopyAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find PassByCopy managed class.");
+
+		mBuiltin.applyOnDirtyAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "ApplyOnDirty");
+		if (mBuiltin.applyOnDirtyAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find ApplyOnDirty managed class.");
 
 		mBuiltin.componentClass = bansheeEngineAssembly->getClass("BansheeEngine", "Component");
 		if(mBuiltin.componentClass == nullptr)

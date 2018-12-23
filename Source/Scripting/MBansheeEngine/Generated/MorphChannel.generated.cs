@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the unique name of the channel.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public string Name
 		{
 			get { return Internal_getName(mCachedPtr); }
@@ -28,6 +29,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns all morph shapes within this channel, in order from lowest to highest.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public MorphShape[] Shapes
 		{
 			get { return Internal_getShapes(mCachedPtr); }

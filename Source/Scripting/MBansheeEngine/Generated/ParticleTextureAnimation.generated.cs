@@ -31,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the evolver.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleTextureAnimationOptions Options
 		{
 			get

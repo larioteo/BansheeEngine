@@ -20,6 +20,7 @@ namespace BansheeEngine
 		/// contain HDR data.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Texture> Texture
 		{
 			get { return Internal_getTexture(mCachedPtr); }
@@ -31,6 +32,7 @@ namespace BansheeEngine
 		/// more or less bright. Equal to one by default.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Brightness
 		{
 			get { return Internal_getBrightness(mCachedPtr); }

@@ -37,7 +37,11 @@ namespace bs
 		MonoClass* showInInspectorAttribute = nullptr;
 		MonoClass* rangeAttribute = nullptr;
 		MonoClass* stepAttribute = nullptr;
-		MonoClass* layerMask = nullptr;
+		MonoClass* layerMaskAttribute = nullptr;
+		MonoClass* nativeWrapperAttribute = nullptr;
+		MonoClass* notNullAttribute = nullptr;
+		MonoClass* passByCopyAttribute = nullptr;
+		MonoClass* applyOnDirtyAttribute = nullptr;
 	};
 
 	/**	Stores data about managed serializable objects in specified assemblies. */

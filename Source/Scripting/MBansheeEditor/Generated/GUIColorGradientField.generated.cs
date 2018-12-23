@@ -77,6 +77,7 @@ namespace BansheeEditor
 
 		/// <summary>Changes the value of the field.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ColorGradient Value
 		{
 			get { return Internal_getValue(mCachedPtr); }

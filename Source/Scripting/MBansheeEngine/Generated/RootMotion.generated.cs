@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Animation curve representing the movement of the root bone.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3Curve Position
 		{
 			get { return Internal_getPositionCurves(mCachedPtr); }
@@ -24,6 +25,7 @@ namespace BansheeEngine
 
 		/// <summary>Animation curve representing the rotation of the root bone.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public QuaternionCurve Rotation
 		{
 			get { return Internal_getRotationCurves(mCachedPtr); }

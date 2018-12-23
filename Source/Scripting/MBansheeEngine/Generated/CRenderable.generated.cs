@@ -23,6 +23,7 @@ namespace BansheeEngine
 		/// each sub-mesh.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Mesh> Mesh
 		{
 			get { return Internal_getMesh(mCachedPtr); }
@@ -35,6 +36,7 @@ namespace BansheeEngine
 		/// materials will be removed.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Material>[] Materials
 		{
 			get { return Internal_getMaterials(mCachedPtr); }
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// Renderable layer must match camera layer in order for the camera to render the component.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ulong Layers
 		{
 			get { return Internal_getLayer(mCachedPtr); }
@@ -54,6 +57,7 @@ namespace BansheeEngine
 
 		/// <summary>Gets world bounds of the mesh rendered by this object.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Bounds Bounds
 		{
 			get

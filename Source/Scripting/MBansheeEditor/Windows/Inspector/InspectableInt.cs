@@ -28,7 +28,7 @@ namespace BansheeEditor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
-        /// <param name="style">Contains information about the field style</param>
+        /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         public InspectableInt(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
             SerializableProperty property, InspectableFieldStyleInfo style)
             : base(parent, title, path, SerializableProperty.FieldType.Int, depth, layout, property)

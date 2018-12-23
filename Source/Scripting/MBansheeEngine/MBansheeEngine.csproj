@@ -45,7 +45,11 @@
     <Compile Include="Math\Line2.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Rendering\Material.cs" />
+    <Compile Include="Serialization\ApplyOnDirty.cs" />
+    <Compile Include="Serialization\NativeWrapper.cs" />
+    <Compile Include="Serialization\PassByCopy.cs" />
     <Compile Include="Serialization\LayerMask.cs" />
+    <Compile Include="Serialization\NotNull.cs" />
     <Compile Include="Serialization\ShowInInspector.cs" />
     <Compile Include="Serialization\Step.cs" />
     <Compile Include="Utility\AsyncOp.cs" />

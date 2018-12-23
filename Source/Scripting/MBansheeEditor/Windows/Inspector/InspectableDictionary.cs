@@ -138,7 +138,6 @@ namespace BansheeEditor
                 return guiDictionary;
             }
 
-
             /// <inheritdoc/>
             public override InspectableState Refresh()
             {
@@ -170,7 +169,6 @@ namespace BansheeEditor
 
                 return base.Refresh();
             }
-
 
             /// <summary>
             /// Updates the ordered set of keys used for mapping sequential indexes to keys. Should be called whenever a 

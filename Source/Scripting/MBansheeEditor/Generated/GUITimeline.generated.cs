@@ -20,6 +20,7 @@ namespace BansheeEditor
 
 		/// <summary>Determines the range of values to display on the timeline, in seconds.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Range
 		{
 			get { return Internal_getRange(mCachedPtr); }
@@ -28,6 +29,7 @@ namespace BansheeEditor
 
 		/// <summary>Determines the offset at which the displayed timeline values start at, in seconds.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Offset
 		{
 			get { return Internal_getOffset(mCachedPtr); }
@@ -36,6 +38,7 @@ namespace BansheeEditor
 
 		/// <summary>Number of frames per second, used for frame selection and marking.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint FPS
 		{
 			get { return Internal_getFPS(mCachedPtr); }
@@ -44,6 +47,7 @@ namespace BansheeEditor
 
 		/// <summary>Frame to display the frame marker on. Set to -1 to clear the frame marker.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint MarkedFrame
 		{
 			get { return Internal_setMarkedFrame0(mCachedPtr); }
@@ -52,6 +56,7 @@ namespace BansheeEditor
 
 		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Padding
 		{
 			get { return Internal_getPadding(mCachedPtr); }

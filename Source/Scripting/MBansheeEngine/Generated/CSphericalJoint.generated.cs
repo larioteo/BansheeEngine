@@ -24,6 +24,7 @@ namespace BansheeEngine
 		/// flag on the joint in order for this to be recognized.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public LimitConeRange Limit
 		{
 			get

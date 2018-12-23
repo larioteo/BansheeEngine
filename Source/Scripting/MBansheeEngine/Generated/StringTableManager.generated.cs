@@ -20,6 +20,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the currently active language. Any newly created strings will use this value.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public static Language ActiveLanguage
 		{
 			get { return Internal_getActiveLanguage(); }

@@ -28,6 +28,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the shape.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleRectShapeOptions Options
 		{
 			get

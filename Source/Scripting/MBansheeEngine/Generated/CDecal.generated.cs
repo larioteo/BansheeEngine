@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the material to use when rendering the decal.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Material> Material
 		{
 			get { return Internal_getMaterial(mCachedPtr); }
@@ -25,6 +26,7 @@ namespace BansheeEngine
 
 		/// <summary>Size of the decal in world space units.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2 Size
 		{
 			get
@@ -38,6 +40,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the maximum distance (from its origin) at which the decal is displayed.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MaxDistance
 		{
 			get { return Internal_getMaxDistance(mCachedPtr); }
@@ -49,6 +52,7 @@ namespace BansheeEngine
 		/// camera layer bitfield in order for the camera to render the decal.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ulong Layer
 		{
 			get { return Internal_getLayer(mCachedPtr); }
@@ -61,6 +65,7 @@ namespace BansheeEngine
 		/// will always be projected onto.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint LayerMask
 		{
 			get { return Internal_getLayerMask(mCachedPtr); }

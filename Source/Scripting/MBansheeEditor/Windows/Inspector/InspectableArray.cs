@@ -16,6 +16,15 @@ namespace BansheeEditor
     public class InspectableArray : InspectableField
     {
         private InspectableArrayGUI arrayGUIField;
+        private InspectableFieldStyleInfo style;
+
+        /// <summary>
+        /// Style applied to the elements of the array and the array itself.
+        /// </summary>
+        internal InspectableFieldStyleInfo Style
+        {
+            get { return style; }
+        }
 
         /// <summary>
         /// Creates a new inspectable array GUI for the specified property.
@@ -27,11 +36,12 @@ namespace BansheeEditor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the array whose contents to display.</param>
+        /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         public InspectableArray(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
-            SerializableProperty property)
+            SerializableProperty property, InspectableFieldStyleInfo style)
             : base(parent, title, path, SerializableProperty.FieldType.Array, depth, layout, property)
         {
-
+            this.style = style;
         }
 
         /// <inheritdoc/>
@@ -51,7 +61,7 @@ namespace BansheeEditor
         {
             GUILayout arrayLayout = layout.AddLayoutY(layoutIndex);
 
-            arrayGUIField = InspectableArrayGUI.Create(parent, title, path, property, arrayLayout, depth);
+            arrayGUIField = InspectableArrayGUI.Create(parent, title, path, property, arrayLayout, depth, style);
             arrayGUIField.IsExpanded = parent.Persistent.GetBool(path + "_Expanded");
             arrayGUIField.OnExpand += x => parent.Persistent.SetBool(path + "_Expanded", x);
         }
@@ -66,6 +76,7 @@ namespace BansheeEditor
             private Inspector parent;
             private SerializableProperty property;
             private string path;
+            private InspectableFieldStyleInfo style;
 
             /// <summary>
             /// Returns the parent inspector the array GUI belongs to.
@@ -84,6 +95,14 @@ namespace BansheeEditor
             }
 
             /// <summary>
+            /// Style applied to the elements of the array and the array itself.
+            /// </summary>
+            public InspectableFieldStyleInfo Style
+            {
+                get { return style; }
+            }
+
+            /// <summary>
             /// Constructs a new inspectable array GUI.
             /// </summary>
             /// <param name="parent">Parent Inspector this field belongs to.</param>
@@ -95,13 +114,15 @@ namespace BansheeEditor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
+            /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
             public InspectableArrayGUI(Inspector parent, LocString title, string path, SerializableProperty property, 
-                GUILayout layout, int depth)
+                GUILayout layout, int depth, InspectableFieldStyleInfo style)
                 : base(title, layout, depth)
             {
                 this.property = property;
                 this.parent = parent;
                 this.path = path;
+                this.style = style;
 
                 array = property.GetValue<Array>();
                 if (array != null)
@@ -120,10 +141,11 @@ namespace BansheeEditor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
+            /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
             public static InspectableArrayGUI Create(Inspector parent, LocString title, string path, 
-                SerializableProperty property, GUILayout layout, int depth)
+                SerializableProperty property, GUILayout layout, int depth, InspectableFieldStyleInfo style)
             {
-                InspectableArrayGUI guiArray = new InspectableArrayGUI(parent, title, path, property, layout, depth);
+                InspectableArrayGUI guiArray = new InspectableArrayGUI(parent, title, path, property, layout, depth, style);
                 guiArray.BuildGUI();
                 
                 return guiArray;
@@ -185,9 +207,36 @@ namespace BansheeEditor
             /// <inheritdoc/>
             protected internal override object GetValue(int seqIndex)
             {
-                SerializableArray array = property.GetArray();
+                SerializableArray serzArray = property.GetArray();
 
-                return array.GetProperty(seqIndex);
+                // Create a property wrapper for native arrays so we get notified when the array values change
+                if (style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NativeWrapper))
+                {
+                    SerializableProperty.Getter getter = () =>
+                    {
+                        Array array = property.GetValue<Array>();
+
+                        if (array != null)
+                            return array.GetValue(seqIndex);
+                        else
+                            return null;
+                    };
+
+                    SerializableProperty.Setter setter = (object value) =>
+                    {
+                        Array array = property.GetValue<Array>();
+
+                        if (array != null)
+                        {
+                            array.SetValue(value, seqIndex);
+                            property.SetValue(array);
+                        }
+                    };
+
+                    return new SerializableProperty(serzArray.ElementPropertyType, serzArray.ElementType, getter, setter);
+                }
+                else
+                    return serzArray.GetProperty(seqIndex);
             }
 
             /// <inheritdoc/>
@@ -287,6 +336,10 @@ namespace BansheeEditor
 
                     array.SetValue(array.GetValue(index), index - 1);
                     array.SetValue(previousEntry, index);
+
+                    // Natively wrapped arrays are passed by copy
+                    if(style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NativeWrapper))
+                        property.SetValue(array);
                 }
             }
 
@@ -299,6 +352,10 @@ namespace BansheeEditor
 
                     array.SetValue(array.GetValue(index), index + 1);
                     array.SetValue(nextEntry, index);
+
+                    // Natively wrapped arrays are passed by copy
+                    if(style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NativeWrapper))
+                        property.SetValue(array);
                 }
             }
         }
@@ -316,9 +373,12 @@ namespace BansheeEditor
                 InspectableArrayGUI arrayParent = (InspectableArrayGUI)parent;
                 SerializableProperty property = GetValue<SerializableProperty>();
 
+                InspectableFieldStyleInfo styleInfo = arrayParent.Style.Clone();
+                styleInfo.StyleFlags &= ~InspectableFieldStyleFlags.NativeWrapper;
+
                 string entryPath = arrayParent.Path + "[" + SeqIndex + "]";
                 field = CreateInspectable(arrayParent.Inspector, SeqIndex + ".", entryPath, 0, Depth + 1,
-                    new InspectableFieldLayout(layout), property);
+                    new InspectableFieldLayout(layout), property, styleInfo);
 
                 return field.GetTitleLayout();
             }

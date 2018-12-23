@@ -46,6 +46,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the type of the represented distribution.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -185,6 +186,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the type of the represented distribution.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -332,6 +334,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the type of the represented distribution.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }

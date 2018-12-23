@@ -16,6 +16,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns true if the async operation has completed.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool IsComplete
 		{
 			get { return Internal_isComplete(mCachedPtr); }
@@ -23,6 +24,7 @@ namespace BansheeEngine
 
 		/// <summary>Retrieves the value returned by the async operation. Only valid if IsComplete returns true.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public object ReturnValue
 		{
 			get { return Internal_getReturnValue(mCachedPtr); }

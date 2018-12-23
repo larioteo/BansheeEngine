@@ -20,6 +20,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the name of the bone the component is referencing.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public string Name
 		{
 			get { return Internal_getBoneName(mCachedPtr); }

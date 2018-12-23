@@ -39,6 +39,7 @@ namespace BansheeEditor
 
 		/// <summary>Animation curves to display.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public CurveDrawInfo[] Curves
 		{
 			get { return Internal_getCurves(mCachedPtr); }

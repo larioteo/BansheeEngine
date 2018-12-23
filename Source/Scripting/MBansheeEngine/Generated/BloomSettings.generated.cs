@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Enables or disables the bloom effect.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -32,6 +33,7 @@ namespace BansheeEngine
 		/// lower performance. Valid range is [0, 3], default is 2.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }
@@ -44,6 +46,7 @@ namespace BansheeEngine
 		/// scaled by exposure. Set to zero or negative to disable the threshold and include all pixels in the calculations.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Threshold
 		{
 			get { return Internal_getthreshold(mCachedPtr); }
@@ -54,6 +57,7 @@ namespace BansheeEngine
 		/// Determines the intensity of the bloom effect. Ideally should be in [0, 4] range but higher values are allowed.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -64,6 +68,7 @@ namespace BansheeEngine
 		/// Tint color to apply to the bloom highlight. A pure white means the bloom inherits the underlying scene color.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Color Tint
 		{
 			get

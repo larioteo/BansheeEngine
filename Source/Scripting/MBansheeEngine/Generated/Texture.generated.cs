@@ -31,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the pixel format for the texture surface.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PixelFormat PixelFormat
 		{
 			get { return Internal_getPixelFormat(mCachedPtr); }
@@ -38,6 +39,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a value that signals the engine in what way is the texture expected to be used.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public TextureUsage Usage
 		{
 			get { return Internal_getUsage(mCachedPtr); }
@@ -45,6 +47,7 @@ namespace BansheeEngine
 
 		/// <summary>Gets the type of texture.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public TextureType Type
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -52,6 +55,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the width of the texture.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Width
 		{
 			get { return Internal_getWidth(mCachedPtr); }
@@ -59,6 +63,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the height of the texture.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Height
 		{
 			get { return Internal_getHeight(mCachedPtr); }
@@ -66,6 +71,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the depth of the texture (only applicable for 3D textures).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Depth
 		{
 			get { return Internal_getDepth(mCachedPtr); }
@@ -76,6 +82,7 @@ namespace BansheeEngine
 		/// to linear space before reading from the texture, and convert them to gamma space when writing to the texture.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool GammaSpace
 		{
 			get { return Internal_getGammaCorrection(mCachedPtr); }
@@ -83,6 +90,7 @@ namespace BansheeEngine
 
 		/// <summary>Gets the number of samples used for multisampling (0 or 1 if multisampling is not used).</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SampleCount
 		{
 			get { return Internal_getSampleCount(mCachedPtr); }
@@ -93,6 +101,7 @@ namespace BansheeEngine
 		/// assumed to be present).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint MipMapCount
 		{
 			get { return Internal_getMipmapCount(mCachedPtr); }

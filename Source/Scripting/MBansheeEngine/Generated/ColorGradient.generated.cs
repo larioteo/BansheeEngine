@@ -34,6 +34,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the number of color keys in the gradient.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumKeys
 		{
 			get { return Internal_getNumKeys(mCachedPtr); }

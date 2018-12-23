@@ -16,6 +16,7 @@ namespace BansheeEngine
 		protected ParticleGpuSimulationSettings() { }
 
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleVectorFieldSettings VectorField
 		{
 			get { return Internal_getvectorField(mCachedPtr); }
@@ -24,6 +25,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines particle color, evaluated over the particle lifetime.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ColorDistribution ColorOverLifetime
 		{
 			get { return Internal_getcolorOverLifetime(mCachedPtr); }
@@ -34,6 +36,7 @@ namespace BansheeEngine
 		/// Determines particle size, evaluated over the particle lifetime. Multiplied by the initial particle size.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector2Distribution SizeScaleOverLifetime
 		{
 			get { return Internal_getsizeScaleOverLifetime(mCachedPtr); }
@@ -42,6 +45,7 @@ namespace BansheeEngine
 
 		/// <summary>Constant acceleration to apply for each step of the simulation.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Acceleration
 		{
 			get
@@ -55,6 +59,7 @@ namespace BansheeEngine
 
 		/// <summary>Amount of resistance to apply in the direction opposite of the particle's velocity.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Drag
 		{
 			get { return Internal_getdrag(mCachedPtr); }
@@ -63,6 +68,7 @@ namespace BansheeEngine
 
 		/// <summary>Settings controlling particle depth buffer collisions.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleDepthCollisionSettings DepthCollision
 		{
 			get { return Internal_getdepthCollision(mCachedPtr); }

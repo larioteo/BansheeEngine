@@ -56,6 +56,7 @@ namespace BansheeEngine
 		/// added or removed, as it is a copy of clip's internal values.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AnimationCurves Curves
 		{
 			get { return Internal_getCurves(mCachedPtr); }
@@ -64,6 +65,7 @@ namespace BansheeEngine
 
 		/// <summary>A set of all events to be triggered as the animation is playing.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public AnimationEvent[] Events
 		{
 			get { return Internal_getEvents(mCachedPtr); }
@@ -76,6 +78,7 @@ namespace BansheeEngine
 		/// was imported with root motion import enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RootMotion RootMotion
 		{
 			get { return Internal_getRootMotion(mCachedPtr); }
@@ -83,6 +86,7 @@ namespace BansheeEngine
 
 		/// <summary>Checks if animation clip has root motion curves separate from the normal animation curves.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool HasRootMotion
 		{
 			get { return Internal_hasRootMotion(mCachedPtr); }
@@ -93,6 +97,7 @@ namespace BansheeEngine
 		/// clips.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool IsAddtive
 		{
 			get { return Internal_isAdditive(mCachedPtr); }
@@ -100,6 +105,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the length of the animation clip, in seconds.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Length
 		{
 			get { return Internal_getLength(mCachedPtr); }
@@ -111,6 +117,7 @@ namespace BansheeEngine
 		/// original sample rate of an imported animation or similar.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SampleRate
 		{
 			get { return Internal_getSampleRate(mCachedPtr); }

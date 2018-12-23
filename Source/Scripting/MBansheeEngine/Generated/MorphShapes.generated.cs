@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all morph channels in the morph animation.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public MorphChannel[] Channels
 		{
 			get { return Internal_getChannels(mCachedPtr); }

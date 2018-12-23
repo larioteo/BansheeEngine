@@ -25,6 +25,7 @@ namespace BansheeEngine
 		/// scene brightness calculations. In log2 units (-8 = 1/256). In the range [-16, 0].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float HistogramLog2Min
 		{
 			get { return Internal_gethistogramLog2Min(mCachedPtr); }
@@ -37,6 +38,7 @@ namespace BansheeEngine
 		/// scene brightness calculations. In log2 units (4 = 16). In the range [0, 16].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float HistogramLog2Max
 		{
 			get { return Internal_gethistogramLog2Max(mCachedPtr); }
@@ -51,6 +53,7 @@ namespace BansheeEngine
 		/// dark pixels in an otherwise bright image). In range [0.0f, 1.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float HistogramPctLow
 		{
 			get { return Internal_gethistogramPctLow(mCachedPtr); }
@@ -65,6 +68,7 @@ namespace BansheeEngine
 		/// bright pixels). In range [0.0f, 1.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float HistogramPctHigh
 		{
 			get { return Internal_gethistogramPctHigh(mCachedPtr); }
@@ -77,6 +81,7 @@ namespace BansheeEngine
 		/// everything is still visible). In range [0.0f, 10.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MinEyeAdaptation
 		{
 			get { return Internal_getminEyeAdaptation(mCachedPtr); }
@@ -89,6 +94,7 @@ namespace BansheeEngine
 		/// low that the rest of the scene is all white (overexposed). In range [0.0f, 10.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float MaxEyeAdaptation
 		{
 			get { return Internal_getmaxEyeAdaptation(mCachedPtr); }
@@ -100,6 +106,7 @@ namespace BansheeEngine
 		/// exposure changes when the scene brightness increases. In range [0.01f, 20.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float EyeAdaptationSpeedUp
 		{
 			get { return Internal_geteyeAdaptationSpeedUp(mCachedPtr); }
@@ -111,6 +118,7 @@ namespace BansheeEngine
 		/// exposure changes when the scene brightness decreases. In range [0.01f, 20.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float EyeAdaptationSpeedDown
 		{
 			get { return Internal_geteyeAdaptationSpeedDown(mCachedPtr); }

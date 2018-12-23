@@ -63,7 +63,7 @@ namespace BansheeEditor
         private void OnFieldValueChanged()
         {
             property.SetValue(guiDistributionField.Value);
-            state |= InspectableState.ModifyInProgress;
+            state |= InspectableState.ModifyInProgress | InspectableState.Modified;
         }
     }
 

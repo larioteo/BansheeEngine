@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the global gravity value for all objects in the scene.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public static Vector3 Gravity
 		{
 			get
@@ -30,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Checks is the physics simulation update currently in progress.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public static bool IsUpdateInProgress
 		{
 			get { return Internal__isUpdateInProgress(); }

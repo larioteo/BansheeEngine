@@ -77,6 +77,7 @@ namespace BansheeEditor
 
 		/// <summary>Changes the value of the field.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ColorDistribution Value
 		{
 			get { return Internal_getValue(mCachedPtr); }
@@ -85,6 +86,7 @@ namespace BansheeEditor
 
 		/// <summary>Returns the type of the currently selected distribution.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }

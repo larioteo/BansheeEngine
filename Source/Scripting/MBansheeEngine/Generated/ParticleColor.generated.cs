@@ -28,6 +28,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the evolver.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleColorOptions Options
 		{
 			get

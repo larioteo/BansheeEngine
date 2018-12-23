@@ -30,6 +30,7 @@ namespace BansheeEngine
 		/// Determines a set of planes to use when using the Plane collision mode. Planes are expected to be in world  space.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Plane[] Planes
 		{
 			get { return Internal_getPlanes(mCachedPtr); }
@@ -41,6 +42,7 @@ namespace BansheeEngine
 		/// collision planes will be updated automatically. Object's negative Z axis is considered to be plane normal.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public SceneObject[] PlaneObjects
 		{
 			get { return Internal_getPlaneObjects(mCachedPtr); }
@@ -49,6 +51,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the evolver.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleCollisionsOptions Options
 		{
 			get

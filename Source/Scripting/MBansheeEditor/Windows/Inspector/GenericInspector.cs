@@ -30,7 +30,7 @@ namespace BansheeEditor
                 SerializableObject serializableObject = new SerializableObject(InspectedObject.GetType(), InspectedObject);
                 foreach (var field in serializableObject.Fields)
                 {
-                    if (!field.Inspectable)
+                    if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
                         continue;
                     
                     string path = field.Name;

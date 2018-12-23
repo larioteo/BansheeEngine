@@ -288,6 +288,12 @@ namespace BansheeEngine
 
             return false;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return "(" + r + ", " + g + ", " + b + ", " + a + ")";
+        }
     }
 
     /** @} */

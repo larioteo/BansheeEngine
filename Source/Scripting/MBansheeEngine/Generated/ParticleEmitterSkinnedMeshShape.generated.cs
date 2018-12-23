@@ -31,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Options describing the shape.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ParticleSkinnedMeshShapeOptions Options
 		{
 			get

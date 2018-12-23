@@ -28,6 +28,7 @@ namespace BansheeEditor
 
 		/// <summary>Color gradient to display.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ColorGradient Gradient
 		{
 			get { return Internal_getGradient(mCachedPtr); }

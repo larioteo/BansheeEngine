@@ -23,6 +23,7 @@ namespace BansheeEngine
 		/// simulation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float BreakForce
 		{
 			get { return Internal_getBreakForce(mCachedPtr); }
@@ -34,6 +35,7 @@ namespace BansheeEngine
 		/// simulation.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float BreakTorque
 		{
 			get { return Internal_getBreakTorque(mCachedPtr); }
@@ -42,6 +44,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines whether collision between the two bodies managed by the joint are enabled.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool EnableCollision
 		{
 			get { return Internal_getEnableCollision(mCachedPtr); }

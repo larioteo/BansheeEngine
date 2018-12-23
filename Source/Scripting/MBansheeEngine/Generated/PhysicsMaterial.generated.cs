@@ -47,6 +47,7 @@ namespace BansheeEngine
 		/// to get an object moving from a static state while it is in contact with other object(s)).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float StaticFriction
 		{
 			get { return Internal_getStaticFriction(mCachedPtr); }
@@ -58,6 +59,7 @@ namespace BansheeEngine
 		/// object slow down when sliding along another object).
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float DynamicFriction
 		{
 			get { return Internal_getDynamicFriction(mCachedPtr); }
@@ -69,6 +71,7 @@ namespace BansheeEngine
 		/// means the value is inelastic. Must be in [0, 1] range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Restitution
 		{
 			get { return Internal_getRestitutionCoefficient(mCachedPtr); }

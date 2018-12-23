@@ -20,6 +20,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the name of the shape.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public string Name
 		{
 			get { return Internal_getName(mCachedPtr); }
@@ -27,6 +28,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the weight of the shape, determining how are different shapes within a channel blended.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Weight
 		{
 			get { return Internal_getWeight(mCachedPtr); }

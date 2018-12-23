@@ -26,6 +26,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns information about all parameters available in the shader.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public ShaderParameter[] Parameters
 		{
 			get { return Internal_getParameters(mCachedPtr); }

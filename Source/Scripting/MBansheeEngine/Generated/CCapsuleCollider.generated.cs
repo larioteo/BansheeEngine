@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Normal vector that determines how is the capsule oriented.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Normal
 		{
 			get
@@ -30,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the position of the capsule shape, relative to the component's scene object.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Center
 		{
 			get
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// vector.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float HalfHeight
 		{
 			get { return Internal_getHalfHeight(mCachedPtr); }
@@ -54,6 +57,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the radius of the capsule.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Radius
 		{
 			get { return Internal_getRadius(mCachedPtr); }

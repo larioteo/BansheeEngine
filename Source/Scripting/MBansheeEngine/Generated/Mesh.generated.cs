@@ -102,6 +102,7 @@ namespace BansheeEngine
 
 		/// <summary>Gets the skeleton required for animation of this mesh, if any is available.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Skeleton Skeleton
 		{
 			get { return Internal_getSkeleton(mCachedPtr); }
@@ -109,6 +110,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns an object containing all shapes used for morph animation, if any are available.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public MorphShapes MorphShapes
 		{
 			get { return Internal_getMorphShapes(mCachedPtr); }
@@ -116,6 +118,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns all sub-meshes contained in the mesh.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public SubMesh[] SubMeshes
 		{
 			get { return Internal_getSubMeshes(mCachedPtr); }
@@ -123,6 +126,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns the number of sub-meshes contained in this mesh.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint SubMeshCount
 		{
 			get { return Internal_getSubMeshCount(mCachedPtr); }
@@ -133,6 +137,7 @@ namespace BansheeEngine
 		/// flag. If writing the caller must ensure the data matches mesh's vertex/index counts, vertex layout and index format.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public MeshData MeshData
 		{
 			get { return Internal_getMeshData(mCachedPtr); }

@@ -77,6 +77,7 @@ namespace BansheeEditor
 
 		/// <summary>Changes the value of the field.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3Distribution Value
 		{
 			get { return Internal_getValue(mCachedPtr); }
@@ -85,6 +86,7 @@ namespace BansheeEditor
 
 		/// <summary>Returns the type of the currently selected distribution.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
 			get { return Internal_getType(mCachedPtr); }
@@ -94,6 +96,7 @@ namespace BansheeEditor
 		/// Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool HasInputFocus
 		{
 			get { return Internal_hasInputFocus(mCachedPtr); }

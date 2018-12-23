@@ -40,6 +40,7 @@ namespace BansheeEngine
 		/// the shader. Shader must be set before doing any other operations with the material.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public RRef<Shader> Shader
 		{
 			get { return Internal_getShader(mCachedPtr); }

@@ -17,6 +17,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the extents (half size) of the geometry of the box.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Extents
 		{
 			get
@@ -30,6 +31,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines the position of the box shape, relative to the component's scene object.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Center
 		{
 			get

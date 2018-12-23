@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines if depth collisions are enabled.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -32,6 +33,7 @@ namespace BansheeEngine
 		/// higher values more.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Restitution
 		{
 			get { return Internal_getrestitution(mCachedPtr); }
@@ -43,6 +45,7 @@ namespace BansheeEngine
 		/// [0, 1].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Dampening
 		{
 			get { return Internal_getdampening(mCachedPtr); }
@@ -51,6 +54,7 @@ namespace BansheeEngine
 
 		/// <summary>Scale which to apply to particle size in order to determine the collision radius.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float RadiusScale
 		{
 			get { return Internal_getradiusScale(mCachedPtr); }

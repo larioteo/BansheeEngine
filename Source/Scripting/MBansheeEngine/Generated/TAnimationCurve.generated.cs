@@ -27,6 +27,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public KeyFrame[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -79,6 +80,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public KeyFrameVec3[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -133,6 +135,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public KeyFrameVec2[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -187,6 +190,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public KeyFrameQuat[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }
@@ -241,6 +245,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a list of all keyframes in the curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public KeyFrameInt[] KeyFrames
 		{
 			get { return Internal_getKeyFrames(mCachedPtr); }

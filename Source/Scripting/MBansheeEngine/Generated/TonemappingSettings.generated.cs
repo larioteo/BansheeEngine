@@ -24,6 +24,7 @@ namespace BansheeEngine
 		/// areas of the image and allows you to reduce over-exposure.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveShoulderStrength
 		{
 			get { return Internal_getfilmicCurveShoulderStrength(mCachedPtr); }
@@ -35,6 +36,7 @@ namespace BansheeEngine
 		/// image.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveLinearStrength
 		{
 			get { return Internal_getfilmicCurveLinearStrength(mCachedPtr); }
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// image and allows you to control how quickly does the curve climb.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveLinearAngle
 		{
 			get { return Internal_getfilmicCurveLinearAngle(mCachedPtr); }
@@ -57,6 +60,7 @@ namespace BansheeEngine
 		/// the image and allows you to reduce under-exposure.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveToeStrength
 		{
 			get { return Internal_getfilmicCurveToeStrength(mCachedPtr); }
@@ -67,6 +71,7 @@ namespace BansheeEngine
 		/// Controls the toe (lower non-linear) section of the filmic curve. used for tonemapping. Affects low-range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveToeNumerator
 		{
 			get { return Internal_getfilmicCurveToeNumerator(mCachedPtr); }
@@ -77,6 +82,7 @@ namespace BansheeEngine
 		/// Controls the toe (lower non-linear) section of the filmic curve used for tonemapping. Affects low-range.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveToeDenominator
 		{
 			get { return Internal_getfilmicCurveToeDenominator(mCachedPtr); }
@@ -85,6 +91,7 @@ namespace BansheeEngine
 
 		/// <summary>Controls the white point of the filmic curve used for tonemapping. Affects the entire curve.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FilmicCurveLinearWhitePoint
 		{
 			get { return Internal_getfilmicCurveLinearWhitePoint(mCachedPtr); }

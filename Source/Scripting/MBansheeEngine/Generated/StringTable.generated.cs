@@ -28,6 +28,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns a total number of strings in the table.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint NumStrings
 		{
 			get { return Internal_getNumStrings(mCachedPtr); }
@@ -35,6 +36,7 @@ namespace BansheeEngine
 
 		/// <summary>Returns all identifiers that the string table contains localized strings for.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public string[] Identifiers
 		{
 			get { return Internal_getIdentifiers(mCachedPtr); }

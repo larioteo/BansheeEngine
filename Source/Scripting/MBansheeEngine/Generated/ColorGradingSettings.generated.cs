@@ -15,6 +15,7 @@ namespace BansheeEngine
 		/// Saturation to be applied during color grading. Larger values increase vibrancy of the image. In range [0.0f, 2.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Saturation
 		{
 			get
@@ -31,6 +32,7 @@ namespace BansheeEngine
 		/// image. In range [0.0f, 2.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Contrast
 		{
 			get
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// Gain to be applied during color grading. Simply increases all color values by an equal scale. In range [0.0f, 2.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Gain
 		{
 			get
@@ -61,6 +64,7 @@ namespace BansheeEngine
 		/// Gain to be applied during color grading. Simply offsets all color values by an equal amount. In range [-1.0f, 1.0f].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public Vector3 Offset
 		{
 			get

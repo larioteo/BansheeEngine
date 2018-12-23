@@ -21,6 +21,7 @@ namespace BansheeEngine
 
 		/// <summary>Enables or disabled the screen space ambient occlusion effect.</summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public bool Enabled
 		{
 			get { return Internal_getenabled(mCachedPtr); }
@@ -34,6 +35,7 @@ namespace BansheeEngine
 		/// 5.0].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Radius
 		{
 			get { return Internal_getradius(mCachedPtr); }
@@ -46,6 +48,7 @@ namespace BansheeEngine
 		/// millimeters, valid range is roughly [0, 200].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Bias
 		{
 			get { return Internal_getbias(mCachedPtr); }
@@ -57,6 +60,7 @@ namespace BansheeEngine
 		/// specified by <see cref="fadeRange"/>.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FadeDistance
 		{
 			get { return Internal_getfadeDistance(mCachedPtr); }
@@ -68,6 +72,7 @@ namespace BansheeEngine
 		/// specified in <see cref="fadeDistance"/>.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float FadeRange
 		{
 			get { return Internal_getfadeRange(mCachedPtr); }
@@ -79,6 +84,7 @@ namespace BansheeEngine
 		/// versa. Valid range is roughly [0.2, 2].
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Intensity
 		{
 			get { return Internal_getintensity(mCachedPtr); }
@@ -91,6 +97,7 @@ namespace BansheeEngine
 		/// darkening will occur.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public float Power
 		{
 			get { return Internal_getpower(mCachedPtr); }
@@ -102,6 +109,7 @@ namespace BansheeEngine
 		/// performance.
 		/// </summary>
 		[ShowInInspector]
+		[NativeWrapper]
 		public uint Quality
 		{
 			get { return Internal_getquality(mCachedPtr); }
