@@ -76,6 +76,8 @@ namespace BansheeEditor
         private GUIVector3Field soRot;
         private GUIVector3Field soScale;
 
+        private Quaternion lastRotation;
+
         private Rect2I[] dropAreas = new Rect2I[0];
 
         private InspectorType currentType = InspectorType.None;
@@ -360,16 +362,16 @@ namespace BansheeEditor
             }
 
             Vector3 position;
-            Vector3 angles;
+            Quaternion rotation;
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
             {
                 position = activeSO.Position;
-                angles = activeSO.Rotation.ToEuler();
+                rotation = activeSO.Rotation;
             }
             else
             {
                 position = activeSO.LocalPosition;
-                angles = activeSO.LocalRotation.ToEuler();
+                rotation = activeSO.LocalRotation;
             }
 
             Vector3 scale = activeSO.LocalScale;
@@ -377,8 +379,13 @@ namespace BansheeEditor
             if (!soPos.HasInputFocus)
                 soPos.Value = position;
 
-            if (!soRot.HasInputFocus)
-                soRot.Value = angles;
+            // Avoid updating the rotation unless actually changed externally, since switching back and forth between
+            // quaternion and euler angles can cause weird behavior
+            if (!soRot.HasInputFocus && rotation != lastRotation)
+            {
+                soRot.Value = rotation.ToEuler();
+                lastRotation = rotation;
+            }
 
             if (!soScale.HasInputFocus)
                 soScale.Value = scale;
@@ -740,11 +747,13 @@ namespace BansheeEditor
             if (activeSO == null)
                 return;
 
+            Quaternion rotation = Quaternion.FromEuler(value);
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
-                activeSO.Rotation = Quaternion.FromEuler(value);
+                activeSO.Rotation = rotation;
             else
-                activeSO.LocalRotation = Quaternion.FromEuler(value);
+                activeSO.LocalRotation = rotation;
 
+            lastRotation = rotation;
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();
         }
