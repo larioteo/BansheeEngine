@@ -39,6 +39,10 @@ namespace BansheeEditor
                 ? InspectableFieldStyleFlags.ApplyOnDirty
                 : 0;
 
+            styleInfo.StyleFlags |= field.Flags.HasFlag(SerializableFieldAttributes.DisplayAsQuaternion)
+                ? InspectableFieldStyleFlags.AsQuaternion
+                : 0;
+
             return styleInfo;
         }
     }

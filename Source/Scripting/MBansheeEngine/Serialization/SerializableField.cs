@@ -17,54 +17,60 @@ namespace BansheeEngine
         /// <summary>
         /// Field will be automatically serialized.
         /// </summary>
-        Serializable  = 1 << 0,
+        Serializable        = 1 << 0,
 
         /// <summary>
         /// Field will be visible in the default inspector.
         /// </summary>
-        Inspectable   = 1 << 1,
+        Inspectable         = 1 << 1,
 
         /// <summary>
         /// Integer or floating point field with min/max range.
         /// </summary>
-        Ranged        = 1 << 2,
+        Ranged              = 1 << 2,
 
         /// <summary>
         /// Integer or floating point field with a minimum increment/decrement step.
         /// </summary>
-        Stepped       = 1 << 3,
+        Stepped             = 1 << 3,
 
         /// <summary>
         /// Field can be animated through the animation window.
         /// </summary>
-        Animable      = 1 << 4,
+        Animable            = 1 << 4,
 
         /// <summary>
         /// Integer field rendered as a layer selection dropdown.
         /// </summary>
-        LayerMask     = 1 << 5,
+        LayerMask           = 1 << 5,
 
         /// <summary>
         /// Field containing a reference type being passed by copy instead of by reference.
         /// </summary>
-        PassByCopy    = 1 << 6,
+        PassByCopy          = 1 << 6,
 
         /// <summary>
         /// Field containing a reference type that should never be null.
         /// </summary>
-        NotNull       = 1 << 7,
+        NotNull             = 1 << 7,
 
         /// <summary>
         /// Field represents a property that wraps a native object. Getters and setters of such a property issue calls into
         /// native code to update the native object.
         /// </summary>
-        NativeWrapper = 1 << 8,
+        NativeWrapper       = 1 << 8,
 
         /// <summary>
         /// When a field changes those changes need to be applied to the parent object by calling the field setter. Only
         /// applicable to properties containing reference types.
         /// </summary>
-        ApplyOnDirty = 1 << 9
+        ApplyOnDirty        = 1 << 9,
+
+        /// <summary>
+        /// When a quaternion is displayed in the inspector, by default it will be displayed as converted into euler angles.
+        /// Use this flag to force it to be displayed as a quaternion (4D value) with no conversion instead.
+        /// </summary>
+        DisplayAsQuaternion = 1 << 10
     }
 
     /// <summary>

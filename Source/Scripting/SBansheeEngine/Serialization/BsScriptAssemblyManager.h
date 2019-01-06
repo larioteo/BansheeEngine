@@ -42,6 +42,7 @@ namespace bs
 		MonoClass* notNullAttribute = nullptr;
 		MonoClass* passByCopyAttribute = nullptr;
 		MonoClass* applyOnDirtyAttribute = nullptr;
+		MonoClass* asQuaternionAttribute = nullptr;
 	};
 
 	/**	Stores data about managed serializable objects in specified assemblies. */

@@ -225,6 +225,9 @@ namespace bs
 					}
 				}
 
+				if (field->hasAttribute(mBuiltin.asQuaternionAttribute))
+					fieldInfo->mFlags |= ScriptFieldFlag::DisplayAsQuaternion;
+
 				if(field->hasAttribute(mBuiltin.notNullAttribute))
 					fieldInfo->mFlags |= ScriptFieldFlag::NotNull;
 
@@ -285,6 +288,9 @@ namespace bs
 							}
 						}
 					}
+
+					if (property->hasAttribute(mBuiltin.asQuaternionAttribute))
+						propertyInfo->mFlags |= ScriptFieldFlag::DisplayAsQuaternion;
 
 					if (property->hasAttribute(mBuiltin.notNullAttribute))
 						propertyInfo->mFlags |= ScriptFieldFlag::NotNull;
@@ -642,6 +648,10 @@ namespace bs
 		mBuiltin.layerMaskAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "LayerMask");
 		if (mBuiltin.layerMaskAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find LayerMask managed class.");
+
+		mBuiltin.asQuaternionAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "AsQuaternion");
+		if (mBuiltin.asQuaternionAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find AsQuaternion managed class.");
 
 		mBuiltin.nativeWrapperAttribute = bansheeEngineAssembly->getClass("BansheeEngine", "NativeWrapper");
 		if (mBuiltin.nativeWrapperAttribute == nullptr)

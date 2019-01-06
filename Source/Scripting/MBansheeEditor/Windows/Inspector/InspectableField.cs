@@ -205,7 +205,10 @@ namespace BansheeEditor
                         field = new InspectableVector4(parent, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Quaternion:
-                        field = new InspectableQuaternion(parent, title, path, depth, layout, property);
+                        if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.AsQuaternion))
+                            field = new InspectableQuaternion(parent, title, path, depth, layout, property);
+                        else
+                            field = new InspectableEuler(parent, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Resource:
                         field = new InspectableResource(parent, title, path, depth, layout, property);

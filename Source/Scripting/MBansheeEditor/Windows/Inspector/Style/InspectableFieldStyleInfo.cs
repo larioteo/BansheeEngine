@@ -46,7 +46,13 @@ namespace BansheeEditor
         /// When a field changes those changes need to be applied to the parent object by calling the field setter. Only
         /// applicable to properties containing reference types.
         /// </summary>
-        ApplyOnDirty = 1 << 5
+        ApplyOnDirty = 1 << 5,
+
+        /// <summary>
+        /// When a quaternion is displayed in the inspector, by default it will be displayed as converted into euler angles.
+        /// Use this flag to force it to be displayed as a quaternion (4D value) with no conversion instead.
+        /// </summary>
+        AsQuaternion = 1 << 6,
     }
 
     /// <summary>
