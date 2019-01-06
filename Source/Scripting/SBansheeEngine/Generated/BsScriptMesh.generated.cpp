@@ -98,7 +98,8 @@ namespace bs
 		SPtr<RendererMeshData> tmpdata;
 		ScriptRendererMeshData* scriptdata;
 		scriptdata = ScriptRendererMeshData::toNative(data);
-		tmpdata = scriptdata->getInternal();
+		if(scriptdata != nullptr)
+			tmpdata = scriptdata->getInternal();
 		ResourceHandle<Mesh> instance = MeshEx::create(tmpdata, topology, usage);
 		ScriptResourceManager::instance().createBuiltinScriptResource(instance, managedInstance);
 	}
@@ -108,7 +109,8 @@ namespace bs
 		SPtr<RendererMeshData> tmpdata;
 		ScriptRendererMeshData* scriptdata;
 		scriptdata = ScriptRendererMeshData::toNative(data);
-		tmpdata = scriptdata->getInternal();
+		if(scriptdata != nullptr)
+			tmpdata = scriptdata->getInternal();
 		Vector<SubMesh> vecsubMeshes;
 		if(subMeshes != nullptr)
 		{
@@ -173,7 +175,8 @@ namespace bs
 		SPtr<RendererMeshData> tmpvalue;
 		ScriptRendererMeshData* scriptvalue;
 		scriptvalue = ScriptRendererMeshData::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		MeshEx::setMeshData(thisPtr->getHandle(), tmpvalue);
 	}
 }

@@ -69,7 +69,8 @@ namespace bs
 		SPtr<ParticleEmitterShape> tmpshape;
 		ScriptParticleEmitterShapeBase* scriptshape;
 		scriptshape = (ScriptParticleEmitterShapeBase*)ScriptParticleEmitterShape::toNative(shape);
-		tmpshape = scriptshape->getInternal();
+		if(scriptshape != nullptr)
+			tmpshape = scriptshape->getInternal();
 		thisPtr->getInternal()->setShape(tmpshape);
 	}
 
@@ -89,7 +90,8 @@ namespace bs
 		SPtr<TDistribution<float>> tmpvalue;
 		ScriptTDistributionfloat* scriptvalue;
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setEmissionRate(*tmpvalue);
 	}
 
@@ -141,7 +143,8 @@ namespace bs
 		SPtr<TDistribution<float>> tmpvalue;
 		ScriptTDistributionfloat* scriptvalue;
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialLifetime(*tmpvalue);
 	}
 
@@ -161,7 +164,8 @@ namespace bs
 		SPtr<TDistribution<float>> tmpvalue;
 		ScriptTDistributionfloat* scriptvalue;
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialSpeed(*tmpvalue);
 	}
 
@@ -181,7 +185,8 @@ namespace bs
 		SPtr<TDistribution<float>> tmpvalue;
 		ScriptTDistributionfloat* scriptvalue;
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialSize(*tmpvalue);
 	}
 
@@ -201,7 +206,8 @@ namespace bs
 		SPtr<TDistribution<Vector3>> tmpvalue;
 		ScriptTDistributionVector3* scriptvalue;
 		scriptvalue = ScriptTDistributionVector3::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialSize3D(*tmpvalue);
 	}
 
@@ -237,7 +243,8 @@ namespace bs
 		SPtr<TDistribution<float>> tmpvalue;
 		ScriptTDistributionfloat* scriptvalue;
 		scriptvalue = ScriptTDistributionfloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialRotation(*tmpvalue);
 	}
 
@@ -257,7 +264,8 @@ namespace bs
 		SPtr<TDistribution<Vector3>> tmpvalue;
 		ScriptTDistributionVector3* scriptvalue;
 		scriptvalue = ScriptTDistributionVector3::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialRotation3D(*tmpvalue);
 	}
 
@@ -293,7 +301,8 @@ namespace bs
 		SPtr<ColorDistribution> tmpvalue;
 		ScriptColorDistribution* scriptvalue;
 		scriptvalue = ScriptColorDistribution::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->setInitialColor(*tmpvalue);
 	}
 

@@ -53,7 +53,8 @@ namespace bs
 		SPtr<RendererMeshData> tmpmeshData;
 		ScriptRendererMeshData* scriptmeshData;
 		scriptmeshData = ScriptRendererMeshData::toNative(meshData);
-		tmpmeshData = scriptmeshData->getInternal();
+		if(scriptmeshData != nullptr)
+			tmpmeshData = scriptmeshData->getInternal();
 		ResourceHandle<PhysicsMesh> instance = PhysicsMeshEx::create(tmpmeshData, type);
 		ScriptResourceManager::instance().createBuiltinScriptResource(instance, managedInstance);
 	}

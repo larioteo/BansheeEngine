@@ -16,6 +16,8 @@ namespace BansheeEngine
 		protected ParticleGpuSimulationSettings() { }
 
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ParticleVectorFieldSettings VectorField
 		{
@@ -25,6 +27,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines particle color, evaluated over the particle lifetime.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ColorDistribution ColorOverLifetime
 		{
@@ -36,6 +40,8 @@ namespace BansheeEngine
 		/// Determines particle size, evaluated over the particle lifetime. Multiplied by the initial particle size.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector2Distribution SizeScaleOverLifetime
 		{
@@ -68,6 +74,8 @@ namespace BansheeEngine
 
 		/// <summary>Settings controlling particle depth buffer collisions.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ParticleDepthCollisionSettings DepthCollision
 		{

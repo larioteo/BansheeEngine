@@ -17,6 +17,8 @@ namespace BansheeEngine
 
 		/// <summary>Animation curve representing the movement of the root bone.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector3Curve Position
 		{
@@ -25,6 +27,8 @@ namespace BansheeEngine
 
 		/// <summary>Animation curve representing the rotation of the root bone.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public QuaternionCurve Rotation
 		{

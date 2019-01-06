@@ -43,7 +43,8 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpcurve;
 		ScriptTAnimationCurvefloat* scriptcurve;
 		scriptcurve = ScriptTAnimationCurvefloat::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setCurve(*tmpcurve);
 	}
 
@@ -52,11 +53,13 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpcurveA;
 		ScriptTAnimationCurvefloat* scriptcurveA;
 		scriptcurveA = ScriptTAnimationCurvefloat::toNative(curveA);
-		tmpcurveA = scriptcurveA->getInternal();
+		if(scriptcurveA != nullptr)
+			tmpcurveA = scriptcurveA->getInternal();
 		SPtr<TAnimationCurve<float>> tmpcurveB;
 		ScriptTAnimationCurvefloat* scriptcurveB;
 		scriptcurveB = ScriptTAnimationCurvefloat::toNative(curveB);
-		tmpcurveB = scriptcurveB->getInternal();
+		if(scriptcurveB != nullptr)
+			tmpcurveB = scriptcurveB->getInternal();
 		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setCurveRange(*tmpcurveA, *tmpcurveB);
 	}
 
@@ -118,7 +121,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUICurvesField* instance = GUICurvesField::create(*tmplabelText, labelWidth, tmpstyle);
@@ -130,7 +134,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUICurvesField* instance = GUICurvesField::create(*tmplabelText, tmpstyle);

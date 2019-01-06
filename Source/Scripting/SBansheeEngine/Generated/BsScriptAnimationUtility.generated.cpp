@@ -44,7 +44,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpeulerCurve;
 		ScriptTAnimationCurveVector3* scripteulerCurve;
 		scripteulerCurve = ScriptTAnimationCurveVector3::toNative(eulerCurve);
-		tmpeulerCurve = scripteulerCurve->getInternal();
+		if(scripteulerCurve != nullptr)
+			tmpeulerCurve = scripteulerCurve->getInternal();
 		tmp__output = AnimationUtility::eulerToQuaternionCurve(tmpeulerCurve);
 
 		MonoObject* __output;
@@ -59,7 +60,8 @@ namespace bs
 		SPtr<TAnimationCurve<Quaternion>> tmpquatCurve;
 		ScriptTAnimationCurveQuaternion* scriptquatCurve;
 		scriptquatCurve = ScriptTAnimationCurveQuaternion::toNative(quatCurve);
-		tmpquatCurve = scriptquatCurve->getInternal();
+		if(scriptquatCurve != nullptr)
+			tmpquatCurve = scriptquatCurve->getInternal();
 		tmp__output = AnimationUtility::quaternionToEulerCurve(tmpquatCurve);
 
 		MonoObject* __output;
@@ -74,7 +76,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpcompoundCurve;
 		ScriptTAnimationCurveVector3* scriptcompoundCurve;
 		scriptcompoundCurve = ScriptTAnimationCurveVector3::toNative(compoundCurve);
-		tmpcompoundCurve = scriptcompoundCurve->getInternal();
+		if(scriptcompoundCurve != nullptr)
+			tmpcompoundCurve = scriptcompoundCurve->getInternal();
 		vec__output = AnimationUtility::splitCurve3D(tmpcompoundCurve);
 
 		MonoArray* __output;
@@ -119,7 +122,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector2>> tmpcompoundCurve;
 		ScriptTAnimationCurveVector2* scriptcompoundCurve;
 		scriptcompoundCurve = ScriptTAnimationCurveVector2::toNative(compoundCurve);
-		tmpcompoundCurve = scriptcompoundCurve->getInternal();
+		if(scriptcompoundCurve != nullptr)
+			tmpcompoundCurve = scriptcompoundCurve->getInternal();
 		vec__output = AnimationUtility::splitCurve2D(tmpcompoundCurve);
 
 		MonoArray* __output;

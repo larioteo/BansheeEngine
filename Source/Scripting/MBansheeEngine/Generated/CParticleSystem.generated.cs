@@ -24,6 +24,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines general purpose settings that apply to the particle system.</summary>
 		[ShowInInspector]
+		[NotNull]
 		[PassByCopy]
 		[NativeWrapper]
 		public ParticleSystemSettings Settings
@@ -34,6 +35,7 @@ namespace BansheeEngine
 
 		/// <summary>Determines settings that control particle GPU simulation.</summary>
 		[ShowInInspector]
+		[NotNull]
 		[PassByCopy]
 		[NativeWrapper]
 		public ParticleGpuSimulationSettings GpuSimulationSettings

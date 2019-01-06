@@ -66,7 +66,8 @@ namespace bs
 		SPtr<ColorGradient> tmpgradient;
 		ScriptColorGradient* scriptgradient;
 		scriptgradient = ScriptColorGradient::toNative(gradient);
-		tmpgradient = scriptgradient->getInternal();
+		if(scriptgradient != nullptr)
+			tmpgradient = scriptgradient->getInternal();
 		SPtr<ColorDistribution> instance = bs_shared_ptr_new<ColorDistribution>(*tmpgradient);
 		new (bs_alloc<ScriptColorDistribution>())ScriptColorDistribution(managedInstance, instance);
 	}
@@ -76,11 +77,13 @@ namespace bs
 		SPtr<ColorGradient> tmpminGradient;
 		ScriptColorGradient* scriptminGradient;
 		scriptminGradient = ScriptColorGradient::toNative(minGradient);
-		tmpminGradient = scriptminGradient->getInternal();
+		if(scriptminGradient != nullptr)
+			tmpminGradient = scriptminGradient->getInternal();
 		SPtr<ColorGradient> tmpmaxGradient;
 		ScriptColorGradient* scriptmaxGradient;
 		scriptmaxGradient = ScriptColorGradient::toNative(maxGradient);
-		tmpmaxGradient = scriptmaxGradient->getInternal();
+		if(scriptmaxGradient != nullptr)
+			tmpmaxGradient = scriptmaxGradient->getInternal();
 		SPtr<ColorDistribution> instance = bs_shared_ptr_new<ColorDistribution>(*tmpminGradient, *tmpmaxGradient);
 		new (bs_alloc<ScriptColorDistribution>())ScriptColorDistribution(managedInstance, instance);
 	}

@@ -64,7 +64,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpcurve;
 		ScriptTAnimationCurveVector3* scriptcurve;
 		scriptcurve = ScriptTAnimationCurveVector3::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		thisPtr->getInternal()->addPositionCurve(tmpname, *tmpcurve);
 	}
 
@@ -75,7 +76,8 @@ namespace bs
 		SPtr<TAnimationCurve<Quaternion>> tmpcurve;
 		ScriptTAnimationCurveQuaternion* scriptcurve;
 		scriptcurve = ScriptTAnimationCurveQuaternion::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		thisPtr->getInternal()->addRotationCurve(tmpname, *tmpcurve);
 	}
 
@@ -86,7 +88,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpcurve;
 		ScriptTAnimationCurveVector3* scriptcurve;
 		scriptcurve = ScriptTAnimationCurveVector3::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		thisPtr->getInternal()->addScaleCurve(tmpname, *tmpcurve);
 	}
 
@@ -97,7 +100,8 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpcurve;
 		ScriptTAnimationCurvefloat* scriptcurve;
 		scriptcurve = ScriptTAnimationCurvefloat::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		thisPtr->getInternal()->addGenericCurve(tmpname, *tmpcurve);
 	}
 

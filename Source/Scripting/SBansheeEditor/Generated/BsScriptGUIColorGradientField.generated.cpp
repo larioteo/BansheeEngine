@@ -51,7 +51,8 @@ namespace bs
 		SPtr<ColorGradient> tmpvalue;
 		ScriptColorGradient* scriptvalue;
 		scriptvalue = ScriptColorGradient::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIColorGradientField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
 	}
 
@@ -80,7 +81,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIColorGradientField* instance = GUIColorGradientField::create(*tmplabelText, labelWidth, tmpstyle);
@@ -92,7 +94,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIColorGradientField* instance = GUIColorGradientField::create(*tmplabelText, tmpstyle);

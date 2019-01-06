@@ -35,7 +35,8 @@ namespace bs
 		SPtr<ParticleSystemSettings> tmpsettings;
 		ScriptParticleSystemSettings* scriptsettings;
 		scriptsettings = ScriptParticleSystemSettings::toNative(settings);
-		tmpsettings = scriptsettings->getInternal();
+		if(scriptsettings != nullptr)
+			tmpsettings = scriptsettings->getInternal();
 		thisPtr->getHandle()->setSettings(*tmpsettings);
 	}
 
@@ -55,7 +56,8 @@ namespace bs
 		SPtr<ParticleGpuSimulationSettings> tmpsettings;
 		ScriptParticleGpuSimulationSettings* scriptsettings;
 		scriptsettings = ScriptParticleGpuSimulationSettings::toNative(settings);
-		tmpsettings = scriptsettings->getInternal();
+		if(scriptsettings != nullptr)
+			tmpsettings = scriptsettings->getInternal();
 		thisPtr->getHandle()->setGpuSimulationSettings(*tmpsettings);
 	}
 

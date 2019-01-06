@@ -69,7 +69,8 @@ namespace bs
 		SPtr<TDistribution<Vector3>> tmpvalue;
 		ScriptTDistributionVector3* scriptvalue;
 		scriptvalue = ScriptTDistributionVector3::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIVector3DistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
 	}
 
@@ -120,7 +121,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIVector3DistributionField* instance = GUIVector3DistributionField::create(*tmplabelText, labelWidth, tmpstyle);
@@ -132,7 +134,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIVector3DistributionField* instance = GUIVector3DistributionField::create(*tmplabelText, tmpstyle);

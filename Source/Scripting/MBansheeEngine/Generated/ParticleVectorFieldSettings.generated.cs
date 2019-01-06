@@ -98,6 +98,8 @@ namespace BansheeEngine
 		/// over the particle system lifetime.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector3Distribution RotationRate
 		{

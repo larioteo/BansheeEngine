@@ -34,7 +34,8 @@ namespace bs
 		SPtr<ColorGradient> tmpcolorGradient;
 		ScriptColorGradient* scriptcolorGradient;
 		scriptcolorGradient = ScriptColorGradient::toNative(colorGradient);
-		tmpcolorGradient = scriptcolorGradient->getInternal();
+		if(scriptcolorGradient != nullptr)
+			tmpcolorGradient = scriptcolorGradient->getInternal();
 		static_cast<GUIColorGradient*>(thisPtr->getGUIElement())->setGradient(*tmpcolorGradient);
 	}
 

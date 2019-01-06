@@ -49,7 +49,8 @@ namespace bs
 		SPtr<RenderTarget> tmptarget;
 		ScriptRenderTargetBase* scripttarget;
 		scripttarget = (ScriptRenderTargetBase*)ScriptRenderTarget::toNative(target);
-		tmptarget = scripttarget->getInternal();
+		if(scripttarget != nullptr)
+			tmptarget = scripttarget->getInternal();
 		thisPtr->getInternal()->setTarget(tmptarget);
 	}
 
@@ -151,7 +152,8 @@ namespace bs
 		SPtr<RenderTarget> tmptarget;
 		ScriptRenderTargetBase* scripttarget;
 		scripttarget = (ScriptRenderTargetBase*)ScriptRenderTarget::toNative(target);
-		tmptarget = scripttarget->getInternal();
+		if(scripttarget != nullptr)
+			tmptarget = scripttarget->getInternal();
 		SPtr<Viewport> instance = Viewport::create(tmptarget, x, y, width, height);
 		new (bs_alloc<ScriptViewport>())ScriptViewport(managedInstance, instance);
 	}

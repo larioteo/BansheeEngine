@@ -60,7 +60,8 @@ namespace bs
 		SPtr<ParticleVectorFieldSettings> tmpvalue;
 		ScriptParticleVectorFieldSettings* scriptvalue;
 		scriptvalue = ScriptParticleVectorFieldSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->vectorField = *tmpvalue;
 	}
 
@@ -80,7 +81,8 @@ namespace bs
 		SPtr<ColorDistribution> tmpvalue;
 		ScriptColorDistribution* scriptvalue;
 		scriptvalue = ScriptColorDistribution::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->colorOverLifetime = *tmpvalue;
 	}
 
@@ -100,7 +102,8 @@ namespace bs
 		SPtr<TDistribution<Vector2>> tmpvalue;
 		ScriptTDistributionVector2* scriptvalue;
 		scriptvalue = ScriptTDistributionVector2::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->sizeScaleOverLifetime = *tmpvalue;
 	}
 
@@ -151,7 +154,8 @@ namespace bs
 		SPtr<ParticleDepthCollisionSettings> tmpvalue;
 		ScriptParticleDepthCollisionSettings* scriptvalue;
 		scriptvalue = ScriptParticleDepthCollisionSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->depthCollision = *tmpvalue;
 	}
 }

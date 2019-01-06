@@ -28,6 +28,8 @@ namespace BansheeEditor
 
 		/// <summary>Color gradient to display.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ColorGradient Gradient
 		{

@@ -115,7 +115,8 @@ namespace bs
 		SPtr<AutoExposureSettings> tmpvalue;
 		ScriptAutoExposureSettings* scriptvalue;
 		scriptvalue = ScriptAutoExposureSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->autoExposure = *tmpvalue;
 	}
 
@@ -151,7 +152,8 @@ namespace bs
 		SPtr<TonemappingSettings> tmpvalue;
 		ScriptTonemappingSettings* scriptvalue;
 		scriptvalue = ScriptTonemappingSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->tonemapping = *tmpvalue;
 	}
 
@@ -171,7 +173,8 @@ namespace bs
 		SPtr<WhiteBalanceSettings> tmpvalue;
 		ScriptWhiteBalanceSettings* scriptvalue;
 		scriptvalue = ScriptWhiteBalanceSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->whiteBalance = *tmpvalue;
 	}
 
@@ -191,7 +194,8 @@ namespace bs
 		SPtr<ColorGradingSettings> tmpvalue;
 		ScriptColorGradingSettings* scriptvalue;
 		scriptvalue = ScriptColorGradingSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->colorGrading = *tmpvalue;
 	}
 
@@ -211,7 +215,8 @@ namespace bs
 		SPtr<DepthOfFieldSettings> tmpvalue;
 		ScriptDepthOfFieldSettings* scriptvalue;
 		scriptvalue = ScriptDepthOfFieldSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->depthOfField = *tmpvalue;
 	}
 
@@ -231,7 +236,8 @@ namespace bs
 		SPtr<AmbientOcclusionSettings> tmpvalue;
 		ScriptAmbientOcclusionSettings* scriptvalue;
 		scriptvalue = ScriptAmbientOcclusionSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->ambientOcclusion = *tmpvalue;
 	}
 
@@ -251,7 +257,8 @@ namespace bs
 		SPtr<ScreenSpaceReflectionsSettings> tmpvalue;
 		ScriptScreenSpaceReflectionsSettings* scriptvalue;
 		scriptvalue = ScriptScreenSpaceReflectionsSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->screenSpaceReflections = *tmpvalue;
 	}
 
@@ -271,7 +278,8 @@ namespace bs
 		SPtr<BloomSettings> tmpvalue;
 		ScriptBloomSettings* scriptvalue;
 		scriptvalue = ScriptBloomSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->bloom = *tmpvalue;
 	}
 
@@ -387,7 +395,8 @@ namespace bs
 		SPtr<ShadowSettings> tmpvalue;
 		ScriptShadowSettings* scriptvalue;
 		scriptvalue = ScriptShadowSettings::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->shadowSettings = *tmpvalue;
 	}
 

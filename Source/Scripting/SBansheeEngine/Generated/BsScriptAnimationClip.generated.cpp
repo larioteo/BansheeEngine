@@ -63,7 +63,8 @@ namespace bs
 		SPtr<AnimationCurves> tmpcurves;
 		ScriptAnimationCurves* scriptcurves;
 		scriptcurves = ScriptAnimationCurves::toNative(curves);
-		tmpcurves = scriptcurves->getInternal();
+		if(scriptcurves != nullptr)
+			tmpcurves = scriptcurves->getInternal();
 		thisPtr->getHandle()->setCurves(*tmpcurves);
 	}
 
@@ -170,11 +171,13 @@ namespace bs
 		SPtr<AnimationCurves> tmpcurves;
 		ScriptAnimationCurves* scriptcurves;
 		scriptcurves = ScriptAnimationCurves::toNative(curves);
-		tmpcurves = scriptcurves->getInternal();
+		if(scriptcurves != nullptr)
+			tmpcurves = scriptcurves->getInternal();
 		SPtr<RootMotion> tmprootMotion;
 		ScriptRootMotion* scriptrootMotion;
 		scriptrootMotion = ScriptRootMotion::toNative(rootMotion);
-		tmprootMotion = scriptrootMotion->getInternal();
+		if(scriptrootMotion != nullptr)
+			tmprootMotion = scriptrootMotion->getInternal();
 		ResourceHandle<AnimationClip> instance = AnimationClip::create(tmpcurves, isAdditive, sampleRate, tmprootMotion);
 		ScriptResourceManager::instance().createBuiltinScriptResource(instance, managedInstance);
 	}

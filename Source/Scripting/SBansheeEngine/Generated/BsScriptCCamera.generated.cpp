@@ -252,7 +252,8 @@ namespace bs
 		SPtr<RenderSettings> tmpsettings;
 		ScriptRenderSettings* scriptsettings;
 		scriptsettings = ScriptRenderSettings::toNative(settings);
-		tmpsettings = scriptsettings->getInternal();
+		if(scriptsettings != nullptr)
+			tmpsettings = scriptsettings->getInternal();
 		thisPtr->getHandle()->setRenderSettings(tmpsettings);
 	}
 

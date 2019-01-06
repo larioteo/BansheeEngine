@@ -125,7 +125,8 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpvalue;
 		ScriptTAnimationCurvefloat* scriptvalue;
 		scriptvalue = ScriptTAnimationCurvefloat::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getHandle()->setFloatCurve(tmpname, *tmpvalue, arrayIdx);
 	}
 
@@ -143,7 +144,8 @@ namespace bs
 		SPtr<ColorGradient> tmpvalue;
 		ScriptColorGradient* scriptvalue;
 		scriptvalue = ScriptColorGradient::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getHandle()->setColorGradient(tmpname, *tmpvalue, arrayIdx);
 	}
 

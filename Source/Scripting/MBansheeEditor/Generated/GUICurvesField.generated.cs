@@ -80,6 +80,8 @@ namespace BansheeEditor
 		/// that range.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public AnimationCurve Curve
 		{
@@ -91,6 +93,8 @@ namespace BansheeEditor
 		/// field doesn't represent a range.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public AnimationCurve MinCurve
 		{
@@ -102,6 +106,8 @@ namespace BansheeEditor
 		/// field doesn't represent a range.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public AnimationCurve MaxCurve
 		{

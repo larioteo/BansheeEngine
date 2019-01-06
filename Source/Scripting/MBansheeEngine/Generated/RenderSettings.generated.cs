@@ -35,6 +35,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing automatic scene exposure.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public AutoExposureSettings AutoExposure
 		{
@@ -61,6 +63,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing tonemapping.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public TonemappingSettings Tonemapping
 		{
@@ -74,6 +78,8 @@ namespace BansheeEngine
 		/// simulate the effects of chromatic adaptation of the human visual system.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public WhiteBalanceSettings WhiteBalance
 		{
@@ -83,6 +89,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing color grading.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ColorGradingSettings ColorGrading
 		{
@@ -92,6 +100,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing the depth of field effect.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public DepthOfFieldSettings DepthOfField
 		{
@@ -101,6 +111,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing screen space ambient occlusion.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public AmbientOcclusionSettings AmbientOcclusion
 		{
@@ -110,6 +122,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing screen space reflections.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ScreenSpaceReflectionsSettings ScreenSpaceReflections
 		{
@@ -119,6 +133,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing the bloom effect.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public BloomSettings Bloom
 		{
@@ -196,6 +212,8 @@ namespace BansheeEngine
 
 		/// <summary>Parameters used for customizing shadow rendering.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ShadowSettings ShadowSettings
 		{

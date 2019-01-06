@@ -172,7 +172,8 @@ namespace bs
 		SPtr<TDistribution<Vector3>> tmpvalue;
 		ScriptTDistributionVector3* scriptvalue;
 		scriptvalue = ScriptTDistributionVector3::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		thisPtr->getInternal()->rotationRate = *tmpvalue;
 	}
 

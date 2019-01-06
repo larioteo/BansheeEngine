@@ -182,7 +182,8 @@ namespace bs
 		SPtr<PixelData> tmpdata;
 		ScriptPixelData* scriptdata;
 		scriptdata = ScriptPixelData::toNative(data);
-		tmpdata = scriptdata->getInternal();
+		if(scriptdata != nullptr)
+			tmpdata = scriptdata->getInternal();
 		TextureEx::setPixels(thisPtr->getHandle(), tmpdata, face, mipLevel);
 	}
 

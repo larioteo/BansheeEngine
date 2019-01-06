@@ -31,6 +31,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines the number of particles that are emitted every second.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public FloatDistribution EmissionRate
 		{
@@ -49,6 +51,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines the lifetime of particles when they are initially spawned, in seconds.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public FloatDistribution InitialLifetime
 		{
@@ -61,6 +65,8 @@ namespace BansheeEngine
 		/// direction, which is determined by the emission shape and potentially other properties.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public FloatDistribution InitialSpeed
 		{
@@ -73,6 +79,8 @@ namespace BansheeEngine
 		/// used if 3D size is disabled.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public FloatDistribution InitialSize
 		{
@@ -85,6 +93,8 @@ namespace BansheeEngine
 		/// Only used if 3D size is enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector3Distribution InitialSize3D
 		{
@@ -109,6 +119,8 @@ namespace BansheeEngine
 		/// particle's local Z axis. Only used if 3D rotation is disabled.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public FloatDistribution InitialRotation
 		{
@@ -120,6 +132,8 @@ namespace BansheeEngine
 		/// Determines the rotation of the particles when initially spawned, in Euler angles. Only used if 3D rotation is enabled.
 		/// </summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector3Distribution InitialRotation3D
 		{
@@ -141,6 +155,8 @@ namespace BansheeEngine
 
 		/// <summary>Determines the initial color (in RGB channels) and transparency (in A channel) of particles.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public ColorDistribution InitialColor
 		{

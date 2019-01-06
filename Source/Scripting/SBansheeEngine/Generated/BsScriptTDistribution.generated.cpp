@@ -67,7 +67,8 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpcurve;
 		ScriptTAnimationCurvefloat* scriptcurve;
 		scriptcurve = ScriptTAnimationCurvefloat::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		SPtr<TDistribution<float>> instance = bs_shared_ptr_new<TDistribution<float>>(*tmpcurve);
 		new (bs_alloc<ScriptTDistributionfloat>())ScriptTDistributionfloat(managedInstance, instance);
 	}
@@ -77,11 +78,13 @@ namespace bs
 		SPtr<TAnimationCurve<float>> tmpminCurve;
 		ScriptTAnimationCurvefloat* scriptminCurve;
 		scriptminCurve = ScriptTAnimationCurvefloat::toNative(minCurve);
-		tmpminCurve = scriptminCurve->getInternal();
+		if(scriptminCurve != nullptr)
+			tmpminCurve = scriptminCurve->getInternal();
 		SPtr<TAnimationCurve<float>> tmpmaxCurve;
 		ScriptTAnimationCurvefloat* scriptmaxCurve;
 		scriptmaxCurve = ScriptTAnimationCurvefloat::toNative(maxCurve);
-		tmpmaxCurve = scriptmaxCurve->getInternal();
+		if(scriptmaxCurve != nullptr)
+			tmpmaxCurve = scriptmaxCurve->getInternal();
 		SPtr<TDistribution<float>> instance = bs_shared_ptr_new<TDistribution<float>>(*tmpminCurve, *tmpmaxCurve);
 		new (bs_alloc<ScriptTDistributionfloat>())ScriptTDistributionfloat(managedInstance, instance);
 	}
@@ -158,7 +161,8 @@ namespace bs
 		SPtr<Random> tmpfactor;
 		ScriptRandom* scriptfactor;
 		scriptfactor = ScriptRandom::toNative(factor);
-		tmpfactor = scriptfactor->getInternal();
+		if(scriptfactor != nullptr)
+			tmpfactor = scriptfactor->getInternal();
 		tmp__output = thisPtr->getInternal()->evaluate(t, *tmpfactor);
 
 		float __output;
@@ -223,7 +227,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpcurve;
 		ScriptTAnimationCurveVector3* scriptcurve;
 		scriptcurve = ScriptTAnimationCurveVector3::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		SPtr<TDistribution<Vector3>> instance = bs_shared_ptr_new<TDistribution<Vector3>>(*tmpcurve);
 		new (bs_alloc<ScriptTDistributionVector3>())ScriptTDistributionVector3(managedInstance, instance);
 	}
@@ -233,11 +238,13 @@ namespace bs
 		SPtr<TAnimationCurve<Vector3>> tmpminCurve;
 		ScriptTAnimationCurveVector3* scriptminCurve;
 		scriptminCurve = ScriptTAnimationCurveVector3::toNative(minCurve);
-		tmpminCurve = scriptminCurve->getInternal();
+		if(scriptminCurve != nullptr)
+			tmpminCurve = scriptminCurve->getInternal();
 		SPtr<TAnimationCurve<Vector3>> tmpmaxCurve;
 		ScriptTAnimationCurveVector3* scriptmaxCurve;
 		scriptmaxCurve = ScriptTAnimationCurveVector3::toNative(maxCurve);
-		tmpmaxCurve = scriptmaxCurve->getInternal();
+		if(scriptmaxCurve != nullptr)
+			tmpmaxCurve = scriptmaxCurve->getInternal();
 		SPtr<TDistribution<Vector3>> instance = bs_shared_ptr_new<TDistribution<Vector3>>(*tmpminCurve, *tmpmaxCurve);
 		new (bs_alloc<ScriptTDistributionVector3>())ScriptTDistributionVector3(managedInstance, instance);
 	}
@@ -304,7 +311,8 @@ namespace bs
 		SPtr<Random> tmpfactor;
 		ScriptRandom* scriptfactor;
 		scriptfactor = ScriptRandom::toNative(factor);
-		tmpfactor = scriptfactor->getInternal();
+		if(scriptfactor != nullptr)
+			tmpfactor = scriptfactor->getInternal();
 		Vector3 tmp__output;
 		tmp__output = thisPtr->getInternal()->evaluate(t, *tmpfactor);
 
@@ -367,7 +375,8 @@ namespace bs
 		SPtr<TAnimationCurve<Vector2>> tmpcurve;
 		ScriptTAnimationCurveVector2* scriptcurve;
 		scriptcurve = ScriptTAnimationCurveVector2::toNative(curve);
-		tmpcurve = scriptcurve->getInternal();
+		if(scriptcurve != nullptr)
+			tmpcurve = scriptcurve->getInternal();
 		SPtr<TDistribution<Vector2>> instance = bs_shared_ptr_new<TDistribution<Vector2>>(*tmpcurve);
 		new (bs_alloc<ScriptTDistributionVector2>())ScriptTDistributionVector2(managedInstance, instance);
 	}
@@ -377,11 +386,13 @@ namespace bs
 		SPtr<TAnimationCurve<Vector2>> tmpminCurve;
 		ScriptTAnimationCurveVector2* scriptminCurve;
 		scriptminCurve = ScriptTAnimationCurveVector2::toNative(minCurve);
-		tmpminCurve = scriptminCurve->getInternal();
+		if(scriptminCurve != nullptr)
+			tmpminCurve = scriptminCurve->getInternal();
 		SPtr<TAnimationCurve<Vector2>> tmpmaxCurve;
 		ScriptTAnimationCurveVector2* scriptmaxCurve;
 		scriptmaxCurve = ScriptTAnimationCurveVector2::toNative(maxCurve);
-		tmpmaxCurve = scriptmaxCurve->getInternal();
+		if(scriptmaxCurve != nullptr)
+			tmpmaxCurve = scriptmaxCurve->getInternal();
 		SPtr<TDistribution<Vector2>> instance = bs_shared_ptr_new<TDistribution<Vector2>>(*tmpminCurve, *tmpmaxCurve);
 		new (bs_alloc<ScriptTDistributionVector2>())ScriptTDistributionVector2(managedInstance, instance);
 	}
@@ -448,7 +459,8 @@ namespace bs
 		SPtr<Random> tmpfactor;
 		ScriptRandom* scriptfactor;
 		scriptfactor = ScriptRandom::toNative(factor);
-		tmpfactor = scriptfactor->getInternal();
+		if(scriptfactor != nullptr)
+			tmpfactor = scriptfactor->getInternal();
 		Vector2 tmp__output;
 		tmp__output = thisPtr->getInternal()->evaluate(t, *tmpfactor);
 

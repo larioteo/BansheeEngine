@@ -77,6 +77,8 @@ namespace BansheeEditor
 
 		/// <summary>Changes the value of the field.</summary>
 		[ShowInInspector]
+		[NotNull]
+		[PassByCopy]
 		[NativeWrapper]
 		public Vector2Distribution Value
 		{

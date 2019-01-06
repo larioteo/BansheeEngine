@@ -60,7 +60,8 @@ namespace bs
 		SPtr<ColorDistribution> tmpvalue;
 		ScriptColorDistribution* scriptvalue;
 		scriptvalue = ScriptColorDistribution::toNative(value);
-		tmpvalue = scriptvalue->getInternal();
+		if(scriptvalue != nullptr)
+			tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIColorDistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);
 	}
 
@@ -100,7 +101,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIColorDistributionField* instance = GUIColorDistributionField::create(*tmplabelText, labelWidth, tmpstyle);
@@ -112,7 +114,8 @@ namespace bs
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
 		scriptlabelText = ScriptHString::toNative(labelText);
-		tmplabelText = scriptlabelText->getInternal();
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);
 		GUIColorDistributionField* instance = GUIColorDistributionField::create(*tmplabelText, tmpstyle);
