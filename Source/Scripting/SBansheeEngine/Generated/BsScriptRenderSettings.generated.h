@@ -70,5 +70,7 @@ namespace bs
 		static void Internal_setoverlayOnly(ScriptRenderSettings* thisPtr, bool value);
 		static bool Internal_getenableSkybox(ScriptRenderSettings* thisPtr);
 		static void Internal_setenableSkybox(ScriptRenderSettings* thisPtr, bool value);
+		static float Internal_getcullDistance(ScriptRenderSettings* thisPtr);
+		static void Internal_setcullDistance(ScriptRenderSettings* thisPtr, float value);
 	};
 }

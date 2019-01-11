@@ -11,7 +11,7 @@ namespace BansheeEngine
     /// <summary>
     /// Changes the editor inspector GUI element of a 64-bit integer to a layer-mask selection drop down. 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class LayerMask : Attribute
     {
         /// <summary>

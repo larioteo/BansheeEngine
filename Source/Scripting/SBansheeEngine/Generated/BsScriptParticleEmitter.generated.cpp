@@ -3,9 +3,28 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "Reflection/BsRTTIType.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterHemisphereShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterCircleShape.generated.h"
 #include "BsScriptParticleEmitterShape.generated.h"
-#include "BsScriptParticleBurst.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterSphereShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterStaticMeshShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterSkinnedMeshShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterBoxShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterConeShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterLineShape.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
+#include "BsScriptParticleEmitterRectShape.generated.h"
 #include "BsScriptTDistribution.generated.h"
+#include "BsScriptParticleBurst.generated.h"
 #include "BsScriptTDistribution.generated.h"
 #include "BsScriptColorDistribution.generated.h"
 #include "BsScriptParticleEmitter.generated.h"
@@ -77,10 +96,34 @@ namespace bs
 	MonoObject* ScriptParticleEmitter::Internal_getShape(ScriptParticleEmitter* thisPtr)
 	{
 		SPtr<ParticleEmitterShape> tmp__output;
-		*tmp__output = *thisPtr->getInternal()->getShape();
+		tmp__output = thisPtr->getInternal()->getShape();
 
 		MonoObject* __output;
-		__output = ScriptParticleEmitterShape::create(tmp__output);
+		if(tmp__output)
+		{
+			if(rtti_is_of_type<ParticleEmitterSphereShape>(tmp__output))
+				__output = ScriptParticleEmitterSphereShape::create(std::static_pointer_cast<ParticleEmitterSphereShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterCircleShape>(tmp__output))
+				__output = ScriptParticleEmitterCircleShape::create(std::static_pointer_cast<ParticleEmitterCircleShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterStaticMeshShape>(tmp__output))
+				__output = ScriptParticleEmitterStaticMeshShape::create(std::static_pointer_cast<ParticleEmitterStaticMeshShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterConeShape>(tmp__output))
+				__output = ScriptParticleEmitterConeShape::create(std::static_pointer_cast<ParticleEmitterConeShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterHemisphereShape>(tmp__output))
+				__output = ScriptParticleEmitterHemisphereShape::create(std::static_pointer_cast<ParticleEmitterHemisphereShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterBoxShape>(tmp__output))
+				__output = ScriptParticleEmitterBoxShape::create(std::static_pointer_cast<ParticleEmitterBoxShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterLineShape>(tmp__output))
+				__output = ScriptParticleEmitterLineShape::create(std::static_pointer_cast<ParticleEmitterLineShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterRectShape>(tmp__output))
+				__output = ScriptParticleEmitterRectShape::create(std::static_pointer_cast<ParticleEmitterRectShape>(tmp__output));
+			else if(rtti_is_of_type<ParticleEmitterSkinnedMeshShape>(tmp__output))
+				__output = ScriptParticleEmitterSkinnedMeshShape::create(std::static_pointer_cast<ParticleEmitterSkinnedMeshShape>(tmp__output));
+			else
+				__output = ScriptParticleEmitterShape::create(tmp__output);
+		}
+		else
+			__output = ScriptParticleEmitterShape::create(tmp__output);
 
 		return __output;
 	}

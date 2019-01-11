@@ -85,7 +85,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptTAnimationCurvefloat>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			array__output.set(i, ScriptTAnimationCurvefloat::create(vec__output[i]));
+			MonoObject* arrayElem__output;
+			arrayElem__output = ScriptTAnimationCurvefloat::create(vec__output[i]);
+			array__output.set(i, arrayElem__output);
 		}
 		__output = array__output.getInternal();
 
@@ -131,7 +133,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptTAnimationCurvefloat>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			array__output.set(i, ScriptTAnimationCurvefloat::create(vec__output[i]));
+			MonoObject* arrayElem__output;
+			arrayElem__output = ScriptTAnimationCurvefloat::create(vec__output[i]);
+			array__output.set(i, arrayElem__output);
 		}
 		__output = array__output.getInternal();
 

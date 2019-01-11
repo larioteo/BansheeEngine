@@ -32,6 +32,7 @@ namespace BansheeEditor
         private bool isExpanded;
         private bool forceUpdate = true;
         private State state;
+        private Type[] instantiableTypes;
 
         /// <summary>
         /// Creates a new inspectable array GUI for the specified property.
@@ -52,16 +53,31 @@ namespace BansheeEditor
             isExpanded = parent.Persistent.GetBool(path + "_Expanded");
 
             // Builds a context menu that lets the user create objects to assign to this field.
-            Type[] types = GetInstantiableTypes(property.InternalType);
-            if (types.Length > 0)
+            instantiableTypes = GetInstantiableTypes(property.InternalType);
+            if (instantiableTypes.Length > 1)
             {
                 createContextMenu = new ContextMenu();
 
-                Array.Sort(types, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
-                foreach (var type in types)
+                Array.Sort(instantiableTypes, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+
+                bool showNamespace = false;
+                string ns = instantiableTypes[0].Namespace;
+                for (int i = 1; i < instantiableTypes.Length; i++)
                 {
-                    createContextMenu.AddItem(type.Namespace + "." + type.Name,
-                        () => property.SetValue(Activator.CreateInstance(type)));
+                    if (instantiableTypes[i].Namespace != ns)
+                    {
+                        showNamespace = true;
+                        break;
+                    }
+                }
+
+                foreach (var type in instantiableTypes)
+                {
+                    string prefix = "";
+                    if (showNamespace)
+                        prefix = type.Namespace + ".";
+
+                    createContextMenu.AddItem(prefix + type.Name, () => property.SetValue(Activator.CreateInstance(type)));
                 }
             }
         }
@@ -292,12 +308,17 @@ namespace BansheeEditor
         private void OnCreateButtonClicked()
         {
             if (createContextMenu == null)
-                return;
+            {
+                if (instantiableTypes.Length > 0)
+                    property.SetValue(Activator.CreateInstance(instantiableTypes[0]));
+            }
+            else
+            {
+                Rect2I bounds = GUIUtility.CalculateBounds(guiCreateBtn, guiInternalTitleLayout);
+                Vector2I position = new Vector2I(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-            Rect2I bounds = GUIUtility.CalculateBounds(guiCreateBtn, guiInternalTitleLayout);
-            Vector2I position = new Vector2I(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-
-            createContextMenu.Open(position, guiInternalTitleLayout);
+                createContextMenu.Open(position, guiInternalTitleLayout);
+            }
         }
 
         /// <summary>

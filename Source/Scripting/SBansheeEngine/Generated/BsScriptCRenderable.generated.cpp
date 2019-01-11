@@ -24,6 +24,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getMaterial", (void*)&ScriptCRenderable::Internal_getMaterial);
 		metaData.scriptClass->addInternalCall("Internal_setMaterials", (void*)&ScriptCRenderable::Internal_setMaterials);
 		metaData.scriptClass->addInternalCall("Internal_getMaterials", (void*)&ScriptCRenderable::Internal_getMaterials);
+		metaData.scriptClass->addInternalCall("Internal_setCullDistanceFactor", (void*)&ScriptCRenderable::Internal_setCullDistanceFactor);
+		metaData.scriptClass->addInternalCall("Internal_getCullDistanceFactor", (void*)&ScriptCRenderable::Internal_getCullDistanceFactor);
 		metaData.scriptClass->addInternalCall("Internal_setLayer", (void*)&ScriptCRenderable::Internal_setLayer);
 		metaData.scriptClass->addInternalCall("Internal_getLayer", (void*)&ScriptCRenderable::Internal_getLayer);
 		metaData.scriptClass->addInternalCall("Internal_getBounds", (void*)&ScriptCRenderable::Internal_getBounds);
@@ -128,6 +130,22 @@ namespace bs
 				array__output.set(i, nullptr);
 		}
 		__output = array__output.getInternal();
+
+		return __output;
+	}
+
+	void ScriptCRenderable::Internal_setCullDistanceFactor(ScriptCRenderable* thisPtr, float factor)
+	{
+		thisPtr->getHandle()->setCullDistanceFactor(factor);
+	}
+
+	float ScriptCRenderable::Internal_getCullDistanceFactor(ScriptCRenderable* thisPtr)
+	{
+		float tmp__output;
+		tmp__output = thisPtr->getHandle()->getCullDistanceFactor();
+
+		float __output;
+		__output = tmp__output;
 
 		return __output;
 	}

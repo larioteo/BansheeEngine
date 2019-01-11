@@ -3,9 +3,9 @@
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
 #include "Image/BsColor.h"
+#include "../../../bsf/Source/Foundation/bsfCore/RenderAPI/BsViewport.h"
 #include "Math/BsRect2.h"
 #include "Math/BsRect2I.h"
-#include "../../../bsf/Source/Foundation/bsfCore/RenderAPI/BsViewport.h"
 
 namespace bs
 {

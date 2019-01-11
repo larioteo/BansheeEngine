@@ -23,6 +23,8 @@ namespace bs
 		static MonoObject* Internal_getMaterial(ScriptCRenderable* thisPtr, uint32_t idx);
 		static void Internal_setMaterials(ScriptCRenderable* thisPtr, MonoArray* materials);
 		static MonoArray* Internal_getMaterials(ScriptCRenderable* thisPtr);
+		static void Internal_setCullDistanceFactor(ScriptCRenderable* thisPtr, float factor);
+		static float Internal_getCullDistanceFactor(ScriptCRenderable* thisPtr);
 		static void Internal_setLayer(ScriptCRenderable* thisPtr, uint64_t layer);
 		static uint64_t Internal_getLayer(ScriptCRenderable* thisPtr);
 		static void Internal_getBounds(ScriptCRenderable* thisPtr, Bounds* __output);

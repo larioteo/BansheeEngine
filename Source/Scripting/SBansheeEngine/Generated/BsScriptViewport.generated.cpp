@@ -3,8 +3,11 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/RenderAPI/BsViewport.h"
+#include "Reflection/BsRTTIType.h"
 #include "Wrappers/BsScriptColor.h"
 #include "BsScriptRenderTarget.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/RenderAPI/BsRenderTexture.h"
+#include "BsScriptRenderTexture.generated.h"
 #include "BsScriptViewport.generated.h"
 
 namespace bs
@@ -60,7 +63,15 @@ namespace bs
 		tmp__output = thisPtr->getInternal()->getTarget();
 
 		MonoObject* __output;
-		__output = ScriptRenderTarget::create(tmp__output);
+		if(tmp__output)
+		{
+			if(rtti_is_of_type<RenderTexture>(tmp__output))
+				__output = ScriptRenderTexture::create(std::static_pointer_cast<RenderTexture>(tmp__output));
+			else
+				__output = ScriptRenderTarget::create(tmp__output);
+		}
+		else
+			__output = ScriptRenderTarget::create(tmp__output);
 
 		return __output;
 	}

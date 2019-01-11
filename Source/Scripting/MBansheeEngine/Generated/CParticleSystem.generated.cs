@@ -73,6 +73,7 @@ namespace BansheeEngine
 		/// match camera layer in order for the camera to render the component.
 		/// </summary>
 		[ShowInInspector]
+		[LayerMask]
 		[NativeWrapper]
 		public ulong Layer
 		{

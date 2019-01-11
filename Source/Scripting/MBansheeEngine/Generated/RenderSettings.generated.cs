@@ -255,6 +255,18 @@ namespace BansheeEngine
 			set { Internal_setenableSkybox(mCachedPtr, value); }
 		}
 
+		/// <summary>
+		/// The absolute base cull-distance for objects rendered through this camera in world units. Objects will use this  
+		/// distance and apply their own factor to it to determine whether they should be visible.
+		/// </summary>
+		[ShowInInspector]
+		[NativeWrapper]
+		public float CullDistance
+		{
+			get { return Internal_getcullDistance(mCachedPtr); }
+			set { Internal_setcullDistance(mCachedPtr, value); }
+		}
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_RenderSettings(RenderSettings managedInstance);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -337,6 +349,10 @@ namespace BansheeEngine
 		private static extern bool Internal_getenableSkybox(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setenableSkybox(IntPtr thisPtr, bool value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern float Internal_getcullDistance(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setcullDistance(IntPtr thisPtr, float value);
 	}
 
 	/** @} */

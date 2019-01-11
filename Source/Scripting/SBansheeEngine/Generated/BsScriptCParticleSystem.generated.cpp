@@ -3,10 +3,29 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Components/BsCParticleSystem.h"
+#include "Reflection/BsRTTIType.h"
 #include "BsScriptParticleSystemSettings.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleOrbit.generated.h"
 #include "BsScriptParticleGpuSimulationSettings.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleGravity.generated.h"
 #include "BsScriptParticleEmitter.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleTextureAnimation.generated.h"
 #include "BsScriptParticleEvolver.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleVelocity.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleForce.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleColor.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleSize.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleRotation.generated.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEvolver.h"
+#include "BsScriptParticleCollisions.generated.h"
 
 namespace bs
 {
@@ -100,7 +119,9 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptParticleEmitter>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			array__output.set(i, ScriptParticleEmitter::create(vec__output[i]));
+			MonoObject* arrayElem__output;
+			arrayElem__output = ScriptParticleEmitter::create(vec__output[i]);
+			array__output.set(i, arrayElem__output);
 		}
 		__output = array__output.getInternal();
 
@@ -135,7 +156,33 @@ namespace bs
 		ScriptArray array__output = ScriptArray::create<ScriptParticleEvolver>(arraySize__output);
 		for(int i = 0; i < arraySize__output; i++)
 		{
-			array__output.set(i, ScriptParticleEvolver::create(vec__output[i]));
+			MonoObject* arrayElem__output;
+			if(vec__output[i])
+			{
+				if(rtti_is_of_type<ParticleVelocity>(vec__output[i]))
+					arrayElem__output = ScriptParticleVelocity::create(std::static_pointer_cast<ParticleVelocity>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleGravity>(vec__output[i]))
+					arrayElem__output = ScriptParticleGravity::create(std::static_pointer_cast<ParticleGravity>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleForce>(vec__output[i]))
+					arrayElem__output = ScriptParticleForce::create(std::static_pointer_cast<ParticleForce>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleTextureAnimation>(vec__output[i]))
+					arrayElem__output = ScriptParticleTextureAnimation::create(std::static_pointer_cast<ParticleTextureAnimation>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleOrbit>(vec__output[i]))
+					arrayElem__output = ScriptParticleOrbit::create(std::static_pointer_cast<ParticleOrbit>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleColor>(vec__output[i]))
+					arrayElem__output = ScriptParticleColor::create(std::static_pointer_cast<ParticleColor>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleSize>(vec__output[i]))
+					arrayElem__output = ScriptParticleSize::create(std::static_pointer_cast<ParticleSize>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleRotation>(vec__output[i]))
+					arrayElem__output = ScriptParticleRotation::create(std::static_pointer_cast<ParticleRotation>(vec__output[i]));
+				else if(rtti_is_of_type<ParticleCollisions>(vec__output[i]))
+					arrayElem__output = ScriptParticleCollisions::create(std::static_pointer_cast<ParticleCollisions>(vec__output[i]));
+				else
+					arrayElem__output = ScriptParticleEvolver::create(vec__output[i]);
+			}
+			else
+				arrayElem__output = ScriptParticleEvolver::create(vec__output[i]);
+			array__output.set(i, arrayElem__output);
 		}
 		__output = array__output.getInternal();
 

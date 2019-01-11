@@ -63,6 +63,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setoverlayOnly", (void*)&ScriptRenderSettings::Internal_setoverlayOnly);
 		metaData.scriptClass->addInternalCall("Internal_getenableSkybox", (void*)&ScriptRenderSettings::Internal_getenableSkybox);
 		metaData.scriptClass->addInternalCall("Internal_setenableSkybox", (void*)&ScriptRenderSettings::Internal_setenableSkybox);
+		metaData.scriptClass->addInternalCall("Internal_getcullDistance", (void*)&ScriptRenderSettings::Internal_getcullDistance);
+		metaData.scriptClass->addInternalCall("Internal_setcullDistance", (void*)&ScriptRenderSettings::Internal_setcullDistance);
 
 	}
 
@@ -446,5 +448,21 @@ namespace bs
 	void ScriptRenderSettings::Internal_setenableSkybox(ScriptRenderSettings* thisPtr, bool value)
 	{
 		thisPtr->getInternal()->enableSkybox = value;
+	}
+
+	float ScriptRenderSettings::Internal_getcullDistance(ScriptRenderSettings* thisPtr)
+	{
+		float tmp__output;
+		tmp__output = thisPtr->getInternal()->cullDistance;
+
+		float __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	void ScriptRenderSettings::Internal_setcullDistance(ScriptRenderSettings* thisPtr, float value)
+	{
+		thisPtr->getInternal()->cullDistance = value;
 	}
 }

@@ -43,6 +43,15 @@ namespace BansheeEngine
 			set { Internal_setMaterials(mCachedPtr, value); }
 		}
 
+		/// <summary>Factor to be applied to the cull distance set in the camera's render settings.</summary>
+		[ShowInInspector]
+		[NativeWrapper]
+		public float CullDistance
+		{
+			get { return Internal_getCullDistanceFactor(mCachedPtr); }
+			set { Internal_setCullDistanceFactor(mCachedPtr, value); }
+		}
+
 		/// <summary>
 		/// Determines the layer bitfield that controls whether a renderable is considered visible in a specific camera.  
 		/// Renderable layer must match camera layer in order for the camera to render the component.
@@ -106,6 +115,10 @@ namespace BansheeEngine
 		private static extern void Internal_setMaterials(IntPtr thisPtr, RRef<Material>[] materials);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern RRef<Material>[] Internal_getMaterials(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setCullDistanceFactor(IntPtr thisPtr, float factor);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern float Internal_getCullDistanceFactor(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setLayer(IntPtr thisPtr, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]

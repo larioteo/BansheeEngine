@@ -101,6 +101,7 @@
     <Compile Include="Windows\Inspector\InspectableColorGradient.cs" />
     <Compile Include="Windows\Inspector\InspectableCurve.cs" />
     <Compile Include="Windows\Inspector\InspectableEnum.cs" />
+    <Compile Include="Windows\Inspector\InspectableEuler.cs" />
     <Compile Include="Windows\Inspector\InspectableFloatDistribution.cs" />
     <Compile Include="Windows\Inspector\InspectableLayerMask.cs" />
     <Compile Include="Windows\Inspector\InspectableQuaternion.cs" />

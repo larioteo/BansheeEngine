@@ -2,8 +2,8 @@
 
 #include "BsScriptEnginePrerequisites.h"
 #include "BsScriptObject.h"
-#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
+#include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleEmitter.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 
