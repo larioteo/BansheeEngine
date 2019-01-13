@@ -1,7 +1,7 @@
 //********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2018 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "GUI/BsGUIColorDistributionField.h"
-#include "GUI/BsGUILayout.h"
+#include "GUI/BsGUILayoutY.h"
 #include "GUI/BsGUILabel.h"
 #include "GUI/BsGUIColorField.h"
 #include "GUI/BsGUIColorGradientField.h"
@@ -14,6 +14,18 @@ using namespace std::placeholders;
 
 namespace bs
 {
+	/** Style type name for the internal color fields. */
+	static constexpr const char* COLOR_FIELD_STYLE_TYPE = "ColorField";
+
+	/** Style type name for the internal color gradient field. */
+	static constexpr const char* COLOR_GRADIENT_FIELD_STYLE_TYPE = "GradientField";
+
+	/** Style type name for the internal drop down button. */
+	static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
+
+	/** Spacing between two internal elements, in pixels. */
+	static constexpr UINT32 ELEM_SPACING = 5;
+
 	GUIColorDistributionField::GUIColorDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
@@ -113,40 +125,75 @@ namespace bs
 
 		if(mMaxGradientField)
 			mMaxGradientField->setTint(color);
+
+		for(auto& entry : mLabels)
+		{
+			if(entry)
+				entry->setTint(color);
+		}
 	}
 
 	Vector2I GUIColorDistributionField::_getOptimalSize() const
 	{
-		Vector2I optimalsize = mDropDownButton->_getOptimalSize();
-
-		if(mLabel)
-		{
-			optimalsize.x += mLabel->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mLabel->_getOptimalSize().y);
-		}
+		Vector2I optimalsize = Vector2I::ZERO;
 
 		if(mMinColorField)
 		{
-			optimalsize.x += mMinColorField->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMinColorField->_getOptimalSize().y);
+			Vector2I elemOptimal = mMinColorField->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
 		}
 
 		if(mMaxColorField)
 		{
-			optimalsize.x += mMaxColorField->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMaxColorField->_getOptimalSize().y);
+			Vector2I elemOptimal = mMaxColorField->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
+
+			optimalsize.y += ELEM_SPACING;
 		}
 
 		if(mMinGradientField)
 		{
-			optimalsize.x += mMinGradientField->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMinGradientField->_getOptimalSize().y);
+			Vector2I elemOptimal = mMinGradientField->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
 		}
 
 		if(mMaxGradientField)
 		{
-			optimalsize.x += mMaxGradientField->_getOptimalSize().x;
-			optimalsize.y = std::max(optimalsize.y, mMaxGradientField->_getOptimalSize().y);
+			Vector2I elemOptimal = mMaxGradientField->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
+
+			optimalsize.y += ELEM_SPACING;
+		}
+
+		for (auto& entry : mLabels)
+		{
+			if (!entry)
+				continue;
+
+			Vector2I elemOptimal = entry->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
+		}
+
+		Vector2I dropDownSize = mDropDownButton->_calculateLayoutSizeRange().optimal;
+		optimalsize.x += dropDownSize.x;
+		optimalsize.y = std::max(optimalsize.y, dropDownSize.y);
+
+		if (mLabel)
+		{
+			Vector2I elemOptimal = mLabel->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x += elemOptimal.x;
+			optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
 		}
 
 		return optimalsize;
@@ -180,6 +227,7 @@ namespace bs
 		mLayout->clear();
 		mLayout->addElement(mLabel);
 
+		GUILayout* valueLayout = mLayout->addNewElement<GUILayoutY>();
 		switch (mPropertyType)
 		{
 		default:
@@ -188,15 +236,16 @@ namespace bs
 			mMaxColorField = nullptr;
 			mMinGradientField = nullptr;
 			mMaxGradientField = nullptr;
+			mLabels = { nullptr, nullptr };
 
 			mMinColorField->setValue(mMinConstant);
 			mMinColorField->onClicked.connect([this]() { onMinClicked(); });
 
-			mLayout->addElement(mMinColorField);
+			valueLayout->addElement(mMinColorField);
 			break;
 		case PDT_RandomRange: 
-			mMinColorField = GUIColorField::create(HString("Min."), 40, GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
-			mMaxColorField = GUIColorField::create(HString("Max."), 40, GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
+			mMinColorField = GUIColorField::create(GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
+			mMaxColorField = GUIColorField::create(GUIOptions(), getSubStyleName(COLOR_FIELD_STYLE_TYPE));
 			mMinGradientField = nullptr;
 			mMaxGradientField = nullptr;
 
@@ -206,38 +255,42 @@ namespace bs
 			mMaxColorField->setValue(mMaxConstant);
 			mMaxColorField->onClicked.connect([this]() { onMaxClicked(); });
 
-			mLayout->addElement(mMinColorField);
-			mLayout->addElement(mMaxColorField);
+			mLabels[0] = valueLayout->addNewElement<GUILabel>(HString("Min."), "HeaderLight");
+			valueLayout->addElement(mMinColorField);
+			valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
+			mLabels[1] = valueLayout->addNewElement<GUILabel>(HString("Max."), "HeaderLight");
+			valueLayout->addElement(mMaxColorField);
 			break;
 		case PDT_Curve: 
 			mMinColorField = nullptr;
 			mMaxColorField = nullptr;
-			mMinGradientField = GUIColorGradientField::create(HString("Gradient"), 
-				getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
+			mMinGradientField = GUIColorGradientField::create(getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
 			mMaxGradientField = nullptr;
+			mLabels = { nullptr, nullptr };
 
 			mMinGradientField->setValue(mMinGradient);
 			mMinGradientField->onClicked.connect([this](){ onMinClicked(); });
 
-			mLayout->addElement(mMinGradientField);
+			valueLayout->addElement(mMinGradientField);
 			break;
 		case PDT_RandomCurveRange: 
 			mMinColorField = nullptr;
 			mMaxColorField = nullptr;
-			mMinGradientField = GUIColorGradientField::create(HString("Min. "),
-				getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
+			mMinGradientField = GUIColorGradientField::create(getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
 
 			mMinGradientField->setValue(mMinGradient);
 			mMinGradientField->onClicked.connect([this](){ onMinClicked(); });
 
-			mMaxGradientField = GUIColorGradientField::create(HString("Max. "),
-				getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
+			mMaxGradientField = GUIColorGradientField::create(getSubStyleName(COLOR_GRADIENT_FIELD_STYLE_TYPE));
 
 			mMaxGradientField->setValue(mMaxGradient);
 			mMaxGradientField->onClicked.connect([this](){ onMaxClicked(); });
 
-			mLayout->addElement(mMinGradientField);
-			mLayout->addElement(mMaxGradientField);
+			mLabels[0] = valueLayout->addNewElement<GUILabel>(HString("Min."), "HeaderLight");
+			valueLayout->addElement(mMinGradientField);
+			valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
+			mLabels[1] = valueLayout->addNewElement<GUILabel>(HString("Max."), "HeaderLight");
+			valueLayout->addElement(mMaxGradientField);
 			break;
 		}
 

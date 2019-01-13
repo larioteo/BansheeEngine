@@ -20,6 +20,32 @@ namespace BansheeEditor
 		protected GUICurvesField() { }
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
+		/// <param name="drawOptions">Options that control which additional curve elements to draw.</param>
+		/// <param name="labelContent">Content to display in the editor field label.</param>
+		/// <param name="labelWidth">Width of the label in pixels.</param>
+		/// <param name="style">
+		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
+		/// If not specified default style is used.
+		/// </param>
+		public GUICurvesField(CurveDrawOptions drawOptions, GUIContent labelContent, uint labelWidth, string style = "")
+		{
+			Internal_create(this, drawOptions, ref labelContent, labelWidth, style);
+		}
+
+		/// <summary>Creates a new GUI editor field with a label.</summary>
+		/// <param name="drawOptions">Options that control which additional curve elements to draw.</param>
+		/// <param name="labelText">String to display in the editor field label.</param>
+		/// <param name="labelWidth">Width of the label in pixels.</param>
+		/// <param name="style">
+		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
+		/// If not specified default style is used.
+		/// </param>
+		public GUICurvesField(CurveDrawOptions drawOptions, LocString labelText, uint labelWidth, string style = "")
+		{
+			Internal_create0(this, drawOptions, labelText, labelWidth, style);
+		}
+
+		/// <summary>Creates a new GUI editor field with a label.</summary>
 		/// <param name="labelContent">Content to display in the editor field label.</param>
 		/// <param name="labelWidth">Width of the label in pixels.</param>
 		/// <param name="style">
@@ -28,7 +54,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(GUIContent labelContent, uint labelWidth, string style = "")
 		{
-			Internal_create(this, ref labelContent, labelWidth, style);
+			Internal_create1(this, ref labelContent, labelWidth, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -39,7 +65,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(GUIContent labelContent, string style = "")
 		{
-			Internal_create0(this, ref labelContent, style);
+			Internal_create2(this, ref labelContent, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -51,7 +77,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(LocString labelText, uint labelWidth, string style = "")
 		{
-			Internal_create1(this, labelText, labelWidth, style);
+			Internal_create3(this, labelText, labelWidth, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -62,7 +88,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(LocString labelText, string style = "")
 		{
-			Internal_create2(this, labelText, style);
+			Internal_create4(this, labelText, style);
 		}
 
 		/// <summary>Creates a new GUI editor field without a label.</summary>
@@ -72,7 +98,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(string style = "")
 		{
-			Internal_create3(this, style);
+			Internal_create5(this, style);
 		}
 
 		/// <summary>
@@ -114,6 +140,14 @@ namespace BansheeEditor
 			get { return Internal_getMaxCurve(mCachedPtr); }
 		}
 
+		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
+		[ShowInInspector]
+		[NativeWrapper]
+		public uint Padding
+		{
+			set { Internal_setPadding(mCachedPtr, value); }
+		}
+
 		/// <summary>Triggered when the user clicks on the GUI element.</summary>
 		partial void OnClicked();
 
@@ -129,6 +163,27 @@ namespace BansheeEditor
 			Internal_setCurveRange(mCachedPtr, curveA, curveB);
 		}
 
+		/// <summary>Changes the visible range that the GUI element displays.</summary>
+		/// <param name="xRange">Range of the horizontal area. Displayed area will range from [0, xRange].</param>
+		/// <param name="yRange">Range of the vertical area. Displayed area will range from [-yRange * 0.5, yRange * 0.5]</param>
+		public void SetRange(float xRange, float yRange)
+		{
+			Internal_setRange(mCachedPtr, xRange, yRange);
+		}
+
+		/// <summary>Returns the offset at which the displayed timeline values start at.</summary>
+		/// <param name="offset">Value to start the timeline values at, where x = time, y = value.</param>
+		public void SetOffset(Vector2 offset)
+		{
+			Internal_setOffset(mCachedPtr, ref offset);
+		}
+
+		/// <summary>Centers and zooms the view to fully display the provided set of curves.</summary>
+		public void CenterAndZoom()
+		{
+			Internal_centerAndZoom(mCachedPtr);
+		}
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setCurve(IntPtr thisPtr, AnimationCurve curve);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -140,15 +195,27 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern AnimationCurve Internal_getMaxCurve(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_setRange(IntPtr thisPtr, float xRange, float yRange);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create0(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
+		private static extern void Internal_setOffset(IntPtr thisPtr, ref Vector2 offset);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUICurvesField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_centerAndZoom(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create2(GUICurvesField managedInstance, LocString labelText, string style);
+		private static extern void Internal_setPadding(IntPtr thisPtr, uint padding);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create3(GUICurvesField managedInstance, string style);
+		private static extern void Internal_create(GUICurvesField managedInstance, CurveDrawOptions drawOptions, ref GUIContent labelContent, uint labelWidth, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create0(GUICurvesField managedInstance, CurveDrawOptions drawOptions, LocString labelText, uint labelWidth, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create1(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create2(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create3(GUICurvesField managedInstance, LocString labelText, uint labelWidth, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create4(GUICurvesField managedInstance, LocString labelText, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create5(GUICurvesField managedInstance, string style);
 		private void Internal_onClicked()
 		{
 			OnClicked();

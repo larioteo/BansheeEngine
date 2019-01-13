@@ -958,6 +958,11 @@
             "Path": "CurveBg.png",
             "SpriteUUID": "fd9eebd6-48d6-13d8-a2ae-48d6080e2142",
             "TextureUUID": "a00466ae-43c2-5460-b49d-43c2f66fe13a"
+        },
+        {
+            "Path": "HeaderLightBg.png",
+            "SpriteUUID": "cc246361-4f95-e188-77bf-4f953134f4cd",
+            "TextureUUID": "12d8705e-4da4-0197-d3a4-4da4eb961b30"
         }
     ],
     "SplashScreen": {

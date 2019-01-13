@@ -620,7 +620,7 @@
             "bottom": 4,
             "left": 4,
             "right": 4,
-            "top": 4
+            "top": 5
         },
         "fixedHeight": true,
         "focused": {
@@ -633,7 +633,7 @@
             "texture": "InputBoxActive.png"
         },
         "font": "arial.ttf",
-        "height": 19,
+        "height": 21,
         "hover": {
             "textColor": {
                 "a": 1.0,
@@ -3217,7 +3217,7 @@
             },
             {
                 "name": "CurvesField",
-                "style": "GUICurves"
+                "style": "GUICurvesField"
             },
             {
                 "name": "DropDownButton",
@@ -3240,8 +3240,12 @@
                 "style": "GUIVector2Field"
             },
             {
-                "name": "CurvesField",
-                "style": "GUICurves"
+                "name": "CurvesFieldX",
+                "style": "GUICurvesFieldX"
+            },
+            {
+                "name": "CurvesFieldY",
+                "style": "GUICurvesFieldY"
             },
             {
                 "name": "DropDownButton",
@@ -3264,8 +3268,16 @@
                 "style": "GUIVector3Field"
             },
             {
-                "name": "CurvesField",
-                "style": "GUICurves"
+                "name": "CurvesFieldX",
+                "style": "GUICurvesFieldX"
+            },
+            {
+                "name": "CurvesFieldY",
+                "style": "GUICurvesFieldY"
+            },
+            {
+                "name": "CurvesFieldZ",
+                "style": "GUICurvesFieldZ"
             },
             {
                 "name": "DropDownButton",
@@ -3295,8 +3307,7 @@
     },
     {
         "name": "GUIColorDistributionField",
-        "fixedHeight": true,
-        "height": 21,
+        "minHeight": 21,
         "minWidth": 30,
         "subStyles": [
             {
@@ -3334,8 +3345,8 @@
         }
     },
     {
-        "fixedHeight": true,
-        "height": 19,
+        "name": "ButtonAddOnBlue",
+        "minHeight": 6,
 		"fixedWidth": true,
 		"width": 15,
         "border": {
@@ -3359,15 +3370,14 @@
             },
             "texture": "ButtonAddOnBlue.png"
         },
-        "name": "ButtonAddOnBlue",
         "textHorzAlign": 1,
         "textVertAlign": 1,
         "font": "arialBold.ttf",
         "fontSize": 8
     },
     {
-        "fixedHeight": true,
-        "height": 19,
+        "name": "ButtonAddOnGreen",
+        "minHeight": 6,
 		"fixedWidth": true,
 		"width": 15,
         "border": {
@@ -3391,15 +3401,14 @@
             },
             "texture": "ButtonAddOnGreen.png"
         },
-        "name": "ButtonAddOnGreen",
         "textHorzAlign": 1,
         "textVertAlign": 1,
         "font": "arialBold.ttf",
         "fontSize": 8
     },
     {
-        "fixedHeight": true,
-        "height": 19,
+        "name": "ButtonAddOnRed",
+        "minHeight": 6,
 		"fixedWidth": true,
 		"width": 15,
         "border": {
@@ -3423,15 +3432,14 @@
             },
             "texture": "ButtonAddOnRed.png"
         },
-        "name": "ButtonAddOnRed",
         "textHorzAlign": 1,
         "textVertAlign": 1,
         "font": "arialBold.ttf",
         "fontSize": 8
     },
     {
-        "fixedHeight": true,
-        "height": 19,
+        "name": "ButtonAddOnGray",
+        "minHeight": 6,
 		"fixedWidth": true,
 		"width": 15,
         "border": {
@@ -3455,13 +3463,13 @@
             },
             "texture": "ButtonAddOnGray.png"
         },
-        "name": "ButtonAddOnGray",
         "textHorzAlign": 1,
         "textVertAlign": 1,
         "font": "arialBold.ttf",
         "fontSize": 8
     },
     {
+	    "name": "CurveBg",
         "minHeight": 4,
 		"minWidth": 4,
         "border": {
@@ -3472,7 +3480,111 @@
         },
         "normal": {
             "texture": "CurveBg.png"
+        }
+    },
+	{
+        "name": "GUICurvesField",
+        "minHeight": 40,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "EditorFieldLabel",
+                "style": "EditorFieldLabel"
+            },
+            {
+                "name": "EditorFieldCurves",
+                "style": "GUICurves"
+            }
+        ]
+    },
+	{
+        "name": "GUICurvesFieldX",
+        "minHeight": 40,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "EditorFieldLabel",
+                "style": "ButtonAddOnRed"
+            },
+            {
+                "name": "EditorFieldCurves",
+                "style": "GUICurves"
+            }
+        ]
+    },
+	{
+        "name": "GUICurvesFieldY",
+        "minHeight": 40,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "EditorFieldLabel",
+                "style": "ButtonAddOnGreen"
+            },
+            {
+                "name": "EditorFieldCurves",
+                "style": "GUICurves"
+            }
+        ]
+    },
+	{
+        "name": "GUICurvesFieldZ",
+        "minHeight": 40,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "EditorFieldLabel",
+                "style": "ButtonAddOnBlue"
+            },
+            {
+                "name": "EditorFieldCurves",
+                "style": "GUICurves"
+            }
+        ]
+    },
+	{
+        "name": "GUICurvesFieldGray",
+        "minHeight": 40,
+        "minWidth": 30,
+        "subStyles": [
+            {
+                "name": "EditorFieldLabel",
+                "style": "ButtonAddOnGray"
+            },
+            {
+                "name": "EditorFieldCurves",
+                "style": "GUICurves"
+            }
+        ]
+    },
+    {
+        "name": "HeaderLight",
+		"fixedHeight": true,
+        "height": 12,
+        "border": {
+            "bottom": 1,
+            "left": 1,
+            "right": 1,
+            "top": 4
         },
-        "name": "CurveBg"
+        "margins": {
+            "bottom": 2,
+            "left": 2,
+            "right": 2,
+            "top": 2
+        },
+        "normal": {
+            "textColor": {
+                "a": 1.0,
+                "b": 0.7,
+                "g": 0.7,
+                "r": 0.7
+            },
+            "texture": "HeaderLightBg.png"
+        },
+        "textHorzAlign": 1,
+        "textVertAlign": 1,
+        "font": "arialBold.ttf",
+        "fontSize": 8
     }
 ]

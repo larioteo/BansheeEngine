@@ -8,6 +8,7 @@
 #include "GUI/BsGUICanvas.h"
 #include "Math/BsLine2.h"
 #include "GUI/BsGUIWidget.h"
+#include "Image/BsPixelUtil.h"
 
 namespace bs
 {
@@ -22,7 +23,7 @@ namespace bs
 
 	const String& GUICurves::getGUITypeName()
 	{
-		static String name = "Curves";
+		static String name = "GUICurves";
 		return name;
 	}
 
@@ -746,19 +747,41 @@ namespace bs
 			mTickHandler.setRange(mOffset, mOffset + getRangeWithPadding(), getDrawableWidth() + mPadding);
 
 			// Draw vertical frame markers
+			struct TickLevel
+			{
+				float t;
+				float strength;
+			};
+
+			struct TickComparator
+			{
+				bool operator()(const TickLevel& a, const TickLevel& b)
+				{
+					if (fabs(a.t - b.t) > 0.001f)
+						return a.t < b.t;
+
+					return false;
+				}
+			};
+
+			Set<TickLevel, TickComparator> uniqueTicks;
+
 			const INT32 numTickLevels = (INT32)mTickHandler.getNumLevels();
-			for (INT32 i = numTickLevels - 1; i >= 0; i--)
+			for (INT32 i = 0; i < numTickLevels; i++)
 			{
 				Vector<float> ticks = mTickHandler.getTicks(i);
 				const float strength = mTickHandler.getLevelStrength(i);
 
 				for (UINT32 j = 0; j < (UINT32)ticks.size(); j++)
-				{
-					Color color = COLOR_DARK_GRAY;
-					color.a *= strength;
+					uniqueTicks.insert({ticks[j], strength });
+			}
 
-					drawFrameMarker(ticks[j], color, false);
-				}
+			for(auto& entry : uniqueTicks)
+			{
+				Color color = PixelUtil::linearToSRGB(COLOR_DARK_GRAY);
+				color *= entry.strength;
+
+				drawFrameMarker(entry.t, color, false);
 			}
 
 			// Draw center line

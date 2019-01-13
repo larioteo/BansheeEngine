@@ -5,6 +5,7 @@
 #include "../../../EditorCore/GUI/BsGUICurvesField.h"
 #include "BsScriptHString.generated.h"
 #include "BsScriptTAnimationCurve.generated.h"
+#include "Wrappers/BsScriptVector.h"
 #include "BsScriptGUIContent.generated.h"
 #include "../../../EditorCore/GUI/BsGUICurvesField.h"
 
@@ -25,11 +26,17 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getCurve", (void*)&ScriptGUICurvesField::Internal_getCurve);
 		metaData.scriptClass->addInternalCall("Internal_getMinCurve", (void*)&ScriptGUICurvesField::Internal_getMinCurve);
 		metaData.scriptClass->addInternalCall("Internal_getMaxCurve", (void*)&ScriptGUICurvesField::Internal_getMaxCurve);
+		metaData.scriptClass->addInternalCall("Internal_setRange", (void*)&ScriptGUICurvesField::Internal_setRange);
+		metaData.scriptClass->addInternalCall("Internal_setOffset", (void*)&ScriptGUICurvesField::Internal_setOffset);
+		metaData.scriptClass->addInternalCall("Internal_centerAndZoom", (void*)&ScriptGUICurvesField::Internal_centerAndZoom);
+		metaData.scriptClass->addInternalCall("Internal_setPadding", (void*)&ScriptGUICurvesField::Internal_setPadding);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUICurvesField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUICurvesField::Internal_create0);
 		metaData.scriptClass->addInternalCall("Internal_create1", (void*)&ScriptGUICurvesField::Internal_create1);
 		metaData.scriptClass->addInternalCall("Internal_create2", (void*)&ScriptGUICurvesField::Internal_create2);
 		metaData.scriptClass->addInternalCall("Internal_create3", (void*)&ScriptGUICurvesField::Internal_create3);
+		metaData.scriptClass->addInternalCall("Internal_create4", (void*)&ScriptGUICurvesField::Internal_create4);
+		metaData.scriptClass->addInternalCall("Internal_create5", (void*)&ScriptGUICurvesField::Internal_create5);
 
 		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "")->getThunk();
 	}
@@ -96,7 +103,50 @@ namespace bs
 		return __output;
 	}
 
-	void ScriptGUICurvesField::Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)
+	void ScriptGUICurvesField::Internal_setRange(ScriptGUICurvesField* thisPtr, float xRange, float yRange)
+	{
+		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setRange(xRange, yRange);
+	}
+
+	void ScriptGUICurvesField::Internal_setOffset(ScriptGUICurvesField* thisPtr, Vector2* offset)
+	{
+		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setOffset(*offset);
+	}
+
+	void ScriptGUICurvesField::Internal_centerAndZoom(ScriptGUICurvesField* thisPtr)
+	{
+		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->centerAndZoom();
+	}
+
+	void ScriptGUICurvesField::Internal_setPadding(ScriptGUICurvesField* thisPtr, uint32_t padding)
+	{
+		static_cast<GUICurvesField*>(thisPtr->getGUIElement())->setPadding(padding);
+	}
+
+	void ScriptGUICurvesField::Internal_create(MonoObject* managedInstance, CurveDrawOption drawOptions, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)
+	{
+		GUIContent tmplabelContent;
+		tmplabelContent = ScriptGUIContent::fromInterop(*labelContent);
+		String tmpstyle;
+		tmpstyle = MonoUtil::monoToString(style);
+		GUICurvesField* instance = GUICurvesField::create(drawOptions, tmplabelContent, labelWidth, tmpstyle);
+		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
+	}
+
+	void ScriptGUICurvesField::Internal_create0(MonoObject* managedInstance, CurveDrawOption drawOptions, MonoObject* labelText, uint32_t labelWidth, MonoString* style)
+	{
+		SPtr<HString> tmplabelText;
+		ScriptHString* scriptlabelText;
+		scriptlabelText = ScriptHString::toNative(labelText);
+		if(scriptlabelText != nullptr)
+			tmplabelText = scriptlabelText->getInternal();
+		String tmpstyle;
+		tmpstyle = MonoUtil::monoToString(style);
+		GUICurvesField* instance = GUICurvesField::create(drawOptions, *tmplabelText, labelWidth, tmpstyle);
+		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
+	}
+
+	void ScriptGUICurvesField::Internal_create1(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)
 	{
 		GUIContent tmplabelContent;
 		tmplabelContent = ScriptGUIContent::fromInterop(*labelContent);
@@ -106,7 +156,7 @@ namespace bs
 		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
 	}
 
-	void ScriptGUICurvesField::Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style)
+	void ScriptGUICurvesField::Internal_create2(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style)
 	{
 		GUIContent tmplabelContent;
 		tmplabelContent = ScriptGUIContent::fromInterop(*labelContent);
@@ -116,7 +166,7 @@ namespace bs
 		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
 	}
 
-	void ScriptGUICurvesField::Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style)
+	void ScriptGUICurvesField::Internal_create3(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style)
 	{
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
@@ -129,7 +179,7 @@ namespace bs
 		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
 	}
 
-	void ScriptGUICurvesField::Internal_create2(MonoObject* managedInstance, MonoObject* labelText, MonoString* style)
+	void ScriptGUICurvesField::Internal_create4(MonoObject* managedInstance, MonoObject* labelText, MonoString* style)
 	{
 		SPtr<HString> tmplabelText;
 		ScriptHString* scriptlabelText;
@@ -142,7 +192,7 @@ namespace bs
 		new (bs_alloc<ScriptGUICurvesField>())ScriptGUICurvesField(managedInstance, instance);
 	}
 
-	void ScriptGUICurvesField::Internal_create3(MonoObject* managedInstance, MonoString* style)
+	void ScriptGUICurvesField::Internal_create5(MonoObject* managedInstance, MonoString* style)
 	{
 		String tmpstyle;
 		tmpstyle = MonoUtil::monoToString(style);

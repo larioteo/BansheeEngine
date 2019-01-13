@@ -8,7 +8,7 @@
 #include "GUI/BsGUIFloatField.h"
 #include "GUI/BsGUIVector2Field.h"
 #include "GUI/BsGUIVector3Field.h"
-#include "GUI/BsGUICurves.h"
+#include "GUI/BsGUICurvesField.h"
 #include "GUI/BsGUIButton.h"
 #include "GUI/BsGUIContextMenu.h"
 #include "GUI/BsGUISpace.h"
@@ -17,14 +17,18 @@ using namespace std::placeholders;
 
 namespace bs
 {
-	namespace impl
-	{
-		template<class T>
-		bool isVertical() { return true; }
+	/** Style type name for the internal float fields. */
+	static constexpr const char* FLOAT_FIELD_STYLE_TYPE = "FloatField";
 
-		template<>
-		bool isVertical<float>() { return false; }
-	}
+	/** Style type name for the internal curve display fields. */
+	static constexpr const char* CURVES_FIELD_STYLE_TYPES[4] = 
+		{ "CurvesFieldX", "CurvesFieldY", "CurvesFieldZ", "CurvesFieldW" };
+
+	/** Style type name for the internal drop down button. */
+	static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
+
+	/** Spacing between two internal elements, in pixels. */
+	static constexpr UINT32 ELEM_SPACING = 5;
 
 	template<class T, class SELF>
 	TGUIDistributionField<T, SELF>::TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
@@ -127,7 +131,7 @@ namespace bs
 				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
 				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
 
-				mCurveDisplay[i]->setCurves({ CurveDrawInfo(mMinCurve[i], Color::BansheeOrange) });
+				mCurveDisplay[i]->setCurve(mMinCurve[i]);
 			}
 
 			break;
@@ -140,11 +144,7 @@ namespace bs
 				TCurveProperties<T>::setComponent(mMinConstant, i, mMinCurve[i].evaluate(0.0f));
 				TCurveProperties<T>::setComponent(mMaxConstant, i, mMaxCurve[i].evaluate(0.0f));
 
-				mCurveDisplay[i]->setCurves(
-					{
-						CurveDrawInfo(mMinCurve[i], Color::BansheeOrange),
-						CurveDrawInfo(mMaxCurve[i], Color::Red)
-					});	
+				mCurveDisplay[i]->setCurveRange(mMinCurve[i], mMaxCurve[i]);
 			}
 
 			break;
@@ -177,6 +177,12 @@ namespace bs
 		if(mMaxInput)
 			mMaxInput->setTint(color);
 
+		for(auto& entry : mLabels)
+		{
+			if(entry)
+				entry->setTint(color);
+		}
+
 		for(int i = 0; i < NumComponents; i++)
 		{
 			if(mCurveDisplay[i])
@@ -189,62 +195,46 @@ namespace bs
 	{
 		Vector2I optimalsize = Vector2I::ZERO;
 
-		if(impl::isVertical<T>())
+		if (mMinInput)
 		{
-			if (mMinInput)
-			{
-				Vector2I elemOptimal = mMinInput->_calculateLayoutSizeRange().optimal;
+			Vector2I elemOptimal = mMinInput->_calculateLayoutSizeRange().optimal;
 
-				optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
-				optimalsize.y += elemOptimal.y;
-			}
-
-			if (mMaxInput)
-			{
-				Vector2I elemOptimal = mMaxInput->_calculateLayoutSizeRange().optimal;
-
-				optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
-				optimalsize.y += elemOptimal.y;
-			}
-
-			for(UINT32 i = 0; i < NumComponents; i++)
-			{
-				if (mCurveDisplay[i])
-				{
-					Vector2I elemOptimal = mCurveDisplay[i]->_calculateLayoutSizeRange().optimal;
-
-					optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
-					optimalsize.y += elemOptimal.y;
-				}
-			}
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
 		}
-		else
+
+		if (mMaxInput)
 		{
-			if (mMinInput)
+			Vector2I elemOptimal = mMaxInput->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
+
+			optimalsize.y += ELEM_SPACING;
+		}
+
+		for (auto& entry : mLabels)
+		{
+			if (!entry)
+				continue;
+
+			Vector2I elemOptimal = entry->_calculateLayoutSizeRange().optimal;
+
+			optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+			optimalsize.y += elemOptimal.y;
+		}
+
+		for (UINT32 i = 0; i < NumComponents; i++)
+		{
+			if (mCurveDisplay[i])
 			{
-				Vector2I elemOptimal = mMinInput->_calculateLayoutSizeRange().optimal;
+				Vector2I elemOptimal = mCurveDisplay[i]->_calculateLayoutSizeRange().optimal;
 
-				optimalsize.x += elemOptimal.x;
-				optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
-			}
+				optimalsize.x = std::max(optimalsize.x, elemOptimal.x);
+				optimalsize.y += elemOptimal.y;
 
-			if (mMaxInput)
-			{
-				Vector2I elemOptimal = mMaxInput->_calculateLayoutSizeRange().optimal;
-
-				optimalsize.x += elemOptimal.x;
-				optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
-			}
-
-			for(UINT32 i = 0; i < NumComponents; i++)
-			{
-				if (mCurveDisplay[i])
-				{
-					Vector2I elemOptimal = mCurveDisplay[i]->_calculateLayoutSizeRange().optimal;
-
-					optimalsize.x += elemOptimal.x;
-					optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
-				}
+				if (i != 0)
+					optimalsize.y += ELEM_SPACING;
 			}
 		}
 		
@@ -277,35 +267,33 @@ namespace bs
 		if (mMaxInput)
 			mMaxInput->setStyle(getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
-		for(int i = 0; i < NumComponents; i++)
+		for (int i = 0; i < NumComponents; i++)
 		{
 			if (mCurveDisplay[i])
-				mCurveDisplay[i]->setStyle(getSubStyleName(CURVES_FIELD_STYLE_TYPE));
+				mCurveDisplay[i]->setStyle(getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 		}
 	}
 
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::rebuild()
 	{
+		constexpr const char* COMP_NAMES[] = { "X", "Y", "Z", "W" };
+		constexpr UINT32 ELEMENT_LABEL_WIDTH = 15;
+
 		if(mLabel)
 			mLayout->removeElement(mLabel);
 
 		mLayout->clear();
 		mLayout->addElement(mLabel);
 
-		GUILayout* valueLayout;
-		
-		if(impl::isVertical<T>())
-			valueLayout = mLayout->addNewElement<GUILayoutY>();
-		else
-			valueLayout = mLayout;
-
+		GUILayout* valueLayout = mLayout->addNewElement<GUILayoutY>();
 		switch (mValue.getType())
 		{
 		default:
 		case PDT_Constant:
 			mMinInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 			mMaxInput = nullptr;
+			mLabels = { nullptr, nullptr };
 
 			for(int i = 0; i < NumComponents; i++)
 				mCurveDisplay[i] = nullptr;
@@ -323,8 +311,8 @@ namespace bs
 			valueLayout->addElement(mMinInput);
 			break;
 		case PDT_RandomRange: 
-			mMinInput = GUIConstantType::create(HString("Min."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
-			mMaxInput = GUIConstantType::create(HString("Max."), 40, GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMaxInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
 			for(int i = 0; i < NumComponents; i++)
 				mCurveDisplay[i] = nullptr;
@@ -349,44 +337,69 @@ namespace bs
 			});
 			mMaxInput->onConfirm.connect([this]() { onConstantConfirmed(); });
 
+			mLabels[0] = valueLayout->addNewElement<GUILabel>(HString("Min."), "HeaderLight");
 			valueLayout->addElement(mMinInput);
+			valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
+			mLabels[1] = valueLayout->addNewElement<GUILabel>(HString("Max."), "HeaderLight");
 			valueLayout->addElement(mMaxInput);
 			break;
 		case PDT_Curve: 
 			mMinInput = nullptr;
 			mMaxInput = nullptr;
+			mLabels = { nullptr, nullptr };
 
 			for(int i = 0; i < NumComponents; i++)
 			{
-				mCurveDisplay[i] = GUICurves::create(CurveDrawOption::DrawMarkers, getSubStyleName(CURVES_FIELD_STYLE_TYPE));
-				mCurveDisplay[i]->setCurves({ CurveDrawInfo(mMinCurve[i], Color::BansheeOrange) });
+				if(NumComponents > 1)
+				{
+					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, HString(COMP_NAMES[i]),
+						ELEMENT_LABEL_WIDTH, getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+				}
+				else
+				{
+					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, 
+						getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+				}
+
+				mCurveDisplay[i]->setCurve(mMinCurve[i]);
 
 				mCurveDisplay[i]->setPadding(3);
 				mCurveDisplay[i]->centerAndZoom();
 				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
 
+				if(i != 0)
+					valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
+
 				valueLayout->addElement(mCurveDisplay[i]);
+
 			}
 
 			break;
 		case PDT_RandomCurveRange: 
 			mMinInput = nullptr;
 			mMaxInput = nullptr;
+			mLabels = { nullptr, nullptr };
 
 			for(int i = 0; i < NumComponents; i++)
 			{
-				mCurveDisplay[i] = GUICurves::create(CurveDrawOption::DrawMarkers | CurveDrawOption::DrawRange,
-					getSubStyleName(CURVES_FIELD_STYLE_TYPE));
+				if(NumComponents > 1)
+				{
+					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, HString(COMP_NAMES[i]),
+						ELEMENT_LABEL_WIDTH, getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+				}
+				else
+				{
+					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, 
+						getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+				}
 
-				mCurveDisplay[i]->setCurves(
-					{
-						CurveDrawInfo(mMinCurve[i], Color::BansheeOrange),
-						CurveDrawInfo(mMaxCurve[i], Color::Red)
-					});
-
+				mCurveDisplay[i]->setCurveRange(mMinCurve[i], mMaxCurve[i]);
 				mCurveDisplay[i]->setPadding(3);
 				mCurveDisplay[i]->centerAndZoom();
 				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
+
+				if(i != 0)
+					valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
 
 				valueLayout->addElement(mCurveDisplay[i]);
 			}

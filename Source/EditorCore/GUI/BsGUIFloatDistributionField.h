@@ -9,7 +9,7 @@
 
 namespace bs
 {
-	class GUICurves;
+	class GUICurvesField;
 
 	/** @addtogroup GUI-Editor-Internal
 	 *  @{
@@ -47,15 +47,6 @@ namespace bs
 		enum { NumComponents = TCurveProperties<T>::NumComponents };
 
 	public:
-		/** Style type name for the internal float fields. */
-		static constexpr const char* FLOAT_FIELD_STYLE_TYPE = "FloatField";
-
-		/** Style type name for the internal curve display field. */
-		static constexpr const char* CURVES_FIELD_STYLE_TYPE = "CurvesField";
-
-		/** Style type name for the internal drop down button. */
-		static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
-
 		TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
@@ -119,7 +110,8 @@ namespace bs
 		GUIButton* mDropDownButton = nullptr;
 		GUIConstantType* mMinInput = nullptr;
 		GUIConstantType* mMaxInput = nullptr;
-		GUICurves* mCurveDisplay[NumComponents] = { };
+		std::array<GUILabel*, 2> mLabels = { nullptr, nullptr };
+		GUICurvesField* mCurveDisplay[NumComponents] = { };
 		PropertyDistributionType mPropertyType = PDT_Constant;
 
 		T mMinConstant = TCurveProperties<T>::getZero();

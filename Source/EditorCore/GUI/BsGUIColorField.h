@@ -49,7 +49,7 @@ namespace bs
 		/** @} */
 
 	protected:
-		virtual ~GUIColorField();
+		virtual ~GUIColorField() = default;
 
 		/** @copydoc GUIElement::styleUpdated */
 		void styleUpdated() override;

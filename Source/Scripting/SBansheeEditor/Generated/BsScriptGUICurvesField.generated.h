@@ -4,6 +4,8 @@
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationCurve.h"
+#include "Math/BsVector2.h"
+#include "../../../EditorCore/GUI/BsGUICurves.h"
 
 namespace bs
 {
@@ -28,10 +30,16 @@ namespace bs
 		static MonoObject* Internal_getCurve(ScriptGUICurvesField* thisPtr);
 		static MonoObject* Internal_getMinCurve(ScriptGUICurvesField* thisPtr);
 		static MonoObject* Internal_getMaxCurve(ScriptGUICurvesField* thisPtr);
-		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
-		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
-		static void Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
-		static void Internal_create2(MonoObject* managedInstance, MonoObject* labelText, MonoString* style);
-		static void Internal_create3(MonoObject* managedInstance, MonoString* style);
+		static void Internal_setRange(ScriptGUICurvesField* thisPtr, float xRange, float yRange);
+		static void Internal_setOffset(ScriptGUICurvesField* thisPtr, Vector2* offset);
+		static void Internal_centerAndZoom(ScriptGUICurvesField* thisPtr);
+		static void Internal_setPadding(ScriptGUICurvesField* thisPtr, uint32_t padding);
+		static void Internal_create(MonoObject* managedInstance, CurveDrawOption drawOptions, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
+		static void Internal_create0(MonoObject* managedInstance, CurveDrawOption drawOptions, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
+		static void Internal_create1(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
+		static void Internal_create2(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
+		static void Internal_create3(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
+		static void Internal_create4(MonoObject* managedInstance, MonoObject* labelText, MonoString* style);
+		static void Internal_create5(MonoObject* managedInstance, MonoString* style);
 	};
 }

@@ -23,15 +23,6 @@ namespace bs
 	GUIColorDistributionField final : public TGUIField<GUIColorDistributionField>
 	{
 	public:
-		/** Style type name for the internal color fields. */
-		static constexpr const char* COLOR_FIELD_STYLE_TYPE = "ColorField";
-
-		/** Style type name for the internal color gradient field. */
-		static constexpr const char* COLOR_GRADIENT_FIELD_STYLE_TYPE = "GradientField";
-
-		/** Style type name for the internal drop down button. */
-		static constexpr const char* DROP_DOWN_FIELD_STYLE_TYPE = "DropDownButton";
-
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
@@ -83,6 +74,7 @@ namespace bs
 		GUIColorField* mMaxColorField = nullptr;
 		GUIColorGradientField* mMinGradientField = nullptr;
 		GUIColorGradientField* mMaxGradientField = nullptr;
+		std::array<GUILabel*, 2> mLabels = { nullptr, nullptr };
 		PropertyDistributionType mPropertyType = PDT_Constant;
 
 		Color mMinConstant = Color::White;

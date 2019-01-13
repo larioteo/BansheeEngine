@@ -12,10 +12,10 @@ namespace bs
 	static const TAnimationCurve<float> EMPTY_CURVE;
 
 	GUICurvesField::GUICurvesField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
-		const String& style, const GUIDimensions& dimensions, bool withLabel)
+		const String& style, const GUIDimensions& dimensions, bool withLabel, CurveDrawOptions drawOptions)
 		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
-		mCurves = GUICurves::create(getSubStyleName(getCurveStyleType()));
+		mCurves = GUICurves::create(drawOptions, getSubStyleName(getCurveStyleType()));
 		mCurves->onClicked.connect(std::bind(&GUICurvesField::clicked, this));
 
 		mLayout->addElement(mCurves);
@@ -30,7 +30,6 @@ namespace bs
 
 		mCurves->setCurves(drawInfos);
 	}
-
 
 	void GUICurvesField::setCurveRange(const TAnimationCurve<float>& curveA, const TAnimationCurve<float>& curveB)
 	{

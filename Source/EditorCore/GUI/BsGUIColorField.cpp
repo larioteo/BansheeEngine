@@ -20,12 +20,6 @@ namespace bs
 		mLayout->addElement(mColor);
 	}
 
-
-	GUIColorField::~GUIColorField()
-	{
-
-	}
-
 	void GUIColorField::setValue(const Color& color)
 	{
 		mValue = color;
