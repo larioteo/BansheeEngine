@@ -159,6 +159,9 @@ namespace BansheeEngine
                     return null;
             };
 
+            bool applyOnChange = Flags.HasFlag(SerializableFieldAttributes.ApplyOnDirty) || 
+                                 Flags.HasFlag(SerializableFieldAttributes.PassByCopy);
+
             SerializableProperty.Setter setter = (object value) =>
             {
                 object parentObject = parent.GetReferencedObject();
@@ -168,7 +171,7 @@ namespace BansheeEngine
                     Internal_SetValue(mCachedPtr, parentObject, value);
 
                     // If value type we cannot just modify the parent object because it's just a copy
-                    if (parentObject.GetType().IsValueType && parent.parentProperty != null)
+                    if ((applyOnChange || parentObject.GetType().IsValueType) && parent.parentProperty != null)
                         parent.parentProperty.SetValue(parentObject);
                 }
             };

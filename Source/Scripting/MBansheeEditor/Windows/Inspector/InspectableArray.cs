@@ -273,9 +273,15 @@ namespace BansheeEditor
             /// <inheritdoc/>
             protected override void ClearList()
             {
-                property.SetValue<object>(null);
-                array = null;
-                numElements = 0;
+                // Native arrays cannot be set to null, so just clear their size to zero instead
+                if (style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NativeWrapper))
+                    CreateList();
+                else
+                {
+                    property.SetValue<object>(null);
+                    array = null;
+                    numElements = 0;
+                }
             }
 
             /// <inheritdoc/>

@@ -120,13 +120,6 @@ namespace BansheeEditor
                 currentIndex += children[i].GetNumLayoutElements();
             }
 
-            if (state.HasFlag(InspectableState.Modified))
-            {
-                if (style.StyleFlags.HasFlag(InspectableFieldStyleFlags.CopiedAsValue) ||
-                    style.StyleFlags.HasFlag(InspectableFieldStyleFlags.ApplyOnDirty))
-                    property.SetValue(propertyValue);
-            }
-
             return state;
         }
 
@@ -174,14 +167,7 @@ namespace BansheeEditor
 
                if (isExpanded)
                {
-                   SerializableObject serializableObject;
-
-                   // Note: Make sure to use the same object instance if it's copied as value
-                   if(style.StyleFlags.HasFlag(InspectableFieldStyleFlags.CopiedAsValue))
-                       serializableObject = new SerializableObject(propertyValue);
-                   else
-                       serializableObject = property.GetObject();
-
+                   SerializableObject serializableObject = property.GetObject();
                    SerializableField[] fields = serializableObject.Fields;
 
                    if (fields.Length > 0)
