@@ -183,7 +183,11 @@ namespace BansheeEngine
             if (type != FieldType.Object)
                 throw new Exception("Attempting to retrieve object information from a field that doesn't contain an object.");
 
-            return Internal_CreateObject(mCachedPtr, this);
+            // Get the most-derived type so the serializable object lists the exact fields
+            object obj = GetValue<object>();
+            Type actualType = obj != null ? obj.GetType() : internalType;
+
+            return Internal_CreateObject(mCachedPtr, this, actualType);
         }
 
         /// <summary>
@@ -327,7 +331,8 @@ namespace BansheeEngine
         private static extern void Internal_CreateInstance(SerializableProperty instance, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern SerializableObject Internal_CreateObject(IntPtr nativeInstance, object managedInstance);
+        private static extern SerializableObject Internal_CreateObject(IntPtr nativeInstance, object managedInstance, 
+            Type actualType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern SerializableArray Internal_CreateArray(IntPtr nativeInstance, object managedInstance);

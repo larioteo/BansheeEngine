@@ -18,7 +18,8 @@ namespace bs
 		SCRIPT_OBJ(ENGINE_ASSEMBLY, "BansheeEngine", "SerializableObject")
 
 		/**	Creates a new serializable object interop object from the data in the provided property.  */
-		static MonoObject* create(const ScriptSerializableProperty* native, MonoObject* managed);
+		static MonoObject* create(const ScriptSerializableProperty* native, MonoObject* managed, 
+			MonoReflectionType* reflType);
 
 	private:
 		ScriptSerializableObject(MonoObject* instance, const SPtr<ManagedSerializableTypeInfo>& typeInfo);

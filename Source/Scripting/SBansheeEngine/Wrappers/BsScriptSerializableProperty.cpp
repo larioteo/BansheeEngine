@@ -67,9 +67,10 @@ namespace bs
 		new (bs_alloc<ScriptSerializableProperty>()) ScriptSerializableProperty(instance, typeInfo);
 	}
 
-	MonoObject* ScriptSerializableProperty::internal_createObject(ScriptSerializableProperty* nativeInstance, MonoObject* managedInstance)
+	MonoObject* ScriptSerializableProperty::internal_createObject(ScriptSerializableProperty* nativeInstance, 
+		MonoObject* managedInstance, MonoReflectionType* reflType)
 	{
-		return ScriptSerializableObject::create(nativeInstance, managedInstance);
+		return ScriptSerializableObject::create(nativeInstance, managedInstance, reflType);
 	}
 
 	MonoObject* ScriptSerializableProperty::internal_createArray(ScriptSerializableProperty* nativeInstance, MonoObject* managedInstance)
