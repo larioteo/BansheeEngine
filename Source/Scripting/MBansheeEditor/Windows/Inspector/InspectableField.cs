@@ -144,7 +144,8 @@ namespace BansheeEditor
             Type customInspectable = InspectorUtility.GetCustomInspectable(type);
             if (customInspectable != null)
             {
-                field = (InspectableField) Activator.CreateInstance(customInspectable, depth, title, property);
+                field = (InspectableField) Activator.CreateInstance(customInspectable, parent, title, path, depth, layout, 
+                    property);
             }
             else
             {

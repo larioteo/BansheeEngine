@@ -51,15 +51,23 @@ namespace bs
 		MonoAssembly* editorAssembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
 		mCustomInspectorAtribute = editorAssembly->getClass("BansheeEditor", "CustomInspector");
 		if (mCustomInspectorAtribute == nullptr)
-			BS_EXCEPT(InvalidStateException, "Cannot find CustomInspector managed class.");
+			BS_EXCEPT(InternalErrorException, "Cannot find CustomInspector managed class.");
 
 		MonoClass* inspectorClass = editorAssembly->getClass("BansheeEditor", "Inspector");
 		if (inspectorClass == nullptr)
-			BS_EXCEPT(InvalidStateException, "Cannot find Inspector managed class.");
+			BS_EXCEPT(InternalErrorException, "Cannot find Inspector managed class.");
 
 		MonoClass* inspectableFieldClass = editorAssembly->getClass("BansheeEditor", "InspectableField");
 		if (inspectableFieldClass == nullptr)
-			BS_EXCEPT(InvalidStateException, "Cannot find InspectableField managed class.");
+			BS_EXCEPT(InternalErrorException, "Cannot find InspectableField managed class.");
+
+		MonoAssembly* corlib = MonoManager::instance().getAssembly("corlib");
+		if(corlib == nullptr)
+			BS_EXCEPT(InternalErrorException, "corlib assembly is not loaded.");
+
+		MonoClass* systemAttributeClass = corlib->getClass("System", "Attribute");
+		if(systemAttributeClass == nullptr)
+			BS_EXCEPT(InternalErrorException, "Cannot find System.Attribute managed class.");
 
 		mTypeField = mCustomInspectorAtribute->getField("type");
 
@@ -98,9 +106,9 @@ namespace bs
 
 					mInspectorTypes[referencedClass] = curClass;
 				}
-				else if (curClass->isSubClassOf(inspectableFieldClass))
+				else if (curClass->isSubClassOf(inspectableFieldClass) || curClass->isSubClassOf(systemAttributeClass))
 				{
-					mInspectorTypes[referencedClass] = curClass;
+					mInspectableFieldTypes[referencedClass] = curClass;
 				}
 			}
 		}

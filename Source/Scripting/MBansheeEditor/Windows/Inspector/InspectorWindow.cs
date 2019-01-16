@@ -119,7 +119,7 @@ namespace BansheeEditor
 
             currentType = InspectorType.Resource;
 
-            inspectorScrollArea = new GUIScrollArea();
+            inspectorScrollArea = new GUIScrollArea(ScrollBarType.ShowIfDoesntFit, ScrollBarType.NeverShow);
             GUI.AddElement(inspectorScrollArea);
             inspectorLayout = inspectorScrollArea.Layout;
 
@@ -170,7 +170,7 @@ namespace BansheeEditor
             currentType = InspectorType.SceneObject;
             activeSO = so;
 
-            inspectorScrollArea = new GUIScrollArea();
+            inspectorScrollArea = new GUIScrollArea(ScrollBarType.ShowIfDoesntFit, ScrollBarType.NeverShow);
             scrollAreaHighlight = new GUITexture(Builtin.WhiteTexture);
             scrollAreaHighlight.SetTint(HIGHLIGHT_COLOR);
             scrollAreaHighlight.Active = false;
@@ -553,7 +553,7 @@ namespace BansheeEditor
             if (objects.Length == 0 && paths.Length == 0)
             {
                 currentType = InspectorType.None;
-                inspectorScrollArea = new GUIScrollArea();
+                inspectorScrollArea = new GUIScrollArea(ScrollBarType.ShowIfDoesntFit, ScrollBarType.NeverShow);
                 GUI.AddElement(inspectorScrollArea);
                 inspectorLayout = inspectorScrollArea.Layout;
 
@@ -567,7 +567,7 @@ namespace BansheeEditor
             else if ((objects.Length + paths.Length) > 1)
             {
                 currentType = InspectorType.None;
-                inspectorScrollArea = new GUIScrollArea();
+                inspectorScrollArea = new GUIScrollArea(ScrollBarType.ShowIfDoesntFit, ScrollBarType.NeverShow);
                 GUI.AddElement(inspectorScrollArea);
                 inspectorLayout = inspectorScrollArea.Layout;
 
