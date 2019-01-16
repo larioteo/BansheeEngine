@@ -81,6 +81,16 @@ namespace BansheeEngine
 			set { Internal_setLayer(mCachedPtr, value); }
 		}
 
+		/// <summary>
+		/// Enables or disabled preview mode. Preview mode allows the particle system to play while the game is not running,  
+		/// primarily for preview purposes in the editor. Returns true if the preview mode was enabled, false if it was disabled 
+		/// or enabling preview failed.
+		/// </summary>
+		internal bool TogglePreviewMode(bool enabled)
+		{
+			return Internal__togglePreviewMode(mCachedPtr, enabled);
+		}
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setSettings(IntPtr thisPtr, ParticleSystemSettings settings);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -101,6 +111,8 @@ namespace BansheeEngine
 		private static extern void Internal_setLayer(IntPtr thisPtr, ulong layer);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ulong Internal_getLayer(IntPtr thisPtr);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool Internal__togglePreviewMode(IntPtr thisPtr, bool enabled);
 	}
 
 	/** @} */

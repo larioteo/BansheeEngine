@@ -36,10 +36,11 @@ namespace bs
 		static void Internal_setPadding(ScriptGUICurvesField* thisPtr, uint32_t padding);
 		static void Internal_create(MonoObject* managedInstance, CurveDrawOption drawOptions, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, CurveDrawOption drawOptions, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
-		static void Internal_create1(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
-		static void Internal_create2(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
-		static void Internal_create3(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
-		static void Internal_create4(MonoObject* managedInstance, MonoObject* labelText, MonoString* style);
-		static void Internal_create5(MonoObject* managedInstance, MonoString* style);
+		static void Internal_create1(MonoObject* managedInstance, CurveDrawOption drawOptions, MonoString* style);
+		static void Internal_create2(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
+		static void Internal_create3(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
+		static void Internal_create4(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);
+		static void Internal_create5(MonoObject* managedInstance, MonoObject* labelText, MonoString* style);
+		static void Internal_create6(MonoObject* managedInstance, MonoString* style);
 	};
 }

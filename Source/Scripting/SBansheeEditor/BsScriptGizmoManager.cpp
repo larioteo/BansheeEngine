@@ -16,20 +16,28 @@
 #include "BsScriptObjectManager.h"
 #include "BsScriptGameObjectManager.h"
 #include "Wrappers/BsScriptComponent.h"
+#include "Wrappers/BsScriptSelection.h"
 
 using namespace std::placeholders;
 
 namespace bs
 {
 	ScriptGizmoManager::ScriptGizmoManager(ScriptAssemblyManager& scriptObjectManager)
-		:mScriptObjectManager(scriptObjectManager), mDrawGizmoAttribute(nullptr), mFlagsField(nullptr)
+		:mScriptObjectManager(scriptObjectManager)
 	{
 		mDomainLoadedConn = ScriptObjectManager::instance().onRefreshDomainLoaded.connect(std::bind(&ScriptGizmoManager::reloadAssemblyData, this));
+		mSelectionSOAddedConn = Selection::instance().onSceneObjectsAdded.connect(
+			[this](const Vector<HSceneObject>& objects) { onSOSelectionChanged(objects, true); });
+		mSelectionSORemovedConn = Selection::instance().onSceneObjectsRemoved.connect(
+			[this](const Vector<HSceneObject>& objects) { onSOSelectionChanged(objects, false); });
+
 		reloadAssemblyData();
 	}
 
 	ScriptGizmoManager::~ScriptGizmoManager()
 	{
+		mSelectionSOAddedConn.disconnect();
+		mSelectionSORemovedConn.disconnect();
 		mDomainLoadedConn.disconnect();
 	}
 
@@ -116,7 +124,7 @@ namespace bs
 						GizmoManager::instance().setPickable(pickable);
 
 						void* params[1] = { managedInstance };
-						iterFind->second.drawGizmosMethod->invoke(nullptr, params);
+						iterFind->second.method->invoke(nullptr, params);
 
 						GizmoManager::instance().endGizmo();
 					}
@@ -138,12 +146,16 @@ namespace bs
 
 		mFlagsField = mDrawGizmoAttribute->getField("flags");
 
+		mOnSelectionChangedAttribute = editorAssembly->getClass("BansheeEditor", "OnSelectionChanged");
+		if (mOnSelectionChangedAttribute == nullptr)
+			BS_EXCEPT(InvalidStateException, "Cannot find OnSelectionChanged managed class.");
+
 		Vector<String> scriptAssemblyNames = mScriptObjectManager.getScriptAssemblies();
 		for (auto& assemblyName : scriptAssemblyNames)
 		{
 			MonoAssembly* assembly = MonoManager::instance().getAssembly(assemblyName);
 
-			// Find new gizmo drawer methods
+			// Find new gizmo drawer & selection changed methods
 			const Vector<MonoClass*>& allClasses = assembly->getAllClasses();
 			for (auto curClass : allClasses)
 			{
@@ -155,12 +167,64 @@ namespace bs
 					if (isValidDrawGizmoMethod(curMethod, componentType, drawGizmoFlags))
 					{
 						String fullComponentName = componentType->getFullName();
-						GizmoData& newGizmoData = mGizmoDrawers[fullComponentName];
+						GizmoData& data = mGizmoDrawers[fullComponentName];
 
-						newGizmoData.componentType = componentType;
-						newGizmoData.drawGizmosMethod = curMethod;
-						newGizmoData.flags = drawGizmoFlags;
+						data.type = componentType;
+						data.method = curMethod;
+						data.flags = drawGizmoFlags;
 					}
+					else if(isValidOnSelectionChangedMethod(curMethod, componentType))
+					{
+						String fullComponentName = componentType->getFullName();
+						SelectionChangedData& data = mSelectionChangedCallbacks[fullComponentName];
+
+						data.type = componentType;
+						data.method = curMethod;
+					}
+				}
+			}
+		}
+	}
+
+	void ScriptGizmoManager::onSOSelectionChanged(const Vector<HSceneObject>& sceneObjects, bool added)
+	{
+		for(auto& sceneObject : sceneObjects)
+		{
+			Vector<HComponent> components = sceneObject->getComponents();
+			for(auto& component : components)
+			{
+				String componentName;
+				MonoObject* managedInstance = nullptr;
+				if (rtti_is_of_type<ManagedComponent>(component.get()))
+				{
+					ManagedComponent* managedComponent = static_cast<ManagedComponent*>(component.get());
+					componentName = managedComponent->getManagedFullTypeName();
+					managedInstance = managedComponent->getManagedInstance();
+				}
+				else
+				{
+					ScriptGameObjectManager& sgoManager = ScriptGameObjectManager::instance();
+					ScriptComponentBase* scriptComponent = sgoManager.getBuiltinScriptComponent(component, false);
+
+					if (scriptComponent)
+					{
+						managedInstance = scriptComponent->getManagedInstance();
+
+						String ns, typeName;
+						MonoUtil::getClassName(managedInstance, ns, typeName);
+
+						componentName = ns + "." + typeName;
+					}
+				}
+
+				if (componentName.empty())
+					continue;
+
+				auto iterFind = mSelectionChangedCallbacks.find(componentName);
+				if (iterFind != mSelectionChangedCallbacks.end())
+				{
+					void* params[2] = { managedInstance, &added };
+					iterFind->second.method->invoke(nullptr, params);
 				}
 			}
 		}
@@ -190,6 +254,34 @@ namespace bs
 
 		MonoObject* drawGizmoAttrib = method->getAttribute(mDrawGizmoAttribute);
 		mFlagsField->get(drawGizmoAttrib, &drawGizmoFlags);
+
+		return true;
+	}
+
+	bool ScriptGizmoManager::isValidOnSelectionChangedMethod(class MonoMethod* method, MonoClass*& componentType)
+	{
+		componentType = nullptr;
+
+		if (!method->hasAttribute(mOnSelectionChangedAttribute))
+			return false;
+
+		if (method->getNumParameters() != 2)
+			return false;
+
+		if (!method->isStatic())
+			return false;
+
+		MonoClass* param0Type = method->getParameterType(0);
+		MonoClass* componentClass = mScriptObjectManager.getBuiltinClasses().componentClass;
+
+		if (!param0Type->isSubClassOf(componentClass))
+			return false;
+
+		MonoClass* param1Type = method->getParameterType(1);
+		if(param1Type->_getInternalClass() != MonoUtil::getBoolClass())
+			return false;
+
+		componentType = param0Type;
 
 		return true;
 	}

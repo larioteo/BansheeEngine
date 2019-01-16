@@ -45,6 +45,17 @@ namespace BansheeEditor
 			Internal_create0(this, drawOptions, labelText, labelWidth, style);
 		}
 
+		/// <summary>Creates a new GUI editor field without a label.</summary>
+		/// <param name="drawOptions">Options that control which additional curve elements to draw.</param>
+		/// <param name="style">
+		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
+		/// If not specified default style is used.
+		/// </param>
+		public GUICurvesField(CurveDrawOptions drawOptions, string style = "")
+		{
+			Internal_create1(this, drawOptions, style);
+		}
+
 		/// <summary>Creates a new GUI editor field with a label.</summary>
 		/// <param name="labelContent">Content to display in the editor field label.</param>
 		/// <param name="labelWidth">Width of the label in pixels.</param>
@@ -54,7 +65,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(GUIContent labelContent, uint labelWidth, string style = "")
 		{
-			Internal_create1(this, ref labelContent, labelWidth, style);
+			Internal_create2(this, ref labelContent, labelWidth, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -65,7 +76,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(GUIContent labelContent, string style = "")
 		{
-			Internal_create2(this, ref labelContent, style);
+			Internal_create3(this, ref labelContent, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -77,7 +88,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(LocString labelText, uint labelWidth, string style = "")
 		{
-			Internal_create3(this, labelText, labelWidth, style);
+			Internal_create4(this, labelText, labelWidth, style);
 		}
 
 		/// <summary>Creates a new GUI editor field with a label.</summary>
@@ -88,7 +99,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(LocString labelText, string style = "")
 		{
-			Internal_create4(this, labelText, style);
+			Internal_create5(this, labelText, style);
 		}
 
 		/// <summary>Creates a new GUI editor field without a label.</summary>
@@ -98,7 +109,7 @@ namespace BansheeEditor
 		/// </param>
 		public GUICurvesField(string style = "")
 		{
-			Internal_create5(this, style);
+			Internal_create6(this, style);
 		}
 
 		/// <summary>
@@ -207,15 +218,17 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUICurvesField managedInstance, CurveDrawOptions drawOptions, LocString labelText, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create1(GUICurvesField managedInstance, CurveDrawOptions drawOptions, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create2(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
+		private static extern void Internal_create2(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create3(GUICurvesField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create3(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create4(GUICurvesField managedInstance, LocString labelText, string style);
+		private static extern void Internal_create4(GUICurvesField managedInstance, LocString labelText, uint labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create5(GUICurvesField managedInstance, string style);
+		private static extern void Internal_create5(GUICurvesField managedInstance, LocString labelText, string style);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_create6(GUICurvesField managedInstance, string style);
 		private void Internal_onClicked()
 		{
 			OnClicked();

@@ -55,6 +55,18 @@ namespace bs
 		 */
 		void ping(const Path& resourcePath);
 
+		/** Triggered when one or multiple scene objects is being added to the selection. */
+		Event<void(const Vector<HSceneObject>&)> onSceneObjectsAdded;
+
+		/** Triggered when one or multiple resources are being added to the selection. */
+		Event<void(const Vector<Path>&)> onResourcesAdded;
+
+		/** Triggered when one or multiple scene objects is being removed from the selection. */
+		Event<void(const Vector<HSceneObject>&)> onSceneObjectsRemoved;
+
+		/** Triggered when one or multiple resources are being removed from the selection. */
+		Event<void(const Vector<Path>&)> onResourcesRemoved;
+
 		/**
 		 * Triggered whenever scene object or resource selection changes. The provided parameters will contain the newly
 		 * selected objects/resource paths.
@@ -82,8 +94,8 @@ namespace bs
 		/**	Updates scene and resource tree views with new selection. */
 		void updateTreeViews();
 
-		/** Removes any destroyed scene objects from the selected scene object list. */
-		void pruneDestroyedSceneObjects() const;
+		/** Removes any destroyed scene objects from the provided scene object list. */
+		void pruneDestroyedSceneObjects(Vector<HSceneObject>& sceneObjects) const;
 
 		mutable Vector<HSceneObject> mSelectedSceneObjects;
 		Vector<Path> mSelectedResourcePaths;
@@ -91,7 +103,9 @@ namespace bs
 		HMessage mSceneSelectionChangedConn;
 		HMessage mResourceSelectionChangedConn;
 
-		mutable Vector<HSceneObject> mTempSO;
+		mutable Vector<HSceneObject> mTempPrune;
+		mutable Vector<HSceneObject> mTempSceneObjects;
+		mutable Vector<Path> mTempResources;
 	};
 
 	/** @} */

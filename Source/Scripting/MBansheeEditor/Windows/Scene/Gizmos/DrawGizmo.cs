@@ -28,8 +28,8 @@ namespace BansheeEditor
     /// <summary>
     /// Notifies the runtime that the method this attribute is specified on serves for gizmo drawing. All drawing in the 
     /// method should be done using the <see cref="Gizmos"/> class. The method must be static and must accept a single
-    /// parameter of type deriving from <see cref="Component"/>. Type of the parameter determines for which objects will
-    /// the gizmo be drawn for.
+    /// parameter of type deriving from <see cref="BansheeEngine.Component"/>. Type of the parameter determines for which
+    /// objects will the gizmo be drawn for.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class DrawGizmo : Attribute

@@ -25,12 +25,19 @@ namespace bs
 	 */
 	class BS_SCR_BED_EXPORT ScriptGizmoManager : public Module<ScriptGizmoManager>
 	{
-		/**	Data about a managed gizmo method. */
+		/**	Data about a managed gizmo drawing method. */
 		struct GizmoData
 		{
-			MonoClass* componentType; /**< Component the gizmo method belongs to. */
-			MonoMethod* drawGizmosMethod; /**< Method that displays the gizmo. */
+			MonoClass* type; /**< Component the gizmo method belongs to. */
+			MonoMethod* method; /**< Method that displays the gizmo. */
 			UINT32 flags; /**< Gizmo flags of type DrawGizmoFlags that control gizmo properties. */
+		};
+
+		/** Data about a managed selection changed callback method. */
+		struct SelectionChangedData
+		{
+			MonoClass* type; /**< Component or resource the selection method should trigger on. */
+			MonoMethod* method; /**< Method that receives the selection changed callback. */
 		};
 
 	public:
@@ -47,6 +54,15 @@ namespace bs
 		void reloadAssemblyData();
 
 		/**
+		 * Triggered when entries are added or removed from the selection.
+		 *
+		 * @param[in]	sceneObjects	Newly selected or deselected scene objects. 
+		 * @param[in]	added			If true, the provided objects were added to the selection. If false, the provided
+		 *								objects were removed from the selection.
+		 */
+		void onSOSelectionChanged(const Vector<HSceneObject>& sceneObjects, bool added);
+
+		/**
 		 * Checks is the provided method a valid gizmo draw method and if it is, returns properties of that method.
 		 *
 		 * @param[in]	method			Method to check.
@@ -58,12 +74,26 @@ namespace bs
 		 */
 		bool isValidDrawGizmoMethod(MonoMethod* method, MonoClass*& componentType, UINT32& drawGizmoFlags);
 
+		/**
+		 * Checks is the provided method a valid selection changed callback method.
+		 *
+		 * @param[in]	method			Method to check.
+		 * @param[in]	componentType	Output parameter containing the component the method is part of. Only valid if this
+		 *								method returns true.
+		 * @return						True if the method is a valid selection changed callback method.
+		 */
+		bool isValidOnSelectionChangedMethod(MonoMethod* method, MonoClass*& componentType);
+
 		ScriptAssemblyManager& mScriptObjectManager;
 		HEvent mDomainLoadedConn;
+		HEvent mSelectionSOAddedConn;
+		HEvent mSelectionSORemovedConn;
 
-		MonoClass* mDrawGizmoAttribute;
-		MonoField* mFlagsField;
+		MonoClass* mDrawGizmoAttribute = nullptr;
+		MonoField* mFlagsField = nullptr;
+		MonoClass* mOnSelectionChangedAttribute = nullptr;
 		Map<String, GizmoData> mGizmoDrawers;
+		Map<String, SelectionChangedData> mSelectionChangedCallbacks;
 	};
 
 	/** @} */

@@ -53,6 +53,7 @@
     <Compile Include="Inspectors\ReflectionProbeInspector.cs" />
     <Compile Include="Inspectors\RenderSettingsInspector.cs" />
     <Compile Include="Utility\EdAnimationCurve.cs" />
+    <Compile Include="Utility\OnSelectionChanged.cs" />
     <Compile Include="Utility\SerializedSceneObject.cs" />
     <Compile Include="Utility\SerializedDiff.cs" />
     <Compile Include="Utility\SerializedObject.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Windows\LogWindow.cs" />
     <Compile Include="Windows\Scene\Gizmos\CameraGizmo.cs" />
     <Compile Include="Windows\Scene\Gizmos\LightProbeVolumeGizmo.cs" />
+    <Compile Include="Windows\Scene\Gizmos\ParticleSystemGizmos.cs" />
     <Compile Include="Windows\Scene\Gizmos\ReflectionProbeGizmo.cs" />
     <Compile Include="Windows\Scene\Handles\HandleSlider2D.cs" />
     <Compile Include="Windows\Scene\Handles\HandleSliderSphere.cs" />

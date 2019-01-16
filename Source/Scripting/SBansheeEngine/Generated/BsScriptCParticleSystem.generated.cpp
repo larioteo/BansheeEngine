@@ -46,6 +46,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getEvolvers", (void*)&ScriptCParticleSystem::Internal_getEvolvers);
 		metaData.scriptClass->addInternalCall("Internal_setLayer", (void*)&ScriptCParticleSystem::Internal_setLayer);
 		metaData.scriptClass->addInternalCall("Internal_getLayer", (void*)&ScriptCParticleSystem::Internal_getLayer);
+		metaData.scriptClass->addInternalCall("Internal__togglePreviewMode", (void*)&ScriptCParticleSystem::Internal__togglePreviewMode);
 
 	}
 
@@ -200,6 +201,17 @@ namespace bs
 		tmp__output = thisPtr->getHandle()->getLayer();
 
 		uint64_t __output;
+		__output = tmp__output;
+
+		return __output;
+	}
+
+	bool ScriptCParticleSystem::Internal__togglePreviewMode(ScriptCParticleSystem* thisPtr, bool enabled)
+	{
+		bool tmp__output;
+		tmp__output = thisPtr->getHandle()->_togglePreviewMode(enabled);
+
+		bool __output;
 		__output = tmp__output;
 
 		return __output;

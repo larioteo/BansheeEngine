@@ -9,6 +9,26 @@
 
 namespace bs
 {
+	template<class T>
+	void setDifference(const Vector<T>& a, const Vector<T>& b, Vector<T>& output)
+	{
+		for(auto& aEntry : a)
+		{
+			bool found = false;
+			for(auto& bEntry : b)
+			{
+				if(aEntry == bEntry)
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if(!found)
+				output.push_back(aEntry);
+		}
+	}
+
 	Selection::Selection()
 	{
 		mSceneSelectionChangedConn = MessageHandler::instance().listen(
@@ -26,18 +46,31 @@ namespace bs
 
 	const Vector<HSceneObject>& Selection::getSceneObjects() const
 	{
-		pruneDestroyedSceneObjects();
+		pruneDestroyedSceneObjects(mSelectedSceneObjects);
 		return mSelectedSceneObjects;
 	}
 
 	void Selection::setSceneObjects(const Vector<HSceneObject>& sceneObjects)
 	{
+		setDifference(mSelectedSceneObjects, sceneObjects, mTempSceneObjects);
+		pruneDestroyedSceneObjects(mTempSceneObjects);
+		onSceneObjectsRemoved(mTempSceneObjects);
+		mTempSceneObjects.clear();
+
+		if(!mSelectedResourcePaths.empty())
+			onResourcesRemoved(mSelectedResourcePaths);
+
+		setDifference(sceneObjects, mSelectedSceneObjects, mTempSceneObjects);
+		pruneDestroyedSceneObjects(mTempSceneObjects);
+		onSceneObjectsAdded(mTempSceneObjects);
+		mTempSceneObjects.clear();
+
 		mSelectedSceneObjects = sceneObjects;
 		mSelectedResourcePaths.clear();
 
 		updateTreeViews();
 
-		pruneDestroyedSceneObjects();
+		pruneDestroyedSceneObjects(mSelectedSceneObjects);
 		onSelectionChanged(mSelectedSceneObjects, Vector<Path>());
 	}
 
@@ -48,6 +81,17 @@ namespace bs
 
 	void Selection::setResourcePaths(const Vector<Path>& paths)
 	{
+		setDifference(mSelectedResourcePaths, paths, mTempResources);
+		onResourcesRemoved(mTempResources);
+		mTempResources.clear();
+
+		if(!mSelectedSceneObjects.empty())
+			onSceneObjectsRemoved(mSelectedSceneObjects);
+
+		setDifference(paths, mSelectedResourcePaths, mTempResources);
+		onResourcesAdded(mSelectedResourcePaths);
+		mTempResources.clear();
+
 		mSelectedResourcePaths = paths;
 		mSelectedSceneObjects.clear();
 
@@ -71,18 +115,15 @@ namespace bs
 
 	void Selection::setResourceUUIDs(const Vector<UUID>& UUIDs)
 	{
-		mSelectedResourcePaths.clear();
+		Vector<Path> paths;
 		for (auto& uuid : UUIDs)
 		{
 			Path path = gProjectLibrary().uuidToPath(uuid);
 			if (path != Path::BLANK)
-				mSelectedResourcePaths.push_back(path);
+				paths.push_back(path);
 		}
 
-		mSelectedSceneObjects.clear();
-		updateTreeViews();
-
-		onSelectionChanged(Vector<HSceneObject>(), mSelectedResourcePaths);
+		setResourcePaths(paths);
 	}
 
 	void Selection::clearSceneSelection()
@@ -92,7 +133,7 @@ namespace bs
 
 	void Selection::clearResourceSelection()
 	{
-		setResourceUUIDs({});
+		setResourcePaths({});
 	}
 
 	void Selection::ping(const HSceneObject& sceneObject)
@@ -134,11 +175,7 @@ namespace bs
 			if (!isDirty)
 				return;
 
-			mSelectedSceneObjects = newSelection;
-			mSelectedResourcePaths.clear();
-
-			pruneDestroyedSceneObjects();
-			onSelectionChanged(mSelectedSceneObjects, Vector<Path>());
+			setSceneObjects(newSelection);
 		}
 	}
 
@@ -167,10 +204,7 @@ namespace bs
 			if (!isDirty)
 				return;
 
-			mSelectedResourcePaths = newSelection;
-			mSelectedSceneObjects.clear();
-
-			onSelectionChanged(Vector<HSceneObject>(), mSelectedResourcePaths);
+			setResourcePaths(newSelection);
 		}
 	}
 
@@ -189,17 +223,17 @@ namespace bs
 		if (sceneTreeView != nullptr)
 		{
 			// Copy in case setSelection modifies the original.
-			pruneDestroyedSceneObjects();
+			pruneDestroyedSceneObjects(mSelectedSceneObjects);
 			Vector<HSceneObject> copy = mSelectedSceneObjects;
 
 			sceneTreeView->setSelection(copy);
 		}
 	}
 
-	void Selection::pruneDestroyedSceneObjects() const
+	void Selection::pruneDestroyedSceneObjects(Vector<HSceneObject>& sceneObjects) const
 	{
 		bool anyDestroyed = false;
-		for (auto& SO : mSelectedSceneObjects)
+		for (auto& SO : sceneObjects)
 		{
 			if (!SO.isDestroyed(true))
 			{
@@ -211,13 +245,13 @@ namespace bs
 		if (!anyDestroyed) // Test for quick exit for the most common case
 			return;
 
-		for(auto& SO : mSelectedSceneObjects)
+		for(auto& SO : sceneObjects)
 		{
 			if(!SO.isDestroyed(true))
-				mTempSO.push_back(SO);
+				mTempPrune.push_back(SO);
 		}
 
-		mSelectedSceneObjects.swap(mTempSO);
-		mTempSO.clear();
+		sceneObjects.swap(mTempPrune);
+		mTempPrune.clear();
 	}
 }
