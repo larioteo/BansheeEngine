@@ -216,6 +216,23 @@ namespace bs
 		mIdxToSceneObjectMap[sphereData.idx] = mActiveSO;
 	}
 
+	void GizmoManager::drawWireHemisphere(const Vector3& position, float radius)
+	{
+		mWireHemisphereData.push_back(SphereData());
+		SphereData& sphereData = mWireHemisphereData.back();
+
+		sphereData.idx = mCurrentIdx++;
+		sphereData.position = position;
+		sphereData.radius = radius;
+		sphereData.color = mColor;
+		sphereData.transform = mTransform;
+		sphereData.sceneObject = mActiveSO;
+		sphereData.pickable = mPickable;
+
+		mDrawHelper->wireHemisphere(position, radius);
+		mIdxToSceneObjectMap[sphereData.idx] = mActiveSO;
+	}
+
 	void GizmoManager::drawWireCapsule(const Vector3& position, float height, float radius)
 	{
 		float halfHeight = height * 0.5f;
@@ -510,6 +527,17 @@ namespace bs
 			mPickingDrawHelper->wireSphere(sphereDataEntry.position, sphereDataEntry.radius);
 		}
 
+		for (auto& sphereDataEntry : mWireSphereData)
+		{
+			if (!sphereDataEntry.pickable)
+				continue;
+
+			mPickingDrawHelper->setColor(idxToColorCallback(sphereDataEntry.idx));
+			mPickingDrawHelper->setTransform(sphereDataEntry.transform);
+
+			mPickingDrawHelper->wireHemisphere(sphereDataEntry.position, sphereDataEntry.radius);
+		}
+
 		for (auto& coneDataEntry : mSolidConeData)
 		{
 			if (!coneDataEntry.pickable)
@@ -657,6 +685,7 @@ namespace bs
 		mWireCubeData.clear();
 		mSolidSphereData.clear();
 		mWireSphereData.clear();
+		mWireHemisphereData.clear();
 		mSolidConeData.clear();
 		mWireConeData.clear();
 		mLineData.clear();

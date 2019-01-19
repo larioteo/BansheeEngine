@@ -38,6 +38,7 @@ namespace bs
 		static void internal_DrawDisc(Vector3* position, Vector3* normal, float radius);
 		static void internal_DrawWireCube(Vector3* position, Vector3* extents);
 		static void internal_DrawWireSphere(Vector3* position, float radius);
+		static void internal_DrawWireHemisphere(Vector3* position, float radius);
 		static void internal_DrawWireCapsule(Vector3* position, float height, float radius);
 		static void internal_DrawWireCone(Vector3* base, Vector3* normal, float height, float radius, Vector2* scale);
 		static void internal_DrawLine(Vector3* start, Vector3* end);

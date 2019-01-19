@@ -125,6 +125,13 @@ namespace bs
 		void drawWireSphere(const Vector3& position, float radius);
 
 		/**
+		 * Draws a wireframe hemisphere represented by three arcs.
+		 *
+		 * @note	Must be called between startGizmo/endGizmo calls.
+		 */
+		void drawWireHemisphere(const Vector3& position, float radius);
+
+		/**
 		 * Draws a wireframe capsule.
 		 *
 		 * @param[in]	position	World coordinates of the center of the capsule.
@@ -468,6 +475,7 @@ namespace bs
 		Vector<CubeData> mWireCubeData;
 		Vector<SphereData> mSolidSphereData;
 		Vector<SphereData> mWireSphereData;
+		Vector<SphereData> mWireHemisphereData;
 		Vector<ConeData> mSolidConeData;
 		Vector<ConeData> mWireConeData;
 		Vector<LineData> mLineData;

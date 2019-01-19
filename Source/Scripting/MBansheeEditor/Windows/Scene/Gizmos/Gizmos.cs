@@ -130,6 +130,16 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Draws a wireframe hemisphere.
+        /// </summary>
+        /// <param name="position">World coordinates of the center of the hemisphere.</param>
+        /// <param name="radius">Hemisphere radius.</param>
+        public static void DrawWireHemisphere(Vector3 position, float radius)
+        {
+            Internal_DrawWireHemisphere(ref position, radius);
+        }
+
+        /// <summary>
         /// Draws a wireframe capsule. Capsule is assumed to be extending along the Y axis.
         /// </summary>
         /// <param name="position">World coordinates of the center of the capsule.</param>
@@ -292,6 +302,9 @@ namespace BansheeEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_DrawWireSphere(ref Vector3 position, float radius);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_DrawWireHemisphere(ref Vector3 position, float radius);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_DrawWireCapsule(ref Vector3 position, float height, float radius);
