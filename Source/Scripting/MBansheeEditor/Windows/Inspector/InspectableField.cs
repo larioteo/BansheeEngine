@@ -145,7 +145,7 @@ namespace BansheeEditor
             if (customInspectable != null)
             {
                 field = (InspectableField) Activator.CreateInstance(customInspectable, parent, title, path, depth, layout, 
-                    property);
+                    property, style);
             }
             else
             {

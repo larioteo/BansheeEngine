@@ -102,11 +102,13 @@
     <Compile Include="Windows\Inspector\InspectableColorDistribution.cs" />
     <Compile Include="Windows\Inspector\InspectableColorGradient.cs" />
     <Compile Include="Windows\Inspector\InspectableCurve.cs" />
+    <Compile Include="Windows\Inspector\InspectableDegree.cs" />
     <Compile Include="Windows\Inspector\InspectableEnum.cs" />
     <Compile Include="Windows\Inspector\InspectableEuler.cs" />
     <Compile Include="Windows\Inspector\InspectableFloatDistribution.cs" />
     <Compile Include="Windows\Inspector\InspectableLayerMask.cs" />
     <Compile Include="Windows\Inspector\InspectableQuaternion.cs" />
+    <Compile Include="Windows\Inspector\InspectableRadian.cs" />
     <Compile Include="Windows\Inspector\InspectableRRef.cs" />
     <Compile Include="Windows\Inspector\InspectableVector2Distribution.cs" />
     <Compile Include="Windows\Inspector\InspectableVector3Distribution.cs" />
