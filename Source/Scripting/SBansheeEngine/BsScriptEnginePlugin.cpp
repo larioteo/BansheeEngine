@@ -6,6 +6,7 @@
 #include "Script/BsScriptManager.h"
 #include "Wrappers/GUI/BsScriptGUI.h"
 #include "BsPlayInEditorManager.h"
+#include "Wrappers/BsScriptScene.h"
 
 namespace bs
 {
@@ -25,6 +26,7 @@ namespace bs
 
 	extern "C" BS_SCR_BE_EXPORT void updatePlugin()
 	{
+		ScriptScene::update();
 		PlayInEditorManager::instance().update();
 		ScriptObjectManager::instance().update();
 		ScriptGUI::update();

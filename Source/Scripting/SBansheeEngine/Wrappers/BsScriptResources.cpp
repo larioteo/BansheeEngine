@@ -5,7 +5,6 @@
 #include "BsMonoClass.h"
 #include "BsMonoMethod.h"
 #include "BsMonoUtil.h"
-#include "Resources/BsResources.h"
 #include "Resources/BsGameResourceManager.h"
 #include "BsScriptResourceManager.h"
 #include "Wrappers/BsScriptResource.h"
@@ -21,16 +20,19 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_Load", (void*)&ScriptResources::internal_Load);
 		metaData.scriptClass->addInternalCall("Internal_LoadFromUUID", (void*)&ScriptResources::internal_LoadFromUUID);
+		metaData.scriptClass->addInternalCall("Internal_LoadAsync", (void*)&ScriptResources::internal_LoadAsync);
+		metaData.scriptClass->addInternalCall("Internal_LoadAsyncFromUUID", (void*)&ScriptResources::internal_LoadAsyncFromUUID);
 		metaData.scriptClass->addInternalCall("Internal_UnloadUnused", (void*)&ScriptResources::internal_UnloadUnused);
 		metaData.scriptClass->addInternalCall("Internal_Release", (void*)&ScriptResources::internal_Release);
 		metaData.scriptClass->addInternalCall("Internal_ReleaseRef", (void*)&ScriptResources::internal_ReleaseRef);
+		metaData.scriptClass->addInternalCall("Internal_GetLoadProgress", (void*)&ScriptResources::internal_GetLoadProgress);
 	}
 
-	MonoObject* ScriptResources::internal_Load(MonoString* path, bool keepLoaded)
+	MonoObject* ScriptResources::internal_Load(MonoString* path, ResourceLoadFlag flags)
 	{
 		Path nativePath = MonoUtil::monoToString(path);
 
-		HResource resource = GameResourceManager::instance().load(nativePath, keepLoaded);
+		HResource resource = GameResourceManager::instance().load(nativePath, flags, false);
 		if (resource == nullptr)
 			return nullptr;
 
@@ -38,11 +40,9 @@ namespace bs
 		return scriptResource->getManagedInstance();
 	}
 
-	MonoObject* ScriptResources::internal_LoadFromUUID(UUID* uuid, bool keepLoaded)
+	MonoObject* ScriptResources::internal_LoadFromUUID(UUID* uuid, ResourceLoadFlag flags)
 	{
-		ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies;
-		if (keepLoaded)
-			loadFlags |= ResourceLoadFlag::KeepInternalRef;
+		ResourceLoadFlags loadFlags = flags;
 
 		if (gApplication().isEditor())
 			loadFlags |= ResourceLoadFlag::KeepSourceData;
@@ -53,6 +53,44 @@ namespace bs
 
 		ScriptResourceBase* scriptResource = ScriptResourceManager::instance().getScriptResource(resource, true);
 		return scriptResource->getManagedInstance();
+	}
+
+	MonoObject* ScriptResources::internal_LoadAsync(MonoString* path, ResourceLoadFlag flags)
+	{
+		Path nativePath = MonoUtil::monoToString(path);
+
+		HResource resource = GameResourceManager::instance().load(nativePath, flags, true);
+		if (resource == nullptr)
+			return nullptr;
+
+		ScriptRRefBase* scriptResource = ScriptResourceManager::instance().getScriptRRef(resource);
+		if(scriptResource != nullptr)
+			return scriptResource->getManagedInstance();
+
+		return nullptr;
+	}
+
+	MonoObject* ScriptResources::internal_LoadAsyncFromUUID(UUID* uuid, ResourceLoadFlag flags)
+	{
+		ResourceLoadFlags loadFlags = flags;
+
+		if (gApplication().isEditor())
+			loadFlags |= ResourceLoadFlag::KeepSourceData;
+
+		HResource resource = gResources().loadFromUUID(*uuid, loadFlags);
+		if (resource == nullptr)
+			return nullptr;
+
+		ScriptRRefBase* scriptResource = ScriptResourceManager::instance().getScriptRRef(resource);
+		if(scriptResource != nullptr)
+			return scriptResource->getManagedInstance();
+
+		return nullptr;
+	}
+
+	float ScriptResources::internal_GetLoadProgress(ScriptRRefBase* resource, bool loadDependencies)
+	{
+		return gResources().getLoadProgress(resource->getHandle(), loadDependencies);
 	}
 
 	void ScriptResources::internal_Release(ScriptResourceBase* resource)

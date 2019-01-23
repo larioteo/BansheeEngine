@@ -23,6 +23,9 @@ namespace bs
 		/** Unregisters internal callbacks. Must be called on scripting system shutdown. */
 		static void shutDown();
 
+		/** Handles per-frame operations. Needs to be called every frame. */
+		static void update();
+
 	private:
 		ScriptScene(MonoObject* instance);
 
@@ -32,20 +35,26 @@ namespace bs
 		/** Triggered when assembly domain is loaded during assembly refresh. */
 		static void onRefreshDomainLoaded();
 
+		/** Makes the provided prefab the currently active scene. */
+		static void setActiveScene(const HPrefab& prefab);
+
 		static HEvent OnRefreshDomainLoadedConn;
 		static HEvent OnRefreshStartedConn;
 
-		static UUID ActiveSceneUUID;
-		static String ActiveSceneName;
-		static bool IsGenericPrefab;
+		static UUID sActiveSceneUUID;
+		static String sActiveSceneName;
+		static bool sIsGenericPrefab;
 
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static MonoObject* internal_LoadScene(MonoString* path);
+		static void internal_SetActiveScene(ScriptPrefab* scriptPrefab);
 		static MonoObject* internal_GetRoot();
 		static void internal_ClearScene();
 		static MonoObject* internal_GetMainCameraSO();
+
+		typedef void(BS_THUNKCALL *OnUpdateThunkDef)(MonoException**);
+		static OnUpdateThunkDef onUpdateThunk;
 	};
 
 	/** @} */

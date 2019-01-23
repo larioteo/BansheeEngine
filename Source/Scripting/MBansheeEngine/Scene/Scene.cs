@@ -1,5 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System;
 using System.Runtime.CompilerServices;
 
 namespace BansheeEngine
@@ -32,6 +34,7 @@ namespace BansheeEngine
         private static string activeSceneName = "Unnamed";
         private static UUID activeSceneUUID;
         private static bool isGenericPrefab = false;
+        private static RRef<Prefab> activateOnLoadScene;
 
         /// <summary>
         /// Returns the root scene object for the current scene.
@@ -64,34 +67,68 @@ namespace BansheeEngine
         public static void Clear()
         {
             Internal_ClearScene();
+
             activeSceneUUID = UUID.Empty;
             activeSceneName = "Unnamed";
+            activateOnLoadScene = null;
         }
 
         /// <summary>
         /// Loads a new scene.
         /// </summary>
         /// <param name="path">Path to the prefab to load.</param>
-        public static void Load(string path)
+        /// <returns>Prefab of the scene at the provided path.</returns>
+        public static Prefab Load(string path)
         {
             Clear();
-            Prefab scene = Internal_LoadScene(path);
 
+            Prefab scene = Resources.Load<Prefab>(path);
             SetActive(scene);
+
+            return scene;
         }
 
+        /// <summary>
+        /// Loads a new scene asynchronously.
+        /// </summary>
+        /// <param name="path">Path to the prefab to load.</param>
+        /// <returns>Handle to the prefab of the scene at the provided path.</returns>
+        public static RRef<Prefab> LoadAsync(string path)
+        {
+            Clear();
+
+            activateOnLoadScene = Resources.LoadAsync<Prefab>(path); 
+
+            if(activateOnLoadScene != null && activateOnLoadScene.IsLoaded)
+                SetActive(activateOnLoadScene.Value);
+
+            return activateOnLoadScene;
+        }
         /// <summary>
         /// Sets the currently active scene to the provided scene.
         /// </summary>
         /// <param name="scene">Scene which to set as active.</param>
         internal static void SetActive(Prefab scene)
         {
+            activateOnLoadScene = null;
+
             if (scene != null)
             {
                 activeSceneUUID = scene.UUID;
                 activeSceneName = scene.Name;
                 isGenericPrefab = !scene.IsScene;
+
+                Internal_SetActiveScene(scene.GetCachedPtr());
             }
+        }
+
+        /// <summary>
+        /// Called once per frame by the runtime.
+        /// </summary>
+        private static void OnUpdate()
+        {
+            if (activateOnLoadScene != null && activateOnLoadScene.IsLoaded)
+                SetActive(activateOnLoadScene.Value);
         }
 
         /// <summary>
@@ -150,7 +187,7 @@ namespace BansheeEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Prefab Internal_LoadScene(string path);
+        private static extern void Internal_SetActiveScene(IntPtr prefab);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern SceneObject Internal_GetRoot();

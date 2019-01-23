@@ -23,9 +23,11 @@ namespace bs
 	HEvent ScriptScene::OnRefreshDomainLoadedConn;
 	HEvent ScriptScene::OnRefreshStartedConn;
 
-	UUID ScriptScene::ActiveSceneUUID;
-	String ScriptScene::ActiveSceneName;
-	bool ScriptScene::IsGenericPrefab;
+	UUID ScriptScene::sActiveSceneUUID;
+	String ScriptScene::sActiveSceneName;
+	bool ScriptScene::sIsGenericPrefab;
+
+	ScriptScene::OnUpdateThunkDef ScriptScene::onUpdateThunk;
 
 	ScriptScene::ScriptScene(MonoObject* instance)
 		:ScriptObject(instance)
@@ -33,10 +35,13 @@ namespace bs
 
 	void ScriptScene::initRuntimeData()
 	{
-		metaData.scriptClass->addInternalCall("Internal_LoadScene", (void*)&ScriptScene::internal_LoadScene);
+		metaData.scriptClass->addInternalCall("Internal_SetActiveScene", (void*)&ScriptScene::internal_SetActiveScene);
 		metaData.scriptClass->addInternalCall("Internal_GetRoot", (void*)&ScriptScene::internal_GetRoot);
 		metaData.scriptClass->addInternalCall("Internal_ClearScene", (void*)&ScriptScene::internal_ClearScene);
 		metaData.scriptClass->addInternalCall("Internal_GetMainCameraSO", (void*)&ScriptScene::internal_GetMainCameraSO);
+
+		MonoMethod* updateMethod = metaData.scriptClass->getMethod("OnUpdate");
+		onUpdateThunk = (OnUpdateThunkDef)updateMethod->getThunk();
 	}
 
 	void ScriptScene::startUp()
@@ -51,11 +56,13 @@ namespace bs
 		OnRefreshDomainLoadedConn.disconnect();
 	}
 
-	MonoObject* ScriptScene::internal_LoadScene(MonoString* path)
+	void ScriptScene::update()
 	{
-		Path nativePath = MonoUtil::monoToString(path);
+		MonoUtil::invokeThunk(onUpdateThunk);
+	}
 
-		HPrefab prefab = GameResourceManager::instance().load<Prefab>(nativePath, true);
+	void ScriptScene::setActiveScene(const HPrefab& prefab)
+	{
 		if (prefab.isLoaded(false))
 		{
 			// If scene replace current root node, otherwise just append to the current root node
@@ -69,30 +76,32 @@ namespace bs
 				gSceneManager().clearScene();
 				prefab->instantiate();
 			}
-
-			ScriptResourceBase* scriptPrefab = ScriptResourceManager::instance().getScriptResource(prefab, true);
-			return scriptPrefab->getManagedInstance();
 		}
 		else
 		{
-			LOGERR("Failed loading scene at path: \"" + nativePath.toString() + "\"");
-			return nullptr;
+			LOGERR("Attempting to activate a scene that hasn't finished loading yet.");
 		}
+	}
+
+	void ScriptScene::internal_SetActiveScene(ScriptPrefab* scriptPrefab)
+	{
+		HPrefab prefab = scriptPrefab->getHandle();
+		setActiveScene(prefab);
 	}
 
 	void ScriptScene::onRefreshStarted()
 	{
 		MonoMethod* uuidMethod = metaData.scriptClass->getMethod("GetSceneUUID");
 		if (uuidMethod != nullptr)
-			ActiveSceneUUID = ScriptUUID::unbox(uuidMethod->invoke(nullptr, nullptr));
+			sActiveSceneUUID = ScriptUUID::unbox(uuidMethod->invoke(nullptr, nullptr));
 
 		MonoMethod* nameMethod = metaData.scriptClass->getMethod("GetSceneName");
 		if (nameMethod != nullptr)
-			ActiveSceneName = MonoUtil::monoToString((MonoString*)nameMethod->invoke(nullptr, nullptr));
+			sActiveSceneName = MonoUtil::monoToString((MonoString*)nameMethod->invoke(nullptr, nullptr));
 
 		MonoMethod* genericPrefabMethod = metaData.scriptClass->getMethod("GetIsGenericPrefab");
 		if (genericPrefabMethod != nullptr)
-			IsGenericPrefab = *(bool*)MonoUtil::unbox(genericPrefabMethod->invoke(nullptr, nullptr));
+			sIsGenericPrefab = *(bool*)MonoUtil::unbox(genericPrefabMethod->invoke(nullptr, nullptr));
 	}
 
 	void ScriptScene::onRefreshDomainLoaded()
@@ -101,7 +110,7 @@ namespace bs
 		if (uuidMethod != nullptr)
 		{
 			void* params[1];
-			params[0] = ScriptUUID::box(ActiveSceneUUID);
+			params[0] = ScriptUUID::box(sActiveSceneUUID);
 
 			uuidMethod->invoke(nullptr, params);
 		}
@@ -110,7 +119,7 @@ namespace bs
 		if (nameMethod != nullptr)
 		{
 			void* params[1];
-			params[0] = MonoUtil::stringToMono(ActiveSceneName);
+			params[0] = MonoUtil::stringToMono(sActiveSceneName);
 
 			nameMethod->invoke(nullptr, params);
 		}
@@ -118,7 +127,7 @@ namespace bs
 		MonoMethod* genericPrefabMethod = metaData.scriptClass->getMethod("SetIsGenericPrefab", 1);
 		if (genericPrefabMethod != nullptr)
 		{
-			void* params[1] = { &IsGenericPrefab };
+			void* params[1] = { &sIsGenericPrefab };
 			genericPrefabMethod->invoke(nullptr, params);
 		}
 	}

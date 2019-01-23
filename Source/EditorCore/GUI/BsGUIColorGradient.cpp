@@ -19,8 +19,8 @@ namespace bs
 		mColorSprite = bs_new<ImageSprite>();
 		mAlphaSprite = bs_new<ImageSprite>();
 
-		mColorImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture().getInternalPtr();
-		mAlphaImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture().getInternalPtr();
+		mColorImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture();
+		mAlphaImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture();
 	}
 
 	GUIColorGradient::~GUIColorGradient()
@@ -106,11 +106,8 @@ namespace bs
 		mAlphaImageDesc.width = mLayoutData.area.width;
 		mAlphaImageDesc.height = mLayoutData.area.height - mColorImageDesc.height;
 
-		HSpriteTexture colorTex = SpriteTexture::create(generateGradientTexture(mValue, mLayoutData.area.width, false)); 
-		HSpriteTexture alphaTex = SpriteTexture::create(generateGradientTexture(mValue, mLayoutData.area.width, true)); 
-
-		mColorImageDesc.texture = colorTex.getInternalPtr();
-		mAlphaImageDesc.texture = alphaTex.getInternalPtr();
+		mColorImageDesc.texture = SpriteTexture::create(generateGradientTexture(mValue, mLayoutData.area.width, false)); 
+		mAlphaImageDesc.texture = SpriteTexture::create(generateGradientTexture(mValue, mLayoutData.area.width, true)); 
 
 		mColorSprite->update(mColorImageDesc, (UINT64)_getParentWidget());
 		mAlphaSprite->update(mAlphaImageDesc, (UINT64)_getParentWidget());

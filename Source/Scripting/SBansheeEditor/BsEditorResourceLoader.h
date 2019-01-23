@@ -16,7 +16,7 @@ namespace bs
 	{
 	public:
 		/** @copydoc IGameResourceLoader::load */
-		HResource load(const Path& path, bool keepLoaded) const override;
+		HResource load(const Path& path, ResourceLoadFlags flags, bool async) const override;
 	};
 
 	/** @} */

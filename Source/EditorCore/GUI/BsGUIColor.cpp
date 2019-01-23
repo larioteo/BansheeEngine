@@ -18,8 +18,8 @@ namespace bs
 		mColorSprite = bs_new<ImageSprite>();
 		mAlphaSprite = bs_new<ImageSprite>();
 
-		mColorImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture().getInternalPtr();
-		mAlphaImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture().getInternalPtr();
+		mColorImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture();
+		mAlphaImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture();
 	}
 
 	GUIColor::~GUIColor()

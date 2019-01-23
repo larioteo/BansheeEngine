@@ -26,7 +26,7 @@ namespace BansheeEngine
 
         /// <summary>
         /// Returns the referenced resource. If the resource hasn't been loaded it will be loaded as if calling
-        /// <see cref="Resources.Load{T}(string,bool)"/> using default settings.
+        /// <see cref="Resources.Load{T}(string,ResourceLoadFlag)"/> using default settings.
         /// </summary>
         public Resource GenericValue => Internal_GetResource(mCachedPtr);
 
@@ -129,7 +129,7 @@ namespace BansheeEngine
     {
         /// <summary>
         /// Returns the referenced resource. If the resource hasn't been loaded it will be loaded as if calling
-        /// <see cref="Resources.Load{T}(string,bool)"/> using default settings.
+        /// <see cref="Resources.Load{T}(string,ResourceLoadFlag)"/> using default settings.
         /// </summary>
         public T Value => (T) GenericValue;
     }

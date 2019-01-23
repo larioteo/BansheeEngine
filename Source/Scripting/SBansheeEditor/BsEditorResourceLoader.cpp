@@ -8,7 +8,7 @@
 
 namespace bs
 {
-	HResource EditorResourceLoader::load(const Path& path, bool keepLoaded) const
+	HResource EditorResourceLoader::load(const Path& path, ResourceLoadFlags flags, bool async) const
 	{
 		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(path);
 
@@ -36,10 +36,6 @@ namespace bs
 					isn't flagged to be included in the build. It may not be available outside of the editor.");
 		}
 
-		ResourceLoadFlags loadFlags = ResourceLoadFlag::LoadDependencies | ResourceLoadFlag::KeepSourceData;
-		if (keepLoaded)
-			loadFlags |= ResourceLoadFlag::KeepInternalRef;
-
-		return gResources().loadFromUUID(resUUID, false, loadFlags);
+		return gResources().loadFromUUID(resUUID, async, flags);
 	}
 }
