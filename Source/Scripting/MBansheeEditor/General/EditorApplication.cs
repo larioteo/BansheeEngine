@@ -167,6 +167,34 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Returns true if the editor is waiting on a scene to be asynchronously loaded.
+        /// </summary>
+        public static bool IsSceneLoading
+        {
+            get
+            {
+                if (lastLoadedScene != null)
+                    return !lastLoadedScene.IsLoaded;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns the load progress of the scene that's being asynchronously loaded
+        /// </summary>
+        public static float SceneLoadProgress
+        {
+            get
+            {
+                if (lastLoadedScene != null)
+                    return Resources.GetLoadProgress(lastLoadedScene);
+
+                return 0.0f;
+            }
+        }
+
+        /// <summary>
         /// Render target that the main camera in the scene (if any) will render its view to. This generally means the main 
         /// game window when running standalone, or the Game viewport when running in editor.
         /// </summary>
@@ -249,6 +277,7 @@ namespace BansheeEditor
 
         private static FolderMonitor monitor;
         private static ScriptCodeManager codeManager;
+        private static RRef<Prefab> lastLoadedScene;
         private static bool sceneDirty;
         private static bool unitTestsExecuted;
         private static EditorPersistentData persistentData;
@@ -494,9 +523,12 @@ namespace BansheeEditor
                 (scenePath) =>
                 {
                     if (string.IsNullOrEmpty(path))
+                    {
                         Scene.Clear();
+                        lastLoadedScene = null;
+                    }
                     else
-                        Scene.Load(path);
+                        lastLoadedScene = Scene.LoadAsync(path);
 
                     SetSceneDirty(false);
 
@@ -981,7 +1013,7 @@ namespace BansheeEditor
 
             if (!string.IsNullOrWhiteSpace(ProjectSettings.LastOpenScene))
             {
-                Scene.Load(ProjectSettings.LastOpenScene);
+                lastLoadedScene = Scene.LoadAsync(ProjectSettings.LastOpenScene);
                 SetSceneDirty(false);
             }
         }

@@ -35,6 +35,7 @@ namespace BansheeEditor
         private RenderTexture renderTexture;
         private GUILayoutY mainLayout;
         private GUIPanel rtPanel;
+        private GUIPanel sceneAxesPanel;
         private GUIButton focusCatcher;
 
         private GUIRenderTexture renderTextureGUI;
@@ -62,10 +63,17 @@ namespace BansheeEditor
 
         private GUIButton cameraOptionsButton;
 
+        private GUILayout progressLayout;
+        private GUIProgressBar loadProgressBar;
+        private GUILabel loadLabel;
+
         private SceneAxesGUI sceneAxesGUI;
 
         private bool hasContentFocus = false;
         private bool HasContentFocus { get { return HasFocus && hasContentFocus; } }
+
+        private bool loadingProgressShown = false;
+        private bool AllowViewportInput { get { return !loadingProgressShown; } }
 
         private int editorSettingsHash = int.MaxValue;
 
@@ -315,13 +323,33 @@ namespace BansheeEditor
             handlesLayout.AddElement(rotateSnapInput);
             handlesLayout.AddSpace(10);
             handlesLayout.AddElement(cameraOptionsButton);
+            handlesLayout.SetHeight(viewButton.Bounds.height);
 
             GUIPanel mainPanel = mainLayout.AddPanel();
             rtPanel = mainPanel.AddPanel();
 
+            // Loading progress
+            loadLabel = new GUILabel(new LocEdString("Loading scene..."));
+            loadProgressBar = new GUIProgressBar("", GUIOption.FixedWidth(200));
+
+            progressLayout = mainPanel.AddLayoutY();
+            progressLayout.AddFlexibleSpace();
+            GUILayout loadLabelLayout = progressLayout.AddLayoutX();
+            loadLabelLayout.AddFlexibleSpace();
+            loadLabelLayout.AddElement(loadLabel);
+            loadLabelLayout.AddFlexibleSpace();
+
+            GUILayout progressBarLayout = progressLayout.AddLayoutX();
+            progressBarLayout.AddFlexibleSpace();
+            progressBarLayout.AddElement(loadProgressBar);
+            progressBarLayout.AddFlexibleSpace();
+            progressLayout.AddFlexibleSpace();
+
+            progressLayout.Active = false;
+
             selectionPanel = mainPanel.AddPanel(-1);
 
-            GUIPanel sceneAxesPanel = mainPanel.AddPanel(-1);
+            sceneAxesPanel = mainPanel.AddPanel(-1);
             sceneAxesGUI = new SceneAxesGUI(this, sceneAxesPanel, HandleAxesGUISize, HandleAxesGUISize, ProjectionType.Perspective);
 
             focusCatcher = new GUIButton("", EditorStyles.Blank);
@@ -338,6 +366,7 @@ namespace BansheeEditor
             frameKey = new VirtualButton(FrameBinding);
 
             UpdateRenderTexture(Width, Height - HeaderHeight);
+            UpdateLoadingProgress();
         }
 
         private void OnCameraOptionsClicked()
@@ -522,6 +551,8 @@ namespace BansheeEditor
 
         private void OnEditorUpdate()
         {
+            UpdateLoadingProgress();
+
             if (HasFocus)
             {
                 if (!Input.IsPointerButtonHeld(PointerButton.Right))
@@ -555,8 +586,23 @@ namespace BansheeEditor
 
             Vector2I scenePos;
             bool inBounds = ScreenToScenePos(Input.PointerPosition, out scenePos);
+
+            bool clearSelection = false;
+            if (AllowViewportInput)
+            {
+                if (Input.IsPointerButtonUp(PointerButton.Left))
+                    clearSelection = true;
+                else if (Input.IsPointerButtonDown(PointerButton.Left))
+                    mouseDownPosition = scenePos;
+            }
+            else
+            {
+                clearSelection = true;
+                inBounds = false;
+            }
+
             bool dragResult = false;
-            if (Input.IsPointerButtonUp(PointerButton.Left))
+            if (clearSelection)
             {
                 dragResult = EndDragSelection();
                 if (sceneHandles.IsActive())
@@ -564,10 +610,6 @@ namespace BansheeEditor
 
                 if (sceneAxesGUI.IsActive())
                     sceneAxesGUI.ClearSelection();
-            }
-            else if (Input.IsPointerButtonDown(PointerButton.Left))
-            {
-                mouseDownPosition = scenePos;
             }
 
             bool draggedOver = DragDrop.DragInProgress || DragDrop.DropInProgress;
@@ -676,7 +718,7 @@ namespace BansheeEditor
                 }
             }
 
-            if (HasContentFocus || IsPointerHovering)
+            if ((HasContentFocus || IsPointerHovering) && AllowViewportInput)
             {
                 cameraController.EnableInput(true);
 
@@ -715,10 +757,13 @@ namespace BansheeEditor
             else
                 cameraController.EnableInput(false);
 
-            SceneHandles.BeginInput();
-            sceneHandles.UpdateInput(scenePos, Input.PointerDelta);
-            sceneAxesGUI.UpdateInput(scenePos);
-            SceneHandles.EndInput();
+            if (AllowViewportInput)
+            {
+                SceneHandles.BeginInput();
+                sceneHandles.UpdateInput(scenePos, Input.PointerDelta);
+                sceneAxesGUI.UpdateInput(scenePos);
+                SceneHandles.EndInput();
+            }
 
             sceneHandles.Draw();
             sceneAxesGUI.Draw();
@@ -971,6 +1016,34 @@ namespace BansheeEditor
             }
 
             objects = cleanList.ToArray();
+        }
+
+        /// <summary>
+        /// Checks if the load progress bar needs to be shown, shows/hides it and updates the progress accordingly.
+        /// </summary>
+        private void UpdateLoadingProgress()
+        {
+            bool needsProgress = EditorApplication.IsSceneLoading;
+
+            if (needsProgress && !loadingProgressShown)
+            {
+                progressLayout.Active = true;
+                rtPanel.Active = false;
+                sceneAxesPanel.Active = false;
+
+                loadingProgressShown = true;
+            }
+            else if(!needsProgress && loadingProgressShown)
+            {
+                progressLayout.Active = false;
+                rtPanel.Active = true;
+                sceneAxesPanel.Active = true;
+
+                loadingProgressShown = false;
+            }
+
+            if (needsProgress)
+                loadProgressBar.Percent = EditorApplication.SceneLoadProgress;
         }
 
         /// <summary>

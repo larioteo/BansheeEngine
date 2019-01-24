@@ -13,7 +13,14 @@ namespace BansheeEditor
     /// </summary>
     public class HierarchyWindow : EditorWindow, IGlobalShortcuts
     {
+        private GUIScrollArea treeScrollArea;
         private GUISceneTreeView treeView;
+
+        private GUILayout progressLayout;
+        private GUIProgressBar loadProgressBar;
+        private GUILabel loadLabel;
+
+        private bool loadingProgressShown = false;
 
         /// <summary>
         /// Opens the hierarchy window.
@@ -68,23 +75,70 @@ namespace BansheeEditor
 
         private void OnInitialize()
         {
-            GUIScrollArea scrollArea = new GUIScrollArea();
-            GUI.AddElement(scrollArea);
+            treeScrollArea = new GUIScrollArea();
+            GUI.AddElement(treeScrollArea);
 
             treeView = new GUISceneTreeView(GUIOption.FlexibleHeight(20), GUIOption.FlexibleWidth(20));
-            scrollArea.Layout.AddElement(treeView);
+            treeScrollArea.Layout.AddElement(treeView);
+
+            // Loading progress
+            loadLabel = new GUILabel(new LocEdString("Loading scene..."));
+            loadProgressBar = new GUIProgressBar();
+
+            progressLayout = GUI.AddLayoutY();
+            progressLayout.AddFlexibleSpace();
+            GUILayout loadLabelLayout = progressLayout.AddLayoutX();
+            loadLabelLayout.AddFlexibleSpace();
+            loadLabelLayout.AddElement(loadLabel);
+            loadLabelLayout.AddFlexibleSpace();
+
+            GUILayout progressBarLayout = progressLayout.AddLayoutX();
+            progressBarLayout.AddFlexibleSpace();
+            progressBarLayout.AddElement(loadProgressBar);
+            progressBarLayout.AddFlexibleSpace();
+            progressLayout.AddFlexibleSpace();
+
+            progressLayout.Active = false;
 
             EditorVirtualInput.OnButtonUp += OnButtonUp;
         }
 
         private void OnEditorUpdate()
         {
+            UpdateLoadingProgress();
+
             treeView.Update();
         }
 
         private void OnDestroy()
         {
             EditorVirtualInput.OnButtonUp -= OnButtonUp;
+        }
+
+        /// <summary>
+        /// Checks if the load progress bar needs to be shown, shows/hides it and updates the progress accordingly.
+        /// </summary>
+        private void UpdateLoadingProgress()
+        {
+            bool needsProgress = EditorApplication.IsSceneLoading;
+
+            if (needsProgress && !loadingProgressShown)
+            {
+                progressLayout.Active = true;
+                treeScrollArea.Active = false;
+
+                loadingProgressShown = true;
+            }
+            else if(!needsProgress && loadingProgressShown)
+            {
+                progressLayout.Active = false;
+                treeScrollArea.Active = true;
+
+                loadingProgressShown = false;
+            }
+
+            if (needsProgress)
+                loadProgressBar.Percent = EditorApplication.SceneLoadProgress;
         }
 
         /// <summary>
