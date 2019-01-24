@@ -47,6 +47,7 @@ namespace bs
 		startUpDesc.audio = BS_AUDIO_MODULE;
 		startUpDesc.physics = BS_PHYSICS_MODULE;
 		startUpDesc.scripting = true;
+		startUpDesc.physicsCooking = true;
 
 		startUpDesc.primaryWindowDesc.videoMode = VideoMode(1920, 1080);
 		startUpDesc.primaryWindowDesc.title = "BansheeEditor";

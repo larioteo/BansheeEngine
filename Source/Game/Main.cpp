@@ -79,6 +79,7 @@ void runApplication()
 	startUpDesc.audio = BS_AUDIO_MODULE;
 	startUpDesc.physics = BS_PHYSICS_MODULE;
 	startUpDesc.scripting = true;
+	startUpDesc.physicsCooking = false;
 
 	startUpDesc.primaryWindowDesc.videoMode = VideoMode(resolutionWidth, resolutionHeight);
 	startUpDesc.primaryWindowDesc.title = toString(gameSettings->titleBarText);
