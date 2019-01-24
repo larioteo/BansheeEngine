@@ -49,8 +49,10 @@ namespace bs
 
 	void GUIColorGradient::setGradient(const ColorGradient& color)
 	{
-		mValue = color;
+		if(mValue == color)
+			return;
 
+		mValue = color;
 		_markContentAsDirty();
 	}
 

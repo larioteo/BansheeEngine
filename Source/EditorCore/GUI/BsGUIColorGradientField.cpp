@@ -21,6 +21,9 @@ namespace bs
 
 	void GUIColorGradientField::setValue(const ColorGradient& gradient)
 	{
+		if(mValue == gradient)
+			return;
+
 		mValue = gradient;
 		mGradient->setGradient(gradient);
 	}

@@ -65,6 +65,9 @@ namespace bs
 
 	void GUIColorDistributionField::setValue(const ColorDistribution& value)
 	{
+		if(mValue == value)
+			return;
+
 		mValue = value;
 
 		switch (mPropertyType)

@@ -41,6 +41,9 @@ namespace bs
 
 		TAnimationCurve<float> curve;
 		Color color;
+
+		bool operator== (const CurveDrawInfo& rhs) const { return curve == rhs.curve && color == rhs.color; }
+		bool operator!= (const CurveDrawInfo& rhs) const { return !operator==(rhs); }
 	};
 
 	/** GUI element that displays one or multiple curves. */

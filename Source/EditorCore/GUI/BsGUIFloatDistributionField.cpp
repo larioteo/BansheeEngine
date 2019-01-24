@@ -80,6 +80,9 @@ namespace bs
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::setValue(const TDistribution<T>& value)
 	{
+		if(mValue == value)
+			return;
+
 		mValue = value;
 
 		switch (mPropertyType)

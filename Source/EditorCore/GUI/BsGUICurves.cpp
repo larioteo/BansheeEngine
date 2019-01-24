@@ -52,6 +52,9 @@ namespace bs
 
 	void GUICurves::setCurves(const Vector<CurveDrawInfo>& curves)
 	{
+		if(mCurves == curves)
+			return;
+
 		mCurves = curves;
 		_markContentAsDirty();
 	}
