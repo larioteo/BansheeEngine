@@ -1,7 +1,7 @@
 //********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "GUI/BsGUIWindowFrameWidget.h"
-#include "RTTI/BsGUIWindowFrameWidgetRTTI.h"
+#include "Private/RTTI/BsGUIWindowFrameWidgetRTTI.h"
 #include "GUI/BsGUIPanel.h"
 #include "GUI/BsCGUIWidget.h"
 #include "GUI/BsGUILayout.h"

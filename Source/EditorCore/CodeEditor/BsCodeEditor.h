@@ -79,7 +79,8 @@ namespace bs
 		 * Synchronizes all code files and assemblies in the active project and updates the project solution for the active
 		 * editor. Each project can only have one solution per editor.
 		 */
-		void syncSolution() const;
+		void syncSolution(const String& gameProjectName, const CodeProjectReference& engineAssemblyRef, 
+			const CodeProjectReference& editorAssemblyRef) const;
 
 	private:
 		/**	Returns the absolute path at which the external editor solution file should be stored. */

@@ -34,15 +34,6 @@ namespace bs
 		/**	Returns the absolute path where the builtin editor assets are located. */
 		Path getDataPath() const { return mBuiltinDataPath; }
 
-		/**	Returns the absolute path to the built-in managed editor assembly file. */
-		Path getEditorAssemblyPath() const;
-
-		/**	Returns the absolute path of the managed editor script assembly file. */
-		Path getEditorScriptAssemblyPath() const;
-
-		/** @copydoc	Application::getScriptAssemblyFolder */
-		Path getScriptAssemblyFolder() const override;
-
 		/** Returns a set of serializable editor settings that contain every globally customizable editor property. */
 		SPtr<EditorSettings> getEditorSettings() const { return mEditorSettings; }
 
@@ -151,7 +142,7 @@ namespace bs
 		Timer mSplashScreenTimer;
 		bool mSplashScreenShown = true;
 
-		DynLib* mSBansheeEditorPlugin;
+		DynLib* mEditorScriptPlugin;
 	};
 
 	/**	Easy way to access EditorApplication. */

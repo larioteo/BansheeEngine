@@ -127,16 +127,16 @@ set(BS_BANSHEEEDITOR_INC_UNDOREDO
 )
 
 set(BS_BANSHEEEDITOR_INC_RTTI
-	"RTTI/BsPlatformInfoRTTI.h"
-	"RTTI/BsBuildDataRTTI.h"
-	"RTTI/BsDockManagerLayoutRTTI.h"
-	"RTTI/BsEditorWidgetLayoutRTTI.h"
-	"RTTI/BsProjectLibraryEntriesRTTI.h"
-	"RTTI/BsProjectResourceMetaRTTI.h"
-	"RTTI/BsEditorSettingsRTTI.h"
-	"RTTI/BsSettingsRTTI.h"
-	"RTTI/BsProjectSettingsRTTI.h"
-	"RTTI/BsGUIWindowFrameWidgetRTTI.h"
+	"Private/RTTI/BsPlatformInfoRTTI.h"
+	"Private/RTTI/BsBuildDataRTTI.h"
+	"Private/RTTI/BsDockManagerLayoutRTTI.h"
+	"Private/RTTI/BsEditorWidgetLayoutRTTI.h"
+	"Private/RTTI/BsProjectLibraryEntriesRTTI.h"
+	"Private/RTTI/BsProjectResourceMetaRTTI.h"
+	"Private/RTTI/BsEditorSettingsRTTI.h"
+	"Private/RTTI/BsSettingsRTTI.h"
+	"Private/RTTI/BsProjectSettingsRTTI.h"
+	"Private/RTTI/BsGUIWindowFrameWidgetRTTI.h"
 )
 
 set(BS_BANSHEEEDITOR_SRC_NOFILTER
@@ -255,20 +255,20 @@ set(BS_BANSHEEEDITOR_SRC_CODEEDITOR
 )
 
 set(BS_BANSHEEEDITOR_INC_WIN32
-	"Win32/BsVSCodeEditor.h"
+	"Private/Win32/BsVSCodeEditor.h"
 )
 
 set(BS_BANSHEEEDITOR_SRC_WIN32
-	"Win32/BsVSCodeEditor.cpp"
-	"Win32/BsWin32BrowseDialogs.cpp"
+	"Private/Win32/BsVSCodeEditor.cpp"
+	"Private/Win32/BsWin32BrowseDialogs.cpp"
 )
 
 set(BS_BANSHEEEDITOR_SRC_LINUX
-	"Linux/BsLinuxBrowseDialogs.cpp"
+	"Private/Linux/BsLinuxBrowseDialogs.cpp"
 )
 
 set(BS_BANSHEEEDITOR_SRC_MACOS
-	"MacOS/BsMacOSBrowseDialogs.mm"
+	"Private/MacOS/BsMacOSBrowseDialogs.mm"
 	)
 
 if(WIN32)

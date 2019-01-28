@@ -192,6 +192,7 @@ namespace bs
 
 	static constexpr const char* EDITOR_ASSEMBLY = "MBansheeEditor";
 	static constexpr const char* SCRIPT_EDITOR_ASSEMBLY = "MScriptEditor";
+	static constexpr const char* EDITOR_NS = "BansheeEditor";
 	static const Path PROJECT_INTERNAL_DIR = u8"Internal/";
 	static const Path INTERNAL_ASSEMBLY_PATH = PROJECT_INTERNAL_DIR + "Assemblies/";
 

@@ -24,6 +24,9 @@
   * Scripts and data transparently reloaded after compilation so changes may be tested immediately
   * Pause and frame-step to better test and debug your game
   * Analyze and modify scene while playing
+* __Animation__
+  * Built-in animation editor
+  * Generic property animation (Animate any script property)
 * __Fully extensible__
   * Specialized scripting API only for editor extensions
   * Easy to use without needing to know about engine internals

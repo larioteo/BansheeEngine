@@ -9,7 +9,7 @@
 #include "CodeEditor/BsMDCodeEditor.h"
 
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include "Win32/BsVSCodeEditor.h"
+#include "Private/Win32/BsVSCodeEditor.h"
 #else
 // Add implementations for code editors on other platforms.
 #endif
@@ -82,7 +82,8 @@ namespace bs
 		mActiveEditor->openFile(getSolutionPath(), filePath, lineNumber);
 	}
 
-	void CodeEditorManager::syncSolution() const
+	void CodeEditorManager::syncSolution(const String& gameProjectName, const CodeProjectReference& engineAssemblyRef, 
+			const CodeProjectReference& editorAssemblyRef) const
 	{
 		if (mActiveEditor == nullptr)
 			return;
@@ -105,11 +106,11 @@ namespace bs
 
 		// Game project
 		CodeProjectData& gameProject = slnData.projects[0];
-		gameProject.name = String(SCRIPT_GAME_ASSEMBLY);
+		gameProject.name = gameProjectName;
 		gameProject.defines = BuildManager::instance().getDefines(activePlatform);
 		
 		//// Add references
-		gameProject.assemblyReferences.push_back(CodeProjectReference{ String(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
+		gameProject.assemblyReferences.push_back(engineAssemblyRef);
 		for (auto& assemblyName : frameworkAssemblies)
 			gameProject.assemblyReferences.push_back(CodeProjectReference{ assemblyName, Path::BLANK });
 
@@ -118,8 +119,8 @@ namespace bs
 		editorProject.name = String(SCRIPT_EDITOR_ASSEMBLY);
 
 		//// Add references
-		editorProject.assemblyReferences.push_back(CodeProjectReference{ String(ENGINE_ASSEMBLY), gApplication().getEngineAssemblyPath() });
-		editorProject.assemblyReferences.push_back(CodeProjectReference{ String(EDITOR_ASSEMBLY), gEditorApplication().getEditorAssemblyPath() });
+		editorProject.assemblyReferences.push_back(engineAssemblyRef);
+		editorProject.assemblyReferences.push_back(editorAssemblyRef);
 		for (auto& assemblyName : frameworkAssemblies)
 			gameProject.assemblyReferences.push_back(CodeProjectReference{ assemblyName, Path::BLANK });
 

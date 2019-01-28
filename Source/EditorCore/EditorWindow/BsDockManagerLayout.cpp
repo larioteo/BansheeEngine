@@ -1,7 +1,7 @@
 //********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "EditorWindow/BsDockManagerLayout.h"
-#include "RTTI/BsDockManagerLayoutRTTI.h"
+#include "Private/RTTI/BsDockManagerLayoutRTTI.h"
 #include "EditorWindow/BsEditorWidgetManager.h"
 
 namespace bs

@@ -23,7 +23,7 @@ set_property(TARGET Banshee3D PROPERTY FOLDER Executable)
 
 # Plugin dependencies
 add_engine_dependencies(Banshee3D)
-add_dependencies(Banshee3D bsfFBXImporter bsfFontImporter bsfFreeImgImporter SBansheeEditor MonoExec)
+add_dependencies(Banshee3D bsfFBXImporter bsfFontImporter bsfFreeImgImporter EditorScript MonoExec)
 
 # Compiler flags
 if(MSVC)
@@ -31,4 +31,4 @@ if(MSVC)
 endif()
 
 # Make sure `bsf` dlls are copied to our folders
-copyBsfBinaries(Banshee3D ${BSF_DIRECTORY})
+install_dll_on_build(Banshee3D ${BSF_DIRECTORY})

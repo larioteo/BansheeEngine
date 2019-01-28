@@ -30,3 +30,4 @@ Documentation/html
 *.opendb
 Source/Experimental
 .vs/*
+Source/EditorManaged/MBansheeEditor.csproj
