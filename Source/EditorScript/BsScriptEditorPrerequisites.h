@@ -38,7 +38,7 @@
  *  @{
  */
 
-/** @defgroup SBansheeEditor SBansheeEditor
+/** @defgroup EditorScript EditorScript 
  *	Contains script interop objects and other scripting functionality for the editor layer.
  *  @{
  */

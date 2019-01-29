@@ -7,7 +7,7 @@
 
 namespace bs
 {
-	/** @addtogroup SBansheeEditor
+	/** @addtogroup EditorScript
 	 *  @{
 	 */
 

@@ -9,7 +9,7 @@ namespace bs
 {
 	extern "C" BS_SCR_BED_EXPORT const char* getPluginName()
 	{
-		static const char* pluginName = "SBansheeEditor";
+		static const char* pluginName = "EditorScript";
 		return pluginName;
 	}
 
