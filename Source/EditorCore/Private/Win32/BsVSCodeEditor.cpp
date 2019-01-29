@@ -1,6 +1,6 @@
 //********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
-#include "Win32/BsVSCodeEditor.h"
+#include "Private/Win32/BsVSCodeEditor.h"
 #include <windows.h>
 #include <atlbase.h>
 #include "FileSystem/BsFileSystem.h"
@@ -13,9 +13,9 @@
 //#import "libid:80cc9f66-e7d8-4ddd-85b6-d9e6cd0e93e2" version("8.0") lcid("0") raw_interfaces_only named_guids
 //#pragma warning(default: 4278)
 
-#include "Win32/dte80a.tlh"
+#include "Private/Win32/dte80a.tlh"
 
-#include "Win32/Setup.Configuration.h"
+#include "Private/Win32/Setup.Configuration.h"
 #include "String/BsUnicode.h"
 _COM_SMARTPTR_TYPEDEF(ISetupInstance, __uuidof(ISetupInstance));
 _COM_SMARTPTR_TYPEDEF(ISetupInstance2, __uuidof(ISetupInstance2));

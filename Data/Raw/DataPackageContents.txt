@@ -6,6 +6,9 @@ Data/arial.ttf.asset
 Data/arial.ttf_8_texpage_0.asset
 Data/arialAA.ttf.asset
 Data/arialAA.ttf_16_texpage_0.asset
+Data/arialBold.ttf.asset
+Data/arialBold.ttf_8_texpage_0.asset
+Data/arialBold.ttf_11_texpage_0.asset
 Data/GUISkin.json.asset
 Data/Layout.asset
 Data/SplashScreen.png.asset
