@@ -374,7 +374,7 @@ namespace BansheeEditor
                 SerializableProperty property = GetKey<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Key[" + RowIdx + "]";
-                fieldKey = CreateInspectable(dictParent.Inspector, "Key", entryPath, 0, Depth + 1,
+                fieldKey = CreateField(dictParent.Inspector, "Key", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
 
                 return fieldKey.GetTitleLayout();
@@ -387,7 +387,7 @@ namespace BansheeEditor
                 SerializableProperty property = GetValue<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Value[" + RowIdx + "]";
-                fieldValue = CreateInspectable(dictParent.Inspector, "Value", entryPath, 0, Depth + 1,
+                fieldValue = CreateField(dictParent.Inspector, "Value", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
             }
 

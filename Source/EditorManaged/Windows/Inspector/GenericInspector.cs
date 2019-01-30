@@ -26,22 +26,9 @@ namespace BansheeEditor
 
             if (InspectedObject != null)
             {
-                int currentIndex = 0;
                 SerializableObject serializableObject = new SerializableObject(InspectedObject.GetType(), InspectedObject);
-                foreach (var field in serializableObject.Fields)
-                {
-                    if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
-                        continue;
-                    
-                    string path = field.Name;
-                    InspectableField inspectableField = InspectableField.CreateInspectable(this, field.Name, path,
-                        currentIndex, 0, new InspectableFieldLayout(Layout), field.GetProperty(), InspectableFieldStyle.Create(field));
-
-                    inspectableFields.Add(inspectableField);
-                    isEmpty = false;
-
-                    currentIndex += inspectableField.GetNumLayoutElements();
-                }
+                inspectableFields = InspectableField.CreateFields(serializableObject, this, "", 0, Layout);
+                isEmpty = inspectableFields.Count > 0;
 
                 base.SetVisible(!isEmpty);
             }

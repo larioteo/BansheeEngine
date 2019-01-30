@@ -383,7 +383,7 @@ namespace BansheeEditor
                 styleInfo.StyleFlags &= ~InspectableFieldStyleFlags.NativeWrapper;
 
                 string entryPath = arrayParent.Path + "[" + SeqIndex + "]";
-                field = CreateInspectable(arrayParent.Inspector, SeqIndex + ".", entryPath, 0, Depth + 1,
+                field = CreateField(arrayParent.Inspector, SeqIndex + ".", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property, styleInfo);
 
                 return field.GetTitleLayout();

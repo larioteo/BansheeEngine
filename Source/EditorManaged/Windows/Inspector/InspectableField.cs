@@ -1,6 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
+using System.Collections.Generic;
 using BansheeEngine;
  
 namespace BansheeEditor
@@ -116,6 +117,77 @@ namespace BansheeEditor
         }
 
         /// <summary>
+        /// Allows the user to override the default inspector GUI for a specific field in an object. If this method
+        /// returns null the default field will be used instead.
+        /// </summary>
+        /// <param name="field">Field to generate inspector GUI for.</param>
+        /// <param name="parent">Parent Inspector the GUI will be rendered on.</param>
+        /// <param name="path">Full path to the provided field (includes name of this field and all parent fields).</param>
+        /// <param name="layout">Parent layout that all the field elements will be added to.</param>
+        /// <param name="layoutIndex">Index into the parent layout at which to insert the GUI elements for the field .</param>
+        /// <param name="depth">
+        /// Determines how deep within the inspector nesting hierarchy is this field. Some fields may contain other fields,
+        /// in which case you should increase this value by one.
+        /// </param>
+        /// <returns>
+        /// Inspectable field implementation that can be used for displaying the GUI for the provided field. Or null if
+        /// default field GUI should be used instead.
+        /// </returns>
+        public delegate InspectableField FieldOverrideCallback(SerializableField field, Inspector parent, string path,
+            InspectableFieldLayout layout, int layoutIndex, int depth);
+
+        /// <summary>
+        /// Creates inspectable fields all the fields/properties of the specified object.
+        /// </summary>
+        /// <param name="obj">Object whose fields the GUI will be drawn for.</param>
+        /// <param name="parent">Parent Inspector to draw in.</param>
+        /// <param name="path">Full path to the field this provided object was retrieved from.</param>
+        /// <param name="depth">
+        /// Determines how deep within the inspector nesting hierarchy is this objects. Some fields may contain other
+        /// fields, in which case you should increase this value by one.
+        /// </param>
+        /// <param name="layout">Parent layout that all the field GUI elements will be added to.</param>
+        /// <param name="overrideCallback">
+        /// Optional callback that allows you to override the look of individual fields in the object. If non-null the
+        /// callback will be called with information about every field in the provided object. If the callback returns
+        /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
+        /// will be used.
+        /// </param>
+        public static List<InspectableField> CreateFields(SerializableObject obj, Inspector parent, string path, 
+            int depth, GUILayoutY layout, FieldOverrideCallback overrideCallback = null)
+        {
+            List<InspectableField> fields = new List<InspectableField>();
+
+            int currentIndex = 0;
+            foreach (var field in obj.Fields)
+            {
+                if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
+                    continue;
+
+                string fieldName = field.Name;
+                string childPath = string.IsNullOrEmpty(path) ? fieldName : path + "/" + fieldName;
+
+                InspectableField inspectableField = null;
+
+                if(overrideCallback != null)
+                    inspectableField = overrideCallback(field, parent, path, new InspectableFieldLayout(layout), 
+                        currentIndex, depth);
+
+                if (inspectableField == null)
+                {
+                    inspectableField = CreateField(parent, fieldName, childPath,
+                        currentIndex, depth, new InspectableFieldLayout(layout), field.GetProperty(), 
+                        InspectableFieldStyle.Create(field));
+                }
+
+                fields.Add(inspectableField);
+                currentIndex += inspectableField.GetNumLayoutElements();
+            }
+
+            return fields;
+        }
+
+        /// <summary>
         /// Creates a new inspectable field, automatically detecting the most appropriate implementation for the type
         /// contained in the provided serializable property. This may be one of the built-in inspectable field implemetations
         /// (like ones for primitives like int or bool), or a user defined implementation defined with a 
@@ -132,7 +204,7 @@ namespace BansheeEditor
         /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         /// <returns>Inspectable field implementation that can be used for displaying the GUI for a serializable property
         ///          of the provided type.</returns>
-        public static InspectableField CreateInspectable(Inspector parent, string title, string path, int layoutIndex, 
+        public static InspectableField CreateField(Inspector parent, string title, string path, int layoutIndex, 
             int depth, InspectableFieldLayout layout, SerializableProperty property, InspectableFieldStyleInfo style = null)
         {
             InspectableField field = null;

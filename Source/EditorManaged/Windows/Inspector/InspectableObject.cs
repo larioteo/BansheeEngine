@@ -193,20 +193,7 @@ namespace BansheeEditor
                        GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
                        backgroundPanel.AddElement(inspectorContentBg);
 
-                       int currentIndex = 0;
-                       foreach (var field in fields)
-                       {
-                           if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
-                               continue;
-
-                           string childPath = path + "/" + field.Name;
-
-                           InspectableField inspectable = CreateInspectable(parent, field.Name, childPath,
-                               currentIndex, depth + 1, new InspectableFieldLayout(guiContentLayout), field.GetProperty(), InspectableFieldStyle.Create(field));
-
-                           children.Add(inspectable);
-                           currentIndex += inspectable.GetNumLayoutElements();
-                       }
+                       children = CreateFields(serializableObject, parent, path, depth + 1, guiContentLayout);
                    }
                }
                else
