@@ -31,6 +31,7 @@ namespace BansheeEditor
         private ContextMenu createContextMenu;
         private bool isExpanded;
         private bool forceUpdate = true;
+        private bool isInline;
         private State state;
         private Type[] instantiableTypes;
 
@@ -51,33 +52,39 @@ namespace BansheeEditor
         {
             this.style = style;
             isExpanded = parent.Persistent.GetBool(path + "_Expanded");
+            isInline = style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.Inline);
 
             // Builds a context menu that lets the user create objects to assign to this field.
-            instantiableTypes = GetInstantiableTypes(property.InternalType);
-            if (instantiableTypes.Length > 1)
+            bool hasCreateButton = !property.IsValueType && !isInline;
+            if (hasCreateButton)
             {
-                createContextMenu = new ContextMenu();
-
-                Array.Sort(instantiableTypes, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
-
-                bool showNamespace = false;
-                string ns = instantiableTypes[0].Namespace;
-                for (int i = 1; i < instantiableTypes.Length; i++)
+                instantiableTypes = GetInstantiableTypes(property.InternalType);
+                if (instantiableTypes.Length > 1)
                 {
-                    if (instantiableTypes[i].Namespace != ns)
+                    createContextMenu = new ContextMenu();
+
+                    Array.Sort(instantiableTypes, (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+
+                    bool showNamespace = false;
+                    string ns = instantiableTypes[0].Namespace;
+                    for (int i = 1; i < instantiableTypes.Length; i++)
                     {
-                        showNamespace = true;
-                        break;
+                        if (instantiableTypes[i].Namespace != ns)
+                        {
+                            showNamespace = true;
+                            break;
+                        }
                     }
-                }
 
-                foreach (var type in instantiableTypes)
-                {
-                    string prefix = "";
-                    if (showNamespace)
-                        prefix = type.Namespace + ".";
+                    foreach (var type in instantiableTypes)
+                    {
+                        string prefix = "";
+                        if (showNamespace)
+                            prefix = type.Namespace + ".";
 
-                    createContextMenu.AddItem(prefix + type.Name, () => property.SetValue(Activator.CreateInstance(type)));
+                        createContextMenu.AddItem(prefix + type.Name,
+                            () => property.SetValue(Activator.CreateInstance(type)));
+                    }
                 }
             }
         }
@@ -131,6 +138,9 @@ namespace BansheeEditor
         {
             Action BuildEmptyGUI = () =>
             {
+                if (isInline)
+                    return;
+
                 guiInternalTitleLayout = guiTitleLayout.InsertLayoutX(0);
 
                 guiInternalTitleLayout.AddElement(new GUILabel(title));
@@ -138,7 +148,7 @@ namespace BansheeEditor
 
                 if (!property.IsValueType)
                 {
-                    GUIContent createIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Create), 
+                    GUIContent createIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Create),
                         new LocEdString("Create"));
                     guiCreateBtn = new GUIButton(createIcon, GUIOption.FixedWidth(30));
                     guiCreateBtn.OnClick += OnCreateButtonClicked;
@@ -146,117 +156,132 @@ namespace BansheeEditor
                 }
             };
 
-           Action BuildFilledGUI = () =>
-           {
-               guiInternalTitleLayout = guiTitleLayout.InsertLayoutX(0);
+            Action BuildFilledGUI = () =>
+            {
+                if (!isInline)
+                {
+                    guiInternalTitleLayout = guiTitleLayout.InsertLayoutX(0);
 
-               GUIToggle guiFoldout = new GUIToggle(title, EditorStyles.Foldout);
-               guiFoldout.Value = isExpanded;
-               guiFoldout.AcceptsKeyFocus = false;
-               guiFoldout.OnToggled += OnFoldoutToggled;
-               guiInternalTitleLayout.AddElement(guiFoldout);
+                    GUIToggle guiFoldout = new GUIToggle(title, EditorStyles.Foldout);
+                    guiFoldout.Value = isExpanded;
+                    guiFoldout.AcceptsKeyFocus = false;
+                    guiFoldout.OnToggled += OnFoldoutToggled;
+                    guiInternalTitleLayout.AddElement(guiFoldout);
 
-               if (!style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NotNull))
-               {
-                   GUIContent clearIcon = new GUIContent(EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear),
-                       new LocEdString("Clear"));
-                   GUIButton clearBtn = new GUIButton(clearIcon, GUIOption.FixedWidth(20));
-                   clearBtn.OnClick += OnClearButtonClicked;
-                   guiInternalTitleLayout.AddElement(clearBtn);
-               }
+                    if (!style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NotNull))
+                    {
+                        GUIContent clearIcon = new GUIContent(
+                            EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear),
+                            new LocEdString("Clear"));
+                        GUIButton clearBtn = new GUIButton(clearIcon, GUIOption.FixedWidth(20));
+                        clearBtn.OnClick += OnClearButtonClicked;
+                        guiInternalTitleLayout.AddElement(clearBtn);
+                    }
+                }
 
-               if (isExpanded)
-               {
-                   SerializableObject serializableObject = property.GetObject();
-                   SerializableField[] fields = serializableObject.Fields;
+                if (isExpanded || isInline)
+                {
+                    SerializableObject serializableObject = property.GetObject();
+                    SerializableField[] fields = serializableObject.Fields;
 
-                   if (fields.Length > 0)
-                   {
-                       guiChildLayout = guiLayout.AddLayoutX();
-                       guiChildLayout.AddSpace(IndentAmount);
+                    if (fields.Length > 0)
+                    {
+                        GUILayoutY guiContentLayout;
+                        if (!isInline)
+                        {
+                            guiChildLayout = guiLayout.AddLayoutX();
+                            guiChildLayout.AddSpace(IndentAmount);
 
-                       GUIPanel guiContentPanel = guiChildLayout.AddPanel();
-                       GUILayoutX guiIndentLayoutX = guiContentPanel.AddLayoutX();
-                       guiIndentLayoutX.AddSpace(IndentAmount);
-                       GUILayoutY guiIndentLayoutY = guiIndentLayoutX.AddLayoutY();
-                       guiIndentLayoutY.AddSpace(IndentAmount);
-                       GUILayoutY guiContentLayout = guiIndentLayoutY.AddLayoutY();
-                       guiIndentLayoutY.AddSpace(IndentAmount);
-                       guiIndentLayoutX.AddSpace(IndentAmount);
-                       guiChildLayout.AddSpace(IndentAmount);
+                            GUIPanel guiContentPanel = guiChildLayout.AddPanel();
+                            GUILayoutX guiIndentLayoutX = guiContentPanel.AddLayoutX();
+                            guiIndentLayoutX.AddSpace(IndentAmount);
+                            GUILayoutY guiIndentLayoutY = guiIndentLayoutX.AddLayoutY();
+                            guiIndentLayoutY.AddSpace(IndentAmount);
+                            guiContentLayout = guiIndentLayoutY.AddLayoutY();
+                            guiIndentLayoutY.AddSpace(IndentAmount);
+                            guiIndentLayoutX.AddSpace(IndentAmount);
+                            guiChildLayout.AddSpace(IndentAmount);
 
-                       short backgroundDepth = (short) (Inspector.START_BACKGROUND_DEPTH - depth - 1);
-                       string bgPanelStyle = depth%2 == 0
-                           ? EditorStylesInternal.InspectorContentBgAlternate
-                           : EditorStylesInternal.InspectorContentBg;
-                       GUIPanel backgroundPanel = guiContentPanel.AddPanel(backgroundDepth);
-                       GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
-                       backgroundPanel.AddElement(inspectorContentBg);
+                            short backgroundDepth = (short) (Inspector.START_BACKGROUND_DEPTH - depth - 1);
+                            string bgPanelStyle = depth % 2 == 0
+                                ? EditorStylesInternal.InspectorContentBgAlternate
+                                : EditorStylesInternal.InspectorContentBg;
+                            GUIPanel backgroundPanel = guiContentPanel.AddPanel(backgroundDepth);
+                            GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
+                            backgroundPanel.AddElement(inspectorContentBg);
+                        }
+                        else
+                            guiContentLayout = guiLayout;
 
-                       children = CreateFields(serializableObject, parent, path, depth + 1, guiContentLayout);
-                   }
-               }
-               else
-                   guiChildLayout = null;
-           };
+                        children = CreateFields(serializableObject, parent, path, depth + 1, guiContentLayout);
+                    }
+                }
+                else
+                    guiChildLayout = null;
+            };
 
-           if (state == State.None)
-           {
-               if (propertyValue != null)
-               {
-                   BuildFilledGUI();
-                   state = State.Filled;
-               }
-               else
-               {
-                   BuildEmptyGUI();
+            if (state == State.None)
+            {
+                if (propertyValue != null)
+                {
+                    BuildFilledGUI();
+                    state = State.Filled;
+                }
+                else
+                {
+                    BuildEmptyGUI();
 
-                   state = State.Empty;
-               }
-           }
-           else if (state == State.Empty)
-           {
-               if (propertyValue != null)
-               {
-                   guiInternalTitleLayout.Destroy();
-                   guiCreateBtn = null;
+                    state = State.Empty;
+                }
+            }
+            else if (state == State.Empty)
+            {
+                if (propertyValue != null)
+                {
+                    guiInternalTitleLayout?.Destroy();
+                    guiInternalTitleLayout = null;
+                    guiCreateBtn = null;
 
-                   BuildFilledGUI();
-                   state = State.Filled;
-               }
-           }
-           else if (state == State.Filled)
-           {
-               foreach (var child in children)
-                   child.Destroy();
+                    BuildFilledGUI();
+                    state = State.Filled;
+                }
+            }
+            else if (state == State.Filled)
+            {
+                foreach (var child in children)
+                    child.Destroy();
 
-               children.Clear();
-               guiInternalTitleLayout.Destroy();
-               guiCreateBtn = null;
+                children.Clear();
 
-               if (guiChildLayout != null)
-               {
-                   guiChildLayout.Destroy();
-                   guiChildLayout = null;
-               }
+                guiInternalTitleLayout?.Destroy();
+                guiInternalTitleLayout = null;
+                guiCreateBtn = null;
 
-               if (propertyValue == null)
-               {
-                   BuildEmptyGUI();
-                   state = State.Empty;
-               }
-               else
-               {
-                   BuildFilledGUI();
-               }
-           }
+                if (guiChildLayout != null)
+                {
+                    guiChildLayout.Destroy();
+                    guiChildLayout = null;
+                }
+
+                if (propertyValue == null)
+                {
+                    BuildEmptyGUI();
+                    state = State.Empty;
+                }
+                else
+                {
+                    BuildFilledGUI();
+                }
+            }
         }
 
         /// <inheritdoc/>
         protected internal override void Initialize(int index)
         {
             guiLayout = layout.AddLayoutY(index);
-            guiTitleLayout = guiLayout.AddLayoutX();
+
+            if(!isInline)
+                guiTitleLayout = guiLayout.AddLayoutX();
 
             propertyValue = property.GetValue<object>();
             BuildGUI(index);

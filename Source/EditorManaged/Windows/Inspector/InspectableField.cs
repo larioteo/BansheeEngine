@@ -18,6 +18,8 @@ namespace BansheeEditor
     /// </summary>
     public abstract class InspectableField
     {
+        private const int IndentAmount = 5;
+
         protected Inspector parent;
         protected InspectableFieldLayout layout;
         protected SerializableProperty property;
@@ -156,13 +158,89 @@ namespace BansheeEditor
         public static List<InspectableField> CreateFields(SerializableObject obj, Inspector parent, string path, 
             int depth, GUILayoutY layout, FieldOverrideCallback overrideCallback = null)
         {
-            List<InspectableField> fields = new List<InspectableField>();
+            // Retrieve fields and sort by order
+            SerializableField[] fields = obj.Fields;
+            Array.Sort(fields,
+                (x, y) =>
+                {
+                    int orderX = x.Flags.HasFlag(SerializableFieldAttributes.Order) ? x.Style.Order : 0;
+                    int orderY = y.Flags.HasFlag(SerializableFieldAttributes.Order) ? y.Style.Order : 0;
 
-            int currentIndex = 0;
-            foreach (var field in obj.Fields)
+                    return orderX.CompareTo(orderY);
+                });
+
+            // Generate per-field GUI while grouping by category
+            Dictionary<string, Tuple<int, GUILayoutY>> categories = new Dictionary<string, Tuple<int, GUILayoutY>>();
+
+            int rootIndex = 0;
+            List<InspectableField> inspectableFields = new List<InspectableField>();
+            foreach (var field in fields)
             {
                 if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
                     continue;
+
+                string category = null;
+                if (field.Flags.HasFlag(SerializableFieldAttributes.Category))
+                    category = field.Style.CategoryName;
+
+                Tuple<int, GUILayoutY> categoryInfo = null;
+                if (!string.IsNullOrEmpty(category))
+                {
+                    if (!categories.TryGetValue(category, out categoryInfo))
+                    {
+                        InspectableFieldLayout fieldLayout = new InspectableFieldLayout(layout);
+                        GUILayoutY categoryRootLayout = fieldLayout.AddLayoutY(rootIndex);
+                        GUILayoutX guiTitleLayout = categoryRootLayout.AddLayoutX();
+
+                        bool isExpanded = parent.Persistent.GetBool(path + "/[" + category + "]_Expanded");
+
+                        GUIToggle guiFoldout = new GUIToggle(category, EditorStyles.Foldout);
+                        guiFoldout.Value = isExpanded;
+                        guiFoldout.AcceptsKeyFocus = false;
+                        guiFoldout.OnToggled += x =>
+                        {
+                            parent.Persistent.SetBool(path + "/[" + category + "]_Expanded", x);
+                        };
+                        guiTitleLayout.AddElement(guiFoldout);
+
+                        GUILayoutX categoryContentLayout = categoryRootLayout.AddLayoutX();
+                        categoryContentLayout.AddSpace(IndentAmount);
+
+                        GUIPanel guiContentPanel = categoryContentLayout.AddPanel();
+                        GUILayoutX guiIndentLayoutX = guiContentPanel.AddLayoutX();
+                        guiIndentLayoutX.AddSpace(IndentAmount);
+                        GUILayoutY guiIndentLayoutY = guiIndentLayoutX.AddLayoutY();
+                        guiIndentLayoutY.AddSpace(IndentAmount);
+                        GUILayoutY categoryLayout = guiIndentLayoutY.AddLayoutY();
+                        guiIndentLayoutY.AddSpace(IndentAmount);
+                        guiIndentLayoutX.AddSpace(IndentAmount);
+                        categoryContentLayout.AddSpace(IndentAmount);
+
+                        short backgroundDepth = (short)(Inspector.START_BACKGROUND_DEPTH - depth - 1);
+                        string bgPanelStyle = depth % 2 == 0
+                            ? EditorStylesInternal.InspectorContentBgAlternate
+                            : EditorStylesInternal.InspectorContentBg;
+                        GUIPanel backgroundPanel = guiContentPanel.AddPanel(backgroundDepth);
+                        GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
+                        backgroundPanel.AddElement(inspectorContentBg);
+
+                        categories[category] = new Tuple<int, GUILayoutY>(0, categoryLayout);
+                        rootIndex++;
+                    }
+                }
+
+                int currentIndex;
+                GUILayoutY parentLayout;
+                if (categoryInfo != null)
+                {
+                    currentIndex = categoryInfo.Item1;
+                    parentLayout = categoryInfo.Item2;
+                }
+                else
+                {
+                    currentIndex = rootIndex;
+                    parentLayout = layout;
+                }
 
                 string fieldName = field.Name;
                 string childPath = string.IsNullOrEmpty(path) ? fieldName : path + "/" + fieldName;
@@ -170,21 +248,26 @@ namespace BansheeEditor
                 InspectableField inspectableField = null;
 
                 if(overrideCallback != null)
-                    inspectableField = overrideCallback(field, parent, path, new InspectableFieldLayout(layout), 
+                    inspectableField = overrideCallback(field, parent, path, new InspectableFieldLayout(parentLayout), 
                         currentIndex, depth);
 
                 if (inspectableField == null)
                 {
                     inspectableField = CreateField(parent, fieldName, childPath,
-                        currentIndex, depth, new InspectableFieldLayout(layout), field.GetProperty(), 
+                        currentIndex, depth, new InspectableFieldLayout(parentLayout), field.GetProperty(), 
                         InspectableFieldStyle.Create(field));
                 }
 
-                fields.Add(inspectableField);
+                inspectableFields.Add(inspectableField);
                 currentIndex += inspectableField.GetNumLayoutElements();
+
+                if (categoryInfo != null)
+                    categories[category] = new Tuple<int, GUILayoutY>(currentIndex, parentLayout);
+                else
+                    rootIndex = currentIndex;
             }
 
-            return fields;
+            return inspectableFields;
         }
 
         /// <summary>
@@ -224,7 +307,7 @@ namespace BansheeEditor
                 switch (property.Type)
                 {
                     case SerializableProperty.FieldType.Int:
-                        if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.UseLayerMask))
+                        if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.AsLayerMask))
                             field = new InspectableLayerMask(parent, title, path, depth, layout, property);
                         else
                         {

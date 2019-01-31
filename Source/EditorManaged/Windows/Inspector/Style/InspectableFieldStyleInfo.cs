@@ -15,12 +15,12 @@ namespace BansheeEditor
         /// <summary>
         /// Floating point field should be represented as a slider rather than a plain input field.
         /// </summary>
-        UseSlider     = 1 << 0,
+        AsSlider     = 1 << 0,
 
         /// <summary>
         /// Integer field should be represented as a layer mask drop down instead of a plain integer input field.
         /// </summary>
-        UseLayerMask  = 1 << 1,
+        AsLayerMask  = 1 << 1,
 
         /// <summary>
         /// Object accessed by the inspectable field is passed as a copy. This means modifications to the object returned by
@@ -53,6 +53,12 @@ namespace BansheeEditor
         /// Use this flag to force it to be displayed as a quaternion (4D value) with no conversion instead.
         /// </summary>
         AsQuaternion = 1 << 6,
+
+        /// <summary>
+        /// Singifies that the field containing a class/struct should display the child fields of that objects as if they
+        /// were part of the parent class in the inspector.
+        /// </summary>
+        Inline = 1 << 7
     }
 
     /// <summary>
@@ -69,6 +75,16 @@ namespace BansheeEditor
         /// Information about the field stepping.
         /// </summary>
         public InspectableFieldStepStyle StepStyle;
+
+        /// <summary>
+        /// Determines the category to place the field in. If null field will be placed in the default category.
+        /// </summary>
+        public InspectableFieldCategoryStyle CategoryStyle;
+
+        /// <summary>
+        /// Determines the order of the field displayed in the inspector, relative to other fields.
+        /// </summary>
+        public InspectableFieldOrderStyle OrderStyle;
 
         /// <summary>
         /// Boolean information about the field.
@@ -96,6 +112,12 @@ namespace BansheeEditor
 
             if(StepStyle != null)
                 style.StepStyle = new InspectableFieldStepStyle(StepStyle.Step);
+
+            if(CategoryStyle != null)
+                style.CategoryStyle = new InspectableFieldCategoryStyle(CategoryStyle.Category);
+
+            if(OrderStyle != null)
+                style.OrderStyle = new InspectableFieldOrderStyle(OrderStyle.Index);
 
             return style;
         }
