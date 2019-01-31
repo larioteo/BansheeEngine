@@ -89,7 +89,6 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Returns the type of the currently selected distribution.</summary>
-		[ShowInInspector]
 		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
@@ -99,7 +98,6 @@ namespace BansheeEditor
 		/// <summary>
 		/// Checks if any of the float input fields currently have input focus. Only relevant for non-curve distributions.
 		/// </summary>
-		[ShowInInspector]
 		[NativeWrapper]
 		public bool HasInputFocus
 		{

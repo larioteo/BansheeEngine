@@ -118,7 +118,6 @@ namespace BansheeEditor
 		/// Returns the curve represented by the field. If the field represents a curve range this returns the minimal curve of 
 		/// that range.
 		/// </summary>
-		[ShowInInspector]
 		[NotNull]
 		[PassByCopy]
 		[NativeWrapper]
@@ -131,7 +130,6 @@ namespace BansheeEditor
 		/// Returns the minimal curve represented by the field containing a curve range. Returns the only available curve if the 
 		/// field doesn't represent a range.
 		/// </summary>
-		[ShowInInspector]
 		[NotNull]
 		[PassByCopy]
 		[NativeWrapper]
@@ -144,7 +142,6 @@ namespace BansheeEditor
 		/// Returns the maximal curve represented by the field containing a curve range. Returns the only available curve if the 
 		/// field doesn't represent a range.
 		/// </summary>
-		[ShowInInspector]
 		[NotNull]
 		[PassByCopy]
 		[NativeWrapper]

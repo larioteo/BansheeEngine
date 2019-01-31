@@ -89,7 +89,6 @@ namespace BansheeEditor
 		}
 
 		/// <summary>Returns the type of the currently selected distribution.</summary>
-		[ShowInInspector]
 		[NativeWrapper]
 		public PropertyDistributionType DistributionType
 		{
