@@ -28,7 +28,7 @@ namespace BansheeEditor
             {
                 SerializableObject serializableObject = new SerializableObject(InspectedObject.GetType(), InspectedObject);
                 inspectableFields = InspectableField.CreateFields(serializableObject, this, "", 0, Layout);
-                isEmpty = inspectableFields.Count > 0;
+                isEmpty = inspectableFields.Count == 0;
 
                 base.SetVisible(!isEmpty);
             }
