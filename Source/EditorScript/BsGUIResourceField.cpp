@@ -56,112 +56,15 @@ namespace bs
 		mDropButton->onClick.connect(std::bind(&GUIResourceField::onDropButtonClicked, this));
 	}
 
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,
-		const String& style)
+	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, 
+		const GUIFieldOptions& options)
 	{
-		const String* curStyle = &style;
+		const String* curStyle = &options.style;
 		if (*curStyle == StringUtil::BLANK)
 			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
 
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, labelContent, labelWidth, *curStyle,
-			GUIDimensions::create(options), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIContent& labelContent, const GUIOptions& options,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, labelContent, DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(options), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const HString& labelText, UINT32 labelWidth, const GUIOptions& options,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(labelText), labelWidth, *curStyle,
-			GUIDimensions::create(options), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const HString& labelText, const GUIOptions& options,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(labelText), DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(options), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIOptions& options, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(), 0, *curStyle,
-			GUIDimensions::create(options), false);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIContent& labelContent, UINT32 labelWidth,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, labelContent, labelWidth, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const GUIContent& labelContent,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, labelContent, DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const HString& labelText, UINT32 labelWidth,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(labelText), labelWidth, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const HString& labelText,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(labelText), DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUIResourceField* GUIResourceField::create(const String& typeNamespace, const String& type, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::ObjectFieldStyleName;
-
-		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, GUIContent(), 0, *curStyle,
-			GUIDimensions::create(), false);
+		return bs_new<GUIResourceField>(PrivatelyConstruct(), typeNamespace, type, options.labelContent, 
+			options.labelWidth, *curStyle, GUIDimensions::create(options.options), true);
 	}
 
 	HResource GUIResourceField::getValue() const

@@ -4,6 +4,7 @@
 
 #include "BsScriptEditorPrerequisites.h"
 #include "GUI/BsGUIElementContainer.h"
+#include "GUI/BsGUIFieldOptions.h"
 
 namespace bs
 {
@@ -11,145 +12,78 @@ namespace bs
 	 *  @{
 	 */
 
+	/** Type that control what type of texture does a GUITexture field accept. */
+	enum class BS_SCRIPT_EXPORT(ed:true,m:GUI-Editor) GUITextureFieldType
+	{
+		Texture = 1,
+		SpriteTexture = 2,
+		TextureOrSpriteTexture = 3,
+	};
+
 	/**
-	 * GUI object that displays a field in which a Texture can be dragged and dropped. The field accepts a Texture of a
-	 * specific type and displays an optional label. If texture is referenced its image is displayed in the field.
+	 * GUI object that displays a field in which a Texture or a SpriteTexture can be dragged and dropped. It also displays
+	 * an optional label field. When a texture is referenced its image is displayed in the field.
 	 */
 	class BS_SCR_BED_EXPORT GUITextureField : public GUIElementContainer
 	{
 		struct PrivatelyConstruct {};
 
 	public:
+		GUITextureField(const PrivatelyConstruct& dummy, GUITextureFieldType type, const GUIContent& labelContent,
+			UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel);
+
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
 		/**
-		 * Creates a new texture GUI editor field with a label.
+		 * Creates a new texture GUI editor field.
 		 *
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
+		 * @param[in]	type			Determines the type of texture the field should accept.
+		 * @param[in]	options			Options controlling the label, style and layout of the field.
 		 */
-		static GUITextureField* create(const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
+		static GUITextureField* create(GUITextureFieldType type, const GUIFieldOptions& options = GUIFieldOptions());
 
 		/**
-		 * Creates a new texture GUI editor field with a label.
+		 * Creates a new texture GUI editor field that accepts a Texture.
 		 *
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
+		 * @param[in]	options			Options controlling the label, style and layout of the field.
 		 */
-		static GUITextureField* create(const GUIContent& labelContent, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const HString& labelText, UINT32 labelWidth, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const HString& labelText, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field without a label.
-		 *
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const GUIOptions& options, const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const GUIContent& labelContent, UINT32 labelWidth,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const GUIContent& labelContent,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const HString& labelText, UINT32 labelWidth,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field with a label.
-		 *
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const HString& labelText,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new texture GUI editor field without a label.
-		 *
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUITextureField* create(const String& style = StringUtil::BLANK);
-
-		GUITextureField(const PrivatelyConstruct& dummy, const GUIContent& labelContent,
-			UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel);
+		static GUITextureField* create(const GUIFieldOptions& options = GUIFieldOptions());
 
 		/** 
-		 * Returns the texture referenced by the field, if any. Note that this will not load the texture in case it's not
-		 * already loaded. 
+		 * Returns the texture referenced by the field, if any. Returns null if no texture is assigned, or if sprite 
+		 * texture is assigned.
 		 */
-		HTexture getValue() const;
+		HTexture getTexture() const;
 
 		/**	Sets the texture referenced by the field. */
-		void setValue(const HTexture& value);
+		void setTexture(const HTexture& value);
 
-		/**	Returns the texture referenced by the field. Returns empty string with no texture is referenced. */
+		/** 
+		 * Returns the sprite texture referenced by the field, if any. Returns null if no sprite texture is assigned, or
+		 * if non-sprite texture is assigned.
+		 */
+		HSpriteTexture getSpriteTexture() const;
+
+		/**	Sets the sprite texture referenced by the field. */
+		void setSpriteTexture(const HSpriteTexture& value);
+
+		/** Returns the normal or sprite texture referenced by the field, as a generic resource handle. */
+		HResource getValue() const;
+
+		/**	Sets the resource referenced by the field. */
+		void setValue(const HResource& value);
+
+		/**	Returns the UUID of the resource referenced by the field. */
 		UUID getUUID() const { return mUUID; }
 
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
+
+		/** 
+		 * @name Internal
+		 * @{
+		 */
 
 		/** @copydoc GUIElement::_updateLayoutInternal */
 		void _updateLayoutInternal(const GUILayoutData& data) override;
@@ -157,13 +91,12 @@ namespace bs
 		/** @copydoc GUIElement::_getOptimalSize */
 		Vector2I _getOptimalSize() const override;
 
-		/**
-		 * Triggered whenever the referenced texture changes. Provides a weak handle to the resource, or empty handle if no
-		 * texture is referenced.
-		 */
-		Event<void(const HTexture&)> onValueChanged;
+		/** @} */
+
+		/** Triggered whenever the referenced texture changes. */
+		Event<void(const HResource&)> onValueChanged;
 	private:
-		virtual ~GUITextureField();
+		virtual ~GUITextureField() = default;
 
 		/** @copydoc GUIElement::styleUpdated */
 		void styleUpdated() override;

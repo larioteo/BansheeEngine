@@ -30,7 +30,7 @@ namespace BansheeEditor
 
             textureField.OnChanged += (x) =>
             {
-                spriteTexture.Texture = x;
+                spriteTexture.Texture = x.As<Texture>();
                 EditorApplication.SetDirty(spriteTexture);
             };
 
@@ -58,7 +58,7 @@ namespace BansheeEditor
             if (spriteTexture == null)
                 return InspectableState.NotModified;
 
-            textureField.ValueRef = spriteTexture.Texture;
+            textureField.TextureRef = spriteTexture.Texture;
             offsetField.Value = spriteTexture.Offset;
             scaleField.Value = spriteTexture.Scale;
 

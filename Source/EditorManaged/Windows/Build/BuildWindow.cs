@@ -225,10 +225,10 @@ namespace BansheeEditor
                     layout.AddElement(iconField);
 
                     titleField.Value = winPlatformInfo.TitleText;
-                    iconField.ValueRef = winPlatformInfo.Icon;
+                    iconField.TextureRef = winPlatformInfo.Icon;
 
                     titleField.OnChanged += x => winPlatformInfo.TitleText = x;
-                    iconField.OnChanged += x => winPlatformInfo.Icon = x;
+                    iconField.OnChanged += x => winPlatformInfo.Icon = x.As<Texture>();
                 }
                     break;
             }

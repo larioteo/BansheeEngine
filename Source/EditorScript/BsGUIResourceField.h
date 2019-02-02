@@ -4,6 +4,7 @@
 
 #include "BsScriptEditorPrerequisites.h"
 #include "GUI/BsGUIElementContainer.h"
+#include "GUI/BsGUIFieldOptions.h"
 
 namespace bs
 {
@@ -24,137 +25,17 @@ namespace bs
 		static const String& getGUITypeName();
 
 		/**
-		 * Creates a new resource GUI editor field with a label.
+		 * Creates a new resource GUI editor field.
 		 *
 		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
 		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
+		 * @param[in]	options			Options controlling the label, style and layout of the field.
 		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
+		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIFieldOptions& options); 
 
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIContent& labelContent, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const HString& labelText, UINT32 labelWidth, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const HString& labelText, const GUIOptions& options,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field without a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	options			Options that allow you to control how is the element positioned and sized. This will
-		 *								override any similar options set by style.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIOptions& options, const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIContent& labelContent, UINT32 labelWidth,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelContent	Content to display in the editor field label.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const GUIContent& labelContent,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	labelWidth		Width of the label in pixels.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const HString& labelText, UINT32 labelWidth,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field with a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	labelText		Text to display in the editor field label.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const HString& labelText,
-			const String& style = StringUtil::BLANK);
-
-		/**
-		 * Creates a new resource GUI editor field without a label.
-		 *
-		 * @param[in]	typeNamespace	Namespace of the type this field accepts. 
-		 * @param[in]	type			Type name of the type this field accepts. Must derive from Resource.
-		 * @param[in]	style			Optional style to use for the element. Style will be retrieved from GUISkin of the
-		 *								GUIWidget the element is used on. If not specified default style is used.
-		 */
-		static GUIResourceField* create(const String& typeNamespace, const String& type, const String& style = StringUtil::BLANK);
-
-		GUIResourceField(const PrivatelyConstruct& dummy, const String& typeNamespace, const String& type, const GUIContent& labelContent,
-			UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel);
+		GUIResourceField(const PrivatelyConstruct& dummy, const String& typeNamespace, const String& type, 
+			const GUIContent& labelContent, UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, 
+			bool withLabel);
 
 		/**	Returns the resource referenced by the field, if any. */
 		HResource getValue() const;

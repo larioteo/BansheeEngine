@@ -47,7 +47,7 @@ namespace BansheeEditor
 
                 customTextureField.OnChanged += x =>
                 {
-                    probe.CustomTexture = Resources.Load<Texture>(x.UUID);
+                    probe.CustomTexture = x.As<Texture>();
                     MarkAsModified();
                     ConfirmModify();
                 };
@@ -79,7 +79,7 @@ namespace BansheeEditor
             probeTypeField.Value = (ulong)probeType;
             radiusField.Value = probe.Radius;
             extentsField.Value = probe.Extents;
-            customTextureField.ValueRef = probe.CustomTexture;
+            customTextureField.TextureRef = probe.CustomTexture;
 
             InspectableState oldState = modifyState;
             if (modifyState.HasFlag(InspectableState.Modified))

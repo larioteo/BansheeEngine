@@ -599,9 +599,13 @@ namespace BansheeEditor
                 case ShaderParameterType.TextureCube:
                     guiElem.OnChanged += (x) =>
                     {
-                        Texture texture = Resources.Load<Texture>(x.UUID);
+                        Resource resource = x.Value;
 
-                        material.SetTexture(shaderParam.name, texture);
+                        if(resource is Texture tex)
+                            material.SetTexture(shaderParam.name, tex);
+                        else if(resource is SpriteTexture spriteTex)
+                            material.SetSpriteTexture(shaderParam.name, spriteTex);
+
                         EditorApplication.SetDirty(material);
                     };
                     break;
@@ -613,17 +617,24 @@ namespace BansheeEditor
         /// <inheritdoc/>
         internal override void Refresh(Material material)
         {
-            Texture value = null;
             switch (shaderParam.type)
             {
                 case ShaderParameterType.Texture2D:
                 case ShaderParameterType.Texture3D:
                 case ShaderParameterType.TextureCube:
-                    value = material.GetTexture(shaderParam.name).Value;
+                    RRef<SpriteTexture> spriteTex = material.GetSpriteTexture(shaderParam.name);
+
+                    if (spriteTex != null)
+                        guiElem.SpriteTextureRef = spriteTex;
+                    else
+                    {
+                        RRef<Texture> texture = material.GetTexture(shaderParam.name);
+                        guiElem.TextureRef = texture;
+                    }
+
+
                     break;
             }
-
-            guiElem.Value = value;
         }
 
         /// <inheritdoc/>

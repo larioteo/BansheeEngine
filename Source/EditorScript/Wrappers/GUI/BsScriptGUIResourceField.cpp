@@ -61,11 +61,12 @@ namespace bs
 		if (withTitle)
 		{
 			GUIContent nativeContent = ScriptGUIContent::fromInterop(*title);
-			guiResourceField = GUIResourceField::create(typeNamespace, typeName, nativeContent, titleWidth, options, styleName);
+			guiResourceField = GUIResourceField::create(typeNamespace, typeName, 
+				GUIFieldOptions(nativeContent, titleWidth, options, styleName));
 		}
 		else
 		{
-			guiResourceField = GUIResourceField::create(typeNamespace, typeName, options, styleName);
+			guiResourceField = GUIResourceField::create(typeNamespace, typeName, GUIFieldOptions(options, styleName));
 		}
 
 		auto nativeInstance = new (bs_alloc<ScriptGUIResourceField>()) ScriptGUIResourceField(instance, guiResourceField);

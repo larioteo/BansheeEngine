@@ -8,13 +8,15 @@
 #include "GUI/BsGUIButton.h"
 #include "GUI/BsGUIPanel.h"
 #include "Resources/BsResources.h"
+#include "Image/BsTexture.h"
+#include "Image/BsSpriteTexture.h"
 #include "Library/BsProjectLibrary.h"
 #include "Utility/BsBuiltinEditorResources.h"
 #include "GUI/BsGUIResourceTreeView.h"
 #include "GUI/BsGUISpace.h"
 #include "Library/BsProjectResourceMeta.h"
-#include "Image/BsSpriteTexture.h"
 #include "Scene/BsSelection.h"
+#include "Reflection/BsRTTIType.h"
 
 using namespace std::placeholders;
 
@@ -22,8 +24,8 @@ namespace bs
 {
 	const UINT32 GUITextureField::DEFAULT_LABEL_WIDTH = 100;
 
-	GUITextureField::GUITextureField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
-		const String& style, const GUIDimensions& dimensions, bool withLabel)
+	GUITextureField::GUITextureField(const PrivatelyConstruct& dummy, GUITextureFieldType, const GUIContent& labelContent, 
+		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel) 
 		:GUIElementContainer(dimensions, style), mLabel(nullptr), mDropButton(nullptr), mClearButton(nullptr)
 	{
 		mLayout = GUILayoutX::create();
@@ -31,12 +33,15 @@ namespace bs
 
 		if (withLabel)
 		{
-			mLabel = GUILabel::create(labelContent, GUIOptions(GUIOption::fixedWidth(labelWidth)), getSubStyleName(BuiltinEditorResources::TextureFieldLabelStyleName));
+			mLabel = GUILabel::create(labelContent, GUIOptions(GUIOption::fixedWidth(labelWidth)), 
+				getSubStyleName(BuiltinEditorResources::TextureFieldLabelStyleName));
 			mLayout->addElement(mLabel);
 		}
 
-		mDropButton = GUIDropButton::create((UINT32)DragAndDropType::Resources, getSubStyleName(BuiltinEditorResources::TextureFieldDropStyleName));
-		mClearButton = GUIButton::create(HString(""), getSubStyleName(BuiltinEditorResources::TextureFieldClearBtnStyleName));
+		mDropButton = GUIDropButton::create((UINT32)DragAndDropType::Resources, 
+			getSubStyleName(BuiltinEditorResources::TextureFieldDropStyleName));
+		mClearButton = GUIButton::create(HString(""), 
+			getSubStyleName(BuiltinEditorResources::TextureFieldClearBtnStyleName));
 		mClearButton->onClick.connect(std::bind(&GUITextureField::onClearButtonClicked, this));
 
 		GUIElementOptions clearBtnOptions = mClearButton->getOptionFlags();
@@ -62,124 +67,80 @@ namespace bs
 		mDropButton->onClick.connect(std::bind(&GUITextureField::onDropButtonClicked, this));
 	}
 
-	GUITextureField::~GUITextureField()
+	GUITextureField* GUITextureField::create(GUITextureFieldType type, const GUIFieldOptions& options)
 	{
-
-	}
-
-	GUITextureField* GUITextureField::create(const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,
-		const String& style)
-	{
-		const String* curStyle = &style;
+		const String* curStyle = &options.style;
 		if (*curStyle == StringUtil::BLANK)
 			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
 
-		return bs_new<GUITextureField>(PrivatelyConstruct(), labelContent, labelWidth, *curStyle,
-			GUIDimensions::create(options), true);
+		return bs_new<GUITextureField>(PrivatelyConstruct(), type, options.labelContent, 
+			options.labelWidth, *curStyle, GUIDimensions::create(options.options), options.labelWidth > 0);
 	}
 
-	GUITextureField* GUITextureField::create(const GUIContent& labelContent, const GUIOptions& options,
-		const String& style)
+	GUITextureField* GUITextureField::create(const GUIFieldOptions& options)
 	{
-		const String* curStyle = &style;
+		const String* curStyle = &options.style;
 		if (*curStyle == StringUtil::BLANK)
 			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
 
-		return bs_new<GUITextureField>(PrivatelyConstruct(), labelContent, DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(options), true);
+		return bs_new<GUITextureField>(PrivatelyConstruct(), GUITextureFieldType::Texture, options.labelContent, 
+			options.labelWidth, *curStyle, GUIDimensions::create(options.options), options.labelWidth > 0);
 	}
 
-	GUITextureField* GUITextureField::create(const HString& labelText, UINT32 labelWidth, const GUIOptions& options,
-		const String& style)
+	HTexture GUITextureField::getTexture() const
 	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
+		HResource resource = gResources()._getResourceHandle(mUUID);
+		if(resource.isLoaded(false))
+		{
+			if (rtti_is_of_type<Texture>(resource.get()))
+				return static_resource_cast<Texture>(resource);
+		}
 
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(labelText), labelWidth, *curStyle,
-			GUIDimensions::create(options), true);
+		return HTexture();
 	}
 
-	GUITextureField* GUITextureField::create( const HString& labelText, const GUIOptions& options,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(labelText), DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(options), true);
-	}
-
-	GUITextureField* GUITextureField::create(const GUIOptions& options, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(), 0, *curStyle,
-			GUIDimensions::create(options), false);
-	}
-
-	GUITextureField* GUITextureField::create(const GUIContent& labelContent, UINT32 labelWidth,
-		const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), labelContent, labelWidth, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUITextureField* GUITextureField::create(const GUIContent& labelContent, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), labelContent, DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUITextureField* GUITextureField::create(const HString& labelText, UINT32 labelWidth, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(labelText), labelWidth, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUITextureField* GUITextureField::create(const HString& labelText, const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(labelText), DEFAULT_LABEL_WIDTH, *curStyle,
-			GUIDimensions::create(), true);
-	}
-
-	GUITextureField* GUITextureField::create(const String& style)
-	{
-		const String* curStyle = &style;
-		if (*curStyle == StringUtil::BLANK)
-			curStyle = &BuiltinEditorResources::TextureFieldStyleName;
-
-		return bs_new<GUITextureField>(PrivatelyConstruct(), GUIContent(), 0, *curStyle, GUIDimensions::create(), false);
-	}
-
-	HTexture GUITextureField::getValue() const
-	{
-		return static_resource_cast<Texture>(Resources::instance()._getResourceHandle(mUUID));
-	}
-
-	void GUITextureField::setValue(const HTexture& value)
+	void GUITextureField::setTexture(const HTexture& value)
 	{
 		if (value)
 			setUUID(value.getUUID(), false);
+		else
+			setUUID(UUID::EMPTY, false);
+	}
+
+	HSpriteTexture GUITextureField::getSpriteTexture() const
+	{
+		HResource resource = gResources()._getResourceHandle(mUUID);
+		if(resource.isLoaded(false))
+		{
+			if (rtti_is_of_type<SpriteTexture>(resource.get()))
+				return static_resource_cast<SpriteTexture>(resource);
+		}
+
+		return HSpriteTexture();
+	}
+
+	void GUITextureField::setSpriteTexture(const HSpriteTexture& value)
+	{
+		if (value)
+			setUUID(value.getUUID(), false);
+		else
+			setUUID(UUID::EMPTY, false);
+	}
+
+	HResource GUITextureField::getValue() const
+	{
+		return gResources()._getResourceHandle(mUUID);
+	}
+
+	void GUITextureField::setValue(const HResource& value)
+	{
+		if (value)
+		{
+			if (rtti_is_of_type<SpriteTexture>(value.get()) || rtti_is_of_type<Texture>(value.get()))
+				setUUID(value.getUUID(), false);
+			else
+				setUUID(UUID::EMPTY, false);
+		}
 		else
 			setUUID(UUID::EMPTY, false);
 	}
@@ -191,25 +152,31 @@ namespace bs
 
 		mUUID = uuid;
 
-		HTexture previewIcon;
+		HSpriteTexture previewIcon;
 
 		Path filePath = gProjectLibrary().uuidToPath(mUUID);
 		if (!filePath.isEmpty())
 		{
 			SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(filePath);
 			if(meta)
-				previewIcon = meta->getPreviewIcons().icon128;
+				previewIcon = SpriteTexture::create(meta->getPreviewIcons().icon128);
 			else
 			{
 				// Not ideal. No cached texture so fall back on loading the original asset
-				previewIcon = gResources().load<Texture>(filePath);
+				HResource resource = gResources().load(filePath);
+				if(resource.isLoaded(false))
+				{
+					if (rtti_is_of_type<SpriteTexture>(resource.get()))
+						previewIcon = static_resource_cast<SpriteTexture>(resource);
+					else if (rtti_is_of_type<Texture>(resource.get()))
+						previewIcon = SpriteTexture::create(static_resource_cast<Texture>(resource));
+				}
 			}
 		}
 		
 		if (previewIcon != nullptr)
 		{
-			HSpriteTexture sprite = SpriteTexture::create(previewIcon);
-			mDropButton->setContent(GUIContent(sprite));
+			mDropButton->setContent(GUIContent(previewIcon));
 			mClearButton->setVisible(true);
 		}
 		else
@@ -219,7 +186,7 @@ namespace bs
 		}
 
 		if (triggerEvent)
-			onValueChanged(static_resource_cast<Texture>(gResources()._getResourceHandle(mUUID)));
+			onValueChanged(gResources()._getResourceHandle(mUUID));
 	}
 
 	void GUITextureField::setTint(const Color& color)
