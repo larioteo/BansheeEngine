@@ -18,7 +18,7 @@ namespace bs
 	enum class ProjectIcon
 	{
 		Folder, Mesh, Font, Texture, PlainText, ScriptCode, SpriteTexture, Shader, ShaderInclude, Material, Prefab, GUISkin,
-		PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip
+		PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip, VectorField
 	};
 
 	/**	Types of icons that may be displayed on the tool bar. */

@@ -49,7 +49,7 @@ namespace BansheeEditor
     public enum LibraryItemIcon // Note: Must match C++ enum ProjectIcon
     {
         Folder, Mesh, Font, Texture, PlainText, ScriptCode, SpriteTexture, Shader, ShaderInclude, Material, Prefab, GUISkin,
-        PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip
+        PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip, VectorField
     }
 
     /// <summary>

@@ -503,6 +503,8 @@ namespace BansheeEditor
                         return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.AudioClip, size);
                     case ResourceType.AnimationClip:
                         return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.AnimationClip, size);
+                    case ResourceType.VectorField:
+                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.VectorField, size);
                 }
             }
 

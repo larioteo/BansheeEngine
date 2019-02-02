@@ -308,6 +308,9 @@ namespace bs
 		case ProjectIcon::AnimationClip:
 			iconName = AnimationClipIconTex;
 			break;
+		case ProjectIcon::VectorField:
+			iconName = SpriteTextureIconTex;
+			break;
 		}
 
 		if (iconName.empty())
