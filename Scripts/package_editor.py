@@ -23,7 +23,7 @@ libFolder = 'x64\\' + configuration + '\\'
 
 inputDataFolder = '..\\' + dataFolder
 inputBsfDataFolder = '..\\' + bsfDataFolder
-inputBinFolder = '..\\bin\\'
+inputBinFolder = '..\\build\\bin\\'
 inputAssembliesFolder = inputBinFolder + assembliesFolder
 inputMonoFolder = inputBinFolder + monoFolder
 inputLibFolder = inputBinFolder + libFolder

@@ -9,8 +9,8 @@
 import os
 
 msbuildPath = "C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\amd64"
-configuration = 'OptimizedDebug' #sys.argv[1]
-buildPath = "..\\Build\\VS2015\\"
+configuration = 'Release' #sys.argv[1]
+buildPath = "..\\build\\"
 solutionPath = buildPath + "Banshee.sln"
 
 if not os.path.exists(msbuildPath):
@@ -20,9 +20,9 @@ if not os.path.exists(msbuildPath):
 os.environ["PATH"] += os.pathsep + msbuildPath
 
 # Build the engine
-os.system("msbuild {0} /p:Configuration=OptimizedDebug;Platform=x64 /m".format(solutionPath))
+os.system("msbuild {0} /p:Configuration={1};Platform=x64 /m".format(solutionPath, configuration))
 
 # Build Win32 game executable
-os.system("msbuild {0} /p:Configuration=Release;Platform=x64 /m".format(solutionPath))
+os.system("msbuild {0} /p:Configuration={1};Platform=x64 /m".format(solutionPath, configuration))
 
 os.system("package_editor.py " + configuration)
