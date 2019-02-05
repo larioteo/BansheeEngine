@@ -246,6 +246,8 @@ namespace bs
 		TID_Settings = 40019,
 		TID_ProjectSettings = 40020,
 		TID_WindowFrameWidget = 40021,
-		TID_ProjectResourceMeta = 40022
+		TID_ProjectResourceMeta = 40022,
+		TID_SettingsValue = 40023,
+		TID_SettingsObjectValue = 40024
 	};
 }

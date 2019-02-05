@@ -211,9 +211,20 @@ namespace BansheeEditor
         /// </summary>
         /// <param name="name">Name to record the property under.</param>
         /// <param name="value">Value of the property.</param>
-        public static void SetString(string name, String value)
+        public static void SetString(string name, string value)
         {
             Internal_SetString(name, value);
+        }
+
+        /// <summary>
+        /// Sets a generic object property. Any object marked with <see cref="SerializeObject"/> attribute can be provided,
+        /// excluding components and resources.
+        /// </summary>
+        /// <param name="name">Name to record the property under.</param>
+        /// <param name="value">Value of the property.</param>
+        public static void SetObject(string name, object value)
+        {
+            Internal_SetObject(name, value);
         }
 
         /// <summary>
@@ -255,9 +266,22 @@ namespace BansheeEditor
         /// <param name="name">Name of the property to retrieve.</param>
         /// <param name="defaultValue">Default value to return if property cannot be found.</param>
         /// <returns>Value of the property if it exists, otherwise the default value.</returns>
-        public static String GetString(string name, string defaultValue = "")
+        public static string GetString(string name, string defaultValue = "")
         {
             return Internal_GetString(name, defaultValue);
+        }
+
+        /// <summary>
+        /// Retrieves a generic object property.
+        /// </summary>
+        /// <param name="name">Name of the property to retrieve.</param>
+        /// <returns>
+        /// Value of the property if it exists, otherwise the default value. Also returns null if the original type of the
+        /// serialized object no longer exists.
+        /// </returns>
+        public static object GetObject(string name)
+        {
+            return Internal_GetObject(name);
         }
 
         /// <summary>
@@ -367,7 +391,9 @@ namespace BansheeEditor
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetBool(string name, bool value);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetString(string name, String value);
+        private static extern void Internal_SetString(string name, string value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetObject(string name, object value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Internal_GetFloat(string name, float defaultValue);
@@ -377,6 +403,8 @@ namespace BansheeEditor
         private static extern bool Internal_GetBool(string name, bool defaultValue);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string Internal_GetString(string name, string defaultValue);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern object Internal_GetObject(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Internal_HasKey(string name);

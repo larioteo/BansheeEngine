@@ -7,6 +7,8 @@
 #include "BsMonoUtil.h"
 #include "BsEditorApplication.h"
 #include "Settings/BsEditorSettings.h"
+#include "Reflection/BsRTTIType.h"
+#include "Serialization/BsManagedSerializableObject.h"
 
 namespace bs
 {
@@ -46,10 +48,12 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_SetInt", (void*)&ScriptEditorSettings::internal_SetInt);
 		metaData.scriptClass->addInternalCall("Internal_SetBool", (void*)&ScriptEditorSettings::internal_SetBool);
 		metaData.scriptClass->addInternalCall("Internal_SetString", (void*)&ScriptEditorSettings::internal_SetString);
+		metaData.scriptClass->addInternalCall("Internal_SetObject", (void*)&ScriptEditorSettings::internal_SetObject);
 		metaData.scriptClass->addInternalCall("Internal_GetFloat", (void*)&ScriptEditorSettings::internal_GetFloat);
 		metaData.scriptClass->addInternalCall("Internal_GetInt", (void*)&ScriptEditorSettings::internal_GetInt);
 		metaData.scriptClass->addInternalCall("Internal_GetBool", (void*)&ScriptEditorSettings::internal_GetBool);
 		metaData.scriptClass->addInternalCall("Internal_GetString", (void*)&ScriptEditorSettings::internal_GetString);
+		metaData.scriptClass->addInternalCall("Internal_GetObject", (void*)&ScriptEditorSettings::internal_GetObject);
 		metaData.scriptClass->addInternalCall("Internal_HasKey", (void*)&ScriptEditorSettings::internal_HasKey);
 		metaData.scriptClass->addInternalCall("Internal_DeleteKey", (void*)&ScriptEditorSettings::internal_DeleteKey);
 		metaData.scriptClass->addInternalCall("Internal_DeleteAllKeys", (void*)&ScriptEditorSettings::internal_DeleteAllKeys);
@@ -267,10 +271,24 @@ namespace bs
 	void ScriptEditorSettings::internal_SetString(MonoString* name, MonoString* value)
 	{
 		String nativeName = MonoUtil::monoToString(name);
-		WString nativeValue = MonoUtil::monoToWString(value);
+		String nativeValue = MonoUtil::monoToString(value);
 
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
 		settings->setString(nativeName, nativeValue);
+	}
+
+	void ScriptEditorSettings::internal_SetObject(MonoString* name, MonoObject* value)
+	{
+		String nativeName = MonoUtil::monoToString(name);
+
+		SPtr<ManagedSerializableObject> nativeValue = ManagedSerializableObject::createFromExisting(value);
+		if(!nativeValue)
+			return;
+
+		nativeValue->serialize();
+
+		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
+		settings->setObject(nativeName, nativeValue);
 	}
 
 	float ScriptEditorSettings::internal_GetFloat(MonoString* name, float defaultValue)
@@ -300,12 +318,25 @@ namespace bs
 	MonoString* ScriptEditorSettings::internal_GetString(MonoString* name, MonoString* defaultValue)
 	{
 		String nativeName = MonoUtil::monoToString(name);
-		WString nativeDefaultValue = MonoUtil::monoToWString(defaultValue);
+		String nativeDefaultValue = MonoUtil::monoToString(defaultValue);
 
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
-		WString nativeValue = settings->getString(nativeName, nativeDefaultValue);
+		String nativeValue = settings->getString(nativeName, nativeDefaultValue);
 
-		return MonoUtil::wstringToMono(nativeValue);
+		return MonoUtil::stringToMono(nativeValue);
+	}
+
+	MonoObject* ScriptEditorSettings::internal_GetObject(MonoString* name)
+	{
+		String nativeName = MonoUtil::monoToString(name);
+
+		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
+		SPtr<ManagedSerializableObject> value = rtti_cast<ManagedSerializableObject>(settings->getObject(nativeName));
+
+		if(!value)
+			return nullptr;
+
+		return value->deserialize();
 	}
 
 	bool ScriptEditorSettings::internal_HasKey(MonoString* name)

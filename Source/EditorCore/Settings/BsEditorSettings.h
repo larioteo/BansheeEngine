@@ -15,11 +15,9 @@ namespace bs
 	struct RecentProject;
 
 	/**	Contains various globally accessible editor preferences. */
-	class BS_ED_EXPORT EditorSettings : public Settings
+	class BS_ED_EXPORT EditorSettings final : public Settings
 	{
 	public:
-		EditorSettings();
-
 		/**	Checks is snapping enabled for move handles in scene view. */
 		bool getMoveHandleSnapActive() const { return mMoveSnapActive; }
 
@@ -119,25 +117,25 @@ namespace bs
 		void setMouseSensitivity(float value) { mMouseSensitivity = value; markAsDirty(); }
 
 	private:
-		bool mMoveSnapActive;
-		bool mRotateSnapActive;
+		bool mMoveSnapActive = false;
+		bool mRotateSnapActive = false;
 
-		float mMoveSnap;
-		Degree mRotationSnap;
+		float mMoveSnap = 0.1f;
+		Degree mRotationSnap { 20.0f };
 
-		UINT32 mGridSize;
-		float mGridAxisSpacing;
+		UINT32 mGridSize = 256;
+		float mGridAxisSpacing = 1.0f;
 
-		UINT32 mActiveSceneTool;
-		UINT32 mActiveCoordinateMode;
-		UINT32 mActivePivotMode;
+		UINT32 mActiveSceneTool = 1; // Move tool
+		UINT32 mActiveCoordinateMode = 0;
+		UINT32 mActivePivotMode = 0;
 
-		float mHandleSize;
-		UINT32 mFPSLimit;
-		float mMouseSensitivity;
+		float mHandleSize = 0.10f;
+		UINT32 mFPSLimit = 60;
+		float mMouseSensitivity = 1.0f;
 
 		Path mLastOpenProject;
-		bool mAutoLoadLastProject;
+		bool mAutoLoadLastProject = true;
 		Vector<RecentProject> mRecentProjects;
 
 		/************************************************************************/
@@ -146,7 +144,7 @@ namespace bs
 	public:
 		friend class EditorSettingsRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 	};
 
 	/**	Data about a recently loaded project. */

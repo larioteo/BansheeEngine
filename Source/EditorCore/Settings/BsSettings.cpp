@@ -5,123 +5,195 @@
 
 namespace bs
 {
-	Settings::Settings()
-		:mHash(0)
-	{ }
+	using namespace impl;
+
+	RTTITypeBase* SettingsObjectValue::getRTTIStatic()
+	{
+		return SettingsObjectValueRTTI::instance();
+	}
+
+	RTTITypeBase* SettingsObjectValue::getRTTI() const
+	{
+		return getRTTIStatic();
+	}
 
 	void Settings::setFloat(const String& name, float value)
 	{
-		mFloatProperties[name] = value;
-		mIntProperties.erase(name);
-		mBoolProperties.erase(name);
-		mStringProperties.erase(name);
+		deleteKey(name);
+
+		UINT32 keyIdx = (UINT32)mPrimitives.size();
+		mKeyLookup[name] = SettingsKeyInfo(keyIdx, SettingsValueType::Float);
+		mPrimitives.push_back(TSettingsValue<SettingsPrimitiveValue>(name, SettingsPrimitiveValue(value)));
 
 		markAsDirty();
 	}
 
 	void Settings::setInt(const String& name, INT32 value)
 	{
-		mFloatProperties.erase(name);
-		mIntProperties[name] = value;
-		mBoolProperties.erase(name);
-		mStringProperties.erase(name);
+		deleteKey(name);
+
+		UINT32 keyIdx = (UINT32)mPrimitives.size();
+		mKeyLookup[name] = SettingsKeyInfo(keyIdx, SettingsValueType::Int);
+		mPrimitives.push_back(TSettingsValue<SettingsPrimitiveValue>(name, SettingsPrimitiveValue(value)));
 
 		markAsDirty();
 	}
 
 	void Settings::setBool(const String& name, bool value)
 	{
-		mFloatProperties.erase(name);
-		mIntProperties.erase(name);
-		mBoolProperties[name] = value;
-		mStringProperties.erase(name);
+		deleteKey(name);
+
+		UINT32 keyIdx = (UINT32)mPrimitives.size();
+		mKeyLookup[name] = SettingsKeyInfo(keyIdx, SettingsValueType::Bool);
+		mPrimitives.push_back(TSettingsValue<SettingsPrimitiveValue>(name, SettingsPrimitiveValue(value)));
 
 		markAsDirty();
 	}
 
-	void Settings::setString(const String& name, const WString& value)
+	void Settings::setString(const String& name, const String& value)
 	{
-		mFloatProperties.erase(name);
-		mIntProperties.erase(name);
-		mBoolProperties.erase(name);
-		mStringProperties[name] = value;
+		deleteKey(name);
+
+		UINT32 keyIdx = (UINT32)mStrings.size();
+		mKeyLookup[name] = SettingsKeyInfo(keyIdx, SettingsValueType::String);
+		mStrings.push_back(TSettingsValue<String>(name, value));
+
+		markAsDirty();
+	}
+
+	void Settings::setObject(const String& name, const SPtr<IReflectable>& value)
+	{
+		deleteKey(name);
+
+		UINT32 keyIdx = (UINT32)mObjects.size();
+		mKeyLookup[name] = SettingsKeyInfo(keyIdx, SettingsValueType::Object);
+		mObjects.push_back(SettingsObjectValue(name, value));
 
 		markAsDirty();
 	}
 
 	float Settings::getFloat(const String& name, float defaultValue)
 	{
-		auto iterFind = mFloatProperties.find(name);
-		if (iterFind != mFloatProperties.end())
-			return iterFind->second;
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return defaultValue;
 
-		return defaultValue;
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		if(valueInfo.type != SettingsValueType::Float)
+			return defaultValue;
+
+		return mPrimitives[valueInfo.index].value.floatVal;
 	}
 
 	INT32 Settings::getInt(const String& name, INT32 defaultValue)
 	{
-		auto iterFind = mIntProperties.find(name);
-		if (iterFind != mIntProperties.end())
-			return iterFind->second;
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return defaultValue;
 
-		return defaultValue;
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		if(valueInfo.type != SettingsValueType::Int)
+			return defaultValue;
+
+		return mPrimitives[valueInfo.index].value.intVal;
 	}
 
 	bool Settings::getBool(const String& name, bool defaultValue)
 	{
-		auto iterFind = mBoolProperties.find(name);
-		if (iterFind != mBoolProperties.end())
-			return iterFind->second;
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return defaultValue;
 
-		return defaultValue;
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		if(valueInfo.type != SettingsValueType::Bool)
+			return defaultValue;
+
+		return mPrimitives[valueInfo.index].value.boolVal;
 	}
 
-	WString Settings::getString(const String& name, const WString& defaultValue)
+	String Settings::getString(const String& name, const String& defaultValue)
 	{
-		auto iterFind = mStringProperties.find(name);
-		if (iterFind != mStringProperties.end())
-			return iterFind->second;
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return defaultValue;
 
-		return defaultValue;
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		return mStrings[valueInfo.index].value;
+	}
+
+	SPtr<IReflectable> Settings::getObject(const String& name)
+	{
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return nullptr;
+
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		return mObjects[valueInfo.index].value;
 	}
 
 	bool Settings::hasKey(const String& name)
 	{
-		if (mFloatProperties.find(name) != mFloatProperties.end())
-			return true;
-
-		if (mIntProperties.find(name) != mIntProperties.end())
-			return true;
-
-		if (mBoolProperties.find(name) != mBoolProperties.end())
-			return true;
-
-		if (mStringProperties.find(name) != mStringProperties.end())
-			return true;
-
-		return false;
+		return mKeyLookup.find(name) != mKeyLookup.end();
 	}
 
 	void Settings::deleteKey(const String& name)
 	{
-		mFloatProperties.erase(name);
-		mIntProperties.erase(name);
-		mBoolProperties.erase(name);
-		mStringProperties.erase(name);
+		auto iterFind = mKeyLookup.find(name);
+		if(iterFind == mKeyLookup.end())
+			return;
+
+		const SettingsKeyInfo& valueInfo = iterFind->second;
+		size_t curIdx = (size_t)valueInfo.index;
+		switch(valueInfo.type)
+		{
+		case SettingsValueType::Float:
+		case SettingsValueType::Int:
+		case SettingsValueType::Bool:
+			{
+				size_t lastIdx = mPrimitives.size() - 1;
+				if(bs_swap_and_erase(mPrimitives, mPrimitives.begin() + curIdx))
+				{
+					SettingsKeyInfo& swappedValue = mKeyLookup[mPrimitives[curIdx].key];
+					swappedValue.index = (UINT32)lastIdx;
+				}
+			}
+			break;
+		case SettingsValueType::String:
+			{
+				size_t lastIdx = mStrings.size() - 1;
+				if(bs_swap_and_erase(mStrings, mStrings.begin() + curIdx))
+				{
+					SettingsKeyInfo& swappedValue = mKeyLookup[mStrings[curIdx].key];
+					swappedValue.index = (UINT32)lastIdx;
+				}
+			}
+			break;
+		case SettingsValueType::Object:
+			{
+				size_t lastIdx = mObjects.size() - 1;
+				if(bs_swap_and_erase(mObjects, mObjects.begin() + curIdx))
+				{
+					SettingsKeyInfo& swappedValue = mKeyLookup[mObjects[curIdx].key];
+					swappedValue.index = (UINT32)lastIdx;
+				}
+			}
+			break;
+		}
+
+		mKeyLookup.erase(iterFind);
 
 		markAsDirty();
 	}
 
 	void Settings::deleteAllKeys()
 	{
-		mFloatProperties.clear();
-		mIntProperties.clear();
-		mBoolProperties.clear();
-		mStringProperties.clear();
+		mKeyLookup.clear();
+		mPrimitives.clear();
+		mStrings.clear();
+		mObjects.clear();
 
 		markAsDirty();
 	}
-
 
 	RTTITypeBase* Settings::getRTTIStatic()
 	{
@@ -130,6 +202,6 @@ namespace bs
 
 	RTTITypeBase* Settings::getRTTI() const
 	{
-		return Settings::getRTTIStatic();
+		return getRTTIStatic();
 	}
 }
