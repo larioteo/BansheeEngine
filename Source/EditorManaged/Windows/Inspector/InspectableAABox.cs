@@ -30,7 +30,7 @@ namespace BansheeEditor
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
         /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         public InspectableAABox(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
-            SerializableProperty property, InspectableFieldStyle style)
+            SerializableProperty property, InspectableFieldStyleInfo style)
             : base(parent, title, path, SerializableProperty.FieldType.Object, depth, layout, property)
         { }
 
