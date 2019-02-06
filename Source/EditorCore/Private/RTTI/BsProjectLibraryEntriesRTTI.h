@@ -81,6 +81,7 @@ namespace bs
 			WString elemName;
 			memory = rttiReadElem(elemName, memory);
 			data.elementName = UTF8::fromWide(elemName);
+			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
 			memory = rttiReadElem(data.lastUpdateTime, memory);
 
@@ -155,6 +156,7 @@ namespace bs
 			WString elemName;
 			memory = rttiReadElem(elemName, memory);
 			data.elementName = UTF8::fromWide(elemName);
+			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
 			UINT32 numChildren = 0;
 			memory = rttiReadElem(numChildren, memory);

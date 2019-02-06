@@ -397,6 +397,7 @@ namespace bs
 		:ScriptObject(instance)
 	{
 		mAssetPath = assetPath;
+		mAssetPath.makeRelative(gProjectLibrary().getResourcesFolder());
 	}
 
 	MonoObject* ScriptDirectoryEntry::create(const ProjectLibrary::DirectoryEntry* entry)
@@ -440,6 +441,7 @@ namespace bs
 		:ScriptObject(instance)
 	{
 		mAssetPath = assetPath;
+		mAssetPath.makeRelative(gProjectLibrary().getResourcesFolder());
 	}
 
 	MonoObject* ScriptFileEntry::create(const ProjectLibrary::FileEntry* entry)

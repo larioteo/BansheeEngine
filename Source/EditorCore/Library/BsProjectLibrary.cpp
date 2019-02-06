@@ -96,15 +96,15 @@ namespace bs
 	{ }
 
 	ProjectLibrary::LibraryEntry::LibraryEntry(const Path& path, const String& name, DirectoryEntry* parent, LibraryEntryType type)
-		:type(type), path(path), elementName(name), parent(parent)
+		:type(type), path(path), elementName(name), elementNameHash(bs_hash(UTF8::toLower(name))), parent(parent)
 	{ }
 
 	ProjectLibrary::FileEntry::FileEntry()
-		: lastUpdateTime(0)
+		:lastUpdateTime(0)
 	{ }
 
 	ProjectLibrary::FileEntry::FileEntry(const Path& path, const String& name, DirectoryEntry* parent)
-		: LibraryEntry(path, name, parent, LibraryEntryType::File), lastUpdateTime(0)
+		:LibraryEntry(path, name, parent, LibraryEntryType::File), lastUpdateTime(0)
 	{ }
 
 	ProjectLibrary::DirectoryEntry::DirectoryEntry()
@@ -894,17 +894,22 @@ namespace bs
 
 	ProjectLibrary::LibraryEntry* ProjectLibrary::findEntry(const Path& path) const
 	{
-		Path fullPath = path;
-		if (fullPath.isAbsolute())
+		Path relPath;
+		const Path* searchPath;
+		if (path.isAbsolute())
 		{
-			if (!mResourcesFolder.includes(fullPath))
+			if (!mResourcesFolder.includes(path))
 				return nullptr;
+
+			relPath = path.getRelative(mRootEntry->path);
+			searchPath = &relPath;
 		}
 		else
-			fullPath.makeAbsolute(mResourcesFolder);
+			searchPath = &path;
 
-		Path relPath = fullPath.getRelative(mRootEntry->path);
-		UINT32 numElems = relPath.getNumDirectories() + (relPath.isFile() ? 1 : 0);
+		BS_ASSERT(mRootEntry->path == mResourcesFolder);
+
+		UINT32 numElems = searchPath->getNumDirectories() + (searchPath->isFile() ? 1 : 0);
 		UINT32 idx = 0;
 
 		LibraryEntry* current = mRootEntry;
@@ -913,18 +918,20 @@ namespace bs
 			if (idx == numElems)
 				return current;
 
-			String curElem;
-			if (relPath.isFile() && idx == (numElems - 1))
-				curElem = relPath.getFilename();
-			else
-				curElem = relPath[idx];
+			const String& curElem =
+				(searchPath->isFile() && idx == (numElems - 1)) ? searchPath->getFilename() : (*searchPath)[idx];
 
 			if (current->type == LibraryEntryType::Directory)
 			{
 				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(current);
+				size_t curElemHash = bs_hash(UTF8::toLower(curElem));
+
 				current = nullptr;
 				for (auto& child : dirEntry->mChildren)
 				{
+					if(curElemHash != child->elementNameHash)
+						continue;
+
 					if (Path::comparePathElem(curElem, child->elementName))
 					{
 						idx++;
@@ -957,10 +964,7 @@ namespace bs
 		filePath.makeParent();
 
 		LibraryEntry* entry = findEntry(filePath);
-		if (entry != nullptr && entry->type == LibraryEntryType::File)
-			return true;
-
-		return false;
+		return entry != nullptr && entry->type == LibraryEntryType::File;
 	}
 
 	SPtr<ProjectResourceMeta> ProjectLibrary::findResourceMeta(const Path& path) const
@@ -1217,6 +1221,7 @@ namespace bs
 				oldEntry->parent = newEntryParent;
 				oldEntry->path = newFullPath;
 				oldEntry->elementName = newFullPath.getTail();
+				oldEntry->elementNameHash = bs_hash(UTF8::toLower(oldEntry->elementName));
 
 				if(oldEntry->type == LibraryEntryType::Directory) // Update child paths
 				{

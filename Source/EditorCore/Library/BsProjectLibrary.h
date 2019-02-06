@@ -40,6 +40,7 @@ namespace bs
 			LibraryEntryType type; /**< Specific type of this entry. */
 			Path path; /**< Absolute path to the entry. */
 			String elementName; /**< Name of the entry. */
+			size_t elementNameHash = 0; /**< Hash of @p elementName, used for faster comparisons. */
 
 			DirectoryEntry* parent; /**< Folder this entry is located in. */
 		};
