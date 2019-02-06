@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{abc62e37-342e-4345-a374-e37ca06c036e}</ProjectGuid>
+    <ProjectGuid>{ABC62E37-342E-4345-A374-E37CA06C036E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>${BS_SHARP_ROOT_NS}</RootNamespace>
@@ -39,7 +39,7 @@ ${BS_SHARP_FILE_LIST}
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\bsf\Source\Plugins\bsfSharp\MBansheeEngine.csproj">
-      <Project>{876eb338-489e-4727-84da-8cbbf0da5b5e}</Project>
+      <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>
       <Name>MBansheeEngine</Name>
     </ProjectReference>
   </ItemGroup>
