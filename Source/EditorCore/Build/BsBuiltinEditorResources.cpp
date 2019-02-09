@@ -46,6 +46,7 @@ namespace bs
 	const char* BuiltinEditorResources::ShaderFolder = "Shaders/";
 	const char* BuiltinEditorResources::SkinFolder = "Skin/";
 	const char* BuiltinEditorResources::IconFolder = "Icons/";
+	const char* BuiltinEditorResources::Icon3DFolder = "Icons3D/";
 	const char* BuiltinEditorResources::ShaderIncludeFolder = "Shaders/Includes/";
 	const char* BuiltinEditorResources::SpriteSubFolder = "Sprites/";
 
@@ -112,7 +113,9 @@ namespace bs
 		EditorSkinFolder = BuiltinDataFolder + SkinFolder;
 		EditorSkinSpritesFolder = EditorSkinFolder + SpriteSubFolder;
 		EditorIconFolder = BuiltinDataFolder + IconFolder;
+		EditorIcon3DFolder = BuiltinDataFolder + Icon3DFolder;
 		EditorIconSpritesFolder = EditorIconFolder + SpriteSubFolder;
+		EditorIcon3DSpritesFolder = EditorIcon3DFolder + SpriteSubFolder;
 		EditorShaderFolder = BuiltinDataFolder + ShaderFolder;
 		EditorShaderIncludeFolder = BuiltinDataFolder + ShaderIncludeFolder;
 
@@ -156,6 +159,14 @@ namespace bs
 	HSpriteTexture BuiltinEditorResources::getGUIIcon(const String& name) const
 	{
 		Path texturePath = EditorIconSpritesFolder;
+		texturePath.append("sprite_" + name + ".asset");
+
+		return gResources().load<SpriteTexture>(texturePath);
+	}
+
+	HSpriteTexture BuiltinEditorResources::getGUIIcon3D(const String& name) const
+	{
+		Path texturePath = EditorIcon3DSpritesFolder;
 		texturePath.append("sprite_" + name + ".asset");
 
 		return gResources().load<SpriteTexture>(texturePath);
@@ -254,61 +265,61 @@ namespace bs
 		return Material::create(mShaderSelection);
 	}
 
-	HSpriteTexture BuiltinEditorResources::getLibraryIcon(ProjectIcon icon, int size) const
+	HSpriteTexture BuiltinEditorResources::getProjectLibraryIcon(ProjectLibraryIcon icon, int size) const
 	{
 		String iconName;
 
 		switch (icon)
 		{
-		case ProjectIcon::Folder:
+		case ProjectLibraryIcon::Folder:
 			iconName = FolderIconTex;
 			break;
-		case ProjectIcon::Font:
+		case ProjectLibraryIcon::Font:
 			iconName = FontIconTex;
 			break;
-		case ProjectIcon::Mesh:
+		case ProjectLibraryIcon::Mesh:
 			iconName = MeshIconTex;
 			break;
-		case ProjectIcon::Texture:
+		case ProjectLibraryIcon::Texture:
 			iconName = TextureIconTex;
 			break;
-		case ProjectIcon::PlainText:
+		case ProjectLibraryIcon::PlainText:
 			iconName = PlainTextIconTex;
 			break;
-		case ProjectIcon::ScriptCode:
+		case ProjectLibraryIcon::ScriptCode:
 			iconName = ScriptCodeIconTex;
 			break;
-		case ProjectIcon::Shader:
+		case ProjectLibraryIcon::Shader:
 			iconName = ShaderIconTex;
 			break;
-		case ProjectIcon::ShaderInclude:
+		case ProjectLibraryIcon::ShaderInclude:
 			iconName = ShaderIncludeIconTex;
 			break;
-		case ProjectIcon::Material:
+		case ProjectLibraryIcon::Material:
 			iconName = MaterialIconTex;
 			break;
-		case ProjectIcon::SpriteTexture:
+		case ProjectLibraryIcon::SpriteTexture:
 			iconName = SpriteTextureIconTex;
 			break;
-		case ProjectIcon::Prefab:
+		case ProjectLibraryIcon::Prefab:
 			iconName = PrefabIconTex;
 			break;
-		case ProjectIcon::GUISkin:
+		case ProjectLibraryIcon::GUISkin:
 			iconName = GUISkinIconTex;
 			break;
-		case ProjectIcon::PhysicsMaterial:
+		case ProjectLibraryIcon::PhysicsMaterial:
 			iconName = PhysicsMaterialIconTex;
 			break;
-		case ProjectIcon::PhysicsMesh:
+		case ProjectLibraryIcon::PhysicsMesh:
 			iconName = PhysicsMeshIconTex;
 			break;
-		case ProjectIcon::AudioClip:
+		case ProjectLibraryIcon::AudioClip:
 			iconName = AudioClipIconTex;
 			break;
-		case ProjectIcon::AnimationClip:
+		case ProjectLibraryIcon::AnimationClip:
 			iconName = AnimationClipIconTex;
 			break;
-		case ProjectIcon::VectorField:
+		case ProjectLibraryIcon::VectorField:
 			iconName = SpriteTextureIconTex;
 			break;
 		}
@@ -445,6 +456,31 @@ namespace bs
 		return output;
 	}
 
+	HSpriteTexture BuiltinEditorResources::getSceneViewIcon(SceneViewIcon icon) const
+	{
+		switch (icon)
+		{
+		case SceneViewIcon::AudioListener:
+			return getGUIIcon3D("SceneAudioListener.png");
+		case SceneViewIcon::AudioSource:
+			return getGUIIcon3D("SceneAudioSource.png");
+		case SceneViewIcon::Camera:
+			return getGUIIcon3D("SceneCamera.png");
+		case SceneViewIcon::Decal:
+			return getGUIIcon3D("SceneDecal.png");
+		case SceneViewIcon::Light:
+			return getGUIIcon3D("SceneLight.png");
+		case SceneViewIcon::LightProbes:
+			return getGUIIcon3D("SceneLightProbes.png");
+		case SceneViewIcon::ParticleSystem:
+			return getGUIIcon3D("SceneParticleSystem.png");
+		case SceneViewIcon::ReflectionProbe:
+			return getGUIIcon3D("SceneReflectionProbe.png");
+		}
+
+		return HSpriteTexture();
+	}
+
 	HSpriteTexture BuiltinEditorResources::getLibraryWindowIcon(LibraryWindowIcon icon) const
 	{
 		switch (icon)
@@ -547,7 +583,7 @@ namespace bs
 		return output;
 	}
 
-	HSpriteTexture BuiltinEditorResources::getIcon(EditorIcon icon) const
+	HSpriteTexture BuiltinEditorResources::getEditorIcon(EditorIcon icon) const
 	{
 		switch (icon)
 		{

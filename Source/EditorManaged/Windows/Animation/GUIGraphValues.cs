@@ -55,7 +55,7 @@ namespace BansheeEditor
             canvas.SetWidth(width);
             canvas.SetHeight(height);
 
-            tickHandler.SetRange(rangeStart, rangeEnd, (uint)height);
+            tickHandler.SetRange(rangeStart, rangeEnd, height);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace BansheeEditor
             rangeStart = start;
             rangeEnd = end;
 
-            tickHandler.SetRange(rangeStart, rangeEnd, (uint)height);
+            tickHandler.SetRange(rangeStart, rangeEnd, height);
         }
 
         /// <summary>
@@ -125,11 +125,11 @@ namespace BansheeEditor
 
             float yOffset = rangeStart + (rangeEnd - rangeStart)*0.5f;
 
-            int numTickLevels = (int)tickHandler.NumLevels;
+            int numTickLevels = tickHandler.NumLevels;
             for (int i = numTickLevels - 1; i >= 0; i--)
             {
-                float[] ticks = tickHandler.GetTicks((uint)i);
-                float strength = tickHandler.GetLevelStrength((uint)i);
+                float[] ticks = tickHandler.GetTicks(i);
+                float strength = tickHandler.GetLevelStrength(i);
                
                 if (ticks.Length > 0)
                 {

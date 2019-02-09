@@ -490,7 +490,7 @@ namespace BansheeEditor
                     textureField.OnChanged += x =>
                     {
                         SpriteTexture texture = Resources.Load<SpriteTexture>(x.UUID);
-                        state.Texture = texture;
+                        state.texture = texture;
 
                         if (OnChanged != null)
                             OnChanged(state);
@@ -498,7 +498,7 @@ namespace BansheeEditor
 
                     textColorField.OnChanged += x =>
                     {
-                        state.TextColor = x;
+                        state.textColor = x;
 
                         if (OnChanged != null)
                             OnChanged(state);
@@ -521,8 +521,8 @@ namespace BansheeEditor
                 {
                     this.state = state;
 
-                    textureField.Value = state.Texture;
-                    textColorField.Value = state.TextColor;
+                    textureField.Value = state.texture;
+                    textColorField.Value = state.textColor;
                 }
             }
 

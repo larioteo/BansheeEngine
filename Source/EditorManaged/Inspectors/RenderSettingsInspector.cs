@@ -489,7 +489,7 @@ namespace BansheeEditor
             fadeRangeField.OnChanged += x => { this.settings.FadeRange = x; MarkAsModified(); ConfirmModify(); };
             intensityField.OnChanged += x => { this.settings.Intensity = x; MarkAsModified(); ConfirmModify(); };
             powerField.OnChanged += x => { this.settings.Power = x; MarkAsModified(); ConfirmModify(); };
-            qualityField.OnChanged += x => { this.settings.Quality = (uint)x; MarkAsModified(); ConfirmModify(); };
+            qualityField.OnChanged += x => { this.settings.Quality = (int)x; MarkAsModified(); ConfirmModify(); };
 
             qualityField.Step = 1.0f;
 
@@ -564,7 +564,7 @@ namespace BansheeEditor
             this.settings = settings;
 
             enabledField.OnChanged += x => { this.settings.Enabled = x; MarkAsModified(); ConfirmModify(); };
-            qualityField.OnChanged += x => { this.settings.Quality = (uint)x; MarkAsModified(); ConfirmModify(); };
+            qualityField.OnChanged += x => { this.settings.Quality = (int)x; MarkAsModified(); ConfirmModify(); };
             intensityField.OnChanged += x => { this.settings.Intensity = x; MarkAsModified(); ConfirmModify(); };
             maxRoughnessField.OnChanged += x => { this.settings.MaxRoughness = x; MarkAsModified(); ConfirmModify(); };
 
@@ -645,7 +645,7 @@ namespace BansheeEditor
 
             numCascadesField.OnChanged += x =>
             {
-                this.settings.NumCascades = (uint) x;
+                this.settings.NumCascades = x;
                 MarkAsModified();
                 ConfirmModify();
             };
@@ -659,7 +659,7 @@ namespace BansheeEditor
 
             filteringQualityField.OnChanged += x =>
             {
-                this.settings.ShadowFilteringQuality = (uint)x;
+                this.settings.ShadowFilteringQuality = (int)x;
                 MarkAsModified();
                 ConfirmModify();
             };

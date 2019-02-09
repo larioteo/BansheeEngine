@@ -32,7 +32,7 @@ namespace BansheeEditor
 
 		/// <summary>Number of tick levels that will be generated.</summary>
 		[NativeWrapper]
-		public uint NumLevels
+		public int NumLevels
 		{
 			get { return Internal_getNumLevels(mCachedPtr); }
 		}
@@ -43,7 +43,7 @@ namespace BansheeEditor
 		/// <param name="valueRangeStart">Start of the range the ticks are to display.</param>
 		/// <param name="valueRangeEnd">End of the range the ticks are to display.</param>
 		/// <param name="pixelRange">Width or height on which the ticks will be rendered. In pixels.</param>
-		public void SetRange(float valueRangeStart, float valueRangeEnd, uint pixelRange)
+		public void SetRange(float valueRangeStart, float valueRangeEnd, int pixelRange)
 		{
 			Internal_setRange(mCachedPtr, valueRangeStart, valueRangeEnd, pixelRange);
 		}
@@ -65,7 +65,7 @@ namespace BansheeEditor
 		/// </summary>
 		/// <param name="level">Level for which to retrieve the strength. Must not be larger than getNumLevels() - 1.</param>
 		/// <returns>Strength of the ticks at this level, in range [0, 1].</returns>
-		public float GetLevelStrength(uint level)
+		public float GetLevelStrength(int level)
 		{
 			return Internal_getLevelStrength(mCachedPtr, level);
 		}
@@ -75,7 +75,7 @@ namespace BansheeEditor
 		/// </summary>
 		/// <param name="level">Level for which to retrieve the positions. Must not be larger than getNumLevels() - 1.</param>
 		/// <returns>Positions of all ticks of the provided level.</returns>
-		public float[] GetTicks(uint level)
+		public float[] GetTicks(int level)
 		{
 			return Internal_getTicks(mCachedPtr, level);
 		}
@@ -83,15 +83,15 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_GUIGraphTicks(GUIGraphTicks managedInstance, GUITickStepType stepType);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_getNumLevels(IntPtr thisPtr);
+		private static extern int Internal_getNumLevels(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setRange(IntPtr thisPtr, float valueRangeStart, float valueRangeEnd, uint pixelRange);
+		private static extern void Internal_setRange(IntPtr thisPtr, float valueRangeStart, float valueRangeEnd, int pixelRange);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setTickSpacing(IntPtr thisPtr, int minPx, int maxPx);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern float Internal_getLevelStrength(IntPtr thisPtr, uint level);
+		private static extern float Internal_getLevelStrength(IntPtr thisPtr, int level);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern float[] Internal_getTicks(IntPtr thisPtr, uint level);
+		private static extern float[] Internal_getTicks(IntPtr thisPtr, int level);
 	}
 
 	/** @} */

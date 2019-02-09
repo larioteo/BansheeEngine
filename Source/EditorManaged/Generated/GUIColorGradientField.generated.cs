@@ -28,7 +28,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIColorGradientField(GUIContent labelContent, uint labelWidth, string style = "")
+		public GUIColorGradientField(GUIContent labelContent, int labelWidth, string style = "")
 		{
 			Internal_create(this, ref labelContent, labelWidth, style);
 		}
@@ -51,7 +51,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIColorGradientField(LocString labelText, uint labelWidth, string style = "")
+		public GUIColorGradientField(LocString labelText, int labelWidth, string style = "")
 		{
 			Internal_create1(this, labelText, labelWidth, style);
 		}
@@ -96,11 +96,11 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_setValue(IntPtr thisPtr, ColorGradient value);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUIColorGradientField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create(GUIColorGradientField managedInstance, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUIColorGradientField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUIColorGradientField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create1(GUIColorGradientField managedInstance, LocString labelText, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create2(GUIColorGradientField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]

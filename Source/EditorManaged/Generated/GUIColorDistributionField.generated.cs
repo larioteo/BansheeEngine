@@ -28,7 +28,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIColorDistributionField(GUIContent labelContent, uint labelWidth, string style = "")
+		public GUIColorDistributionField(GUIContent labelContent, int labelWidth, string style = "")
 		{
 			Internal_create(this, ref labelContent, labelWidth, style);
 		}
@@ -51,7 +51,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIColorDistributionField(LocString labelText, uint labelWidth, string style = "")
+		public GUIColorDistributionField(LocString labelText, int labelWidth, string style = "")
 		{
 			Internal_create1(this, labelText, labelWidth, style);
 		}
@@ -108,11 +108,11 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern PropertyDistributionType Internal_getType(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUIColorDistributionField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create(GUIColorDistributionField managedInstance, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUIColorDistributionField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUIColorDistributionField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create1(GUIColorDistributionField managedInstance, LocString labelText, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create2(GUIColorDistributionField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]

@@ -89,7 +89,7 @@ namespace BansheeEditor
             removeProbeButton.OnClick += () =>
             {
                 if (LightProbeVolumeNodeHandles.SelectedNode != uint.MaxValue)
-                    lpv.RemoveProbe(LightProbeVolumeNodeHandles.SelectedNode);
+                    lpv.RemoveProbe((int)LightProbeVolumeNodeHandles.SelectedNode);
 
                 MarkAsModified();
                 ConfirmModify();

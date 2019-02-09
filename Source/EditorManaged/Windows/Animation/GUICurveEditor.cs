@@ -409,7 +409,7 @@ namespace BansheeEditor
         public void SetFPS(int fps)
         {
             guiTimeline.SetFPS(fps);
-            guiCurveDrawing.FPS = (uint)fps;
+            guiCurveDrawing.FPS = fps;
 
             if(showEvents)
                 guiEvents.SetFPS(fps);
@@ -445,7 +445,7 @@ namespace BansheeEditor
             markedFrameIdx = frameIdx;
 
             guiTimeline.SetMarkedFrame(frameIdx);
-            guiCurveDrawing.MarkedFrame = (uint)frameIdx;
+            guiCurveDrawing.MarkedFrame = frameIdx;
 
             if(showEvents)
                 guiEvents.SetMarkedFrame(frameIdx);

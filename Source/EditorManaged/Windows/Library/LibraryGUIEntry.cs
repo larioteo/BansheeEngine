@@ -451,7 +451,7 @@ namespace BansheeEditor
             LibraryEntry entry = ProjectLibrary.GetEntry(path);
             if (entry.Type == LibraryEntryType.Directory)
             {
-                return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Folder, size);
+                return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Folder, size);
             }
             else
             {
@@ -474,37 +474,37 @@ namespace BansheeEditor
                 switch (meta.ResType)
                 {
                     case ResourceType.Font:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Font, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Font, size);
                     case ResourceType.Mesh:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Mesh, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Mesh, size);
                     case ResourceType.Texture:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Texture, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Texture, size);
                     case ResourceType.PlainText:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.PlainText, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.PlainText, size);
                     case ResourceType.ScriptCode:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.ScriptCode, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.ScriptCode, size);
                     case ResourceType.SpriteTexture:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.SpriteTexture, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.SpriteTexture, size);
                     case ResourceType.Shader:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Shader, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Shader, size);
                     case ResourceType.ShaderInclude:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Shader, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Shader, size);
                     case ResourceType.Material:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Material, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Material, size);
                     case ResourceType.Prefab:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.Prefab, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.Prefab, size);
                     case ResourceType.GUISkin:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.GUISkin, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.GUISkin, size);
                     case ResourceType.PhysicsMaterial:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.PhysicsMaterial, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.PhysicsMaterial, size);
                     case ResourceType.PhysicsMesh:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.PhysicsMesh, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.PhysicsMesh, size);
                     case ResourceType.AudioClip:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.AudioClip, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.AudioClip, size);
                     case ResourceType.AnimationClip:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.AnimationClip, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.AnimationClip, size);
                     case ResourceType.VectorField:
-                        return EditorBuiltin.GetLibraryItemIcon(LibraryItemIcon.VectorField, size);
+                        return EditorBuiltin.GetProjectLibraryIcon(ProjectLibraryIcon.VectorField, size);
                 }
             }
 

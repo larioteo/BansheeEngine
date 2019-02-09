@@ -99,7 +99,7 @@ namespace BansheeEditor
 		/// <summary>Attempts to find a curve under the provided coordinates.</summary>
 		/// <param name="pixelCoords">Coordinates relative to this GUI element in pixels.</param>
 		/// <returns>Index of the curve, or -1 if none found.</returns>
-		public uint FindCurve(Vector2I pixelCoords)
+		public int FindCurve(Vector2I pixelCoords)
 		{
 			return Internal_findCurve(mCachedPtr, ref pixelCoords);
 		}
@@ -156,7 +156,7 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_curveToPixelSpace(IntPtr thisPtr, ref Vector2 curveCoords, out Vector2I __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_findCurve(IntPtr thisPtr, ref Vector2I pixelCoords);
+		private static extern int Internal_findCurve(IntPtr thisPtr, ref Vector2I pixelCoords);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_findKeyFrame(IntPtr thisPtr, ref Vector2I pixelCoords, out KeyframeRef keyframe);
 		[MethodImpl(MethodImplOptions.InternalCall)]

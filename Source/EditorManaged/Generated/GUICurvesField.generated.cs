@@ -29,7 +29,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUICurvesField(CurveDrawOptions drawOptions, GUIContent labelContent, uint labelWidth, string style = "")
+		public GUICurvesField(CurveDrawOptions drawOptions, GUIContent labelContent, int labelWidth, string style = "")
 		{
 			Internal_create(this, drawOptions, ref labelContent, labelWidth, style);
 		}
@@ -42,7 +42,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUICurvesField(CurveDrawOptions drawOptions, LocString labelText, uint labelWidth, string style = "")
+		public GUICurvesField(CurveDrawOptions drawOptions, LocString labelText, int labelWidth, string style = "")
 		{
 			Internal_create0(this, drawOptions, labelText, labelWidth, style);
 		}
@@ -65,7 +65,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUICurvesField(GUIContent labelContent, uint labelWidth, string style = "")
+		public GUICurvesField(GUIContent labelContent, int labelWidth, string style = "")
 		{
 			Internal_create2(this, ref labelContent, labelWidth, style);
 		}
@@ -88,7 +88,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUICurvesField(LocString labelText, uint labelWidth, string style = "")
+		public GUICurvesField(LocString labelText, int labelWidth, string style = "")
 		{
 			Internal_create4(this, labelText, labelWidth, style);
 		}
@@ -153,7 +153,7 @@ namespace BansheeEditor
 		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
 		[ShowInInspector]
 		[NativeWrapper]
-		public uint Padding
+		public int Padding
 		{
 			set { Internal_setPadding(mCachedPtr, value); }
 		}
@@ -211,19 +211,19 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_centerAndZoom(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setPadding(IntPtr thisPtr, uint padding);
+		private static extern void Internal_setPadding(IntPtr thisPtr, int padding);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUICurvesField managedInstance, CurveDrawOptions drawOptions, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create(GUICurvesField managedInstance, CurveDrawOptions drawOptions, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create0(GUICurvesField managedInstance, CurveDrawOptions drawOptions, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create0(GUICurvesField managedInstance, CurveDrawOptions drawOptions, LocString labelText, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create1(GUICurvesField managedInstance, CurveDrawOptions drawOptions, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create2(GUICurvesField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create2(GUICurvesField managedInstance, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create3(GUICurvesField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create4(GUICurvesField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create4(GUICurvesField managedInstance, LocString labelText, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create5(GUICurvesField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]

@@ -15,70 +15,80 @@ namespace bs
 	 */
 
 	/**	Types of valid icons used when viewing the project library. */
-	enum class ProjectIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class ProjectLibraryIcon
 	{
 		Folder, Mesh, Font, Texture, PlainText, ScriptCode, SpriteTexture, Shader, ShaderInclude, Material, Prefab, GUISkin,
 		PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip, VectorField
 	};
 
 	/**	Types of icons that may be displayed on the tool bar. */
-	enum class ToolbarIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class ToolbarIcon
 	{
 		NewCamera, NewRenderable, NewPointLight, NewDirLight, NewSpotLight, NewSceneObject, NewCube, NewSphere, NewCone, 
 		NewQuad, NewMat, NewCSScript, NewShader, NewSpriteTex, Pause, Play, Step, Undo, Redo, OpenProject, SaveProject, 
 		SaveScene
 	};
 
+	/** Types of icons that are used as 3D icons in the scene view. */
+	enum BS_SCRIPT_EXPORT(ed:true) class SceneViewIcon
+	{
+		Camera, Light, AudioSource, AudioListener, Decal, ParticleSystem, LightProbes, ReflectionProbe
+	};
+
 	/**	Types of icons that may be displayed in the scene window. */
-	enum class SceneWindowIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class SceneWindowIcon
 	{
 		View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap, SceneCameraOptions
 	};
 
 	/**	Types of icons that may be displayed in the inspector window. */
-	enum class InspectorWindowIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class InspectorWindowIcon
 	{
 		Create, Clone, Clear, Resize, Delete, MoveUp, MoveDown, Edit, Apply, Add, Cancel
 	};
 
 	/**	Types of icons that may be displayed in the library window. */
-	enum class LibraryWindowIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class LibraryWindowIcon
 	{
 		Home, Up, Clear, Options
 	};
 
 	/**	Types of icons that may be displayed in the animation editor window. */
-	enum class AnimationWindowIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class AnimationWindowIcon
 	{
 		Play, Record, FrameForward, FrameBack, AddKeyframe, AddEvent, Keyframe, Event
 	};
 
 	/**	Types of icons used in various areas throughout the editor. */
-	enum class EditorIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class EditorIcon
 	{
 		X, Component, SceneObject
 	};
 
 	/**	Types of icons to be used along with log messages depending on their severity. */
-	enum class LogMessageIcon
+	enum BS_SCRIPT_EXPORT(ed:true) class LogMessageIcon
 	{
 		Info, Warning, Error
 	};
 
 	/**	Contains a set of built-in resources used by the editor. */
-	class BS_ED_EXPORT BuiltinEditorResources : public bs::Module<BuiltinEditorResources>
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,n:EditorBuiltin,m:Utility-Editor) 
+	BuiltinEditorResources : public bs::Module<BuiltinEditorResources>
 	{
 	public:
 		BuiltinEditorResources();
 
 		/**	Returns the default editor GUI skin. */
-		const HGUISkin& getSkin() const { return mSkin; }
+		BS_SCRIPT_EXPORT(pr:getter,n:GUISkin)
+		BS_NORREF const HGUISkin& getSkin() const { return mSkin; }
 
 		/** Returns the default font used by the editor. */
-		const HFont& getDefaultFont() const { return mDefaultFont; }
+		BS_SCRIPT_EXPORT(pr:getter,n:DefaultFont)
+		BS_NORREF const HFont& getDefaultFont() const { return mDefaultFont; }
 
 		/** Returns the default antialiased font used by the editor. */
-		const HFont& getDefaultAAFont() const { return mDefaultAAFont; }
+		BS_SCRIPT_EXPORT(pr:getter,n:DefaultAAFont)
+		BS_NORREF const HFont& getDefaultAAFont() const { return mDefaultAAFont; }
 
 		/**	Creates a material used for docking drop overlay used by the editor. */
 		HMaterial createDockDropOverlayMaterial() const;
@@ -129,33 +139,47 @@ namespace bs
 		 * Retrieves an icon that represents a specific resource type that may be displayed when viewing the project 
 		 * library.
 		 */
-		HSpriteTexture getLibraryIcon(ProjectIcon icon, int size) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getProjectLibraryIcon(ProjectLibraryIcon icon, int size) const;
 
 		/**	Retrieves an icon that may be displayed on the main window's toolbar. */
-		HSpriteTexture getToolbarIcon(ToolbarIcon icon) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getToolbarIcon(ToolbarIcon icon) const;
 
 		/**	Retrieves an icon that may be displayed on the scene window. */
+		BS_SCRIPT_EXPORT()
 		GUIContentImages getSceneWindowIcon(SceneWindowIcon icon) const;
 
+		/**	Retrieves an icon that may be displayed in the 3D scene view. */
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getSceneViewIcon(SceneViewIcon icon) const;
+
 		/**	Retrieves an icon that may be displayed on the library window. */
-		HSpriteTexture getLibraryWindowIcon(LibraryWindowIcon icon) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getLibraryWindowIcon(LibraryWindowIcon icon) const;
 
 		/**	Retrieves an icon that may be displayed on the inspector window. */
-		HSpriteTexture getInspectorWindowIcon(InspectorWindowIcon icon) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getInspectorWindowIcon(InspectorWindowIcon icon) const;
 
 		/**	Retrieves an icon that may be displayed on the animation editor window. */
+		BS_SCRIPT_EXPORT()
 		GUIContentImages getAnimationWindowIcon(AnimationWindowIcon icon) const;
 
 		/**	Retrieves an icon that represents a specific generic editor icon. */
-		HSpriteTexture getIcon(EditorIcon icon) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getEditorIcon(EditorIcon icon) const;
 
 		/**	Retrieves an icon that represents a specific log message type. */
-		HSpriteTexture getLogMessageIcon(LogMessageIcon icon, UINT32 size, bool dark) const;
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getLogMessageIcon(LogMessageIcon icon, UINT32 size, bool dark) const;
 
 		/**	Returns text contained in the default "empty" shader. */
+		BS_SCRIPT_EXPORT(pr:getter,n:EmptyShaderCode)
 		String getEmptyShaderCode() const;
 
 		/**	Returns text contained in the default "empty" C# script. */
+		BS_SCRIPT_EXPORT(pr:getter,n:EmptyCSScriptCode)
 		String getEmptyCSScriptCode() const;
 
 		/**	Returns image data the Banshee Engine splash screen. */
@@ -180,6 +204,9 @@ namespace bs
 	private:
 		/**	Loads a GUI icon with the specified filename. */
 		HSpriteTexture getGUIIcon(const String& name) const;
+
+		/**	Loads a GUI icon with the specified filename. */
+		HSpriteTexture getGUIIcon3D(const String& name) const;
 
 		/**	Loads a shader with the specified filename */
 		HShader getShader(const String& name) const;
@@ -209,6 +236,7 @@ namespace bs
 		static const char* ShaderFolder;
 		static const char* SkinFolder;
 		static const char* IconFolder;
+		static const char* Icon3DFolder;
 		static const char* ShaderIncludeFolder;
 		static const char* SpriteSubFolder;
 
@@ -216,7 +244,9 @@ namespace bs
 		Path EditorSkinFolder;
 		Path EditorSkinSpritesFolder;
 		Path EditorIconFolder;
+		Path EditorIcon3DFolder;
 		Path EditorIconSpritesFolder;
+		Path EditorIcon3DSpritesFolder;
 		Path EditorShaderFolder;
 		Path EditorShaderIncludeFolder;
 

@@ -1073,7 +1073,7 @@ namespace bs
 
 		float invViewportWidth = 1.0f / (camera->getViewport()->getPixelArea().width * 0.5f);
 		float invViewportHeight = 1.0f / (camera->getViewport()->getPixelArea().height * 0.5f);
-		float viewportYFlip = bs::RenderAPI::getAPIInfo().isFlagSet(RenderAPIFeatureFlag::NDCYAxisDown) ? -1.0f : 1.0f;
+		float viewportYFlip = (gCaps().conventions.ndcYAxis == Conventions::Axis::Down) ? -1.0f : 1.0f;
 
 		if (!usePickingMaterial)
 		{
@@ -1170,13 +1170,13 @@ namespace bs
 		// Set up ortho matrix
 		Matrix4 projMat;
 
-		const RenderAPIInfo& rapiInfo = rapi.getAPIInfo();
-		float left = screenArea.x + rapiInfo.getHorizontalTexelOffset();
-		float right = screenArea.x + screenArea.width + rapiInfo.getHorizontalTexelOffset();
-		float top = screenArea.y + rapiInfo.getVerticalTexelOffset();
-		float bottom = screenArea.y + screenArea.height + rapiInfo.getVerticalTexelOffset();
-		float near = rapiInfo.getMinimumDepthInputValue();
-		float far = rapiInfo.getMaximumDepthInputValue();
+		const RenderAPICapabilities& caps = gCaps();
+		float left = screenArea.x + caps.horizontalTexelOffset;
+		float right = screenArea.x + screenArea.width + caps.horizontalTexelOffset;
+		float top = screenArea.y + caps.verticalTexelOffset;
+		float bottom = screenArea.y + screenArea.height + caps.verticalTexelOffset;
+		float near = caps.minDepth;
+		float far = caps.maxDepth;
 
 		// Top/bottom have been swapped because we're moving from window coordinates (origin top left)
 		// to normalized device coordinates (origin bottom left)

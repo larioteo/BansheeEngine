@@ -493,7 +493,7 @@ namespace BansheeEditor
 
             clip.Curves = newClipCurves;
             clip.Events = events;
-            clip.SampleRate = (uint)sampleRate;
+            clip.SampleRate = sampleRate;
 
             tangents = new EditorAnimClipTangents();
             tangents.positionCurves = positionTangents.ToArray();

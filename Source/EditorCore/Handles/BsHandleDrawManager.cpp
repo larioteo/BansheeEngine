@@ -322,7 +322,7 @@ namespace bs
 			Matrix4 viewProjMat = camera.getProjectionMatrixRS() * camera.getViewMatrix();
 			float invViewportWidth = 1.0f / (camera.getViewport()->getPixelArea().width * 0.5f);
 			float invViewportHeight = 1.0f / (camera.getViewport()->getPixelArea().height * 0.5f);
-			float viewportYFlip = bs::RenderAPI::getAPIInfo().isFlagSet(RenderAPIFeatureFlag::NDCYAxisDown) ? -1.0f : 1.0f;
+			float viewportYFlip = (gCaps().conventions.ndcYAxis == Conventions::Axis::Down) ? -1.0f : 1.0f;
 
 			gHandleParamBlockDef.gMatViewProj.set(mParamBuffer, viewProjMat);
 			gHandleParamBlockDef.gViewDir.set(mParamBuffer, (Vector4)camera.getTransform().getForward());

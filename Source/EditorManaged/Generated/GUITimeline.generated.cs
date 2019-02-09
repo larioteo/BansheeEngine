@@ -41,7 +41,7 @@ namespace BansheeEditor
 		/// <summary>Number of frames per second, used for frame selection and marking.</summary>
 		[ShowInInspector]
 		[NativeWrapper]
-		public uint FPS
+		public int FPS
 		{
 			get { return Internal_getFPS(mCachedPtr); }
 			set { Internal_setFPS(mCachedPtr, value); }
@@ -50,7 +50,7 @@ namespace BansheeEditor
 		/// <summary>Frame to display the frame marker on. Set to -1 to clear the frame marker.</summary>
 		[ShowInInspector]
 		[NativeWrapper]
-		public uint MarkedFrame
+		public int MarkedFrame
 		{
 			get { return Internal_setMarkedFrame0(mCachedPtr); }
 			set { Internal_setMarkedFrame(mCachedPtr, value); }
@@ -59,7 +59,7 @@ namespace BansheeEditor
 		/// <summary>Sets the size of padding to apply to the left and right sides of the curve drawing, in pixels.</summary>
 		[ShowInInspector]
 		[NativeWrapper]
-		public uint Padding
+		public int Padding
 		{
 			get { return Internal_getPadding(mCachedPtr); }
 			set { Internal_setPadding(mCachedPtr, value); }
@@ -70,7 +70,7 @@ namespace BansheeEditor
 		/// </summary>
 		/// <param name="pixelCoords">Coordinates relative to this GUI element.</param>
 		/// <returns>Frame that was clicked on, or -1 if the coordinates are outside of valid bounds.</returns>
-		public uint GetFrame(Vector2I pixelCoords)
+		public int GetFrame(Vector2I pixelCoords)
 		{
 			return Internal_getFrame(mCachedPtr, ref pixelCoords);
 		}
@@ -108,15 +108,15 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getOffset(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setFPS(IntPtr thisPtr, uint FPS);
+		private static extern void Internal_setFPS(IntPtr thisPtr, int FPS);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_getFPS(IntPtr thisPtr);
+		private static extern int Internal_getFPS(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setMarkedFrame(IntPtr thisPtr, uint index);
+		private static extern void Internal_setMarkedFrame(IntPtr thisPtr, int index);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_setMarkedFrame0(IntPtr thisPtr);
+		private static extern int Internal_setMarkedFrame0(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_getFrame(IntPtr thisPtr, ref Vector2I pixelCoords);
+		private static extern int Internal_getFrame(IntPtr thisPtr, ref Vector2I pixelCoords);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getTime(IntPtr thisPtr, int pixel);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -124,9 +124,9 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_getTimeForFrame(IntPtr thisPtr, int index);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_setPadding(IntPtr thisPtr, uint padding);
+		private static extern void Internal_setPadding(IntPtr thisPtr, int padding);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern uint Internal_getPadding(IntPtr thisPtr);
+		private static extern int Internal_getPadding(IntPtr thisPtr);
 	}
 
 	/** @} */

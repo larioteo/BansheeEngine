@@ -91,7 +91,7 @@ namespace BansheeEditor
             {
                 if (nodeColliders[i].State == HandleSlider.StateType.Active)
                 {
-                    selectedNode = probeInfos[i].handle;
+                    selectedNode = (uint)probeInfos[i].handle;
                     break;
                 }
             }
@@ -101,7 +101,7 @@ namespace BansheeEditor
                 moveHandle.PostInput();
 
                 if (moveHandle.IsDragged())
-                    volume.SetProbePosition(selectedNode, moveHandle.Position + moveHandle.Delta);
+                    volume.SetProbePosition((int)selectedNode, moveHandle.Position + moveHandle.Delta);
             }
         }
 

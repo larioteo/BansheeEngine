@@ -464,9 +464,9 @@ namespace bs
 			float depth = depthPixelData->getDepthAt(samplePixel.x, samplePixel.y);
 			Color normal = normalsPixelData->getColorAt(samplePixel.x, samplePixel.y);
 
-			const RenderAPIInfo& rapiInfo = rs.getAPIInfo();
-			float max = rapiInfo.getMaximumDepthInputValue();
-			float min = rapiInfo.getMinimumDepthInputValue();
+			const RenderAPICapabilities& caps = gCaps();
+			float max = caps.maxDepth;
+			float min = caps.minDepth;
 			depth = depth * Math::abs(max - min) + min;
 
 			result.depth = depth;

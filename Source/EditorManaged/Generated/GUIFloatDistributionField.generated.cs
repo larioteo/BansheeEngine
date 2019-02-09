@@ -28,7 +28,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(GUIContent labelContent, uint labelWidth, string style = "")
+		public GUIFloatDistributionField(GUIContent labelContent, int labelWidth, string style = "")
 		{
 			Internal_create(this, ref labelContent, labelWidth, style);
 		}
@@ -51,7 +51,7 @@ namespace BansheeEditor
 		/// Optional style to use for the element. Style will be retrieved from GUISkin of the GUIWidget the element is used on. 
 		/// If not specified default style is used.
 		/// </param>
-		public GUIFloatDistributionField(LocString labelText, uint labelWidth, string style = "")
+		public GUIFloatDistributionField(LocString labelText, int labelWidth, string style = "")
 		{
 			Internal_create1(this, labelText, labelWidth, style);
 		}
@@ -131,11 +131,11 @@ namespace BansheeEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_hasInputFocus(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, uint labelWidth, string style);
+		private static extern void Internal_create(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_create1(GUIFloatDistributionField managedInstance, LocString labelText, uint labelWidth, string style);
+		private static extern void Internal_create1(GUIFloatDistributionField managedInstance, LocString labelText, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create2(GUIFloatDistributionField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
