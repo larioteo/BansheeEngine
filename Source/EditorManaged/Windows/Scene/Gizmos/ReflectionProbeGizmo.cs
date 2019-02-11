@@ -14,7 +14,7 @@ namespace BansheeEditor
     internal class ReflectionProbeGizmos
     {
         /// <summary>
-        /// Method called by the runtime when gizmos are meant to be drawn.
+        /// Draws the reflection probe shape.
         /// </summary>
         /// <param name="reflProbe">Reflection probe to draw gizmos for.</param>
         [DrawGizmo(DrawGizmoFlags.Selected)]
@@ -37,6 +37,17 @@ namespace BansheeEditor
                     Gizmos.DrawWireSphere(position, reflProbe.Radius);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Draws reflection probe icon in scene view.
+        /// </summary>
+        /// <param name="reflProbe">Reflection probe to draw the icon for.</param>
+        [DrawGizmo(DrawGizmoFlags.NotSelected | DrawGizmoFlags.Pickable)]
+        private static void DrawIcon(ReflectionProbe reflProbe)
+        {
+            Gizmos.DrawIcon(reflProbe.SceneObject.Position, 
+                EditorBuiltin.GetSceneViewIcon(SceneViewIcon.ReflectionProbe), false);
         }
     }
 

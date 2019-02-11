@@ -14,9 +14,9 @@ namespace BansheeEditor
     internal class LightGizmos
     {
         /// <summary>
-        /// Method called by the runtime when gizmos are meant to be drawn.
+        /// Draws light shape gizmos when a light is selected.
         /// </summary>
-        /// <param name="light">Light to draw gizmos for.</param>
+        /// <param name="light">Light to draw the gizmos for.</param>
         [DrawGizmo(DrawGizmoFlags.Selected)]
         private static void Draw(Light light)
         {
@@ -83,6 +83,16 @@ namespace BansheeEditor
                 }
                     break;
             }
+        }
+
+        /// <summary>
+        /// Draws light icon in scene view.
+        /// </summary>
+        /// <param name="light">Light to draw the icon for.</param>
+        [DrawGizmo(DrawGizmoFlags.NotSelected | DrawGizmoFlags.Pickable)]
+        private static void DrawIcon(Light light)
+        {
+            Gizmos.DrawIcon(light.SceneObject.Position, EditorBuiltin.GetSceneViewIcon(SceneViewIcon.Light), false);
         }
     }
 

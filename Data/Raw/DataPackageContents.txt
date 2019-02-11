@@ -1,4 +1,5 @@
 Data/Icons
+Data/Icons3D
 Data/Shaders
 Data/Skin
 Data/.version

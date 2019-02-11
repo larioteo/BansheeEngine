@@ -1645,5 +1645,47 @@
             "SpriteUUID": "bc2d60d6-4a4b-eef9-8c87-4a4baad3c2c7",
             "TextureUUID": "b41fb04a-44f2-e17e-b697-44f20a42b34d"
         }
+    ],
+    "SpriteIcons3D": [
+        {
+            "Path": "SceneAudioListener.png",
+            "SpriteUUID": "a65f1c54-4651-6220-5ca4-4651c64998da",
+            "TextureUUID": "db857963-42e8-705a-60ae-42e808c56296"
+        },
+        {
+            "Path": "SceneAudioSource.png",
+            "SpriteUUID": "9069c9f3-4be9-98cf-21b2-4be9758201b0",
+            "TextureUUID": "59ae7925-435d-1df2-e0ba-435d183ba0ec"
+        },
+        {
+            "Path": "SceneCamera.png",
+            "SpriteUUID": "39c1e7da-49b2-6c27-70b4-49b2aefe04ef",
+            "TextureUUID": "208e1e11-4281-5e62-5c87-428187497e19"
+        },
+        {
+            "Path": "SceneDecal.png",
+            "SpriteUUID": "c568d4b9-4ea2-7cec-b1ba-4ea2daccbeff",
+            "TextureUUID": "d36bdb2d-42e1-d3b4-aab1-42e1e7403f1a"
+        },
+        {
+            "Path": "SceneLight.png",
+            "SpriteUUID": "4f60d738-4174-9cfc-4ea8-41742ff28869",
+            "TextureUUID": "0b0acf95-4b7c-fb2c-efa6-4b7c4da3b47a"
+        },
+        {
+            "Path": "SceneLightProbes.png",
+            "SpriteUUID": "61138f43-43a0-5af8-a1ab-43a0f253b7ae",
+            "TextureUUID": "963b4e7b-4f7f-ab34-a7a4-4f7f7c725a15"
+        },
+        {
+            "Path": "SceneParticleSystem.png",
+            "SpriteUUID": "3e1bd794-4dde-4edf-13a4-4ddebefc332d",
+            "TextureUUID": "62131253-4a3f-57b5-45a8-4a3f091e6dc8"
+        },
+        {
+            "Path": "SceneReflectionProbe.png",
+            "SpriteUUID": "c0ebfd2a-4f61-294a-a483-4f6120a1368e",
+            "TextureUUID": "a70c58f5-444f-37b6-dca3-444f126cadc8"
+        }
     ]
 }

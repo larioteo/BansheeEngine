@@ -49,7 +49,7 @@ namespace BansheeEditor
             probeInfos = volume.GetProbes();
             for (int i = 0; i < probeInfos.Length; i++)
             {
-                if(i == nodeColliders.Count)
+                if (i == nodeColliders.Count)
                     nodeColliders.Add(new HandleSliderSphere(this, 1.0f, false));
 
                 Vector3 position = probeInfos[i].position;
@@ -66,7 +66,7 @@ namespace BansheeEditor
 
             if (selectedNode != uint.MaxValue)
             {
-                if(moveHandle == null)
+                if (moveHandle == null)
                     moveHandle = new MoveHandle();
 
                 Vector3 position = Vector3.Zero;
@@ -87,11 +87,11 @@ namespace BansheeEditor
         /// <inheritdoc/>
         protected internal override void PostInput()
         {
-            for(int i = 0; i < nodeColliders.Count; i++)
+            for (int i = 0; i < nodeColliders.Count; i++)
             {
                 if (nodeColliders[i].State == HandleSlider.StateType.Active)
                 {
-                    selectedNode = (uint)probeInfos[i].handle;
+                    selectedNode = (uint) probeInfos[i].handle;
                     break;
                 }
             }
@@ -101,7 +101,7 @@ namespace BansheeEditor
                 moveHandle.PostInput();
 
                 if (moveHandle.IsDragged())
-                    volume.SetProbePosition((int)selectedNode, moveHandle.Position + moveHandle.Delta);
+                    volume.SetProbePosition((int) selectedNode, moveHandle.Position + moveHandle.Delta);
             }
         }
 
@@ -113,6 +113,29 @@ namespace BansheeEditor
 
             foreach (var entry in probeInfos)
                 HandleDrawing.DrawSphere(entry.position, 1.0f);
+        }
+    }
+
+    /** @} */
+
+    /** @addtogroup Gizmos
+     *  @{
+     */
+
+    /// <summary>
+    /// Handles drawing of gizmos for <see cref="LightProbeVolume"/> component.
+    /// </summary>
+    internal class LightProbeVolumeGizmos
+    {
+        /// <summary>
+        /// Draws light probe volume icon in scene view.
+        /// </summary>
+        /// <param name="volume">Light probe volume to draw the icon for.</param>
+        [DrawGizmo(DrawGizmoFlags.NotSelected | DrawGizmoFlags.Pickable)]
+        private static void DrawIcon(LightProbeVolume volume)
+        {
+            Gizmos.DrawIcon(volume.SceneObject.Position,
+                EditorBuiltin.GetSceneViewIcon(SceneViewIcon.LightProbes), false);
         }
     }
 

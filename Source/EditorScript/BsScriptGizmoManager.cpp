@@ -65,6 +65,9 @@ namespace bs
 			HSceneObject curSO = todo.top();
 			todo.pop();
 
+			if(curSO->hasFlag(SOF_Internal))
+				continue;
+
 			bool isSelected = std::count(selectedObjects.begin(), selectedObjects.end(), curSO) > 0;
 			if (isSelected && !isParentSelected)
 			{

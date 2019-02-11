@@ -84,7 +84,7 @@ namespace BansheeEditor
         }
 
         /// <summary>
-        /// Method called by the runtime when gizmos are meant to be drawn.
+        /// Draws the particle system shape when the particle system is selected.
         /// </summary>
         /// <param name="component">Component to draw gizmos for.</param>
         [DrawGizmo(DrawGizmoFlags.Selected)]
@@ -277,6 +277,16 @@ namespace BansheeEditor
                 AABox bounds = component.Settings.CustomBounds;
                 Gizmos.DrawWireCube(bounds.Center, bounds.Size * 0.5f);
             }
+        }
+
+        /// <summary>
+        /// Draws particle system icon in scene view.
+        /// </summary>
+        /// <param name="component">Component to draw the icon for.</param>
+        [DrawGizmo(DrawGizmoFlags.NotSelected | DrawGizmoFlags.Pickable)]
+        private static void DrawIcon(ParticleSystem component)
+        {
+            Gizmos.DrawIcon(component.SceneObject.Position, EditorBuiltin.GetSceneViewIcon(SceneViewIcon.ParticleSystem), false);
         }
 
         /// <summary>

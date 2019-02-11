@@ -27,7 +27,7 @@ namespace bs
 	const UINT32 GizmoManager::WIRE_SPHERE_QUALITY = 10;
 	const float GizmoManager::MAX_ICON_RANGE = 500.0f;
 	const UINT32 GizmoManager::OPTIMAL_ICON_SIZE = 64;
-	const float GizmoManager::ICON_TEXEL_WORLD_SIZE = 0.05f;
+	const float GizmoManager::ICON_TEXEL_WORLD_SIZE = 0.015f;
 
 	GizmoManager::GizmoManager()
 		: mPickable(false), mCurrentIdx(0), mTransformDirty(false), mColorDirty(false), mDrawHelper(nullptr)
@@ -1022,7 +1022,7 @@ namespace bs
 			SPtr<GpuParamsSet> paramsSet;
 			if (iconMeshIdx >= mIconParamSets.size())
 			{
-				mIconMaterial->createParamsSet();
+				paramsSet = mIconMaterial->createParamsSet();
 				paramsSet->setParamBlockBuffer("Uniforms", mIconGizmoBuffer, true);
 
 				mIconParamSets.push_back(paramsSet);
@@ -1183,6 +1183,7 @@ namespace bs
 		// Negative near/far because Z is flipped for normalized device coordinates 
 		// (positive Z goes into screen as opposed to view space here we're looking along negative Z)
 		projMat.makeProjectionOrtho(left, right, top, bottom, -near, -far);
+		rapi.convertProjectionMatrix(projMat, projMat);
 
 		if (!usePickingMaterial)
 		{

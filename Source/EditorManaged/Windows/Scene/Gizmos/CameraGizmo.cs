@@ -14,9 +14,9 @@ namespace BansheeEditor
     internal class CameraGizmo
     {
         /// <summary>
-        /// Method called by the runtime when gizmos are meant to be drawn.
+        /// Draws camera shape gizmos when a camera is selected.
         /// </summary>
-        /// <param name="camera">Camera to draw gizmos for.</param>
+        /// <param name="camera">Camera to draw the gizmos for.</param>
         [DrawGizmo(DrawGizmoFlags.Selected)]
         private static void Draw(Camera camera)
         {
@@ -27,6 +27,17 @@ namespace BansheeEditor
 
             Gizmos.DrawFrustum(Vector3.Zero, camera.AspectRatio, camera.FieldOfView, camera.NearClipPlane,
                 camera.FarClipPlane);
+
+        }
+
+        /// <summary>
+        /// Draws camera icon in scene view.
+        /// </summary>
+        /// <param name="camera">Camera to draw the icon for.</param>
+        [DrawGizmo(DrawGizmoFlags.NotSelected | DrawGizmoFlags.Pickable)]
+        private static void DrawIcon(Camera camera)
+        {
+            Gizmos.DrawIcon(camera.SceneObject.Position, EditorBuiltin.GetSceneViewIcon(SceneViewIcon.Camera), false);
         }
     }
 
