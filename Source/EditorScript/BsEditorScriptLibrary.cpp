@@ -21,6 +21,16 @@ namespace bs
 		EngineScriptLibrary::initialize();
 
 		EditorScriptManager::startUp();
+		
+		mQuitRequestedEvent = gEditorApplication().onQuitRequested.connect([]()
+		{
+			EditorScriptManager::instance().quitRequested();
+		});
+	}
+
+	void EditorScriptLibrary::update()
+	{
+		EditorScriptManager::instance().update();
 	}
 
 	void EditorScriptLibrary::reload()
@@ -82,6 +92,8 @@ namespace bs
 
 	void EditorScriptLibrary::destroy()
 	{
+		mQuitRequestedEvent.disconnect();
+
 		GameObjectManager::instance().destroyQueuedObjects();
 
 		unloadAssemblies();

@@ -15,14 +15,14 @@ namespace bs
 	 */
 
 	/**	Types of valid icons used when viewing the project library. */
-	enum BS_SCRIPT_EXPORT(ed:true) class ProjectLibraryIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class ProjectLibraryIcon
 	{
 		Folder, Mesh, Font, Texture, PlainText, ScriptCode, SpriteTexture, Shader, ShaderInclude, Material, Prefab, GUISkin,
 		PhysicsMaterial, PhysicsMesh, AudioClip, AnimationClip, VectorField
 	};
 
 	/**	Types of icons that may be displayed on the tool bar. */
-	enum BS_SCRIPT_EXPORT(ed:true) class ToolbarIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class ToolbarIcon
 	{
 		NewCamera, NewRenderable, NewPointLight, NewDirLight, NewSpotLight, NewSceneObject, NewCube, NewSphere, NewCone, 
 		NewQuad, NewMat, NewCSScript, NewShader, NewSpriteTex, Pause, Play, Step, Undo, Redo, OpenProject, SaveProject, 
@@ -30,49 +30,49 @@ namespace bs
 	};
 
 	/** Types of icons that are used as 3D icons in the scene view. */
-	enum BS_SCRIPT_EXPORT(ed:true) class SceneViewIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class SceneViewIcon
 	{
 		Camera, Light, AudioSource, AudioListener, Decal, ParticleSystem, LightProbes, ReflectionProbe
 	};
 
 	/**	Types of icons that may be displayed in the scene window. */
-	enum BS_SCRIPT_EXPORT(ed:true) class SceneWindowIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class SceneWindowIcon
 	{
 		View, Move, Rotate, Scale, Pivot, Center, Local, World, MoveSnap, RotateSnap, SceneCameraOptions
 	};
 
 	/**	Types of icons that may be displayed in the inspector window. */
-	enum BS_SCRIPT_EXPORT(ed:true) class InspectorWindowIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class InspectorWindowIcon
 	{
 		Create, Clone, Clear, Resize, Delete, MoveUp, MoveDown, Edit, Apply, Add, Cancel
 	};
 
 	/**	Types of icons that may be displayed in the library window. */
-	enum BS_SCRIPT_EXPORT(ed:true) class LibraryWindowIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class LibraryWindowIcon
 	{
 		Home, Up, Clear, Options
 	};
 
 	/**	Types of icons that may be displayed in the animation editor window. */
-	enum BS_SCRIPT_EXPORT(ed:true) class AnimationWindowIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class AnimationWindowIcon
 	{
 		Play, Record, FrameForward, FrameBack, AddKeyframe, AddEvent, Keyframe, Event
 	};
 
 	/**	Types of icons used in various areas throughout the editor. */
-	enum BS_SCRIPT_EXPORT(ed:true) class EditorIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class EditorIcon
 	{
 		X, Component, SceneObject
 	};
 
 	/**	Types of icons to be used along with log messages depending on their severity. */
-	enum BS_SCRIPT_EXPORT(ed:true) class LogMessageIcon
+	enum BS_SCRIPT_EXPORT(api:bed) class LogMessageIcon
 	{
 		Info, Warning, Error
 	};
 
 	/**	Contains a set of built-in resources used by the editor. */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,n:EditorBuiltin,m:Utility-Editor) 
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(n:EditorBuiltin,m:Utility-Editor,api:bed) 
 	BuiltinEditorResources : public bs::Module<BuiltinEditorResources>
 	{
 	public:

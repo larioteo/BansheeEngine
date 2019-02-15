@@ -131,7 +131,7 @@ namespace bs
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
 	 * Label is optional. This specific implementation displays an input field for a floating point distribution.
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
 	GUIFloatDistributionField final : public TGUIDistributionField<float, GUIFloatDistributionField>
 	{
 	public:
@@ -145,7 +145,7 @@ namespace bs
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
 	 * Label is optional. This specific implementation displays an input field for a 2D vector distribution.
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
 	GUIVector2DistributionField final : public TGUIDistributionField<Vector2, GUIVector2DistributionField>
 	{
 	public:
@@ -159,7 +159,7 @@ namespace bs
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
 	 * Label is optional. This specific implementation displays an input field for a 3D vector distribution.
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
 	GUIVector3DistributionField final : public TGUIDistributionField<Vector3, GUIVector3DistributionField>
 	{
 	public:

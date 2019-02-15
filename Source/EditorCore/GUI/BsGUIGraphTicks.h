@@ -12,7 +12,7 @@ namespace bs
 	 */
 
 	/** Determines how should ticks reported by <see cref="GUIGraphTicks"/> be distributed. */
-	enum class BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUITickStepType
+	enum class BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUITickStepType
 	{
 		/** Ticks represent time values (Multiples of 60). */
 		Time,
@@ -26,7 +26,7 @@ namespace bs
 	 * coordinates along which ticks should be positioned. Ticks are reported as multiple separate levels with different
 	 * strengths, depending on how close their distribution is to the upper valid range.
 	 */
-	class BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUIGraphTicks
+	class BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUIGraphTicks
 	{
 	public:
 		/**

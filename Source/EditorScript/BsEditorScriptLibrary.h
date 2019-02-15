@@ -22,6 +22,9 @@ namespace bs
 		/** @copydoc ScriptLibrary::initialize */
 		void initialize() override;
 
+		/** @copydoc ScriptLibrary::update */
+		void update() override;
+
 		/** @copydoc ScriptLibrary::reload */
 		void reload() override;
 
@@ -40,11 +43,12 @@ namespace bs
 		/** Returns the singleton instance of this library. */
 		static EditorScriptLibrary& instance()
 		{
-			return static_cast<EditorScriptLibrary&>(*ScriptManager::instance()._getScriptLibrary());
+			return static_cast<EditorScriptLibrary&>(*ScriptManager::_getScriptLibrary());
 		}
 
 	private:
 		bool mScriptAssembliesLoaded;
+		HEvent mQuitRequestedEvent;
 	};
 
 	/** @} */

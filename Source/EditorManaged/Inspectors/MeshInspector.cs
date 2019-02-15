@@ -50,10 +50,10 @@ namespace BansheeEditor
             skinField.Value = newImportOptions.ImportSkin;
             blendShapesField.Value = newImportOptions.ImportBlendShapes;
             animationField.Value = newImportOptions.ImportAnimation;
-            scaleField.Value = newImportOptions.Scale;
-            cpuCachedField.Value = newImportOptions.CPUCached;
+            scaleField.Value = newImportOptions.ImportScale;
+            cpuCachedField.Value = newImportOptions.CpuCached;
             collisionMeshTypeField.Value = (ulong)newImportOptions.CollisionMeshType;
-            keyFrameReductionField.Value = newImportOptions.KeyframeReduction;
+            keyFrameReductionField.Value = newImportOptions.ReduceKeyFrames;
             rootMotionField.Value = newImportOptions.ImportRootMotion;
 
             importOptions = newImportOptions;
@@ -85,10 +85,10 @@ namespace BansheeEditor
             skinField.OnChanged += x => importOptions.ImportSkin = x;
             blendShapesField.OnChanged += x => importOptions.ImportBlendShapes = x;
             animationField.OnChanged += x => importOptions.ImportAnimation = x;
-            scaleField.OnChanged += x => importOptions.Scale = x;
-            cpuCachedField.OnChanged += x => importOptions.CPUCached = x;
+            scaleField.OnChanged += x => importOptions.ImportScale = x;
+            cpuCachedField.OnChanged += x => importOptions.CpuCached = x;
             collisionMeshTypeField.OnSelectionChanged += x => importOptions.CollisionMeshType = (CollisionMeshType)x;
-            keyFrameReductionField.OnChanged += x => importOptions.KeyframeReduction = x;
+            keyFrameReductionField.OnChanged += x => importOptions.ReduceKeyFrames = x;
             rootMotionField.OnChanged += x => importOptions.ImportRootMotion = x;
 
             reimportButton.OnClick += TriggerReimport;
@@ -104,7 +104,7 @@ namespace BansheeEditor
             Layout.AddElement(keyFrameReductionField);
             Layout.AddElement(rootMotionField);
 
-            splitInfos = importOptions.AnimationClipSplits;
+            splitInfos = importOptions.AnimationSplits;
 
             animSplitInfoField = GUIArrayField<AnimationSplitInfo, AnimSplitArrayRow>.Create(
                 new LocEdString("Animation splits"), splitInfos, Layout);
@@ -150,7 +150,7 @@ namespace BansheeEditor
         /// </summary>
         private void TriggerReimport()
         {
-            importOptions.AnimationClipSplits = splitInfos;
+            importOptions.AnimationSplits = splitInfos;
 
             ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
@@ -200,7 +200,7 @@ namespace BansheeEditor
                 nameField.OnChanged += x =>
                 {
                     AnimationSplitInfo splitInfo = GetValue<AnimationSplitInfo>();
-                    splitInfo.name = x;
+                    splitInfo.Name = x;
  
                     MarkAsModified();
                 };
@@ -211,7 +211,7 @@ namespace BansheeEditor
                 startFrameField.OnChanged += x =>
                 {
                     AnimationSplitInfo splitInfo = GetValue<AnimationSplitInfo>();
-                    splitInfo.startFrame = x;
+                    splitInfo.StartFrame = x;
 
                     MarkAsModified();
                 };
@@ -222,7 +222,7 @@ namespace BansheeEditor
                 endFrameField.OnChanged += x =>
                 {
                     AnimationSplitInfo splitInfo = GetValue<AnimationSplitInfo>();
-                    splitInfo.endFrame = x;
+                    splitInfo.EndFrame = x;
 
                     MarkAsModified();
                 };
@@ -233,7 +233,7 @@ namespace BansheeEditor
                 isAdditiveField.OnChanged += x =>
                 {
                     AnimationSplitInfo splitInfo = GetValue<AnimationSplitInfo>();
-                    splitInfo.isAdditive = x;
+                    splitInfo.IsAdditive = x;
 
                     MarkAsModified();
                     ConfirmModify();
@@ -249,10 +249,10 @@ namespace BansheeEditor
 
                 if (splitInfo != null)
                 {
-                    nameField.Value = splitInfo.name;
-                    startFrameField.Value = splitInfo.startFrame;
-                    endFrameField.Value = splitInfo.endFrame;
-                    isAdditiveField.Value = splitInfo.isAdditive;
+                    nameField.Value = splitInfo.Name;
+                    startFrameField.Value = splitInfo.StartFrame;
+                    endFrameField.Value = splitInfo.EndFrame;
+                    isAdditiveField.Value = splitInfo.IsAdditive;
                 }
 
                 return base.Refresh();

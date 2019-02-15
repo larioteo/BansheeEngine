@@ -4,8 +4,10 @@ include(CMakeSources.cmake)
 file(GLOB BS_GENERATED_SCRIPT_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Generated/*.h)
 file(GLOB BS_GENERATED_SCRIPT_CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Generated/*.cpp)
 
+source_group("Generated" FILES ${BS_GENERATED_SCRIPT_H_FILES} ${BS_GENERATED_SCRIPT_CPP_FILES})
+
 # Target
-add_library(EditorScript SHARED 
+add_library(EditorScript OBJECT 
 	${BS_EDITORSCRIPT_SRC} 
 	${BS_GENERATED_SCRIPT_H_FILES} 
 	${BS_GENERATED_SCRIPT_CPP_FILES})
@@ -14,14 +16,12 @@ add_library(EditorScript SHARED
 add_common_flags(EditorScript)
 	
 # Includes
-set(EditorScript_INC 
-	"./"
-	"./Generated")
+set(EditorScript_INC "./")
 
-target_include_directories(EditorScript PRIVATE ${EditorScript_INC})
+target_include_directories(EditorScript PUBLIC ${EditorScript_INC})
 	
 # Defines
-target_compile_definitions(EditorScript PRIVATE -DBS_SCR_BED_EXPORTS)
+target_compile_definitions(EditorScript PUBLIC -DBS_SCR_BED_STATIC_LIB)
 
 # Libraries
 ## Local libs

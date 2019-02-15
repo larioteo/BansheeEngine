@@ -12,7 +12,7 @@ namespace bs
 	 */
 
 	/** Different icon sizes for project resource preview icons. */
-	struct BS_SCRIPT_EXPORT(pl:true,ed:true) ProjectResourceIcons
+	struct BS_SCRIPT_EXPORT(pl:true,api:bed) ProjectResourceIcons
 	{
 		HTexture icon16;
 		HTexture icon32;

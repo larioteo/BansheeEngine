@@ -15,7 +15,7 @@ namespace bs
 	 */
 
 	/** GUI element that displays a color gradient. */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUIColorGradient : public GUIElement
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUIColorGradient : public GUIElement
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */

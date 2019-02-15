@@ -7,7 +7,7 @@
 #include "Handles/BsHandleDrawManager.h"
 #include "BsMonoUtil.h"
 
-#include "BsScriptFont.generated.h"
+#include "Generated/BsScriptFont.generated.h"
 
 namespace bs
 {

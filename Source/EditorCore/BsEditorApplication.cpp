@@ -46,7 +46,6 @@ namespace bs
 		startUpDesc.renderer = BS_RENDERER_MODULE;
 		startUpDesc.audio = BS_AUDIO_MODULE;
 		startUpDesc.physics = BS_PHYSICS_MODULE;
-		startUpDesc.scripting = true;
 		startUpDesc.physicsCooking = true;
 
 		startUpDesc.primaryWindowDesc.videoMode = VideoMode(1920, 1080);
@@ -72,7 +71,7 @@ namespace bs
 	}
 
 	EditorApplication::EditorApplication()
-		:Application(createStartupDesc()), mIsProjectLoaded(false), mEditorScriptPlugin(nullptr)
+		:Application(createStartupDesc()), mIsProjectLoaded(false)
 	{
 
 	}
@@ -137,7 +136,7 @@ namespace bs
 		CodeEditorManager::startUp();
 
 		MainEditorWindow::create(getPrimaryWindow());
-		ScriptManager::instance().initialize();
+		ScriptManager::startUp();
 	}
 
 	void EditorApplication::onShutDown()
@@ -160,28 +159,6 @@ namespace bs
 		Application::onShutDown();
 	}
 
-	void EditorApplication::loadScriptSystem()
-	{
-		loadPlugin("bsfMono", &mMonoPlugin);
-		loadPlugin("bsfScript", &mScriptPlugin);
-		loadPlugin("EditorScript", &mEditorScriptPlugin);
-	}
-
-	void EditorApplication::unloadScriptSystem()
-	{
-		// These plugins must be unloaded before any other script plugins, because
-		// they will cause finalizers to trigger and various modules those finalizers
-		// might reference must still be active
-		if(mEditorScriptPlugin != nullptr)
-			unloadPlugin(mEditorScriptPlugin);
-
-		if(mScriptPlugin != nullptr)
-			unloadPlugin(mScriptPlugin);
-
-		if(mMonoPlugin != nullptr)
-			unloadPlugin(mMonoPlugin);
-	}
-
 	void EditorApplication::startUp()
 	{
 		CoreApplication::startUp<EditorApplication>();
@@ -191,6 +168,11 @@ namespace bs
 	{
 		mSplashScreenTimer.reset();
 		SplashScreen::show();
+	}
+
+	void EditorApplication::startUpScriptManager()
+	{
+		// Do nothing, we initialize the script manager at a later stage
 	}
 
 	void EditorApplication::preUpdate()
@@ -225,12 +207,7 @@ namespace bs
 
 	void EditorApplication::quitRequested()
 	{
-		typedef void(*QuitRequestedFunc)();
-
-		QuitRequestedFunc quitRequestedCall = (QuitRequestedFunc)mEditorScriptPlugin->getSymbol("quitRequested");
-
-		if (quitRequestedCall != nullptr)
-			quitRequestedCall();
+		onQuitRequested();
 	}
 
 	void EditorApplication::saveProject()

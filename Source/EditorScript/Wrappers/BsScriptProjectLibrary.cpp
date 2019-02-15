@@ -10,13 +10,13 @@
 #include "Library/BsProjectResourceMeta.h"
 #include "BsScriptResourceManager.h"
 #include "Serialization/BsScriptAssemblyManager.h"
-#include "Wrappers/BsScriptImportOptions.h"
 #include "BsEditorApplication.h"
 #include "Serialization/BsManagedSerializableObject.h"
 #include "Reflection/BsRTTIType.h"
 #include "BsManagedResourceMetaData.h"
 
-#include "BsScriptProjectResourceIcons.generated.h"
+#include "Generated/BsScriptProjectResourceIcons.generated.h"
+#include "Generated/BsScriptImportOptions.editor.generated.h"
 
 using namespace std::placeholders;
 
@@ -130,7 +130,7 @@ namespace bs
 		if (options != nullptr)
 		{
 			ScriptImportOptions* scriptOptions = ScriptImportOptions::toNative(options);
-			nativeOptions = scriptOptions->getImportOptions();
+			nativeOptions = scriptOptions->getInternal();
 		}
 
 		gProjectLibrary().reimport(assetPath, nativeOptions, force);

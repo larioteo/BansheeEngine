@@ -16,7 +16,7 @@ namespace bs
 	 */
 
 	/** Controls which elements should a GUICurves object draw. */
-	enum class BS_SCRIPT_EXPORT(ed:true,m:GUIEditor,n:CurveDrawOptions) CurveDrawOption
+	enum class BS_SCRIPT_EXPORT(m:GUIEditor,n:CurveDrawOptions,api:bed) CurveDrawOption
 	{
 		/** Draws markers at specific time intervals. */
 		DrawMarkers = 1 << 0,
@@ -32,7 +32,7 @@ namespace bs
 	BS_FLAGS_OPERATORS(CurveDrawOption)
 
 	/** Curve and a color to draw it in. */
-	struct BS_SCRIPT_EXPORT(ed:true,pl:true,m:GUIEditor) CurveDrawInfo
+	struct BS_SCRIPT_EXPORT(pl:true,m:GUIEditor,api:bed) CurveDrawInfo
 	{
 		CurveDrawInfo() = default;
 		CurveDrawInfo(const TAnimationCurve<float>& curve, Color color)
@@ -47,7 +47,7 @@ namespace bs
 	};
 
 	/** GUI element that displays one or multiple curves. */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUICurves : public GUITimeline
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUICurves : public GUITimeline
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */

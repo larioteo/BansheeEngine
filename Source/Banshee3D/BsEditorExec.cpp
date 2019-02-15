@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "BsEditorApplication.h"
 #include "Error/BsCrashHandler.h"
+#include "BsEditorScriptLibrary.h"
 
 #if BS_PLATFORM == BS_PLATFORM_WIN32
 #include <windows.h>
@@ -21,6 +22,9 @@ int CALLBACK WinMain(
 
 	__try
 	{
+		SPtr<EditorScriptLibrary> library = bs_shared_ptr_new<EditorScriptLibrary>();
+		ScriptManager::_setScriptLibrary(library);
+
 		EditorApplication::startUp();
 		EditorApplication::instance().runMainLoop();
 		EditorApplication::shutDown();
@@ -39,6 +43,9 @@ using namespace bs;
 
 int main()
 {
+	SPtr<EditorScriptLibrary> library = bs_shared_ptr_new<EditorScriptLibrary>();
+	ScriptManager::_setScriptLibrary(library);
+
 	EditorApplication::startUp();
 	EditorApplication::instance().runMainLoop();
 	EditorApplication::shutDown();

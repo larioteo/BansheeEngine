@@ -19,7 +19,7 @@ namespace bs
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
 	 * Label is optional. This specific implementation displays an animation curve or a range between two animation curves.
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUICurvesField final : public TGUIField<GUICurvesField>
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUICurvesField final : public TGUIField<GUICurvesField>
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */

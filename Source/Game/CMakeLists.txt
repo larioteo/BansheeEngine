@@ -52,7 +52,7 @@ endif()
 
 # Libraries
 ## Local libs
-target_link_libraries(Game bsf)
+target_link_libraries(Game bsfScript bsfMono bsf)
 
 # IDE specific
 set_property(TARGET Game PROPERTY FOLDER Executable)

@@ -6,9 +6,9 @@
 #include "Scene/BsGizmoManager.h"
 #include "BsMonoUtil.h"
 
-#include "BsScriptRendererMeshData.generated.h"
-#include "BsScriptSpriteTexture.generated.h"
-#include "BsScriptFont.generated.h"
+#include "Generated/BsScriptRendererMeshData.generated.h"
+#include "Generated/BsScriptSpriteTexture.generated.h"
+#include "Generated/BsScriptFont.generated.h"
 
 namespace bs
 {

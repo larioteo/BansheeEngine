@@ -34,11 +34,11 @@ namespace BansheeEditor
             importOptions = GetImportOptions();
 
             formatField.OnSelectionChanged += x => importOptions.Format = (PixelFormat)x;
-            generateMipsField.OnChanged += x => importOptions.GenerateMipmaps = x;
-            maximumMipsField.OnChanged += x => importOptions.MaxMipmapLevel = x;
-            srgbField.OnChanged += x => importOptions.IsSRGB = x;
-            cpuCachedField.OnChanged += x => importOptions.CPUCached = x;
-            isCubemapField.OnChanged += x => importOptions.IsCubemap = x;
+            generateMipsField.OnChanged += x => importOptions.GenerateMips = x;
+            maximumMipsField.OnChanged += x => importOptions.MaxMip = x;
+            srgbField.OnChanged += x => importOptions.SRGB = x;
+            cpuCachedField.OnChanged += x => importOptions.CpuCached = x;
+            isCubemapField.OnChanged += x => importOptions.Cubemap = x;
             cubemapSourceTypeField.OnSelectionChanged += x => importOptions.CubemapSourceType = (CubemapSourceType)x;
             reimportButton.OnClick += TriggerReimport;
 
@@ -62,14 +62,14 @@ namespace BansheeEditor
             TextureImportOptions newImportOptions = GetImportOptions();
 
             formatField.Value = (ulong)newImportOptions.Format;
-            generateMipsField.Value = newImportOptions.GenerateMipmaps;
-            maximumMipsField.Value = newImportOptions.MaxMipmapLevel;
-            srgbField.Value = newImportOptions.IsSRGB;
-            cpuCachedField.Value = newImportOptions.CPUCached;
-            isCubemapField.Value = newImportOptions.IsCubemap;
+            generateMipsField.Value = newImportOptions.GenerateMips;
+            maximumMipsField.Value = newImportOptions.MaxMip;
+            srgbField.Value = newImportOptions.SRGB;
+            cpuCachedField.Value = newImportOptions.CpuCached;
+            isCubemapField.Value = newImportOptions.Cubemap;
             cubemapSourceTypeField.Value = (ulong) newImportOptions.CubemapSourceType;
 
-            cubemapSourceTypeField.Active = importOptions.IsCubemap;
+            cubemapSourceTypeField.Active = importOptions.Cubemap;
 
             importOptions = newImportOptions;
 

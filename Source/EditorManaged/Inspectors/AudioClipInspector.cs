@@ -30,7 +30,7 @@ namespace BansheeEditor
 
             formatField.OnSelectionChanged += x => importOptions.Format = (AudioFormat)x;
             readModeField.OnSelectionChanged += x => importOptions.ReadMode = (AudioReadMode)x;
-            bitDepthField.OnSelectionChanged += x => importOptions.BitDepth = (AudioBitDepth)x;
+            bitDepthField.OnSelectionChanged += x => importOptions.BitDepth = (int)x;
             is3DField.OnChanged += x => importOptions.Is3D = x;
 
             reimportButton.OnClick += TriggerReimport;

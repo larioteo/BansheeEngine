@@ -16,7 +16,7 @@ namespace bs
 	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
 	 * Label is optional. This specific implementation displays a color gradient input field.
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) 
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
 	GUIColorGradientField final : public TGUIField<GUIColorGradientField>
 	{
 	public:

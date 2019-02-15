@@ -5,7 +5,7 @@
 #include "BsScriptGizmoManager.h"
 #include "Components/BsCCamera.h"
 
-#include "BsScriptCCamera.generated.h"
+#include "Generated/BsScriptCCamera.generated.h"
 
 namespace bs
 {

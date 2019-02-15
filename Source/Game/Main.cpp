@@ -14,6 +14,7 @@
 #include "RenderAPI/BsRenderAPI.h"
 #include "Resources/BsGameResourceManager.h"
 #include "BsEngineConfig.h"
+#include "BsEngineScriptLibrary.h"
 
 void runApplication();
 
@@ -56,6 +57,9 @@ using namespace bs;
 
 void runApplication()
 {
+	SPtr<EngineScriptLibrary> library = bs_shared_ptr_new<EngineScriptLibrary>();
+	ScriptManager::_setScriptLibrary(library);
+
 	Path gameSettingsPath = Paths::getGameSettingsPath();
 
 	FileDecoder fd(gameSettingsPath);
@@ -78,7 +82,6 @@ void runApplication()
 	startUpDesc.renderer = BS_RENDERER_MODULE;
 	startUpDesc.audio = BS_AUDIO_MODULE;
 	startUpDesc.physics = BS_PHYSICS_MODULE;
-	startUpDesc.scripting = true;
 	startUpDesc.physicsCooking = false;
 
 	startUpDesc.primaryWindowDesc.videoMode = VideoMode(resolutionWidth, resolutionHeight);
@@ -109,8 +112,8 @@ void runApplication()
 			SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
 			window->setFullscreen(selectedVideoMode);
 
-			resolutionWidth = selectedVideoMode.getWidth();
-			resolutionHeight = selectedVideoMode.getHeight();
+			resolutionWidth = selectedVideoMode.width;
+			resolutionHeight = selectedVideoMode.height;
 		}
 		else
 		{

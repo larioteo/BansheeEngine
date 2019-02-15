@@ -13,7 +13,7 @@ namespace bs
 	 */
 
 	/** Type that control what type of texture does a GUITexture field accept. */
-	enum class BS_SCRIPT_EXPORT(ed:true,m:GUI-Editor) GUITextureFieldType
+	enum class BS_SCRIPT_EXPORT(m:GUI-Editor,api:bed) GUITextureFieldType
 	{
 		Texture = 1,
 		SpriteTexture = 2,

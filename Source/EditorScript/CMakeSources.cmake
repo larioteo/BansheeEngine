@@ -55,7 +55,6 @@ set(BS_EDITORSCRIPT_SRC_WRAPPERS
 	"Wrappers/BsScriptHandleSliderPlane.cpp"
 	"Wrappers/BsScriptHandleSliderSphere.cpp"
 	"Wrappers/BsScriptHandleSlider2D.cpp"
-	"Wrappers/BsScriptImportOptions.cpp"
 	"Wrappers/BsScriptInspectorUtility.cpp"
 	"Wrappers/BsScriptModalWindow.cpp"
 	"Wrappers/BsScriptOSDropTarget.cpp"
@@ -76,7 +75,6 @@ set(BS_EDITORSCRIPT_SRC_WRAPPERS
 )
 
 set(BS_EDITORSCRIPT_SRC_NOFILTER
-	"BsScriptEditorPlugin.cpp"
 	"BsGUIGameObjectField.cpp"
 	"BsGUIResourceField.cpp"
 	"BsEditorScriptManager.cpp"
@@ -118,7 +116,6 @@ set(BS_EDITORSCRIPT_INC_WRAPPERS
 	"Wrappers/BsScriptOSDropTarget.h"
 	"Wrappers/BsScriptModalWindow.h"
 	"Wrappers/BsScriptInspectorUtility.h"
-	"Wrappers/BsScriptImportOptions.h"
 	"Wrappers/BsScriptHandleSliderPlane.h"
 	"Wrappers/BsScriptHandleSliderManager.h"
 	"Wrappers/BsScriptHandleSliderLine.h"

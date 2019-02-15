@@ -14,7 +14,7 @@ namespace bs
 	 */
 
 	/** Base class that can be implemented by GUI elements needing to elements along draw a horizontal timeline. */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(ed:true,m:GUIEditor) GUITimeline : public GUIElementContainer
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUITimeline : public GUIElementContainer
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */

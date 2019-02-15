@@ -51,7 +51,7 @@ namespace BansheeEditor
                     rebuildGUI |= newFontSizes.Length != fontSizes.Array.GetLength(0);
             }
 
-            CharRange[] newCharRanges = newImportOptions.CharRanges;
+            CharRange[] newCharRanges = newImportOptions.CharIndexRanges;
             if (newCharRanges == null)
                 rebuildGUI |= charRanges.Array != null;
             else
@@ -71,7 +71,7 @@ namespace BansheeEditor
             renderModeField.Value = (ulong)newImportOptions.RenderMode;
             boldField.Value = newImportOptions.Bold;
             italicField.Value = newImportOptions.Italic;
-            dpiField.Value = newImportOptions.DPI;
+            dpiField.Value = newImportOptions.Dpi;
             importOptions = newImportOptions;
 
             return InspectableState.NotModified;
@@ -91,8 +91,8 @@ namespace BansheeEditor
             fontSizes.OnExpand += x => Persistent.SetBool("fontSizes_Expanded", x);
 
             charRanges = GUIArrayField<CharRange, CharRangeArrayRow>.Create(
-                new LocEdString("Character ranges"), importOptions.CharRanges, Layout);
-            charRanges.OnChanged += x => importOptions.CharRanges = x;
+                new LocEdString("Character ranges"), importOptions.CharIndexRanges, Layout);
+            charRanges.OnChanged += x => importOptions.CharIndexRanges = x;
             charRanges.IsExpanded = Persistent.GetBool("charRanges_Expanded");
             charRanges.OnExpand += x => Persistent.SetBool("charRanges_Expanded", x);
 
@@ -106,7 +106,7 @@ namespace BansheeEditor
             italicField.OnChanged += x => importOptions.Italic = x;
 
             dpiField = new GUIIntField(new LocEdString("DPI"));
-            dpiField.OnChanged += x => importOptions.DPI = x;
+            dpiField.OnChanged += x => importOptions.Dpi = x;
 
             reimportButton = new GUIButton(new LocEdString("Reimport"));
             reimportButton.OnClick += TriggerReimport;

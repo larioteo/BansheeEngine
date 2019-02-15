@@ -23,7 +23,7 @@
 #include "FileSystem/BsFileSystem.h"
 #include "Wrappers/BsScriptPrefab.h"
 
-#include "BsScriptRenderTexture.generated.h"
+#include "Generated/BsScriptRenderTexture.generated.h"
 #include "BsEditorScriptLibrary.h"
 
 namespace bs

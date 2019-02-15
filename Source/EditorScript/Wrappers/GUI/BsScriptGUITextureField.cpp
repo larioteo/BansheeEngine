@@ -14,8 +14,8 @@
 
 #include "Generated/BsScriptGUIContent.generated.h"
 #include "Generated/BsScriptTexture.generated.h"
+#include "Generated/BsScriptSpriteTexture.generated.h"
 #include "Wrappers/BsScriptRRefBase.h"
-#include "BsScriptSpriteTexture.generated.h"
 
 using namespace std::placeholders;
 

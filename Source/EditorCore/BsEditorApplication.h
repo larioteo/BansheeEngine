@@ -76,6 +76,9 @@ namespace bs
 
 		/** @copydoc Application::isEditor */
 		bool isEditor() const override { return true; }
+
+		/** Callback when the user requests application exit. The receiver is expected to handle shutdown if required. */
+		Event<void()> onQuitRequested;
 	private:
 		/** @copydoc Module::onStartUp */
 		void onStartUp() override;
@@ -92,14 +95,11 @@ namespace bs
 		/** @copydoc CoreApplication::quitRequested */
 		void quitRequested() override;
 
-		/** @copydoc Application::loadScriptSystem */
-		void loadScriptSystem() override;
-
-		/** @copydoc Application::unloadScriptSystem */
-		void unloadScriptSystem() override;
-
 		/** @copydoc Application::startUpRenderer */
 		void startUpRenderer() override;
+
+		/** @copydoc Application::startUpScriptManager */
+		void startUpScriptManager() override;
 
 		/**
 		 * Loads the previously saved editor widget layout from the default location. Can return null if no layout was 
@@ -141,8 +141,6 @@ namespace bs
 
 		Timer mSplashScreenTimer;
 		bool mSplashScreenShown = true;
-
-		DynLib* mEditorScriptPlugin;
 	};
 
 	/**	Easy way to access EditorApplication. */

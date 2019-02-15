@@ -139,7 +139,7 @@ namespace bs
 
 				bool isEditorScript = false;
 				if (scriptIO != nullptr)
-					isEditorScript = scriptIO->isEditorScript();
+					isEditorScript = scriptIO->editorScript;
 
 				if (isEditorScript)
 					editorProject.codeFiles.push_back(resEntry->path);
