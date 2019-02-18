@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSerializedDiff : public ScriptObject <ScriptSerializedDiff>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SerializedDiff")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SerializedDiff")
 
 	private:
 		ScriptSerializedDiff(MonoObject* instance, const SPtr<ManagedSerializableDiff>& obj);

@@ -13,7 +13,7 @@ namespace bs
 
 	/**
 	 * Renders, updates and manipulates handles declared in managed code. Managed code handles have a [CustomHandle]
-	 * attribute and must implement BansheeEditor.Handle.
+	 * attribute and must implement bs.Editor.Handle.
 	 */
 	class BS_SCR_BED_EXPORT ScriptHandleManager : public HandleManager
 	{

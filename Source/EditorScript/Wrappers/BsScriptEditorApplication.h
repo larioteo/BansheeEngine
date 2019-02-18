@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptEditorApplication : public ScriptObject <ScriptEditorApplication>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "EditorApplication")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "EditorApplication")
 
 		/**	Registers internal callbacks. Must be called on scripting system load. */
 		static void startUp();

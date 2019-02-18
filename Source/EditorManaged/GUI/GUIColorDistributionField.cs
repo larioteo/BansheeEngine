@@ -1,7 +1,7 @@
 ﻿using System;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     partial class GUIColorDistributionField
     {

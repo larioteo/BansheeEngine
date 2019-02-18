@@ -1,5 +1,5 @@
 # Generate the CS project file
-generate_csharp_project(${PROJECT_SOURCE_DIR}/Source/EditorManaged MBansheeEditor BansheeEditor MBansheeEditor)
+generate_csharp_project(${PROJECT_SOURCE_DIR}/Source/EditorManaged MBansheeEditor bs.Editor MBansheeEditor)
 
 # Include the CS project in the build
 set(BS_CS_PROJ "MBansheeEditor.csproj")

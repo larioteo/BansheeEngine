@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUIListBoxField : public TScriptGUIElement<ScriptGUIListBoxField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIListBoxField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUIListBoxField")
 
 	private:
 		/**

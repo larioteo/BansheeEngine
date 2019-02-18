@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSerializedObject : public ScriptObject <ScriptSerializedObject>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SerializedObject")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SerializedObject")
 
 		/** Returns the serialized object wrapped by this object. */
 		SPtr<ManagedSerializableObject> getInternal() const { return mSerializedObject; }

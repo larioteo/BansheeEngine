@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptProjectSettings : public ScriptObject <ScriptProjectSettings>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "ProjectSettings")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ProjectSettings")
 
 	private:
 		ScriptProjectSettings(MonoObject* instance);

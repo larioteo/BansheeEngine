@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptUnitTests : public ScriptObject <ScriptUnitTests>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "UnitTests")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "UnitTests")
 
 		/**	Starts execution of the managed tests. */
 		static void runTests();

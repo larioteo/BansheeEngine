@@ -2,10 +2,9 @@
 //**************** Copyright (c) 2017 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
 using System.Collections.Generic;
-using BansheeEngine;
-using BansheeEditor;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Scene-Editor
      *  @{

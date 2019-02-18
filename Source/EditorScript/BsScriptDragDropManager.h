@@ -27,7 +27,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptDragDrop : public ScriptObject<ScriptDragDrop>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "DragDrop");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "DragDrop");
 
 	private:
 		ScriptDragDrop(MonoObject* instance);
@@ -64,7 +64,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSceneObjectDragDropData : public ScriptObject<ScriptSceneObjectDragDropData>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneObjectDragDropData");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SceneObjectDragDropData");
 
 		/** Creates a new managed instance of SceneObjectDragDropData containing the specified scene objects. */
 		static MonoObject* create(const Vector<HSceneObject>& sceneObjects);
@@ -91,7 +91,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptResourceDragDropData : public ScriptObject < ScriptResourceDragDropData >
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "ResourceDragDropData");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ResourceDragDropData");
 
 		/**	Creates a new managed instance of ResourceDragDropData containing the specified resource paths. */
 		static MonoObject* create(const Vector<Path>& paths);

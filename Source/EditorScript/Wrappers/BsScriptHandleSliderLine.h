@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptHandleSliderLine : public ScriptObject <ScriptHandleSliderLine, ScriptHandleSliderBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "HandleSliderLine")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "HandleSliderLine")
 
 	protected:
 		/** @copydoc ScriptHandleSliderBase::getSlider */

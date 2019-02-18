@@ -21,7 +21,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptDropDownWindow : public ScriptObject <ScriptDropDownWindow>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "DropDownWindow")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "DropDownWindow")
 
 		~ScriptDropDownWindow();
 

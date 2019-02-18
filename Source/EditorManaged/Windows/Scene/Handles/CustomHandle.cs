@@ -1,16 +1,16 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Handles
      *  @{
      */
 
     /// <summary>
-    /// Attribute that can be added to types deriving from <see cref="BansheeEditor.Handle"/>. That handle implementation
+    /// Attribute that can be added to types deriving from <see cref="Handle"/>. That handle implementation
     /// will then be used whenever a handle for the type specified in this attribute needs to be displayed.
     /// 
     /// Implementation must contain a constructor accepting the object for the type the handle is shown for, otherwise

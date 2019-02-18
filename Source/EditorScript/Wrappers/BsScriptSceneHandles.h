@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSceneHandles : public ScriptObject <ScriptSceneHandles>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneHandles")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SceneHandles")
 
 	private:
 		ScriptSceneHandles(MonoObject* object, EditorWidgetBase* parentWidget, const HCamera& camera);

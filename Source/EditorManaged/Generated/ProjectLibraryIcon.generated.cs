@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
 	/// <summary>Types of valid icons used when viewing the project library.</summary>
 	public enum ProjectLibraryIcon

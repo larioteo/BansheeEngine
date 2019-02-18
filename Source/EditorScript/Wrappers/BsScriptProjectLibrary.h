@@ -19,7 +19,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptProjectLibrary : public ScriptObject<ScriptProjectLibrary>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "ProjectLibrary")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ProjectLibrary")
 
 		/**	Initializes the project library callbacks. Must be called on library load. */
 		void static startUp();
@@ -106,7 +106,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptLibraryEntry : public ScriptObject <ScriptLibraryEntry>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "LibraryEntry")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "LibraryEntry")
 
 		ScriptLibraryEntry(MonoObject* instance);
 
@@ -124,7 +124,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptDirectoryEntry : public ScriptObject <ScriptDirectoryEntry, ScriptLibraryEntryBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "DirectoryEntry")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "DirectoryEntry")
 
 		ScriptDirectoryEntry(MonoObject* instance, const Path& assetPath);
 
@@ -142,7 +142,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptFileEntry : public ScriptObject <ScriptFileEntry, ScriptLibraryEntryBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "FileEntry")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "FileEntry")
 
 		ScriptFileEntry(MonoObject* instance, const Path& assetPath);
 
@@ -162,7 +162,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptResourceMeta : public ScriptObject <ScriptResourceMeta>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "ResourceMeta")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ResourceMeta")
 
 		ScriptResourceMeta(MonoObject* instance, const SPtr<ProjectResourceMeta>& meta);
 

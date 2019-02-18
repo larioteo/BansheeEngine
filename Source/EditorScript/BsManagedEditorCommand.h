@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptCmdManaged : public ScriptObject <ScriptCmdManaged, PersistentScriptObjectBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "UndoableCommand")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "UndoableCommand")
 
 		~ScriptCmdManaged();
 

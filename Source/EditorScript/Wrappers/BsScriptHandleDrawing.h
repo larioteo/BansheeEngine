@@ -19,7 +19,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptHandleDrawing : public ScriptObject <ScriptHandleDrawing>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "HandleDrawing")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "HandleDrawing")
 
 	private:
 		ScriptHandleDrawing(MonoObject* instance);

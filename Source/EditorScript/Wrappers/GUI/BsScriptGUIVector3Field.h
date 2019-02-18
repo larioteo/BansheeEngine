@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUIVector3Field : public TScriptGUIElement<ScriptGUIVector3Field>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIVector3Field")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUIVector3Field")
 
 	private:
 		/**

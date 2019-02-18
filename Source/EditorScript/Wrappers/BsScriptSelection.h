@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSelection : public ScriptObject<ScriptSelection>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "Selection");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "Selection");
 
 		/**	Hooks up selection callbacks. Must be called on library load. */
 		static void startUp();

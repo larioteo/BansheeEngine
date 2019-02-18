@@ -143,13 +143,13 @@ namespace bs
 	{
 		// Reload DrawGizmo attribute from editor assembly
 		MonoAssembly* editorAssembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
-		mDrawGizmoAttribute = editorAssembly->getClass("BansheeEditor", "DrawGizmo");
+		mDrawGizmoAttribute = editorAssembly->getClass(EDITOR_NS, "DrawGizmo");
 		if (mDrawGizmoAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find DrawGizmo managed class.");
 
 		mFlagsField = mDrawGizmoAttribute->getField("flags");
 
-		mOnSelectionChangedAttribute = editorAssembly->getClass("BansheeEditor", "OnSelectionChanged");
+		mOnSelectionChangedAttribute = editorAssembly->getClass(EDITOR_NS, "OnSelectionChanged");
 		if (mOnSelectionChangedAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find OnSelectionChanged managed class.");
 

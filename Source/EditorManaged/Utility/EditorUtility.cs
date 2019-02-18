@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Utility-Editor
      *  @{

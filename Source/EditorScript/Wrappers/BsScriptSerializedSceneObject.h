@@ -16,7 +16,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSerializedSceneObject : public ScriptObject <ScriptSerializedSceneObject>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SerializedSceneObject")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SerializedSceneObject")
 
 	private:
 		ScriptSerializedSceneObject(MonoObject* instance, const HSceneObject& so, bool recordHierarchy);

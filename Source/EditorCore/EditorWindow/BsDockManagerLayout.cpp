@@ -108,7 +108,7 @@ namespace bs
 					}
 				}
 
-				if (curEntry->widgetNames.size() == 0)
+				if (curEntry->widgetNames.empty())
 				{
 					Entry* parent = curEntry->parent;
 					if (parent != nullptr)
@@ -122,11 +122,28 @@ namespace bs
 								newParent->children[0] = otherChild;
 							else
 								newParent->children[1] = otherChild;
+
+							bs_delete(parent);
+						}
+						else // Parent is root
+						{
+							if(otherChild)
+							{
+								parent->isLeaf = true;
+								parent->widgetNames = otherChild->widgetNames;
+								parent->children[0] = nullptr;
+								parent->children[1] = nullptr;
+							}
+							else
+							{
+								parent->isLeaf = false;
+								parent->widgetNames.clear();
+							}
 						}
 
-						otherChild->parent = newParent;
+						if(otherChild)
+							otherChild->parent = newParent;
 
-						bs_delete(parent);
 						bs_delete(curEntry);
 					}
 				}

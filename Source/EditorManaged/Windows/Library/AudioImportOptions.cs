@@ -1,7 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2019 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /// <summary>
     /// Numbers of bits per audio sample.

@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Inspector
      *  @{

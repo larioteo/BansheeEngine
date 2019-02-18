@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
 	/// <summary>Types of icons that are used as 3D icons in the scene view.</summary>
 	public enum SceneViewIcon

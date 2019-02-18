@@ -68,7 +68,7 @@ namespace bs
 
 		MonoAssembly* assembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
 
-		MonoClass* defaultSizeAttrib = assembly->getClass("BansheeEditor", "DefaultSize");
+		MonoClass* defaultSizeAttrib = assembly->getClass(EDITOR_NS, "DefaultSize");
 		if (defaultSizeAttrib == nullptr)
 			BS_EXCEPT(InternalErrorException, "Cannot find DefaultSize managed class.");
 

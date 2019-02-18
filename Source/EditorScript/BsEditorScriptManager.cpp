@@ -131,7 +131,7 @@ namespace bs
 		String editorAssemblyPath = EditorScriptLibrary::instance().getEditorAssemblyPath().toString();
 		mEditorAssembly = &MonoManager::instance().loadAssembly(editorAssemblyPath, EDITOR_ASSEMBLY);
 
-		mProgramEdClass = mEditorAssembly->getClass("BansheeEditor", "Program");
+		mProgramEdClass = mEditorAssembly->getClass(EDITOR_NS, "Program");
 		mUpdateMethod = mProgramEdClass->getMethod("OnEditorUpdate");
 
 		ScriptEditorWindow::clearRegisteredEditorWindow();

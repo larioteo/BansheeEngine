@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptBrowseDialog : public ScriptObject<ScriptBrowseDialog>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "BrowseDialog")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "BrowseDialog")
 
 	private:
 		ScriptBrowseDialog(MonoObject* instance);

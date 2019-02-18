@@ -19,7 +19,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptEditorWindow : public ScriptObject<ScriptEditorWindow, PersistentScriptObjectBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "EditorWindow")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "EditorWindow")
 
 		~ScriptEditorWindow();
 

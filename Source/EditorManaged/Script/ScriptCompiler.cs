@@ -7,9 +7,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Script
      *  @{

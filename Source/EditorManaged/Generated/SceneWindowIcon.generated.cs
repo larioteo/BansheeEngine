@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
 	/// <summary>Types of icons that may be displayed in the scene window.</summary>
 	public enum SceneWindowIcon

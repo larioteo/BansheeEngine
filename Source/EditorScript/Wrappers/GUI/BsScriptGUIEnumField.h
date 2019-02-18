@@ -20,7 +20,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUIEnumField : public TScriptGUIElement<ScriptGUIEnumField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIEnumField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUIEnumField")
 
 	private:
 		/**

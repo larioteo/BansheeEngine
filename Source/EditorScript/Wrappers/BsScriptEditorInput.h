@@ -16,7 +16,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptEditorInput : public ScriptObject<ScriptEditorInput>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "EditorInput")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "EditorInput")
 
 		/**	Registers internal callbacks. Must be called on scripting system load. */
 		static void startUp();

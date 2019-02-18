@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUISceneTreeView : public TScriptGUIElement<ScriptGUISceneTreeView>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUISceneTreeView")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUISceneTreeView")
 
 	private:
 		ScriptGUISceneTreeView(MonoObject* instance, GUISceneTreeView* treeView);

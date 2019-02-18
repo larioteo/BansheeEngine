@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSceneSelection : public ScriptObject <ScriptSceneSelection>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneSelection")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SceneSelection")
 
 	private:
 		ScriptSceneSelection(MonoObject* object, const SPtr<Camera>& camera);

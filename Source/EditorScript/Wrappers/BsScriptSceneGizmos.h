@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSceneGizmos : public ScriptObject <ScriptSceneGizmos>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneGizmos")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SceneGizmos")
 
 	private:
 		ScriptSceneGizmos(MonoObject* object, const HCamera& camera);

@@ -4,9 +4,9 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Build
      *  @{

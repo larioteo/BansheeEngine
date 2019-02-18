@@ -1,10 +1,10 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System.Runtime.CompilerServices;
-using BansheeEngine;
+using bs;
 using System;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Handles
      *  @{

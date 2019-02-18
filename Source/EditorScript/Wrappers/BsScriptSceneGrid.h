@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptSceneGrid : public ScriptObject <ScriptSceneGrid>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "SceneGrid")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SceneGrid")
 
 	private:
 		ScriptSceneGrid(MonoObject* object, const SPtr<Camera>& camera);

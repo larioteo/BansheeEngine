@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUITextField : public TScriptGUIElement<ScriptGUITextField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUITextField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUITextField")
 
 	private:
 		/**

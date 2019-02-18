@@ -75,7 +75,7 @@ namespace bs
 
 		// Reload MenuItem attribute from editor assembly
 		MonoAssembly* editorAssembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
-		mMenuItemAttribute = editorAssembly->getClass("BansheeEditor", "MenuItem");
+		mMenuItemAttribute = editorAssembly->getClass(EDITOR_NS, "MenuItem");
 		if (mMenuItemAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find MenuItem managed class.");
 

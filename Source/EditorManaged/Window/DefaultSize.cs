@@ -2,7 +2,7 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup Window
      *  @{

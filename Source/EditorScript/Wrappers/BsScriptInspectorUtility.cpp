@@ -49,15 +49,15 @@ namespace bs
 
 		// Reload MenuItem attribute from editor assembly
 		MonoAssembly* editorAssembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
-		mCustomInspectorAtribute = editorAssembly->getClass("BansheeEditor", "CustomInspector");
+		mCustomInspectorAtribute = editorAssembly->getClass(EDITOR_NS, "CustomInspector");
 		if (mCustomInspectorAtribute == nullptr)
 			BS_EXCEPT(InternalErrorException, "Cannot find CustomInspector managed class.");
 
-		MonoClass* inspectorClass = editorAssembly->getClass("BansheeEditor", "Inspector");
+		MonoClass* inspectorClass = editorAssembly->getClass(EDITOR_NS, "Inspector");
 		if (inspectorClass == nullptr)
 			BS_EXCEPT(InternalErrorException, "Cannot find Inspector managed class.");
 
-		MonoClass* inspectableFieldClass = editorAssembly->getClass("BansheeEditor", "InspectableField");
+		MonoClass* inspectableFieldClass = editorAssembly->getClass(EDITOR_NS, "InspectableField");
 		if (inspectableFieldClass == nullptr)
 			BS_EXCEPT(InternalErrorException, "Cannot find InspectableField managed class.");
 

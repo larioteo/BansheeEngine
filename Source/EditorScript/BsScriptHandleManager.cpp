@@ -174,15 +174,15 @@ namespace bs
 	void ScriptHandleManager::loadAssemblyData()
 	{
 		MonoAssembly* editorAssembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
-		mCustomHandleAttribute = editorAssembly->getClass("BansheeEditor", "CustomHandle");
+		mCustomHandleAttribute = editorAssembly->getClass(EDITOR_NS, "CustomHandle");
 		if (mCustomHandleAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find CustomHandle managed class.");
 
-		mHandleBaseClass = editorAssembly->getClass("BansheeEditor", "Handle");
+		mHandleBaseClass = editorAssembly->getClass(EDITOR_NS, "Handle");
 		if (mHandleBaseClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find Handle managed class.");
 
-		mDefaultHandleManagerClass = editorAssembly->getClass("BansheeEditor", "DefaultHandleManager");
+		mDefaultHandleManagerClass = editorAssembly->getClass(EDITOR_NS, "DefaultHandleManager");
 		if (mDefaultHandleManagerClass == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find DefaultHandleManager managed class.");
 

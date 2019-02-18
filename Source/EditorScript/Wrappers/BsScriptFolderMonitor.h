@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptFolderMonitor : public ScriptObject <ScriptFolderMonitor>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "FolderMonitor")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "FolderMonitor")
 
 	private:
 		friend class ScriptFolderMonitorManager;

@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
 	/// <summary>Different icon sizes for project resource preview icons.</summary>
 	[StructLayout(LayoutKind.Sequential), SerializeObject]

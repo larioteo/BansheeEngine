@@ -2,9 +2,9 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
 using System.Runtime.CompilerServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /// <summary>
     /// Base class for implementation of commands that can be recorded in the UndoRedo system.

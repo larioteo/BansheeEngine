@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptUndoRedo : public ScriptObject <ScriptUndoRedo>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "UndoRedo");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "UndoRedo");
 
 		/** Creates a new managed UndoRedo stack. */
 		static MonoObject* create();

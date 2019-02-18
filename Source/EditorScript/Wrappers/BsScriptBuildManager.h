@@ -29,7 +29,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptBuildManager : public ScriptObject <ScriptBuildManager>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "BuildManager")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "BuildManager")
 
 	private:
 		ScriptBuildManager(MonoObject* instance);

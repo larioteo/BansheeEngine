@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
 	/// <summary>Types of icons to be used along with log messages depending on their severity.</summary>
 	public enum LogMessageIcon

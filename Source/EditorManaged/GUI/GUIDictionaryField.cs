@@ -3,9 +3,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /** @addtogroup GUI-Editor 
      *  @{

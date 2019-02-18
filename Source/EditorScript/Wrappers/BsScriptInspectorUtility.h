@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptInspectorUtility : public ScriptObject<ScriptInspectorUtility>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "InspectorUtility");
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "InspectorUtility");
 
 		/**	Hooks up domain reload callback. Must be called on library load. */
 		static void startUp();

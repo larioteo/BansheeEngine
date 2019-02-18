@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptEditorUtility : public ScriptObject <ScriptEditorUtility>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "EditorUtility")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "EditorUtility")
 
 	private:
 		ScriptEditorUtility(MonoObject* instance);

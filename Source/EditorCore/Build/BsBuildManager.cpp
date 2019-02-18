@@ -76,8 +76,7 @@ namespace bs
 	Vector<Path> BuildManager::getNativeBinaries(PlatformType type) const
 	{
 		Vector<Path> libs = { u8"bsfEngine", u8"bsfCore", u8"bsfUtility",
-			u8"bsfD3D11RenderAPI", u8"bsfGLRenderAPI", u8"bsfMono",
-			u8"RenderBeast", u8"SBansheeEngine",  u8"mono-2.0-sgen", u8"nvtt" };
+			u8"bsfD3D11RenderAPI", u8"bsfGLRenderAPI", u8"RenderBeast",  u8"mono-2.0-sgen", u8"nvtt" };
 
 		switch (type)
 		{

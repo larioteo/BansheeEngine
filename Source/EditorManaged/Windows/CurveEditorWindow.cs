@@ -1,9 +1,9 @@
 ﻿//********************************** Banshee Engine (www.banshee5d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
-using BansheeEngine;
+using bs;
 
-namespace BansheeEditor
+namespace bs.Editor
 {
     /// <summary>
     /// Opens a window that allows the user to edit a single animation curve or two curves representing a range.

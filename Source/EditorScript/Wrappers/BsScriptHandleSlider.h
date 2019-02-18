@@ -44,7 +44,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptHandleSlider : public ScriptObject <ScriptHandleSlider>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "HandleSlider")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "HandleSlider")
 
 	private:
 		ScriptHandleSlider(MonoObject* instance);

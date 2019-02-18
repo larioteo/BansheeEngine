@@ -16,7 +16,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptEditorVirtualInput : public ScriptObject<ScriptEditorVirtualInput>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEngine", "EditorVirtualInput")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, ENGINE_NS, "EditorVirtualInput")
 
 		/**	Must be called on library load. Hooks up necessary callbacks. */
 		static void startUp();

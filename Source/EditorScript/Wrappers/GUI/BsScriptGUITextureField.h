@@ -18,7 +18,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUITextureField : public TScriptGUIElement <ScriptGUITextureField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUITextureField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUITextureField")
 
 	private:
 		/**

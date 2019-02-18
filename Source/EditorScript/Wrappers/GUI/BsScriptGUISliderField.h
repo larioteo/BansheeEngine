@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUISliderField : public TScriptGUIElement<ScriptGUISliderField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUISliderField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUISliderField")
 
 	private:
 		ScriptGUISliderField(MonoObject* instance, GUISliderField* sliderField);

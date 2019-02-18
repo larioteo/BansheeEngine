@@ -17,7 +17,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGUIFloatField : public TScriptGUIElement<ScriptGUIFloatField>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "GUIFloatField")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "GUIFloatField")
 
 	private:
 		ScriptGUIFloatField(MonoObject* instance, GUIFloatField* floatField);

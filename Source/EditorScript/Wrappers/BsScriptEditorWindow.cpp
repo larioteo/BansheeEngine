@@ -306,18 +306,18 @@ namespace bs
 
 		if(assembly != nullptr)
 		{
-			MonoClass* defaultSizeAttrib = assembly->getClass("BansheeEditor", "DefaultSize");
+			MonoClass* defaultSizeAttrib = assembly->getClass(EDITOR_NS, "DefaultSize");
 			if (defaultSizeAttrib == nullptr)
 				BS_EXCEPT(InternalErrorException, "Cannot find DefaultSize managed attribute.");
 
 			MonoField* defaultWidthField = defaultSizeAttrib->getField("width");
 			MonoField* defaultHeightField = defaultSizeAttrib->getField("height");
 
-			MonoClass* undoRedoLocalAttrib = assembly->getClass("BansheeEditor", "UndoRedoLocal");
+			MonoClass* undoRedoLocalAttrib = assembly->getClass(EDITOR_NS, "UndoRedoLocal");
 			if (undoRedoLocalAttrib == nullptr)
 				BS_EXCEPT(InternalErrorException, "Cannot find UndoRedoLocal managed attribute.");
 
-			MonoClass* editorWindowClass = assembly->getClass("BansheeEditor", "EditorWindow");
+			MonoClass* editorWindowClass = assembly->getClass(EDITOR_NS, "EditorWindow");
 
 			const Vector<MonoClass*>& allClasses = assembly->getAllClasses();
 			for(auto& curClass : allClasses)

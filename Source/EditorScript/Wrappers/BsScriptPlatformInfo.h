@@ -32,7 +32,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptPlatformInfo : public ScriptObject <ScriptPlatformInfo, ScriptPlatformInfoBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "PlatformInfo")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "PlatformInfo")
 
 		/** Creates a new managed platform info object that wraps the provided native platform info. */
 		static MonoObject* create(const SPtr<PlatformInfo>& platformInfo);
@@ -59,7 +59,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptWinPlatformInfo : public ScriptObject <ScriptWinPlatformInfo, ScriptPlatformInfoBase>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "WinPlatformInfo")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "WinPlatformInfo")
 
 		/**	Creates a new managed platform info object that wraps the provided native platform info. */
 		static MonoObject* create(const SPtr<WinPlatformInfo>& platformInfo);

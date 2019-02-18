@@ -15,7 +15,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptPrefabUtility : public ScriptObject <ScriptPrefabUtility>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "PrefabUtility")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "PrefabUtility")
 
 	private:
 		ScriptPrefabUtility(MonoObject* instance);

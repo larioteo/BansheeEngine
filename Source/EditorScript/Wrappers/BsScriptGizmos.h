@@ -20,7 +20,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptGizmos : public ScriptObject<ScriptGizmos>
 	{
 	public:
-		SCRIPT_OBJ(EDITOR_ASSEMBLY, "BansheeEditor", "Gizmos")
+		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "Gizmos")
 
 	private:
 		ScriptGizmos(MonoObject* instance);

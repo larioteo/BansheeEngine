@@ -2,7 +2,7 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System.Runtime.CompilerServices;
 
-namespace BansheeEngine
+namespace bs
 {
     /** @addtogroup Input-Editor 
      *  @{
