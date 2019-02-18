@@ -1,7 +1,5 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
-using bs;
-
 namespace bs.Editor
 {
     /** @addtogroup Inspector
@@ -9,15 +7,16 @@ namespace bs.Editor
      */
 
     /// <summary>
-    /// Displays GUI for a serializable property containing a <see cref="Resource"/> reference.
+    /// Displays GUI for a serializable property containing a <see cref="Texture"/> reference.
     /// </summary>
-    public class InspectableResource : InspectableField
+    [CustomInspector(typeof(Texture))]
+    public class InspectableTexture : InspectableField
     {
-        private GUIResourceField guiField;
+        private GUITextureField guiField;
         private InspectableState state;
 
         /// <summary>
-        /// Creates a new inspectable resource reference GUI for the specified property.
+        /// Creates a new inspectable texture reference GUI for the specified property.
         /// </summary>
         /// <param name="parent">Parent Inspector this field belongs to.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
@@ -26,28 +25,30 @@ namespace bs.Editor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
-        public InspectableResource(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
-            SerializableProperty property)
-            : base(parent, title, path, SerializableProperty.FieldType.Resource, depth, layout, property)
+        public InspectableTexture(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
+            SerializableProperty property, InspectableFieldStyleInfo style)
+            : base(parent, title, path, property.Type, depth, layout, property)
         { }
 
         /// <inheritoc/>
         protected internal override void Initialize(int layoutIndex)
         {
-            if (property.Type == SerializableProperty.FieldType.Resource)
-            {
-                guiField = new GUIResourceField(property.InternalType, new GUIContent(title));
-                guiField.OnChanged += OnFieldValueChanged;
+            guiField = new GUITextureField(GUITextureFieldType.Texture, new GUIContent(title));
+            guiField.OnChanged += OnFieldValueChanged;
 
-                layout.AddElement(layoutIndex, guiField);
-            }
+            layout.AddElement(layoutIndex, guiField);
         }
 
         /// <inheritdoc/>
         public override InspectableState Refresh(int layoutIndex)
         {
             if (guiField != null)
-                guiField.Value = property.GetValue<Resource>();
+            {
+                if (property.Type == SerializableProperty.FieldType.Resource)
+                    guiField.Texture = property.GetValue<Texture>();
+                else
+                    guiField.TextureRef = property.GetValue<RRef<Texture>>();
+            }
 
             InspectableState oldState = state;
             if (state.HasFlag(InspectableState.Modified))
@@ -62,9 +63,11 @@ namespace bs.Editor
         /// <param name="newValue">New resource to reference.</param>
         private void OnFieldValueChanged(RRefBase newValue)
         {
-            Resource res = Resources.Load<Resource>(newValue.UUID);
+            if (property.Type == SerializableProperty.FieldType.Resource)
+                property.SetValue(newValue.GenericValue);
+            else
+                property.SetValue(newValue);
 
-            property.SetValue(res);
             state = InspectableState.Modified;
         }
     }
