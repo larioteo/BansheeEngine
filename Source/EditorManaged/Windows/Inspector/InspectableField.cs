@@ -2,6 +2,7 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
 using System.Collections.Generic;
+using System.Text;
 using bs;
  
 namespace bs.Editor
@@ -215,7 +216,7 @@ namespace bs.Editor
                     parentLayout = layout;
                 }
 
-                string fieldName = field.Name;
+                string fieldName = GetReadableIdentifierName(field.Name);
                 string childPath = string.IsNullOrEmpty(path) ? fieldName : path + "/" + fieldName;
 
                 InspectableField inspectableField = null;
@@ -377,6 +378,70 @@ namespace bs.Editor
             field.Refresh(layoutIndex);
 
             return field;
+        }
+
+        /// <summary>
+        /// Converts a name of an identifier (such as a field or a property) into a human readable name.
+        /// </summary>
+        /// <param name="input">Identifier to convert.</param>
+        /// <returns>Human readable name with spaces.</returns>
+        public static string GetReadableIdentifierName(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return "";
+
+            StringBuilder sb = new StringBuilder();
+
+            bool nextUpperIsSpace = true;
+
+            // TODO - m prefix?
+            if (input[0] == '_')
+            {
+                // Skip
+                nextUpperIsSpace = false;
+            }
+            else if (input[0] == 'm' && input.Length > 1 && char.IsUpper(input[1]))
+            {
+                // Skip
+                nextUpperIsSpace = false;
+            }
+            else if (char.IsLower(input[0]))
+                sb.Append(char.ToUpper(input[0]));
+            else
+            {
+                sb.Append(input[0]);
+                nextUpperIsSpace = false;
+            }
+
+            for (int i = 1; i < input.Length; i++)
+            {
+                if (input[i] == '_')
+                {
+                    sb.Append(' ');
+                    nextUpperIsSpace = false;
+                    
+                }
+                else if (char.IsUpper(input[i]))
+                {
+                    if (nextUpperIsSpace)
+                    {
+                        sb.Append(' ');
+                        sb.Append(input[i]);
+                    }
+                    else
+                        sb.Append(char.ToLower(input[i]));
+
+
+                    nextUpperIsSpace = false;
+                }
+                else
+                {
+                    sb.Append(input[i]);
+                    nextUpperIsSpace = true;
+                }
+            }
+
+            return sb.ToString();
         }
     }
 
