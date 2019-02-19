@@ -36,7 +36,7 @@ namespace bs.Editor
         private Type[] instantiableTypes;
 
         /// <summary>
-        /// Creates a new inspectable array GUI for the specified property.
+        /// Creates a new inspectable object GUI for the specified property.
         /// </summary>
         /// <param name="parent">Parent Inspector this field belongs to.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>

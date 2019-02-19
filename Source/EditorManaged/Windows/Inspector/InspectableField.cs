@@ -36,10 +36,7 @@ namespace bs.Editor
             get { return property; }
             set
             {
-                if (value == null)
-                    throw new ArgumentException("Cannot assign a null property to an inspectable field.");
-
-                if (value.Type != type)
+                if (value != null && value.Type != type)
                 {
                     throw new ArgumentException(
                         "Attempting to initialize an inspectable field with a property of invalid type.");
@@ -170,71 +167,47 @@ namespace bs.Editor
                 });
 
             // Generate per-field GUI while grouping by category
-            Dictionary<string, Tuple<int, GUILayoutY>> categories = new Dictionary<string, Tuple<int, GUILayoutY>>();
-
             int rootIndex = 0;
+            int categoryIndex = 0;
+            string categoryName = null;
+            InspectableCategory category = null;
+
             List<InspectableField> inspectableFields = new List<InspectableField>();
             foreach (var field in fields)
             {
                 if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
                     continue;
 
-                string category = null;
                 if (field.Flags.HasFlag(SerializableFieldAttributes.Category))
-                    category = field.Style.CategoryName;
-
-                Tuple<int, GUILayoutY> categoryInfo = null;
-                if (!string.IsNullOrEmpty(category))
                 {
-                    if (!categories.TryGetValue(category, out categoryInfo))
+                    string newCategory = field.Style.CategoryName;
+                    if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
                     {
-                        InspectableFieldLayout fieldLayout = new InspectableFieldLayout(layout);
-                        GUILayoutY categoryRootLayout = fieldLayout.AddLayoutY(rootIndex);
-                        GUILayoutX guiTitleLayout = categoryRootLayout.AddLayoutX();
+                        string categoryPath = path + "/[" + newCategory + "]";
+                        category = new InspectableCategory(parent, newCategory, categoryPath, depth, new InspectableFieldLayout(layout));
 
-                        bool isExpanded = parent.Persistent.GetBool(path + "/[" + category + "]_Expanded");
+                        category.Initialize(rootIndex);
+                        category.Refresh(rootIndex);
+                        rootIndex += category.GetNumLayoutElements();
 
-                        GUIToggle guiFoldout = new GUIToggle(category, EditorStyles.Foldout);
-                        guiFoldout.Value = isExpanded;
-                        guiFoldout.AcceptsKeyFocus = false;
-                        guiFoldout.OnToggled += x =>
-                        {
-                            parent.Persistent.SetBool(path + "/[" + category + "]_Expanded", x);
-                        };
-                        guiTitleLayout.AddElement(guiFoldout);
+                        inspectableFields.Add(category);
 
-                        GUILayoutX categoryContentLayout = categoryRootLayout.AddLayoutX();
-                        categoryContentLayout.AddSpace(IndentAmount);
-
-                        GUIPanel guiContentPanel = categoryContentLayout.AddPanel();
-                        GUILayoutX guiIndentLayoutX = guiContentPanel.AddLayoutX();
-                        guiIndentLayoutX.AddSpace(IndentAmount);
-                        GUILayoutY guiIndentLayoutY = guiIndentLayoutX.AddLayoutY();
-                        guiIndentLayoutY.AddSpace(IndentAmount);
-                        GUILayoutY categoryLayout = guiIndentLayoutY.AddLayoutY();
-                        guiIndentLayoutY.AddSpace(IndentAmount);
-                        guiIndentLayoutX.AddSpace(IndentAmount);
-                        categoryContentLayout.AddSpace(IndentAmount);
-
-                        short backgroundDepth = (short)(Inspector.START_BACKGROUND_DEPTH - depth - 1);
-                        string bgPanelStyle = depth % 2 == 0
-                            ? EditorStylesInternal.InspectorContentBgAlternate
-                            : EditorStylesInternal.InspectorContentBg;
-                        GUIPanel backgroundPanel = guiContentPanel.AddPanel(backgroundDepth);
-                        GUITexture inspectorContentBg = new GUITexture(null, bgPanelStyle);
-                        backgroundPanel.AddElement(inspectorContentBg);
-
-                        categories[category] = new Tuple<int, GUILayoutY>(0, categoryLayout);
-                        rootIndex++;
+                        categoryName = newCategory;
+                        categoryIndex = 0;
+                    }
+                    else
+                    {
+                        categoryName = null;
+                        category = null;
                     }
                 }
 
                 int currentIndex;
                 GUILayoutY parentLayout;
-                if (categoryInfo != null)
+                if (category != null)
                 {
-                    currentIndex = categoryInfo.Item1;
-                    parentLayout = categoryInfo.Item2;
+                    currentIndex = categoryIndex;
+                    parentLayout = category.ChildLayout;
                 }
                 else
                 {
@@ -258,11 +231,15 @@ namespace bs.Editor
                         InspectableFieldStyle.Create(field));
                 }
 
-                inspectableFields.Add(inspectableField);
+                if (category != null)
+                    category.AddChild(inspectableField);
+                else
+                    inspectableFields.Add(inspectableField);
+
                 currentIndex += inspectableField.GetNumLayoutElements();
 
-                if (categoryInfo != null)
-                    categories[category] = new Tuple<int, GUILayoutY>(currentIndex, parentLayout);
+                if (category != null)
+                    categoryIndex = currentIndex;
                 else
                     rootIndex = currentIndex;
             }
