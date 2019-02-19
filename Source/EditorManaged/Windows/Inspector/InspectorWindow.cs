@@ -47,7 +47,8 @@ namespace bs.Editor
         /// </summary>
         private class InspectorResource
         {
-            public GUIPanel panel;
+            public GUIPanel mainPanel;
+            public GUIPanel previewPanel;
             public Inspector inspector;
         }
 
@@ -105,7 +106,7 @@ namespace bs.Editor
         /// Sets a resource whose GUI is to be displayed in the inspector. Clears any previous contents of the window.
         /// </summary>
         /// <param name="resourcePath">Resource path relative to the project of the resource to inspect.</param>
-        private void SetObjectToInspect(String resourcePath)
+        private void SetObjectToInspect(string resourcePath)
         {
             activeResourcePath = resourcePath;
             if (!ProjectLibrary.Exists(resourcePath))
@@ -148,14 +149,15 @@ namespace bs.Editor
             inspectorLayout.AddSpace(COMPONENT_SPACING);
 
             inspectorResource = new InspectorResource();
-            inspectorResource.panel = inspectorLayout.AddPanel();
+            inspectorResource.mainPanel = inspectorLayout.AddPanel();
+            inspectorLayout.AddFlexibleSpace();
+            inspectorResource.previewPanel = inspectorLayout.AddPanel();
 
             var persistentProperties = persistentData.GetProperties(meta.UUID.ToString());
 
             inspectorResource.inspector = InspectorUtility.GetInspector(resourceType);
-            inspectorResource.inspector.Initialize(inspectorResource.panel, activeResourcePath, persistentProperties);
-
-            inspectorLayout.AddFlexibleSpace();
+            inspectorResource.inspector.Initialize(inspectorResource.mainPanel, inspectorResource.previewPanel,
+                activeResourcePath, persistentProperties);
         }
 
         /// <summary>

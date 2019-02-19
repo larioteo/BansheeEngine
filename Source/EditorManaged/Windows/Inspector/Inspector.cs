@@ -33,6 +33,15 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Returns the secondary GUI panel. Located at the bottom of the inspector window and unlike <see cref="GUI"/> has
+        /// no padding or styling applied. Only available when inspecting resources.
+        /// </summary>
+        protected GUIPanel PreviewGUI
+        {
+            get { return previewPanel; }
+        }
+
+        /// <summary>
         /// Returns the object the inspector is currently displaying. If the current object is a resource use
         /// <see cref="InspectedResourcePath"/> instead;
         /// </summary>
@@ -60,6 +69,7 @@ namespace bs.Editor
 
         private GUIPanel rootGUI;
         private GUIPanel mainPanel;
+        private GUIPanel previewPanel;
         private GUILayoutY layout;
         private object inspectedObject;
         private string inspectedResourcePath;
@@ -68,15 +78,17 @@ namespace bs.Editor
         /// <summary>
         /// Common code called by both Initialize() overloads.
         /// </summary>
-        /// <param name="gui">GUI panel to add the GUI elements to.</param>
+        /// <param name="mainGui">Primary GUI panel to add the GUI elements to.</param>
+        /// <param name="previewGui">Secondary GUI panel located at the bottom of the inspector window, aimed primarily for
+        /// resource previews, but can be used for any purpose.</param>
         /// <param name="persistent">A set of properties that the inspector can read/write. They will be persisted even 
         ///                          after the inspector is closed and restored when it is re-opened.</param>
-        private void InitializeBase(GUIPanel gui, SerializableProperties persistent)
+        private void InitializeBase(GUIPanel mainGui, GUIPanel previewGui, SerializableProperties persistent)
         {
-            rootGUI = gui;
+            rootGUI = mainGui;
             this.persistent = persistent;
 
-            GUILayout contentLayoutX = gui.AddLayoutX();
+            GUILayout contentLayoutX = mainGui.AddLayoutX();
             contentLayoutX.AddSpace(5);
             GUILayout contentLayoutY = contentLayoutX.AddLayoutY();
             contentLayoutY.AddSpace(5);
@@ -84,11 +96,12 @@ namespace bs.Editor
             contentLayoutY.AddSpace(5);
             contentLayoutX.AddSpace(5);
 
-            GUIPanel backgroundPanel = gui.AddPanel(START_BACKGROUND_DEPTH);
+            GUIPanel backgroundPanel = mainGui.AddPanel(START_BACKGROUND_DEPTH);
             GUITexture inspectorContentBg = new GUITexture(null, EditorStylesInternal.InspectorContentBg);
             backgroundPanel.AddElement(inspectorContentBg);
 
             mainPanel = contentPanel;
+            previewPanel = previewGui;
             layout = GUI.AddLayoutY();
         }
 
@@ -101,7 +114,7 @@ namespace bs.Editor
         ///                          after the inspector is closed and restored when it is re-opened.</param>
         internal virtual void Initialize(GUIPanel gui, object instance, SerializableProperties persistent)
         {
-            InitializeBase(gui, persistent);
+            InitializeBase(gui, null, persistent);
 
             inspectedObject = instance;
 
@@ -112,13 +125,16 @@ namespace bs.Editor
         /// <summary>
         /// Initializes the inspector using a resource path. Must be called after construction.
         /// </summary>
-        /// <param name="gui">GUI panel to add the GUI elements to.</param>
+        /// <param name="mainGui">Primary GUI panel to add the GUI elements to.</param>
+        /// <param name="previewGui">Secondary GUI panel located at the bottom of the inspector window, aimed primarily for
+        /// resource previews, but can be used for any purpose.</param>
         /// <param name="path">Path to the resource for which to display GUI for.</param>
         /// <param name="persistent">A set of properties that the inspector can read/write. They will be persisted even 
         ///                          after the inspector is closed and restored when it is re-opened.</param>
-        internal virtual void Initialize(GUIPanel gui, string path, SerializableProperties persistent)
+        internal virtual void Initialize(GUIPanel mainGui, GUIPanel previewGui, string path, 
+            SerializableProperties persistent)
         {
-            InitializeBase(gui, persistent);
+            InitializeBase(mainGui, previewGui, persistent);
 
             inspectedResourcePath = path;
 

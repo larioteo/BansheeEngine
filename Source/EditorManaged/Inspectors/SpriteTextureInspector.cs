@@ -35,14 +35,15 @@ namespace bs.Editor
 
             genericDrawer = new GenericInspectorDrawer(spriteTexture, this, Layout);
 
-            previewTitleLayout = GUILayoutWithBackground.Create<GUILayoutX>(Layout, Builtin.WhiteTexture,
+            GUILayout previewLayout = PreviewGUI.AddLayoutY();
+            previewTitleLayout = GUILayoutWithBackground.Create<GUILayoutX>(previewLayout, Builtin.WhiteTexture,
                 new Color(0.129f, 0.129f, 0.129f), new RectOffset(11, 0, 2, 0));
 
             GUILabel title = new GUILabel(new LocEdString("Preview"));
             previewTitleLayout.Layout.AddElement(title);
             previewTitleLayout.Layout.AddFlexibleSpace();
 
-            previewContentLayout = GUILayoutWithBackground.Create<GUILayoutX>(Layout, Builtin.WhiteTexture,
+            previewContentLayout = GUILayoutWithBackground.Create<GUILayoutX>(previewLayout, Builtin.WhiteTexture,
                 new Color(0.09f, 0.09f, 0.09f), new RectOffset(5, 5, 5, 5));
 
             previewContentLayout.MainPanel.SetHeight(250);
