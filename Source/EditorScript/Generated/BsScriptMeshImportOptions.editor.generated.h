@@ -3,8 +3,9 @@
 #pragma once
 
 #include "BsScriptEditorPrerequisites.h"
-#include "BsScriptObject.h"
+#include "Wrappers/BsScriptReflectable.h"
 #include "BsScriptImportOptions.editor.generated.h"
+#include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
@@ -13,14 +14,13 @@ namespace bs
 {
 	class MeshImportOptions;
 
-	class BS_SCR_BED_EXPORT ScriptMeshImportOptions : public ScriptObject<ScriptMeshImportOptions, ScriptImportOptionsBase>
+	class BS_SCR_BED_EXPORT ScriptMeshImportOptions : public TScriptReflectable<ScriptMeshImportOptions, MeshImportOptions, ScriptImportOptionsBase>
 	{
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "MeshImportOptions")
 
 		ScriptMeshImportOptions(MonoObject* managedInstance, const SPtr<MeshImportOptions>& value);
 
-		SPtr<MeshImportOptions> getInternal() const;
 		static MonoObject* create(const SPtr<MeshImportOptions>& value);
 
 	private:

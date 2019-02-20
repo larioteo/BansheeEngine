@@ -3,8 +3,9 @@
 #pragma once
 
 #include "BsScriptEditorPrerequisites.h"
-#include "BsScriptObject.h"
+#include "Wrappers/BsScriptReflectable.h"
 #include "BsScriptImportOptions.editor.generated.h"
+#include "../../bsf/Source/Foundation/bsfCore/Importer/BsTextureImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Image/BsPixelData.h"
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 
@@ -12,14 +13,13 @@ namespace bs
 {
 	class TextureImportOptions;
 
-	class BS_SCR_BED_EXPORT ScriptTextureImportOptions : public ScriptObject<ScriptTextureImportOptions, ScriptImportOptionsBase>
+	class BS_SCR_BED_EXPORT ScriptTextureImportOptions : public TScriptReflectable<ScriptTextureImportOptions, TextureImportOptions, ScriptImportOptionsBase>
 	{
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "TextureImportOptions")
 
 		ScriptTextureImportOptions(MonoObject* managedInstance, const SPtr<TextureImportOptions>& value);
 
-		SPtr<TextureImportOptions> getInternal() const;
 		static MonoObject* create(const SPtr<TextureImportOptions>& value);
 
 	private:

@@ -4,19 +4,13 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "../../bsf/Source/Foundation/bsfCore/Importer/BsShaderImportOptions.h"
 
 namespace bs
 {
 	ScriptShaderImportOptions::ScriptShaderImportOptions(MonoObject* managedInstance, const SPtr<ShaderImportOptions>& value)
-		:ScriptObject(managedInstance)
+		:TScriptReflectable(managedInstance, value)
 	{
 		mInternal = value;
-	}
-
-	SPtr<ShaderImportOptions> ScriptShaderImportOptions::getInternal() const 
-	{
-		return std::static_pointer_cast<ShaderImportOptions>(mInternal);
 	}
 
 	void ScriptShaderImportOptions::initRuntimeData()

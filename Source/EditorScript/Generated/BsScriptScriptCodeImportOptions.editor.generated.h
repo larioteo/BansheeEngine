@@ -3,21 +3,21 @@
 #pragma once
 
 #include "BsScriptEditorPrerequisites.h"
-#include "BsScriptObject.h"
+#include "Wrappers/BsScriptReflectable.h"
 #include "BsScriptImportOptions.editor.generated.h"
+#include "../../bsf/Source/Foundation/bsfEngine/Resources/BsScriptCodeImportOptions.h"
 
 namespace bs
 {
 	class ScriptCodeImportOptions;
 
-	class BS_SCR_BED_EXPORT ScriptScriptCodeImportOptions : public ScriptObject<ScriptScriptCodeImportOptions, ScriptImportOptionsBase>
+	class BS_SCR_BED_EXPORT ScriptScriptCodeImportOptions : public TScriptReflectable<ScriptScriptCodeImportOptions, ScriptCodeImportOptions, ScriptImportOptionsBase>
 	{
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ScriptCodeImportOptions")
 
 		ScriptScriptCodeImportOptions(MonoObject* managedInstance, const SPtr<ScriptCodeImportOptions>& value);
 
-		SPtr<ScriptCodeImportOptions> getInternal() const;
 		static MonoObject* create(const SPtr<ScriptCodeImportOptions>& value);
 
 	private:

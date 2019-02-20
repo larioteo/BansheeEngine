@@ -394,7 +394,6 @@ namespace bs.Editor
 
             bool nextUpperIsSpace = true;
 
-            // TODO - m prefix?
             if (input[0] == '_')
             {
                 // Skip

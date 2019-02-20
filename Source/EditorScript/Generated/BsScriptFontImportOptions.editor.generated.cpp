@@ -4,21 +4,15 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "../../bsf/Source/Foundation/bsfCore/Text/BsFontImportOptions.h"
 #include "BsScriptCharRange.editor.generated.h"
 #include "BsScriptFontImportOptions.editor.generated.h"
 
 namespace bs
 {
 	ScriptFontImportOptions::ScriptFontImportOptions(MonoObject* managedInstance, const SPtr<FontImportOptions>& value)
-		:ScriptObject(managedInstance)
+		:TScriptReflectable(managedInstance, value)
 	{
 		mInternal = value;
-	}
-
-	SPtr<FontImportOptions> ScriptFontImportOptions::getInternal() const 
-	{
-		return std::static_pointer_cast<FontImportOptions>(mInternal);
 	}
 
 	void ScriptFontImportOptions::initRuntimeData()

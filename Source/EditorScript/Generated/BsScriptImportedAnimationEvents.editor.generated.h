@@ -3,7 +3,8 @@
 #pragma once
 
 #include "BsScriptEditorPrerequisites.h"
-#include "BsScriptObject.h"
+#include "Wrappers/BsScriptReflectable.h"
+#include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationClip.h"
 
 namespace bs
@@ -11,19 +12,16 @@ namespace bs
 	struct ImportedAnimationEvents;
 	struct __AnimationEventInterop;
 
-	class BS_SCR_BED_EXPORT ScriptImportedAnimationEvents : public ScriptObject<ScriptImportedAnimationEvents>
+	class BS_SCR_BED_EXPORT ScriptImportedAnimationEvents : public TScriptReflectable<ScriptImportedAnimationEvents, ImportedAnimationEvents>
 	{
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ImportedAnimationEvents")
 
 		ScriptImportedAnimationEvents(MonoObject* managedInstance, const SPtr<ImportedAnimationEvents>& value);
 
-		SPtr<ImportedAnimationEvents> getInternal() const { return mInternal; }
 		static MonoObject* create(const SPtr<ImportedAnimationEvents>& value);
 
 	private:
-		SPtr<ImportedAnimationEvents> mInternal;
-
 		static void Internal_ImportedAnimationEvents(MonoObject* managedInstance);
 		static MonoString* Internal_getname(ScriptImportedAnimationEvents* thisPtr);
 		static void Internal_setname(ScriptImportedAnimationEvents* thisPtr, MonoString* value);

@@ -3,22 +3,22 @@
 #pragma once
 
 #include "BsScriptEditorPrerequisites.h"
-#include "BsScriptObject.h"
+#include "Wrappers/BsScriptReflectable.h"
 #include "BsScriptImportOptions.editor.generated.h"
+#include "../../bsf/Source/Foundation/bsfCore/Importer/BsShaderImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsShaderImportOptions.h"
 
 namespace bs
 {
 	class ShaderImportOptions;
 
-	class BS_SCR_BED_EXPORT ScriptShaderImportOptions : public ScriptObject<ScriptShaderImportOptions, ScriptImportOptionsBase>
+	class BS_SCR_BED_EXPORT ScriptShaderImportOptions : public TScriptReflectable<ScriptShaderImportOptions, ShaderImportOptions, ScriptImportOptionsBase>
 	{
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "ShaderImportOptions")
 
 		ScriptShaderImportOptions(MonoObject* managedInstance, const SPtr<ShaderImportOptions>& value);
 
-		SPtr<ShaderImportOptions> getInternal() const;
 		static MonoObject* create(const SPtr<ShaderImportOptions>& value);
 
 	private:

@@ -4,7 +4,6 @@
 #include "BsMonoMethod.h"
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
-#include "../../bsf/Source/Foundation/bsfCore/Importer/BsMeshImportOptions.h"
 #include "BsScriptAnimationSplitInfo.editor.generated.h"
 #include "BsScriptImportedAnimationEvents.editor.generated.h"
 #include "BsScriptMeshImportOptions.editor.generated.h"
@@ -12,14 +11,9 @@
 namespace bs
 {
 	ScriptMeshImportOptions::ScriptMeshImportOptions(MonoObject* managedInstance, const SPtr<MeshImportOptions>& value)
-		:ScriptObject(managedInstance)
+		:TScriptReflectable(managedInstance, value)
 	{
 		mInternal = value;
-	}
-
-	SPtr<MeshImportOptions> ScriptMeshImportOptions::getInternal() const 
-	{
-		return std::static_pointer_cast<MeshImportOptions>(mInternal);
 	}
 
 	void ScriptMeshImportOptions::initRuntimeData()
