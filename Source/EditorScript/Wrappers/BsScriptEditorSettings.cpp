@@ -9,6 +9,7 @@
 #include "Settings/BsEditorSettings.h"
 #include "Reflection/BsRTTIType.h"
 #include "Serialization/BsManagedSerializableObject.h"
+#include "Serialization/BsScriptAssemblyManager.h"
 
 namespace bs
 {
@@ -277,15 +278,19 @@ namespace bs
 		settings->setString(nativeName, nativeValue);
 	}
 
+
 	void ScriptEditorSettings::internal_SetObject(MonoString* name, MonoObject* value)
 	{
 		String nativeName = MonoUtil::monoToString(name);
 
-		SPtr<ManagedSerializableObject> nativeValue = ManagedSerializableObject::createFromExisting(value);
-		if(!nativeValue)
-			return;
+		SPtr<IReflectable> nativeValue;
+		if(value != nullptr)
+		{
+			nativeValue = ScriptAssemblyManager::getReflectableFromManagedObject(value);
 
-		nativeValue->serialize();
+			if(!nativeValue)
+				return;
+		}
 
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
 		settings->setObject(nativeName, nativeValue);
@@ -331,12 +336,31 @@ namespace bs
 		String nativeName = MonoUtil::monoToString(name);
 
 		SPtr<EditorSettings> settings = gEditorApplication().getEditorSettings();
-		SPtr<ManagedSerializableObject> value = rtti_cast<ManagedSerializableObject>(settings->getObject(nativeName));
+		SPtr<IReflectable> obj = settings->getObject(nativeName);
 
-		if(!value)
+		if(!obj)
 			return nullptr;
 
-		return value->deserialize();
+		if(auto managedSerializableObject = rtti_cast<ManagedSerializableObject>(obj))
+		{
+			if (!managedSerializableObject)
+				return nullptr;
+
+			return managedSerializableObject->deserialize();
+		}
+		else
+		{
+			UINT32 rttiId = obj->getRTTI()->getRTTIId(); 
+			const ReflectableTypeInfo* reflTypeInfo = ScriptAssemblyManager::instance().getReflectableTypeInfo(rttiId);
+			if(reflTypeInfo == nullptr)
+			{
+				LOGERR(StringUtil::format("Mapping between a reflectable object and a managed type is missing "
+					"for type \"{0}\"", rttiId))
+				return nullptr;
+			}
+
+			return reflTypeInfo->createCallback(obj);
+		}
 	}
 
 	bool ScriptEditorSettings::internal_HasKey(MonoString* name)
