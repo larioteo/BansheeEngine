@@ -47,6 +47,8 @@ namespace bs
 		}
 
 	private:
+		BuiltinTypeMappings mEditorTypeMappings;
+
 		bool mScriptAssembliesLoaded;
 		HEvent mQuitRequestedEvent;
 	};

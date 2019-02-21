@@ -10,6 +10,8 @@
 #include "BsMonoAssembly.h"
 #include "Scene/BsGameObjectManager.h"
 
+#include "Generated/BsEditorBuiltinReflectableTypesLookup.generated.h"
+
 namespace bs
 {
 	EditorScriptLibrary::EditorScriptLibrary()
@@ -19,6 +21,11 @@ namespace bs
 	void EditorScriptLibrary::initialize()
 	{
 		EngineScriptLibrary::initialize();
+
+		mEditorTypeMappings.reflectableObjects = EditorBuiltinReflectableTypes::getEntries();
+
+		MonoManager::instance().loadAssembly(getEditorAssemblyPath(), EDITOR_ASSEMBLY);
+		ScriptAssemblyManager::instance().loadAssemblyInfo(EDITOR_ASSEMBLY, mEditorTypeMappings);
 
 		EditorScriptManager::startUp();
 		
@@ -48,42 +55,44 @@ namespace bs
 		// Do a full refresh if we have already loaded script assemblies
 		if (mScriptAssembliesLoaded)
 		{
-			Vector<std::pair<String, Path>> assemblies;
+			Vector<AssemblyRefreshInfo> assemblies;
 
-			assemblies.push_back({ ENGINE_ASSEMBLY, engineAssemblyPath });
+			assemblies.push_back(AssemblyRefreshInfo(ENGINE_ASSEMBLY, &engineAssemblyPath, &mEngineTypeMappings));
 			if (gEditorApplication().isProjectLoaded())
 			{
 				if (FileSystem::exists(gameAssemblyPath))
-					assemblies.push_back({ SCRIPT_GAME_ASSEMBLY, gameAssemblyPath });
+					assemblies.push_back(AssemblyRefreshInfo(SCRIPT_GAME_ASSEMBLY, &gameAssemblyPath, &BuiltinTypeMappings::EMPTY));
 			}
 
-			assemblies.push_back({ EDITOR_ASSEMBLY, editorAssemblyPath });
+			assemblies.push_back(AssemblyRefreshInfo(EDITOR_ASSEMBLY, &editorAssemblyPath, &mEditorTypeMappings));
 			if (gEditorApplication().isProjectLoaded())
 			{
 				if (FileSystem::exists(editorScriptAssemblyPath))
-					assemblies.push_back({ SCRIPT_EDITOR_ASSEMBLY, editorScriptAssemblyPath });
+					assemblies.push_back(AssemblyRefreshInfo(SCRIPT_EDITOR_ASSEMBLY, &editorScriptAssemblyPath, &BuiltinTypeMappings::EMPTY));
 			}
 
 			ScriptObjectManager::instance().refreshAssemblies(assemblies);
 		}
 		else // Otherwise just additively load them
 		{
+			ScriptAssemblyManager::instance().clearAssemblyInfo();
+
 			MonoManager::instance().loadAssembly(engineAssemblyPath.toString(), ENGINE_ASSEMBLY);
-			ScriptAssemblyManager::instance().loadAssemblyInfo(ENGINE_ASSEMBLY);
+			ScriptAssemblyManager::instance().loadAssemblyInfo(ENGINE_ASSEMBLY, mEngineTypeMappings);
 
 			if (FileSystem::exists(gameAssemblyPath))
 			{
 				MonoManager::instance().loadAssembly(gameAssemblyPath.toString(), SCRIPT_GAME_ASSEMBLY);
-				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_GAME_ASSEMBLY);
+				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_GAME_ASSEMBLY, BuiltinTypeMappings());
 			}
 
 			MonoManager::instance().loadAssembly(editorAssemblyPath.toString(), EDITOR_ASSEMBLY);
-			ScriptAssemblyManager::instance().loadAssemblyInfo(EDITOR_ASSEMBLY);
+			ScriptAssemblyManager::instance().loadAssemblyInfo(EDITOR_ASSEMBLY, mEditorTypeMappings);
 
 			if (FileSystem::exists(editorScriptAssemblyPath))
 			{
 				MonoManager::instance().loadAssembly(editorScriptAssemblyPath.toString(), SCRIPT_EDITOR_ASSEMBLY);
-				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_EDITOR_ASSEMBLY);
+				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_EDITOR_ASSEMBLY, BuiltinTypeMappings());
 			}
 
 			mScriptAssembliesLoaded = true;

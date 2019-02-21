@@ -39,7 +39,6 @@ namespace bs
 		GameResourceManager::instance().setLoader(resourceLoader);
 
 		loadMonoTypes();
-		ScriptAssemblyManager::instance().loadAssemblyInfo(EDITOR_ASSEMBLY);
 
 		ScriptUndoRedo::startUp();
 		ScriptEditorInput::startUp();
