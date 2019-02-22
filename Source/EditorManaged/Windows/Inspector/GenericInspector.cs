@@ -24,7 +24,7 @@ namespace bs.Editor
             if (InspectedObject == null)
                 LoadResource();
 
-            drawer = new GenericInspectorDrawer(InspectedObject, this, Layout);
+            drawer = new GenericInspectorDrawer(InspectedObject, new InspectableContext(Persistent), Layout);
 
             isEmpty = drawer.Fields.Count == 0;
             base.SetVisible(!isEmpty);
@@ -58,7 +58,7 @@ namespace bs.Editor
         /// Creates new generic inspector field drawer for the specified object.
         /// </summary>
         /// <param name="obj">Object whose fields to create the GUI for.</param>
-        /// <param name="parent">Parent Inspector to draw in.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="layout">Parent layout that all the field GUI elements will be added to.</param>
         /// <param name="overrideCallback">
         /// Optional callback that allows you to override the look of individual fields in the object. If non-null the
@@ -66,14 +66,14 @@ namespace bs.Editor
         /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
         /// will be used.
         /// </param>
-        public GenericInspectorDrawer(object obj, Inspector parent, GUILayoutY layout, 
+        public GenericInspectorDrawer(object obj, InspectableContext context, GUILayoutY layout, 
             InspectableField.FieldOverrideCallback overrideCallback = null)
         {
             if (obj == null)
                 return;
 
             SerializableObject serializableObject = new SerializableObject(obj.GetType(), obj);
-            Fields = InspectableField.CreateFields(serializableObject, parent, "", 0, layout, overrideCallback);
+            Fields = InspectableField.CreateFields(serializableObject, context, "", 0, layout, overrideCallback);
         }
 
         /// <summary>

@@ -30,16 +30,16 @@ namespace bs.Editor
         /// Creates a new inspectable category. The category is initially empty and children must be added by calling
         /// <see cref="AddChild"/>.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the category.</param>
         /// <param name="path">Full path to the category (includes name of the category and all parent properties).</param>
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
-        public InspectableCategory(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout)
-            : base(parent, title, "", SerializableProperty.FieldType.Object, depth, layout, null)
+        public InspectableCategory(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout)
+            : base(context, title, "", SerializableProperty.FieldType.Object, depth, layout, null)
         {
-            isExpanded = parent.Persistent.GetBool(path + "_Expanded");
+            isExpanded = context.Persistent.GetBool(path + "_Expanded");
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace bs.Editor
         /// <param name="expanded">Determines whether the contents were expanded or collapsed.</param>
         private void OnFoldoutToggled(bool expanded)
         {
-            parent.Persistent.SetBool(path + "_Expanded", expanded);
+            context.Persistent.SetBool(path + "_Expanded", expanded);
             isExpanded = expanded;
             guiContentPanel.Active = expanded;
         }

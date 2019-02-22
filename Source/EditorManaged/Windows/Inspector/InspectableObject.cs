@@ -38,7 +38,7 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new inspectable object GUI for the specified property.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
@@ -46,12 +46,12 @@ namespace bs.Editor
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the object whose contents to display.</param>
         /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
-        public InspectableObject(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
+        public InspectableObject(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout, 
             SerializableProperty property, InspectableFieldStyleInfo style)
-            : base(parent, title, path, SerializableProperty.FieldType.Object, depth, layout, property)
+            : base(context, title, path, SerializableProperty.FieldType.Object, depth, layout, property)
         {
             this.style = style;
-            isExpanded = parent.Persistent.GetBool(path + "_Expanded");
+            isExpanded = context.Persistent.GetBool(path + "_Expanded");
             isInline = style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.Inline);
 
             // Builds a context menu that lets the user create objects to assign to this field.
@@ -213,7 +213,7 @@ namespace bs.Editor
                         else
                             guiContentLayout = guiLayout;
 
-                        children = CreateFields(serializableObject, parent, path, depth + 1, guiContentLayout);
+                        children = CreateFields(serializableObject, context, path, depth + 1, guiContentLayout);
                     }
                 }
                 else
@@ -293,7 +293,7 @@ namespace bs.Editor
         /// <param name="expanded">Determines whether the contents were expanded or collapsed.</param>
         private void OnFoldoutToggled(bool expanded)
         {
-            parent.Persistent.SetBool(path + "_Expanded", expanded);
+            context.Persistent.SetBool(path + "_Expanded", expanded);
 
             isExpanded = expanded;
             forceUpdate = true;

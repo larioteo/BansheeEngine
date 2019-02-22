@@ -29,7 +29,7 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new inspectable array GUI for the specified property.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
@@ -37,9 +37,9 @@ namespace bs.Editor
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the array whose contents to display.</param>
         /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
-        public InspectableArray(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
+        public InspectableArray(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout, 
             SerializableProperty property, InspectableFieldStyleInfo style)
-            : base(parent, title, path, SerializableProperty.FieldType.Array, depth, layout, property)
+            : base(context, title, path, SerializableProperty.FieldType.Array, depth, layout, property)
         {
             this.style = style;
         }
@@ -61,9 +61,9 @@ namespace bs.Editor
         {
             GUILayout arrayLayout = layout.AddLayoutY(layoutIndex);
 
-            arrayGUIField = InspectableArrayGUI.Create(parent, title, path, property, arrayLayout, depth, style);
-            arrayGUIField.IsExpanded = parent.Persistent.GetBool(path + "_Expanded");
-            arrayGUIField.OnExpand += x => parent.Persistent.SetBool(path + "_Expanded", x);
+            arrayGUIField = InspectableArrayGUI.Create(context, title, path, property, arrayLayout, depth, style);
+            arrayGUIField.IsExpanded = context.Persistent.GetBool(path + "_Expanded");
+            arrayGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace bs.Editor
         {
             private Array array;
             private int numElements;
-            private Inspector parent;
+            private InspectableContext context;
             private SerializableProperty property;
             private string path;
             private InspectableFieldStyleInfo style;
 
             /// <summary>
-            /// Returns the parent inspector the array GUI belongs to.
+            /// Context shared by all inspectable fields created by the same parent.
             /// </summary>
-            public Inspector Inspector
+            public InspectableContext Context
             {
-                get { return parent; }
+                get { return context; }
             }
 
             /// <summary>
@@ -105,7 +105,7 @@ namespace bs.Editor
             /// <summary>
             /// Constructs a new inspectable array GUI.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -115,12 +115,12 @@ namespace bs.Editor
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
             /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
-            public InspectableArrayGUI(Inspector parent, LocString title, string path, SerializableProperty property, 
+            public InspectableArrayGUI(InspectableContext context, LocString title, string path, SerializableProperty property, 
                 GUILayout layout, int depth, InspectableFieldStyleInfo style)
                 : base(title, layout, depth)
             {
                 this.property = property;
-                this.parent = parent;
+                this.context = context;
                 this.path = path;
                 this.style = style;
 
@@ -132,7 +132,7 @@ namespace bs.Editor
             /// <summary>
             /// Creates a new inspectable array GUI object that displays the contents of the provided serializable property.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -142,10 +142,10 @@ namespace bs.Editor
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
             /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
-            public static InspectableArrayGUI Create(Inspector parent, LocString title, string path, 
+            public static InspectableArrayGUI Create(InspectableContext context, LocString title, string path, 
                 SerializableProperty property, GUILayout layout, int depth, InspectableFieldStyleInfo style)
             {
-                InspectableArrayGUI guiArray = new InspectableArrayGUI(parent, title, path, property, layout, depth, style);
+                InspectableArrayGUI guiArray = new InspectableArrayGUI(context, title, path, property, layout, depth, style);
                 guiArray.BuildGUI();
                 
                 return guiArray;
@@ -383,7 +383,7 @@ namespace bs.Editor
                 styleInfo.StyleFlags &= ~InspectableFieldStyleFlags.NativeWrapper;
 
                 string entryPath = arrayParent.Path + "[" + SeqIndex + "]";
-                field = CreateField(arrayParent.Inspector, SeqIndex + ".", entryPath, 0, Depth + 1,
+                field = CreateField(arrayParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property, styleInfo);
 
                 return field.GetTitleLayout();

@@ -33,7 +33,7 @@ namespace bs.Editor
             if (spriteTexture == null)
                 return;
 
-            genericDrawer = new GenericInspectorDrawer(spriteTexture, this, Layout);
+            genericDrawer = new GenericInspectorDrawer(spriteTexture, new InspectableContext(Persistent), Layout);
 
             GUILayout previewLayout = PreviewGUI.AddLayoutY();
             previewTitleLayout = GUILayoutWithBackground.Create<GUILayoutX>(previewLayout, Builtin.WhiteTexture,

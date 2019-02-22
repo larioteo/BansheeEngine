@@ -21,7 +21,7 @@ namespace bs.Editor
     {
         private const int IndentAmount = 5;
 
-        protected Inspector parent;
+        protected InspectableContext context;
         protected InspectableFieldLayout layout;
         protected SerializableProperty property;
         protected string title;
@@ -50,7 +50,7 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new inspectable field GUI for the specified property.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="type">Type of property this field will be used for displaying.</param>
@@ -58,10 +58,10 @@ namespace bs.Editor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the array whose contents to display.</param>
-        public InspectableField(Inspector parent, string title, string path, SerializableProperty.FieldType type, 
+        public InspectableField(InspectableContext context, string title, string path, SerializableProperty.FieldType type, 
             int depth, InspectableFieldLayout layout, SerializableProperty property)
         {
-            this.parent = parent;
+            this.context = context;
             this.layout = layout;
             this.title = title;
             this.path = path;
@@ -121,7 +121,7 @@ namespace bs.Editor
         /// returns null the default field will be used instead.
         /// </summary>
         /// <param name="field">Field to generate inspector GUI for.</param>
-        /// <param name="parent">Parent Inspector the GUI will be rendered on.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="path">Full path to the provided field (includes name of this field and all parent fields).</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="layoutIndex">Index into the parent layout at which to insert the GUI elements for the field .</param>
@@ -133,14 +133,14 @@ namespace bs.Editor
         /// Inspectable field implementation that can be used for displaying the GUI for the provided field. Or null if
         /// default field GUI should be used instead.
         /// </returns>
-        public delegate InspectableField FieldOverrideCallback(SerializableField field, Inspector parent, string path,
+        public delegate InspectableField FieldOverrideCallback(SerializableField field, InspectableContext context, string path,
             InspectableFieldLayout layout, int layoutIndex, int depth);
 
         /// <summary>
         /// Creates inspectable fields all the fields/properties of the specified object.
         /// </summary>
         /// <param name="obj">Object whose fields the GUI will be drawn for.</param>
-        /// <param name="parent">Parent Inspector to draw in.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="path">Full path to the field this provided object was retrieved from.</param>
         /// <param name="depth">
         /// Determines how deep within the inspector nesting hierarchy is this objects. Some fields may contain other
@@ -153,7 +153,7 @@ namespace bs.Editor
         /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
         /// will be used.
         /// </param>
-        public static List<InspectableField> CreateFields(SerializableObject obj, Inspector parent, string path, 
+        public static List<InspectableField> CreateFields(SerializableObject obj, InspectableContext context, string path, 
             int depth, GUILayoutY layout, FieldOverrideCallback overrideCallback = null)
         {
             // Retrieve fields and sort by order
@@ -185,7 +185,8 @@ namespace bs.Editor
                     if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
                     {
                         string categoryPath = path + "/[" + newCategory + "]";
-                        category = new InspectableCategory(parent, newCategory, categoryPath, depth, new InspectableFieldLayout(layout));
+                        category = new InspectableCategory(context, newCategory, categoryPath, depth, 
+                            new InspectableFieldLayout(layout));
 
                         category.Initialize(rootIndex);
                         category.Refresh(rootIndex);
@@ -222,12 +223,12 @@ namespace bs.Editor
                 InspectableField inspectableField = null;
 
                 if(overrideCallback != null)
-                    inspectableField = overrideCallback(field, parent, path, new InspectableFieldLayout(parentLayout), 
+                    inspectableField = overrideCallback(field, context, path, new InspectableFieldLayout(parentLayout), 
                         currentIndex, depth);
 
                 if (inspectableField == null)
                 {
-                    inspectableField = CreateField(parent, fieldName, childPath,
+                    inspectableField = CreateField(context, fieldName, childPath,
                         currentIndex, depth, new InspectableFieldLayout(parentLayout), field.GetProperty(), 
                         InspectableFieldStyle.Create(field));
                 }
@@ -254,7 +255,7 @@ namespace bs.Editor
         /// (like ones for primitives like int or bool), or a user defined implementation defined with a 
         /// <see cref="CustomInspector"/> attribute.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="layoutIndex">Index into the parent layout at which to insert the GUI elements for the field .</param>
@@ -265,7 +266,7 @@ namespace bs.Editor
         /// <param name="style">Information that can be used for customizing field rendering and behaviour.</param>
         /// <returns>Inspectable field implementation that can be used for displaying the GUI for a serializable property
         ///          of the provided type.</returns>
-        public static InspectableField CreateField(Inspector parent, string title, string path, int layoutIndex, 
+        public static InspectableField CreateField(InspectableContext context, string title, string path, int layoutIndex, 
             int depth, InspectableFieldLayout layout, SerializableProperty property, InspectableFieldStyleInfo style = null)
         {
             InspectableField field = null;
@@ -277,7 +278,7 @@ namespace bs.Editor
             Type customInspectable = InspectorUtility.GetCustomInspectable(type);
             if (customInspectable != null)
             {
-                field = (InspectableField) Activator.CreateInstance(customInspectable, parent, title, path, depth, layout, 
+                field = (InspectableField) Activator.CreateInstance(customInspectable, context, title, path, depth, layout, 
                     property, style);
             }
             else
@@ -286,87 +287,87 @@ namespace bs.Editor
                 {
                     case SerializableProperty.FieldType.Int:
                         if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.AsLayerMask))
-                            field = new InspectableLayerMask(parent, title, path, depth, layout, property);
+                            field = new InspectableLayerMask(context, title, path, depth, layout, property);
                         else
                         {
                             if (style?.RangeStyle == null || !style.RangeStyle.Slider)
-                                field = new InspectableInt(parent, title, path, depth, layout, property, style);
+                                field = new InspectableInt(context, title, path, depth, layout, property, style);
                             else
-                                field = new InspectableRangedInt(parent, title, path, depth, layout, property, style);
+                                field = new InspectableRangedInt(context, title, path, depth, layout, property, style);
                         }
 
                         break;
                     case SerializableProperty.FieldType.Float:
                         if (style?.RangeStyle == null || !style.RangeStyle.Slider)
-                            field = new InspectableFloat(parent, title, path, depth, layout, property, style);
+                            field = new InspectableFloat(context, title, path, depth, layout, property, style);
                         else
-                            field = new InspectableRangedFloat(parent, title, path, depth, layout, property, style);
+                            field = new InspectableRangedFloat(context, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.Bool:
-                        field = new InspectableBool(parent, title, path, depth, layout, property);
+                        field = new InspectableBool(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Color:
-                        field = new InspectableColor(parent, title, path, depth, layout, property);
+                        field = new InspectableColor(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.ColorGradient:
-                        field = new InspectableColorGradient(parent, title, path, depth, layout, property);
+                        field = new InspectableColorGradient(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Curve:
-                        field = new InspectableCurve(parent, title, path, depth, layout, property);
+                        field = new InspectableCurve(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.FloatDistribution:
-                        field = new InspectableFloatDistribution(parent, title, path, depth, layout, property);
+                        field = new InspectableFloatDistribution(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Vector2Distribution:
-                        field = new InspectableVector2Distribution(parent, title, path, depth, layout, property);
+                        field = new InspectableVector2Distribution(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Vector3Distribution:
-                        field = new InspectableVector3Distribution(parent, title, path, depth, layout, property);
+                        field = new InspectableVector3Distribution(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.ColorDistribution:
-                        field = new InspectableColorDistribution(parent, title, path, depth, layout, property);
+                        field = new InspectableColorDistribution(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.String:
-                        field = new InspectableString(parent, title, path, depth, layout, property);
+                        field = new InspectableString(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Vector2:
-                        field = new InspectableVector2(parent, title, path, depth, layout, property);
+                        field = new InspectableVector2(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Vector3:
-                        field = new InspectableVector3(parent, title, path, depth, layout, property);
+                        field = new InspectableVector3(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Vector4:
-                        field = new InspectableVector4(parent, title, path, depth, layout, property);
+                        field = new InspectableVector4(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Quaternion:
                         if (style != null && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.AsQuaternion))
-                            field = new InspectableQuaternion(parent, title, path, depth, layout, property);
+                            field = new InspectableQuaternion(context, title, path, depth, layout, property);
                         else
-                            field = new InspectableEuler(parent, title, path, depth, layout, property);
+                            field = new InspectableEuler(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Resource:
-                        field = new InspectableResource(parent, title, path, depth, layout, property);
+                        field = new InspectableResource(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.RRef:
-                        field = new InspectableRRef(parent, title, path, depth, layout, property);
+                        field = new InspectableRRef(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.GameObjectRef:
-                        field = new InspectableGameObjectRef(parent, title, path, depth, layout, property);
+                        field = new InspectableGameObjectRef(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Object:
-                        field = new InspectableObject(parent, title, path, depth, layout, property, style);
+                        field = new InspectableObject(context, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.Array:
-                        field = new InspectableArray(parent, title, path, depth, layout, property, style);
+                        field = new InspectableArray(context, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.List:
-                        field = new InspectableList(parent, title, path, depth, layout, property);
+                        field = new InspectableList(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Dictionary:
-                        field = new InspectableDictionary(parent, title, path, depth, layout, property);
+                        field = new InspectableDictionary(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Enum:
-                        field = new InspectableEnum(parent, title, path, depth, layout, property);
+                        field = new InspectableEnum(context, title, path, depth, layout, property);
                         break;
                 }
             }
@@ -442,6 +443,36 @@ namespace bs.Editor
 
             return sb.ToString();
         }
+    }
+
+    /// <summary>
+    /// Contains information shared between multiple inspector fields.
+    /// </summary>
+    public class InspectableContext
+    {
+        /// <summary>
+        /// Creates a new context.
+        /// </summary>
+        public InspectableContext()
+        {
+            Persistent = new SerializableProperties();
+        }
+
+
+        /// <summary>
+        /// Creates a new context with user-provided peristent property storage.
+        /// </summary>
+        /// <param name="persistent">Existing object into which to inspectable fields can store persistent data.</param>
+        public InspectableContext(SerializableProperties persistent)
+        {
+            Persistent = persistent;
+        }
+
+        /// <summary>
+        /// A set of properties that the inspector can read/write. They will be persisted even after the inspector is closed
+        /// and restored when it is re-opened.
+        /// </summary>
+        public SerializableProperties Persistent { get; }
     }
 
     /** @} */

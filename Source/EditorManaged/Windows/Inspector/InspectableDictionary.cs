@@ -22,16 +22,16 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new inspectable dictionary GUI for the specified property.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the dictionary whose contents to display.</param>
-        public InspectableDictionary(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout, 
+        public InspectableDictionary(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout, 
             SerializableProperty property)
-            : base(parent, title, path, SerializableProperty.FieldType.Dictionary, depth, layout, property)
+            : base(context, title, path, SerializableProperty.FieldType.Dictionary, depth, layout, property)
         {
 
         }
@@ -53,9 +53,9 @@ namespace bs.Editor
         {
             GUILayout dictionaryLayout = layout.AddLayoutY(layoutIndex);
 
-            dictionaryGUIField = InspectableDictionaryGUI.Create(parent, title, path, property, dictionaryLayout, depth);
-            dictionaryGUIField.IsExpanded = parent.Persistent.GetBool(path + "_Expanded");
-            dictionaryGUIField.OnExpand += x => parent.Persistent.SetBool(path + "_Expanded", x);
+            dictionaryGUIField = InspectableDictionaryGUI.Create(context, title, path, property, dictionaryLayout, depth);
+            dictionaryGUIField.IsExpanded = context.Persistent.GetBool(path + "_Expanded");
+            dictionaryGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
         /// <summary>
@@ -67,17 +67,17 @@ namespace bs.Editor
             private SerializableProperty property;
             private IDictionary dictionary;
             private int numElements;
-            private Inspector parent;
+            private InspectableContext context;
             private string path;
 
             private List<SerializableProperty> orderedKeys = new List<SerializableProperty>();
 
             /// <summary>
-            /// Returns the parent inspector the array GUI belongs to.
+            /// Context shared by all inspectable fields created by the same parent.
             /// </summary>
-            public Inspector Inspector
+            public InspectableContext Context
             {
-                get { return parent; }
+                get { return context; }
             }
 
             /// <summary>
@@ -91,7 +91,7 @@ namespace bs.Editor
             /// <summary>
             /// Constructs a new dictionary GUI.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -100,12 +100,12 @@ namespace bs.Editor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
-            protected InspectableDictionaryGUI(Inspector parent, LocString title, string path, SerializableProperty property, 
+            protected InspectableDictionaryGUI(InspectableContext context, LocString title, string path, SerializableProperty property, 
                 GUILayout layout, int depth = 0)
             : base(title, layout, depth)
             {
                 this.property = property;
-                this.parent = parent;
+                this.context = context;
                 this.path = path;
 
                 dictionary = property.GetValue<IDictionary>();
@@ -119,7 +119,7 @@ namespace bs.Editor
             /// Builds the inspectable dictionary GUI elements. Must be called at least once in order for the contents to 
             /// be populated.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -128,10 +128,10 @@ namespace bs.Editor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
-            public static InspectableDictionaryGUI Create(Inspector parent, LocString title, string path, 
+            public static InspectableDictionaryGUI Create(InspectableContext context, LocString title, string path, 
                 SerializableProperty property, GUILayout layout, int depth = 0)
             {
-                InspectableDictionaryGUI guiDictionary = new InspectableDictionaryGUI(parent, title, path, property, 
+                InspectableDictionaryGUI guiDictionary = new InspectableDictionaryGUI(context, title, path, property, 
                     layout, depth);
                 guiDictionary.BuildGUI();
 
@@ -374,7 +374,7 @@ namespace bs.Editor
                 SerializableProperty property = GetKey<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Key[" + RowIdx + "]";
-                fieldKey = CreateField(dictParent.Inspector, "Key", entryPath, 0, Depth + 1,
+                fieldKey = CreateField(dictParent.Context, "Key", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
 
                 return fieldKey.GetTitleLayout();
@@ -387,7 +387,7 @@ namespace bs.Editor
                 SerializableProperty property = GetValue<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Value[" + RowIdx + "]";
-                fieldValue = CreateField(dictParent.Inspector, "Value", entryPath, 0, Depth + 1,
+                fieldValue = CreateField(dictParent.Context, "Value", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
             }
 

@@ -22,16 +22,16 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new inspectable list GUI for the specified property.
         /// </summary>
-        /// <param name="parent">Parent Inspector this field belongs to.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
         /// <param name="path">Full path to this property (includes name of this property and all parent properties).</param>
         /// <param name="depth">Determines how deep within the inspector nesting hierarchy is this field. Some fields may
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the list whose contents to display.</param>
-        public InspectableList(Inspector parent, string title, string path, int depth, InspectableFieldLayout layout,
+        public InspectableList(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout,
             SerializableProperty property)
-            : base(parent, title, path, SerializableProperty.FieldType.List, depth, layout, property)
+            : base(context, title, path, SerializableProperty.FieldType.List, depth, layout, property)
         {
 
         }
@@ -53,9 +53,9 @@ namespace bs.Editor
         {
             GUILayout arrayLayout = layout.AddLayoutY(layoutIndex);
 
-            listGUIField = InspectableListGUI.Create(parent, title, path, property, arrayLayout, depth);
-            listGUIField.IsExpanded = parent.Persistent.GetBool(path + "_Expanded");
-            listGUIField.OnExpand += x => parent.Persistent.SetBool(path + "_Expanded", x);
+            listGUIField = InspectableListGUI.Create(context, title, path, property, arrayLayout, depth);
+            listGUIField.IsExpanded = context.Persistent.GetBool(path + "_Expanded");
+            listGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
         /// <summary>
@@ -65,16 +65,16 @@ namespace bs.Editor
         {
             private IList list;
             private int numElements;
-            private Inspector parent;
+            private InspectableContext context;
             private SerializableProperty property;
             private string path;
 
             /// <summary>
-            /// Returns the parent inspector the array GUI belongs to.
+            /// Context shared by all inspectable fields created by the same parent.
             /// </summary>
-            public Inspector Inspector
+            public InspectableContext Context
             {
-                get { return parent; }
+                get { return context; }
             }
 
             /// <summary>
@@ -88,7 +88,7 @@ namespace bs.Editor
             /// <summary>
             /// Constructs a new empty inspectable list GUI.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -97,12 +97,12 @@ namespace bs.Editor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
-            public InspectableListGUI(Inspector parent, LocString title, string path, SerializableProperty property, 
-                GUILayout layout, int depth)
+            public InspectableListGUI(InspectableContext context, LocString title, string path, 
+                SerializableProperty property, GUILayout layout, int depth)
                 : base(title, layout, depth)
             {
                 this.property = property;
-                this.parent = parent;
+                this.context = context;
                 this.path = path;
 
                 list = property.GetValue<IList>();
@@ -113,7 +113,7 @@ namespace bs.Editor
             /// <summary>
             /// Creates a new inspectable list GUI object that displays the contents of the provided serializable property.
             /// </summary>
-            /// <param name="parent">Parent Inspector this field belongs to.</param>
+            /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
             /// <param name="title">Label to display on the list GUI title.</param>
             /// <param name="path">Full path to this property (includes name of this property and all parent properties).
             /// </param>
@@ -122,10 +122,10 @@ namespace bs.Editor
             /// <param name="depth">Determines at which depth to render the background. Useful when you have multiple
             ///                     nested containers whose backgrounds are overlaping. Also determines background style,
             ///                     depths divisible by two will use an alternate style.</param>
-            public static InspectableListGUI Create(Inspector parent, LocString title, string path, 
+            public static InspectableListGUI Create(InspectableContext context, LocString title, string path, 
                 SerializableProperty property, GUILayout layout, int depth)
             {
-                InspectableListGUI listGUI = new InspectableListGUI(parent, title, path, property, layout, depth);
+                InspectableListGUI listGUI = new InspectableListGUI(context, title, path, property, layout, depth);
                 listGUI.BuildGUI();
 
                 return listGUI;
@@ -290,7 +290,7 @@ namespace bs.Editor
                 SerializableProperty property = GetValue<SerializableProperty>();
 
                 string entryPath = listParent.Path + "[" + SeqIndex + "]";
-                field = CreateField(listParent.Inspector, SeqIndex + ".", entryPath, 0, Depth + 1,
+                field = CreateField(listParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property, new InspectableFieldStyleInfo());
 
                 return field.GetTitleLayout();
