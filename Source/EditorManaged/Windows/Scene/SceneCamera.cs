@@ -15,6 +15,9 @@ namespace bs.Editor
     internal sealed class SceneCamera : ManagedComponent
     {
         #region Constants
+        public const float StartSpeed = 4.0f;
+        public const float TopSpeed = 12.0f;
+
         public const string MoveForwardBinding = "SceneForward";
         public const string MoveLeftBinding = "SceneLeft";
         public const string MoveRightBinding = "SceneRight";
@@ -27,6 +30,11 @@ namespace bs.Editor
         public const string HorizontalAxisBinding = "SceneHorizontal";
         public const string VerticalAxisBinding = "SceneVertical";
         public const string ScrollAxisBinding = "SceneScroll";
+
+        public const string ViewSettingsKey = "SceneCamera0_ViewSettings";
+        public const string MoveSettingsKey = "SceneCamera0_MoveSettings";
+        public const string RenderSettingsKey = "SceneCamera0_RenderSettings";
+
         #endregion
 
         #region Fields
@@ -49,6 +57,7 @@ namespace bs.Editor
         private bool lastHideCursorState;
         private Camera camera;
         private bool inputEnabled = true;
+        private SceneCameraViewSettings viewSettings;
 
         // Animating camera transitions
         private CameraAnimation animation = new CameraAnimation();
@@ -58,93 +67,67 @@ namespace bs.Editor
         #endregion
 
         #region Public properties
+
         /// <summary>
-        /// Type of projection used by camera for rendering the scene.
+        /// Returns the internal camera component. You should not make modifications to the returned camera.
         /// </summary>
-        public ProjectionType ProjectionType
+        public Camera Camera { get => camera; }
+
+        /// <summary>
+        /// Settings for controlling scene camera view.
+        /// </summary>
+        public SceneCameraViewSettings ViewSettings
         {
-            get { return camera.ProjectionType; }
+            get => viewSettings;
             set
             {
-                if (camera.ProjectionType != value)
-                {
-                    CameraState state = new CameraState();
-                    state.Position = camera.SceneObject.Position;
-                    state.Rotation = camera.SceneObject.Rotation;
-                    state.Orthographic = value == ProjectionType.Orthographic;
-                    state.FrustumWidth = frustumWidth;
+                viewSettings = value;
 
-                    SetState(state);
-                }
+                camera.ProjectionType = value.projectionType;
+                camera.NearClipPlane = value.nearClipPlane;
+                camera.FarClipPlane = value.farClipPlane;
+                camera.OrthoHeight = value.orthographicSize;
+                camera.FieldOfView = value.fieldOfView;
+                camera.Viewport.ClearColor = value.backgroundColor;
             }
         }
 
         /// <summary>
-        /// The orthographic size of the scene camera.
+        /// Settings for controlling scene camera movement.
         /// </summary>
-        public float OrthographicSize {
-            get { return camera.OrthoHeight; }
-            set {
-                camera.OrthoHeight = value;
-                SceneCameraOptions.SetOrthographicSize(value);
-            }
-        }
+        public SceneCameraMoveSettings MoveSettings { get; set; }
 
         /// <summary>
-        /// The field of view of the scene camera.
+        /// Options for controlling scene camera rendering.
         /// </summary>
-        public Degree FieldOfView {
-            get { return camera.FieldOfView; }
-            set {
-                camera.FieldOfView = value;
-                SceneCameraOptions.SetFieldOfView(value.Degrees);
-            }
-        }
-
-        /// <summary>
-        /// The near clip plane of the scene camera.
-        /// </summary>
-        public float NearClipPlane {
-            get { return camera.NearClipPlane; }
-            set {
-                camera.NearClipPlane = value;
-                SceneCameraOptions.SetNearClipPlane(value);
-            }
-        }
-
-        /// <summary>
-        /// The far clip plane of the scene camera.
-        /// </summary>
-        public float FarClipPlane {
-            get { return camera.FarClipPlane; }
-            set {
-                camera.FarClipPlane = value;
-                SceneCameraOptions.SetFarClipPlane(value);
-            }
-        }
-
-        /// <summary>
-        /// The scroll speed of the scene camera.
-        /// </summary>
-        public float ScrollSpeed
+        public RenderSettings RenderSettings
         {
-            get { return SceneCameraOptions.ScrollSpeed; }
-            set { SceneCameraOptions.SetScrollSpeed(value); }
+            get => camera.RenderSettings;
+            set => camera.RenderSettings = value;
         }
 
-        private SceneCameraOptions SceneCameraOptions { get; set; } = new SceneCameraOptions();
         #endregion
 
         #region Public methods
         /// <summary>
-        /// Initializes default scene camera options.
+        /// Changes the scene camera projection type and animates the transition.
         /// </summary>
-        public void Initialize()
+        /// <param name="projectionType">New projection type.</param>
+        public void ChangeProjectionType(ProjectionType projectionType)
         {
-            camera.NearClipPlane = SceneCameraOptions.NearClipPlane;
-            camera.FarClipPlane = SceneCameraOptions.FarClipPlane;
-            camera.OrthoHeight = SceneCameraOptions.OrthographicSize;
-            camera.FieldOfView = SceneCameraOptions.FieldOfView;
+            if (camera.ProjectionType != projectionType)
+            {
+                CameraState state = new CameraState();
+                state.Position = camera.SceneObject.Position;
+                state.Rotation = camera.SceneObject.Rotation;
+                state.Orthographic = projectionType == ProjectionType.Orthographic;
+                state.FrustumWidth = frustumWidth;
+
+                viewSettings.projectionType = projectionType;
+                ProjectSettings.SetObject(ViewSettingsKey, viewSettings);
+
+                SetState(state);
+            }
         }
 
         /// <summary>
@@ -193,6 +176,10 @@ namespace bs.Editor
         private void OnReset()
         {
             camera = SceneObject.GetComponent<Camera>();
+
+            ViewSettings = ProjectSettings.GetObject<SceneCameraViewSettings>(ViewSettingsKey);
+            MoveSettings = ProjectSettings.GetObject<SceneCameraMoveSettings>(MoveSettingsKey);
+            RenderSettings = ProjectSettings.GetObject<RenderSettings>(RenderSettingsKey);
 
             moveForwardBtn = new VirtualButton(MoveForwardBinding);
             moveLeftBtn = new VirtualButton(MoveLeftBinding);
@@ -254,7 +241,7 @@ namespace bs.Editor
                     float horzValue = VirtualInput.GetAxisValue(horizontalAxis);
                     float vertValue = VirtualInput.GetAxisValue(verticalAxis);
 
-                    float rotationAmount = SceneCameraOptions.RotationalSpeed * EditorSettings.MouseSensitivity;
+                    float rotationAmount = MoveSettings.rotationalSpeed * EditorSettings.MouseSensitivity;
 
                     yaw += new Degree(horzValue * rotationAmount);
                     pitch += new Degree(vertValue * rotationAmount);
@@ -286,9 +273,9 @@ namespace bs.Editor
 
                         float multiplier = 1.0f;
                         if (fastMove)
-                            multiplier = SceneCameraOptions.FastModeMultiplier;
+                            multiplier = MoveSettings.fastModeMultiplier;
 
-                        currentSpeed = MathEx.Clamp(currentSpeed + SceneCameraOptions.Acceleration * frameDelta, SceneCameraOptions.StartSpeed, SceneCameraOptions.TopSpeed);
+                        currentSpeed = MathEx.Clamp(currentSpeed + MoveSettings.acceleration * frameDelta, StartSpeed, TopSpeed);
                         currentSpeed *= multiplier;
                     }
                     else
@@ -313,7 +300,7 @@ namespace bs.Editor
                     Vector3 direction = new Vector3(horzValue, -vertValue, 0.0f);
                     direction = camera.SceneObject.Rotation.Rotate(direction);
 
-                    SceneObject.Move(direction * SceneCameraOptions.PanSpeed * frameDelta);
+                    SceneObject.Move(direction * MoveSettings.panSpeed * frameDelta);
                 }
             }
             else
@@ -341,16 +328,15 @@ namespace bs.Editor
                     {
                         if (!isOrthographic)
                         {
-                            SceneObject.Move(SceneObject.Forward * scrollAmount * SceneCameraOptions.ScrollSpeed * frameDelta);
+                            SceneObject.Move(SceneObject.Forward * scrollAmount * MoveSettings.scrollSpeed * frameDelta);
                         }
                         else
                         {
-                            float orthoHeight = MathEx.Max(1.0f, OrthographicSize - scrollAmount * frameDelta);
+                            float oldOrthoHeight = camera.OrthoHeight;
+                            float orthoHeight = MathEx.Max(1.0f, oldOrthoHeight - scrollAmount * frameDelta);
 
-                            if (OrthographicSize != orthoHeight)
-                            {
-                                OrthographicSize = orthoHeight;
-                            }
+                            if (oldOrthoHeight != orthoHeight)
+                                camera.OrthoHeight = orthoHeight;
                         }
                     }
                 }
@@ -390,6 +376,12 @@ namespace bs.Editor
 
             Vector3 forward = bounds.Center - SceneObject.Position;
             forward.Normalize();
+
+            GetNearFarForDistance(distance, out var near, out var far);
+            viewSettings.nearClipPlane = near;
+            viewSettings.farClipPlane = far;
+
+            ProjectSettings.SetObject(ViewSettingsKey, viewSettings);
 
             CameraState state = new CameraState();
             state.Position = bounds.Center - forward * distance;
@@ -446,7 +438,7 @@ namespace bs.Editor
             pitch = (Degree)eulerAngles.x;
             yaw = (Degree)eulerAngles.y;
 
-            Degree FOV = (Degree)(1.0f - animation.State.OrthographicPct) * SceneCameraOptions.FieldOfView;
+            Degree FOV = (Degree)(1.0f - animation.State.OrthographicPct) * viewSettings.fieldOfView;
             if (FOV < (Degree)5.0f)
             {
                 camera.ProjectionType = ProjectionType.Orthographic;
@@ -460,27 +452,10 @@ namespace bs.Editor
             
             // Note: Consider having a global setting for near/far planes as changing it here might confuse the user
             float distance = CalcDistanceForFrustumWidth(frustumWidth);
+            GetNearFarForDistance(distance, out var near, out var far);
 
-            if (distance < 1)
-            {
-                camera.NearClipPlane = 0.005f;
-                camera.FarClipPlane = 1000f;
-            }
-            if (distance < 100)
-            {
-                camera.NearClipPlane = 0.05f;
-                camera.FarClipPlane = 2500f;
-            }
-            else if (distance < 1000)
-            {
-                camera.NearClipPlane = 0.5f;
-                camera.FarClipPlane = 10000f;
-            }
-            else
-            {
-                camera.NearClipPlane = 5.0f;
-                camera.FarClipPlane = 1000000f;
-            }
+            camera.NearClipPlane = near;
+            camera.FarClipPlane = far;
         }
 
         /// <summary>
@@ -514,6 +489,37 @@ namespace bs.Editor
             }
 
             ApplyState(lerp);
+        }
+
+        /// <summary>
+        /// Calculates the camera near and far plane distances used for looking at an object certain distance from the
+        /// camera.
+        /// </summary>
+        /// <param name="distance">Distance of the object from the camera.</param>
+        /// <param name="near">Output near plane distance.</param>
+        /// <param name="far">Output far plane distance.</param>
+        private static void GetNearFarForDistance(float distance, out float near, out float far)
+        {
+            if (distance < 1)
+            {
+                near = 0.005f;
+                far = 1000f;
+            }
+            if (distance < 100)
+            {
+                near = 0.05f;
+                far = 2500f;
+            }
+            else if (distance < 1000)
+            {
+                near = 0.5f;
+                far = 10000f;
+            }
+            else
+            {
+                near = 5.0f;
+                far = 1000000f;
+            }
         }
 
         /// <summary>
@@ -579,11 +585,46 @@ namespace bs.Editor
                 interpolated.Position = start.Position * (1.0f - t) + target.Position * t;
                 interpolated.Rotation = Quaternion.Slerp(start.Rotation, target.Rotation, t);
                 interpolated.OrthographicPct = start.OrthographicPct * (1.0f - t) + target.OrthographicPct * t;
-
                 interpolated.FrustumWidth = start.FrustumWidth * (1.0f - t) + target.FrustumWidth * t;
             }
         };
         #endregion 
+    }
+
+    /// <summary>
+    /// Contains properties used for controlling scene camera movement.
+    /// </summary>
+    [SerializeObject]
+    internal class SceneCameraMoveSettings
+    {
+        [Range(0.1f, 10.0f)]
+        public float acceleration = 1.0f;
+        [Range(1.0f, 10.0f)]
+        public float fastModeMultiplier = 2.0f;
+        [Range(0.1f, 10.0f)]
+        public float panSpeed = 3.0f;
+        [Range(0.1f, 3.0f)]
+        public float scrollSpeed = 3.0f;
+        [Range(0.1f, 10.0f)]
+        public float rotationalSpeed = 3.0f;
+    }
+
+    /// <summary>
+    /// Contains properties used for controlling scene camera view.
+    /// </summary>
+    [SerializeObject]
+    internal class SceneCameraViewSettings
+    {
+        public ProjectionType projectionType = ProjectionType.Perspective;
+        [Range(10.0f, 170.0f, false)]
+        public Degree fieldOfView = new Degree(90.0f);
+        [Range(0.001f, 10000.0f, false)]
+        public float orthographicSize = 10.0f;
+        [Range(0.0001f, 10, false)]
+        public float nearClipPlane = 0.05f;
+        [Range(1.0f, 100000.0f, false)]
+        public float farClipPlane = 2500.0f;
+        public Color backgroundColor = new Color(0.282f, 0.341f, 0.478f);
     }
 
     /** @} */

@@ -31,7 +31,7 @@ namespace bs.Editor
         private const int HandleAxesGUIPaddingY = 5;
 
         private Camera camera;
-        private SceneCamera cameraController;
+        private SceneCamera sceneCamera;
         private RenderTexture renderTexture;
         private GUILayoutY mainLayout;
         private GUIPanel rtPanel;
@@ -68,6 +68,7 @@ namespace bs.Editor
         private GUILabel loadLabel;
 
         private SceneAxesGUI sceneAxesGUI;
+        private ProjectionType sceneAxesLastProjectionType;
 
         private bool hasContentFocus = false;
         private bool HasContentFocus { get { return HasFocus && hasContentFocus; } }
@@ -99,64 +100,7 @@ namespace bs.Editor
         /// <summary>
         /// Returns the scene camera.
         /// </summary>
-        public Camera Camera
-        {
-            get { return camera; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's projection type.
-        /// </summary>
-        internal ProjectionType ProjectionType
-        {
-            get { return cameraController.ProjectionType; }
-            set { cameraController.ProjectionType = value; sceneAxesGUI.ProjectionType = value; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's orthographic size.
-        /// </summary>
-        internal float OrthographicSize
-        {
-            get { return cameraController.OrthographicSize; }
-            set { cameraController.OrthographicSize = value; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's field of view.
-        /// </summary>
-        internal Degree FieldOfView
-        {
-            get { return cameraController.FieldOfView; }
-            set { cameraController.FieldOfView = value; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's near clip plane.
-        /// </summary>
-        internal float NearClipPlane
-        {
-            get { return cameraController.NearClipPlane; }
-            set { cameraController.NearClipPlane = value; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's far clip plane.
-        /// </summary>
-        internal float FarClipPlane
-        {
-            get { return cameraController.FarClipPlane; }
-            set { cameraController.FarClipPlane = value; }
-        }
-
-        /// <summary>
-        /// Determines scene camera's scroll speed.
-        /// </summary>
-        internal float ScrollSpeed
-        {
-            get { return cameraController.ScrollSpeed; }
-            set { cameraController.ScrollSpeed = value; }
-        }
+        public SceneCamera Camera => sceneCamera;
 
         /// <summary>
         /// Constructs a new scene window.
@@ -181,7 +125,7 @@ namespace bs.Editor
         {
             SceneWindow window = GetWindow<SceneWindow>();
             if (window != null)
-                window.cameraController.FrameSelected();
+                window.sceneCamera.FrameSelected();
         }
 
         /// <summary>
@@ -351,6 +295,7 @@ namespace bs.Editor
 
             sceneAxesPanel = mainPanel.AddPanel(-1);
             sceneAxesGUI = new SceneAxesGUI(this, sceneAxesPanel, HandleAxesGUISize, HandleAxesGUISize, ProjectionType.Perspective);
+            sceneAxesLastProjectionType = ProjectionType.Perspective;
 
             focusCatcher = new GUIButton("", EditorStyles.Blank);
             focusCatcher.OnFocusGained += () => hasContentFocus = true;
@@ -371,15 +316,7 @@ namespace bs.Editor
 
         private void OnCameraOptionsClicked()
         {
-            Vector2I openPosition;
-            Rect2I buttonBounds = GUIUtility.CalculateBounds(cameraOptionsButton, GUI);
-
-            openPosition.x = buttonBounds.x + buttonBounds.width / 2;
-            openPosition.y = buttonBounds.y + buttonBounds.height / 2;
-
-            SceneCameraOptionsDropdown cameraOptionsDropdown = DropDownWindow.Open<SceneCameraOptionsDropdown>(GUI, openPosition);
-
-            cameraOptionsDropdown.Initialize(this);
+            SceneCameraSettingsWindow.Open();
         }
 
         private void OnDestroy()
@@ -488,7 +425,7 @@ namespace bs.Editor
         {
             axis.Normalize();
 
-            cameraController.LookAlong(axis);
+            sceneCamera.LookAlong(axis);
             UpdateGridMode();
         }
 
@@ -581,6 +518,13 @@ namespace bs.Editor
 
             // Update scene view handles and selection
             sceneGrid.Draw();
+
+            ProjectionType currentProjType = camera.ProjectionType;
+            if (sceneAxesLastProjectionType != currentProjType)
+            {
+                sceneAxesGUI.ProjectionType = currentProjType;
+                sceneAxesLastProjectionType = currentProjType;
+            }
 
             bool handleActive = sceneHandles.IsActive() || sceneAxesGUI.IsActive();
 
@@ -720,7 +664,7 @@ namespace bs.Editor
 
             if ((HasContentFocus || IsPointerHovering) && AllowViewportInput)
             {
-                cameraController.EnableInput(true);
+                sceneCamera.EnableInput(true);
 
                 if (inBounds && HasContentFocus)
                 {
@@ -755,7 +699,7 @@ namespace bs.Editor
                 }
             }
             else
-                cameraController.EnableInput(false);
+                sceneCamera.EnableInput(false);
 
             if (AllowViewportInput)
             {
@@ -775,7 +719,7 @@ namespace bs.Editor
             UpdateGridMode();
 
             if (VirtualInput.IsButtonDown(frameKey))
-                cameraController.FrameSelected();
+                sceneCamera.FrameSelected();
         }
 
         /// <inheritdoc/>
@@ -954,9 +898,7 @@ namespace bs.Editor
                 camera.Viewport.ClearColor = ClearColor;
                 camera.Layers = UInt64.MaxValue & ~SceneAxesHandle.LAYER; // Don't draw scene axes in this camera
 
-                cameraController = sceneCameraSO.AddComponent<SceneCamera>();
-
-                cameraController.Initialize();
+                sceneCamera = sceneCameraSO.AddComponent<SceneCamera>();
 
                 renderTextureGUI = new GUIRenderTexture(renderTexture);
                 rtPanel.AddElement(renderTextureGUI);

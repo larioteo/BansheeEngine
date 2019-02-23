@@ -243,12 +243,11 @@ namespace bs.Editor
             SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
             if (sceneWindow != null)
             {
-                if (sceneWindow.ProjectionType == ProjectionType.Orthographic)
-                    sceneWindow.ProjectionType = ProjectionType.Perspective;
+                if (sceneWindow.Camera.Camera.ProjectionType == ProjectionType.Orthographic)
+                    sceneWindow.Camera.ChangeProjectionType(ProjectionType.Perspective);
                 else
-                    sceneWindow.ProjectionType = ProjectionType.Orthographic;
+                    sceneWindow.Camera.ChangeProjectionType(ProjectionType.Orthographic);
             }
-                
         }
     }
 

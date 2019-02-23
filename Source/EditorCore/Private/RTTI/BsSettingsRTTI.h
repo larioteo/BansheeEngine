@@ -101,7 +101,7 @@ namespace bs
 
 			SPtr<IReflectable> newRTTIObject() override
 			{
-				return bs_shared_ptr_new<Settings>();
+				return bs_shared_ptr_new<SettingsObjectValue>();
 			}
 		};
 	}

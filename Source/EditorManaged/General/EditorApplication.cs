@@ -85,7 +85,11 @@ namespace bs.Editor
         /// </summary>
         public static Camera SceneViewCamera
         {
-            get { return EditorWindow.GetWindow<SceneWindow>().Camera; }
+            get
+            {
+                SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
+                return sceneWindow?.Camera.Camera;
+            }
         }
 
         /// <summary>
@@ -193,6 +197,11 @@ namespace bs.Editor
                 return 0.0f;
             }
         }
+
+        /// <summary>
+        /// Triggered right before the project is being saved.
+        /// </summary>
+        public static event Action OnProjectSave;
 
         /// <summary>
         /// Render target that the main camera in the scene (if any) will render its view to. This generally means the main 
@@ -678,6 +687,8 @@ namespace bs.Editor
         [ToolbarItem("Save Project", ToolbarIcon.SaveProject, "Save project", 1999)]
         public static void SaveProject()
         {
+            OnProjectSave?.Invoke();
+
             // Apply changes to any animation clips edited using the animation editor
             foreach (var KVP in persistentData.dirtyAnimClips)
                 KVP.Value.SaveToClip();

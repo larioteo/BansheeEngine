@@ -276,12 +276,16 @@ namespace bs.Editor
         /// </summary>
         /// <param name="name">Name of the property to retrieve.</param>
         /// <returns>
-        /// Value of the property if it exists, otherwise the default value. Also returns null if the original type of the
-        /// serialized object no longer exists.
+        /// Value of the property if it exists, otherwise an empty instance of the object. Returns null if the tyoe of
+        /// the stored object doesn't match the requested type.
         /// </returns>
-        public static object GetObject(string name)
+        public static T GetObject<T>(string name) where T : class, new()
         {
-            return Internal_GetObject(name);
+            object obj = Internal_GetObject(name);
+            if (obj == null)
+                return new T();
+
+            return obj as T;
         }
 
         /// <summary>
