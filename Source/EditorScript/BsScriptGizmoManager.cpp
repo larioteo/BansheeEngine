@@ -193,6 +193,9 @@ namespace bs
 	{
 		for(auto& sceneObject : sceneObjects)
 		{
+			if(sceneObject.isDestroyed())
+				continue;
+
 			Vector<HComponent> components = sceneObject->getComponents();
 			for(auto& component : components)
 			{

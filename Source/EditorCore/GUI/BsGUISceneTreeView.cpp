@@ -179,17 +179,19 @@ namespace bs
 				}
 			}
 
-			for(UINT32 i = 0; i < element->mChildren.size(); i++)
+			// Make sure to update children list before deleting them. Deletions cause callbacks which can ultimately call
+			// back into this method
+			element->mChildren.swap(newChildren);
+
+			for(UINT32 i = 0; i < newChildren.size(); i++)
 			{
 				if(!tempToDelete[i])
 					continue;
 
-				deleteTreeElementInternal(element->mChildren[i]);
+				deleteTreeElementInternal(newChildren[i]);
 			}
 
 			bs_stack_free(tempToDelete);
-
-			element->mChildren = newChildren;
 			needsUpdate = true;
 		}
 
