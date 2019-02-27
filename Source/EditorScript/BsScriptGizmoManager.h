@@ -92,7 +92,7 @@ namespace bs
 		MonoClass* mDrawGizmoAttribute = nullptr;
 		MonoField* mFlagsField = nullptr;
 		MonoClass* mOnSelectionChangedAttribute = nullptr;
-		Map<String, GizmoData> mGizmoDrawers;
+		UnorderedMap<String, SmallVector<GizmoData, 2>> mGizmoDrawers;
 		Map<String, SelectionChangedData> mSelectionChangedCallbacks;
 	};
 

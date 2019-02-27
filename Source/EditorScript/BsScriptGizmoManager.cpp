@@ -108,28 +108,33 @@ namespace bs
 				auto iterFind = mGizmoDrawers.find(componentName);
 				if (iterFind != mGizmoDrawers.end())
 				{
-					UINT32 flags = iterFind->second.flags;
+					SmallVector<GizmoData, 2>& entries = iterFind->second;
 
-					bool drawGizmo = false;
-					if (((flags & (UINT32)DrawGizmoFlags::Selected) != 0) && isSelected)
-						drawGizmo = true;
-
-					if (((flags & (UINT32)DrawGizmoFlags::ParentSelected) != 0) && isParentSelected)
-						drawGizmo = true;
-
-					if (((flags & (UINT32)DrawGizmoFlags::NotSelected) != 0) && !isSelected && !isParentSelected)
-						drawGizmo = true;
-
-					if (drawGizmo)
+					for(auto& entry : entries)
 					{
-						bool pickable = (flags & (UINT32)DrawGizmoFlags::Pickable) != 0;
-						GizmoManager::instance().startGizmo(curSO);
-						GizmoManager::instance().setPickable(pickable);
+						UINT32 flags = entry.flags;
 
-						void* params[1] = { managedInstance };
-						iterFind->second.method->invoke(nullptr, params);
+						bool drawGizmo = false;
+						if (((flags & (UINT32)DrawGizmoFlags::Selected) != 0) && isSelected)
+							drawGizmo = true;
 
-						GizmoManager::instance().endGizmo();
+						if (((flags & (UINT32)DrawGizmoFlags::ParentSelected) != 0) && isParentSelected)
+							drawGizmo = true;
+
+						if (((flags & (UINT32)DrawGizmoFlags::NotSelected) != 0) && !isSelected && !isParentSelected)
+							drawGizmo = true;
+
+						if (drawGizmo)
+						{
+							bool pickable = (flags & (UINT32)DrawGizmoFlags::Pickable) != 0;
+							GizmoManager::instance().startGizmo(curSO);
+							GizmoManager::instance().setPickable(pickable);
+
+							void* params[1] = { managedInstance };
+							entry.method->invoke(nullptr, params);
+
+							GizmoManager::instance().endGizmo();
+						}
 					}
 				}
 			}
@@ -153,6 +158,8 @@ namespace bs
 		if (mOnSelectionChangedAttribute == nullptr)
 			BS_EXCEPT(InvalidStateException, "Cannot find OnSelectionChanged managed class.");
 
+		mGizmoDrawers.clear();
+
 		Vector<String> scriptAssemblyNames = mScriptObjectManager.getScriptAssemblies();
 		for (auto& assemblyName : scriptAssemblyNames)
 		{
@@ -170,11 +177,10 @@ namespace bs
 					if (isValidDrawGizmoMethod(curMethod, componentType, drawGizmoFlags))
 					{
 						String fullComponentName = componentType->getFullName();
-						GizmoData& data = mGizmoDrawers[fullComponentName];
+						SmallVector<GizmoData, 2>& entries = mGizmoDrawers[fullComponentName];
 
-						data.type = componentType;
-						data.method = curMethod;
-						data.flags = drawGizmoFlags;
+						GizmoData data{componentType, curMethod, drawGizmoFlags};
+						entries.add(data);
 					}
 					else if(isValidOnSelectionChangedMethod(curMethod, componentType))
 					{
