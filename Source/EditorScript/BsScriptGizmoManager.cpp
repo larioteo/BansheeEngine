@@ -45,7 +45,7 @@ namespace bs
 	{
 		GizmoManager::instance().clearGizmos();
 
-		HSceneObject rootSO = SceneManager::instance().getRootNode();
+		HSceneObject rootSO = SceneManager::instance().getMainScene()->getRoot();
 
 		Stack<HSceneObject> todo;
 		todo.push(rootSO);

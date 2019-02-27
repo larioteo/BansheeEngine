@@ -232,7 +232,7 @@ namespace bs
 	MonoObject* ScriptEditorApplication::internal_SaveScene(MonoString* path)
 	{
 		Path nativePath = MonoUtil::monoToString(path);
-		HSceneObject sceneRoot = gSceneManager().getRootNode();
+		HSceneObject sceneRoot = gSceneManager().getMainScene()->getRoot();
 		
 		SPtr<ProjectResourceMeta> resMeta = gProjectLibrary().findResourceMeta(nativePath);
 		HPrefab scene;

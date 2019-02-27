@@ -580,7 +580,7 @@ namespace bs
 		HSceneObject light = SceneObject::create("Directional light");
 		light->addComponent<TestComponentA>();
 
-		HSceneObject sceneRoot = gSceneManager().getRootNode();
+		HSceneObject sceneRoot = gSceneManager().getMainScene()->getRoot();
 		HPrefab scenePrefab = Prefab::create(sceneRoot, true);
 
 		HSceneObject bDeleteMe = SceneObject::create("B");

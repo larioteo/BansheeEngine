@@ -66,7 +66,7 @@ namespace bs.Editor
         /// <summary>
         /// Opens the console window.
         /// </summary>
-        [MenuItem("Windows/Log", ButtonModifier.CtrlAlt, ButtonCode.L, 6000)]
+        [MenuItem("Windows/Log", ButtonModifier.CtrlAlt, ButtonCode.M, 6000)]
         private static void OpenConsoleWindow()
         {
             OpenWindow<LogWindow>();
