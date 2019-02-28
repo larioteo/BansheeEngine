@@ -289,55 +289,56 @@ namespace bs.Editor
                         MoveSelection(MoveDirection.Right);
                     }
                 }
-                else
-                {
-                    if (Input.IsButtonDown(ButtonCode.Return))
-                    {
-                        string newName = inProgressRenameElement.GetRenamedName();
-
-                        string originalPath = inProgressRenameElement.path;
-                        originalPath = originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-
-                        string newPath = Path.GetDirectoryName(originalPath);
-                        string newNameWithExtension = newName + Path.GetExtension(originalPath);
-                        newPath = Path.Combine(newPath, newNameWithExtension);
-
-                        bool renameOK = true;
-                        if (!PathEx.IsValidFileName(newName))
-                        {
-                            DialogBox.Open(new LocEdString("Error"), new LocEdString("The name you specified is not a valid file name. Try another."), DialogBox.Type.OK);
-                            renameOK = false;
-                        }
-
-                        if (renameOK)
-                        {
-                            // Windows sees paths with dot at the end as if they didn't have it
-                            // so remove the dot to ensure the project library does the same
-                            string trimmedNewPath = newPath.TrimEnd('.');
-
-                            if (originalPath != trimmedNewPath && ProjectLibrary.Exists(trimmedNewPath))
-                            {
-                                DialogBox.Open(new LocEdString("Error"), new LocEdString("File/folder with that name already exists in this folder."), DialogBox.Type.OK);
-                                renameOK = false;
-                            }
-                        }
-
-                        if (renameOK)
-                        {
-                            ProjectLibrary.Rename(originalPath, newNameWithExtension);
-                            StopRename();
-                        }
-                    }
-                    else if (Input.IsButtonDown(ButtonCode.Escape))
-                    {
-                        StopRename();
-                    }
-                }
             }
             else
             {
                 if (isRenameInProgress && !HasFocus)
                     StopRename();
+            }
+
+            if (isRenameInProgress)
+            {
+                if (Input.IsButtonDown(ButtonCode.Return))
+                {
+                    string newName = inProgressRenameElement.GetRenamedName();
+
+                    string originalPath = inProgressRenameElement.path;
+                    originalPath = originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+                    string newPath = Path.GetDirectoryName(originalPath);
+                    string newNameWithExtension = newName + Path.GetExtension(originalPath);
+                    newPath = Path.Combine(newPath, newNameWithExtension);
+
+                    bool renameOK = true;
+                    if (!PathEx.IsValidFileName(newName))
+                    {
+                        DialogBox.Open(new LocEdString("Error"), new LocEdString("The name you specified is not a valid file name. Try another."), DialogBox.Type.OK);
+                        renameOK = false;
+                    }
+
+                    if (renameOK)
+                    {
+                        // Windows sees paths with dot at the end as if they didn't have it
+                        // so remove the dot to ensure the project library does the same
+                        string trimmedNewPath = newPath.TrimEnd('.');
+
+                        if (originalPath != trimmedNewPath && ProjectLibrary.Exists(trimmedNewPath))
+                        {
+                            DialogBox.Open(new LocEdString("Error"), new LocEdString("File/folder with that name already exists in this folder."), DialogBox.Type.OK);
+                            renameOK = false;
+                        }
+                    }
+
+                    if (renameOK)
+                    {
+                        ProjectLibrary.Rename(originalPath, newNameWithExtension);
+                        StopRename();
+                    }
+                }
+                else if (Input.IsButtonDown(ButtonCode.Escape))
+                {
+                    StopRename();
+                }
             }
 
             if (autoScrollAmount != 0)
