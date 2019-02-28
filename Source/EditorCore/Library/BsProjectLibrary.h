@@ -42,26 +42,26 @@ namespace bs
 			String elementName; /**< Name of the entry. */
 			size_t elementNameHash = 0; /**< Hash of @p elementName, used for faster comparisons. */
 
-			DirectoryEntry* parent; /**< Folder this entry is located in. */
+			DirectoryEntry* parent = nullptr; /**< Folder this entry is located in. */
 		};
 
 		/**	A library entry representing a file. Each file can have one or multiple resources. */
 		struct FileEntry : public LibraryEntry
 		{
-			FileEntry();
+			FileEntry() = default;
 			FileEntry(const Path& path, const String& name, DirectoryEntry* parent);
 
 			SPtr<ProjectFileMeta> meta; /**< Meta file containing various information about the resource(s). */
-			std::time_t lastUpdateTime; /**< Timestamp of when we last imported the resource. */
+			std::time_t lastUpdateTime = 0; /**< Timestamp of when we last imported the resource. */
 		};
 
 		/**	A library entry representing a folder that contains other entries. */
 		struct DirectoryEntry : public LibraryEntry
 		{
-			DirectoryEntry();
+			DirectoryEntry() = default;
 			DirectoryEntry(const Path& path, const String& name, DirectoryEntry* parent);
 
-			Vector<LibraryEntry*> mChildren; /**< Child files or folders. */
+			Vector<USPtr<LibraryEntry>> mChildren; /**< Child files or folders. */
 		};
 
 	public:
@@ -79,7 +79,7 @@ namespace bs
 		UINT32 checkForModifications(const Path& path);
 
 		/**	Returns the root library entry that references the entire library hierarchy. */
-		const LibraryEntry* getRootEntry() const { return mRootEntry; }
+		const USPtr<DirectoryEntry>& getRootEntry() const { return mRootEntry; }
 
 		/**
 		 * Attempts to a find a library entry at the specified path.
@@ -88,7 +88,7 @@ namespace bs
 		 * @return				Found entry, or null if not found. Value returned by this method is transient, it may be
 		 *						destroyed on any following ProjectLibrary call.
 		 */
-		LibraryEntry* findEntry(const Path& path) const;
+		USPtr<LibraryEntry> findEntry(const Path& path) const;
 
 		/** 
 		 * Checks whether the provided path points to a sub-resource. Sub-resource is any resource that is not the primary
@@ -113,7 +113,7 @@ namespace bs
 		 * @return		A list of entries matching the pattern. Values returned by this method are transient, they may be
 		 *				destroyed on any following ProjectLibrary call.
 		 */
-		Vector<LibraryEntry*> search(const String& pattern);
+		Vector<USPtr<LibraryEntry>> search(const String& pattern);
 
 		/**
 		 * Searches the library for a pattern, but only among specific resource types.
@@ -123,7 +123,7 @@ namespace bs
 		 * @return		A list of entries matching the pattern. Values returned by this method are transient, they may be
 		 *				destroyed on any following ProjectLibrary call.
 		 */
-		Vector<LibraryEntry*> search(const String& pattern, const Vector<UINT32>& typeIds);
+		Vector<USPtr<LibraryEntry>> search(const String& pattern, const Vector<UINT32>& typeIds);
 
 		/**
 		 * Returns resource path based on its UUID.
@@ -210,7 +210,7 @@ namespace bs
 		 * Finds all top-level resource entries that should be included in a build. Values returned by this method are
 		 * transient, they may be destroyed on any following ProjectLibrary call.
 		 */
-		Vector<FileEntry*> getResourcesForBuild() const;
+		Vector<USPtr<FileEntry>> getResourcesForBuild() const;
 
 		/**
 		 * Loads a resource at the specified path, synchronously.
@@ -312,7 +312,7 @@ namespace bs
 		 *								actually finish the import.
 		 * @return						Newly added resource entry.
 		 */
-		FileEntry* addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
+		USPtr<FileEntry> addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
 			const SPtr<ImportOptions>& importOptions = nullptr, bool forceReimport = false, bool synchronous = false);
 
 		/**
@@ -322,7 +322,7 @@ namespace bs
 		 * @param[in]	dirPath	Absolute path to the directory.
 		 * @return		Newly added directory entry.
 		 */
-		DirectoryEntry* addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath);
+		USPtr<DirectoryEntry> addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath);
 
 		/**
 		 * Common code for deleting a resource from the library. This code only removes the library entry, not the actual
@@ -330,7 +330,7 @@ namespace bs
 		 *
 		 * @param[in]	resource	Entry to delete.
 		 */
-		void deleteResourceInternal(FileEntry* resource);
+		void deleteResourceInternal(USPtr<FileEntry> resource);
 
 		/**
 		 * Common code for deleting a directory from the library. This code only removes the library entry, not the actual
@@ -338,7 +338,7 @@ namespace bs
 		 *
 		 * @param[in]	directory	Entry to delete.
 		 */
-		void deleteDirectoryInternal(DirectoryEntry* directory);
+		void deleteDirectoryInternal(USPtr<DirectoryEntry> directory);
 
 		/**
 		 * Triggers a reimport of a resource using the provided import options, if needed. Doesn't import dependencies.
@@ -368,10 +368,11 @@ namespace bs
 		 * Creates a full hierarchy of directory entries up to the provided directory, if any are needed.
 		 *
 		 * @param[in]	fullPath			Absolute path to a directory we are creating the hierarchy to.
-		 * @param[in]	newHierarchyRoot	First directory entry that already existed in our hierarchy.
-		 * @param[in]	newHierarchyLeaf	Leaf entry corresponding to the exact entry at \p path.
+		 * @param[out]	newHierarchyRoot	First directory entry that already existed in our hierarchy.
+		 * @param[out]	newHierarchyLeaf	Leaf entry corresponding to the exact entry at \p fullPath.
 		 */
-		void createInternalParentHierarchy(const Path& fullPath, DirectoryEntry** newHierarchyRoot, DirectoryEntry** newHierarchyLeaf);
+		void createInternalParentHierarchy(const Path& fullPath, DirectoryEntry** newHierarchyRoot, 
+			DirectoryEntry** newHierarchyLeaf);
 
 		/**	Checks has a file been modified since the last import. */
 		bool isUpToDate(FileEntry* file) const;
@@ -439,7 +440,7 @@ namespace bs
 		static const char* RESOURCE_MANIFEST_FILENAME;
 
 		SPtr<ResourceManifest> mResourceManifest;
-		DirectoryEntry* mRootEntry;
+		USPtr<DirectoryEntry> mRootEntry;
 		Path mProjectFolder;
 		Path mResourcesFolder;
 		bool mIsLoaded;

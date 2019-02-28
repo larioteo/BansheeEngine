@@ -5,14 +5,14 @@
 
 namespace bs
 {
-	ProjectLibraryEntries::ProjectLibraryEntries(const ProjectLibrary::DirectoryEntry& rootEntry)
+	ProjectLibraryEntries::ProjectLibraryEntries(const USPtr<ProjectLibrary::DirectoryEntry>& rootEntry)
 		:mRootEntry(rootEntry)
 	{ }
 
 	ProjectLibraryEntries::ProjectLibraryEntries(const ConstructPrivately& dummy)
 	{ }
 
-	SPtr<ProjectLibraryEntries> ProjectLibraryEntries::create(const ProjectLibrary::DirectoryEntry& rootEntry)
+	SPtr<ProjectLibraryEntries> ProjectLibraryEntries::create(const USPtr<ProjectLibrary::DirectoryEntry>& rootEntry)
 	{
 		return bs_shared_ptr_new<ProjectLibraryEntries>(rootEntry);
 	}

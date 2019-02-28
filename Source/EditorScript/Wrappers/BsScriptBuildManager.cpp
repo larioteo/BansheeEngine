@@ -229,7 +229,7 @@ namespace bs
 		SPtr<ResourceMapping> resourceMap = ResourceMapping::create();
 
 		// Get all resources manually included in build
-		Vector<ProjectLibrary::FileEntry*> buildResources = gProjectLibrary().getResourcesForBuild();
+		Vector<USPtr<ProjectLibrary::FileEntry>> buildResources = gProjectLibrary().getResourcesForBuild();
 		for (auto& entry : buildResources)
 		{
 			if (entry->meta == nullptr)

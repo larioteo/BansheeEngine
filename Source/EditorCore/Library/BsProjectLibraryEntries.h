@@ -22,20 +22,20 @@ namespace bs
 
 	public:
 		explicit ProjectLibraryEntries(const ConstructPrivately& dummy);
-		ProjectLibraryEntries(const ProjectLibrary::DirectoryEntry& rootEntry);
+		ProjectLibraryEntries(const USPtr<ProjectLibrary::DirectoryEntry>& rootEntry);
 
 		/**
 		 * Creates new project library entries based on a ProjectLibrary root directory entry.
 		 *
 		 * @param[in]	rootEntry	Root directory entry in ProjectLibrary.
 		 */
-		static SPtr<ProjectLibraryEntries> create(const ProjectLibrary::DirectoryEntry& rootEntry);
+		static SPtr<ProjectLibraryEntries> create(const USPtr<ProjectLibrary::DirectoryEntry>& rootEntry);
 		
 		/**	Returns the root directory entry that references the entire entry hierarchy. */
-		const ProjectLibrary::DirectoryEntry& getRootEntry() const { return mRootEntry; }
+		const USPtr<ProjectLibrary::DirectoryEntry>& getRootEntry() const { return mRootEntry; }
 
 	private:
-		ProjectLibrary::DirectoryEntry mRootEntry;
+		USPtr<ProjectLibrary::DirectoryEntry> mRootEntry;
 
 		/************************************************************************/
 		/* 								SERIALIZATION                      		*/
@@ -47,7 +47,7 @@ namespace bs
 	public:
 		friend class ProjectLibraryEntriesRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;
+		RTTITypeBase* getRTTI() const override;
 	};
 
 	/** @} */

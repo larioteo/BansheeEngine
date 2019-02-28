@@ -17,8 +17,14 @@ namespace bs
 	class ProjectLibraryEntriesRTTI : public RTTIType<ProjectLibraryEntries, IReflectable, ProjectLibraryEntriesRTTI>
 	{
 	private:
-		ProjectLibrary::DirectoryEntry& getRootElement(ProjectLibraryEntries* obj) { return obj->mRootEntry; }
-		void setRootElement(ProjectLibraryEntries* obj, ProjectLibrary::DirectoryEntry& val) { obj->mRootEntry = val; } 
+		ProjectLibrary::DirectoryEntry& getRootElement(ProjectLibraryEntries* obj) { return *obj->mRootEntry; }
+		void setRootElement(ProjectLibraryEntries* obj, ProjectLibrary::DirectoryEntry& val)
+		{
+			obj->mRootEntry = bs_shared_ptr_new<ProjectLibrary::DirectoryEntry>(val);
+
+			for(auto& child : obj->mRootEntry->mChildren)
+				child->parent = obj->mRootEntry.get();
+		} 
 
 	public:
 		ProjectLibraryEntriesRTTI()
@@ -43,11 +49,11 @@ namespace bs
 		}
 	};
 
-	template<> struct RTTIPlainType<bs::ProjectLibrary::FileEntry>
+	template<> struct RTTIPlainType<ProjectLibrary::FileEntry>
 	{	
-		enum { id = bs::TID_ProjectLibraryResEntry }; enum { hasDynamicSize = 1 };
+		enum { id = TID_ProjectLibraryResEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const bs::ProjectLibrary::FileEntry& data, char* memory)
+		static void toMemory(const ProjectLibrary::FileEntry& data, char* memory)
 		{ 
 			UINT32 size = 0;
 			char* memoryStart = memory;
@@ -66,7 +72,7 @@ namespace bs
 			memcpy(memoryStart, &size, sizeof(UINT32));
 		}
 
-		static UINT32 fromMemory(bs::ProjectLibrary::FileEntry& data, char* memory)
+		static UINT32 fromMemory(ProjectLibrary::FileEntry& data, char* memory)
 		{ 
 			UINT32 size = 0;
 			memcpy(&size, memory, sizeof(UINT32));
@@ -74,7 +80,7 @@ namespace bs
 
 			UINT32 type;
 			memory = rttiReadElem(type, memory);
-			data.type = (bs::ProjectLibrary::LibraryEntryType)type;
+			data.type = (ProjectLibrary::LibraryEntryType)type;
 
 			memory = rttiReadElem(data.path, memory);
 
@@ -88,7 +94,7 @@ namespace bs
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const bs::ProjectLibrary::FileEntry& data)	
+		static UINT32 getDynamicSize(const ProjectLibrary::FileEntry& data)	
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
@@ -106,11 +112,11 @@ namespace bs
 		}	
 	}; 
 
-	template<> struct RTTIPlainType<bs::ProjectLibrary::DirectoryEntry>
+	template<> struct RTTIPlainType<ProjectLibrary::DirectoryEntry>
 	{	
-		enum { id = bs::TID_ProjectLibraryDirEntry }; enum { hasDynamicSize = 1 };
+		enum { id = TID_ProjectLibraryDirEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const bs::ProjectLibrary::DirectoryEntry& data, char* memory)
+		static void toMemory(const ProjectLibrary::DirectoryEntry& data, char* memory)
 		{ 
 			UINT32 size = 0;
 			char* memoryStart = memory;
@@ -129,14 +135,14 @@ namespace bs
 
 			for(auto& child : data.mChildren)
 			{
-				if(child->type == bs::ProjectLibrary::LibraryEntryType::File)
+				if(child->type == ProjectLibrary::LibraryEntryType::File)
 				{
-					bs::ProjectLibrary::FileEntry* childResEntry = static_cast<bs::ProjectLibrary::FileEntry*>(child);
+					auto* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
 					memory = rttiWriteElem(*childResEntry, memory, size);
 				}
-				else if(child->type == bs::ProjectLibrary::LibraryEntryType::Directory)
+				else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
 				{
-					bs::ProjectLibrary::DirectoryEntry* childDirEntry = static_cast<bs::ProjectLibrary::DirectoryEntry*>(child);
+					auto* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
 					memory = rttiWriteElem(*childDirEntry, memory, size);
 				}
 			}
@@ -144,8 +150,8 @@ namespace bs
 			memcpy(memoryStart, &size, sizeof(UINT32));
 		}
 
-		static UINT32 fromMemory(bs::ProjectLibrary::DirectoryEntry& data, char* memory)
-		{ 
+		static UINT32 fromMemory(ProjectLibrary::DirectoryEntry& data, char* memory)
+		{
 			UINT32 size = 0;
 			memcpy(&size, memory, sizeof(UINT32));
 			memory += sizeof(UINT32);
@@ -161,22 +167,24 @@ namespace bs
 			UINT32 numChildren = 0;
 			memory = rttiReadElem(numChildren, memory);
 
-			for(UINT32 i = 0; i < numChildren; i++)
+			for (UINT32 i = 0; i < numChildren; i++)
 			{
-				bs::ProjectLibrary::LibraryEntryType childType = bs::ProjectLibrary::LibraryEntryType::File;
+				ProjectLibrary::LibraryEntryType childType = ProjectLibrary::LibraryEntryType::File;
 				rttiReadElem(childType, memory + sizeof(UINT32)); // Skip ahead to get type
 
-				if(childType == bs::ProjectLibrary::LibraryEntryType::File)
+				if (childType == ProjectLibrary::LibraryEntryType::File)
 				{
-					bs::ProjectLibrary::FileEntry* childResEntry = bs_new<bs::ProjectLibrary::FileEntry>(); // Note: Assumes that ProjectLibrary takes care of the cleanup
+					USPtr<ProjectLibrary::FileEntry> childResEntry = bs_shared_ptr_new<ProjectLibrary::FileEntry>();
+					// Note: Assumes that ProjectLibrary takes care of the cleanup
 					memory = rttiReadElem(*childResEntry, memory);
 
 					childResEntry->parent = &data;
 					data.mChildren.push_back(childResEntry);
 				}
-				else if(childType == bs::ProjectLibrary::LibraryEntryType::Directory)
+				else if (childType == ProjectLibrary::LibraryEntryType::Directory)
 				{
-					bs::ProjectLibrary::DirectoryEntry* childDirEntry = bs_new<bs::ProjectLibrary::DirectoryEntry>(); // Note: Assumes that ProjectLibrary takes care of the cleanup
+					USPtr<ProjectLibrary::DirectoryEntry> childDirEntry = bs_shared_ptr_new<ProjectLibrary::DirectoryEntry>();
+					// Note: Assumes that ProjectLibrary takes care of the cleanup
 					memory = rttiReadElem(*childDirEntry, memory);
 
 					childDirEntry->parent = &data;
@@ -187,7 +195,7 @@ namespace bs
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const bs::ProjectLibrary::DirectoryEntry& data)	
+		static UINT32 getDynamicSize(const ProjectLibrary::DirectoryEntry& data)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
@@ -197,14 +205,14 @@ namespace bs
 
 			for(auto& child : data.mChildren)
 			{
-				if(child->type == bs::ProjectLibrary::LibraryEntryType::File)
+				if(child->type == ProjectLibrary::LibraryEntryType::File)
 				{
-					bs::ProjectLibrary::FileEntry* childResEntry = static_cast<bs::ProjectLibrary::FileEntry*>(child);
+					ProjectLibrary::FileEntry* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
 					dataSize += rttiGetElemSize(*childResEntry);
 				}
-				else if(child->type == bs::ProjectLibrary::LibraryEntryType::Directory)
+				else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
 				{
-					bs::ProjectLibrary::DirectoryEntry* childDirEntry = static_cast<bs::ProjectLibrary::DirectoryEntry*>(child);
+					ProjectLibrary::DirectoryEntry* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
 					dataSize += rttiGetElemSize(*childDirEntry);
 				}
 			}
@@ -218,7 +226,7 @@ namespace bs
 
 			return (UINT32)dataSize;
 		}	
-	}; 
+	};
 
 	/** @} */
 	/** @endcond */

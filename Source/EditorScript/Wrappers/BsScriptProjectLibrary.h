@@ -92,14 +92,14 @@ namespace bs
 	class BS_SCR_BED_EXPORT ScriptLibraryEntryBase : public ScriptObjectBase
 	{
 	public:
-		/**	Returns the asset path of the library entry. */
-		const Path& getAssetPath() const { return mAssetPath; }
+		/**	Returns the wrapped library entry object. */
+		const USPtr<ProjectLibrary::LibraryEntry>& getInternal() const { return mEntry; }
 
 	protected:
 		ScriptLibraryEntryBase(MonoObject* instance);
-		virtual ~ScriptLibraryEntryBase() {}
+		virtual ~ScriptLibraryEntryBase() = default;
 
-		Path mAssetPath;
+		USPtr<ProjectLibrary::LibraryEntry> mEntry;
 	};
 
 	/**	Interop class between C++ & CLR for LibraryEntry. */
@@ -126,10 +126,10 @@ namespace bs
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "DirectoryEntry")
 
-		ScriptDirectoryEntry(MonoObject* instance, const Path& assetPath);
+		ScriptDirectoryEntry(MonoObject* instance, const USPtr<ProjectLibrary::DirectoryEntry>& entry);
 
 		/** Creates a new interop object that wraps the provided native directory entry object. */
-		static MonoObject* create(const ProjectLibrary::DirectoryEntry* entry);
+		static MonoObject* create(const USPtr<ProjectLibrary::DirectoryEntry>& entry);
 
 	private:
 		/************************************************************************/
@@ -144,10 +144,10 @@ namespace bs
 	public:
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "FileEntry")
 
-		ScriptFileEntry(MonoObject* instance, const Path& assetPath);
+		ScriptFileEntry(MonoObject* instance, const USPtr<ProjectLibrary::FileEntry>& entry);
 
 		/** Creates a new interop object that wraps the provided native resource entry object. */
-		static MonoObject* create(const ProjectLibrary::FileEntry* entry);
+		static MonoObject* create(const USPtr<ProjectLibrary::FileEntry>& entry);
 
 	private:
 		/************************************************************************/

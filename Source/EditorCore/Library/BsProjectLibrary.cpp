@@ -92,22 +92,16 @@ namespace bs
 	const char* ProjectLibrary::RESOURCE_MANIFEST_FILENAME = "ResourceManifest.asset";
 
 	ProjectLibrary::LibraryEntry::LibraryEntry()
-		:type(LibraryEntryType::Directory), parent(nullptr)
+		:type(LibraryEntryType::Directory)
 	{ }
 
-	ProjectLibrary::LibraryEntry::LibraryEntry(const Path& path, const String& name, DirectoryEntry* parent, LibraryEntryType type)
+	ProjectLibrary::LibraryEntry::LibraryEntry(const Path& path, const String& name, DirectoryEntry* parent, 
+		LibraryEntryType type)
 		:type(type), path(path), elementName(name), elementNameHash(bs_hash(UTF8::toLower(name))), parent(parent)
 	{ }
 
-	ProjectLibrary::FileEntry::FileEntry()
-		:lastUpdateTime(0)
-	{ }
-
 	ProjectLibrary::FileEntry::FileEntry(const Path& path, const String& name, DirectoryEntry* parent)
-		:LibraryEntry(path, name, parent, LibraryEntryType::File), lastUpdateTime(0)
-	{ }
-
-	ProjectLibrary::DirectoryEntry::DirectoryEntry()
+		:LibraryEntry(path, name, parent, LibraryEntryType::File)
 	{ }
 
 	ProjectLibrary::DirectoryEntry::DirectoryEntry(const Path& path, const String& name, DirectoryEntry* parent)
@@ -117,7 +111,7 @@ namespace bs
 	ProjectLibrary::ProjectLibrary()
 		: mRootEntry(nullptr), mIsLoaded(false)
 	{
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 	}
 
 	ProjectLibrary::~ProjectLibrary()
@@ -134,12 +128,10 @@ namespace bs
 			return resourcesToImport; // Folder not part of our resources path, so no modifications
 
 		if(mRootEntry == nullptr)
-		{
-			mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
-		}
+			mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		Path pathToSearch = fullPath;
-		LibraryEntry* entry = findEntry(pathToSearch);
+		USPtr<LibraryEntry> entry = findEntry(pathToSearch);
 		if (entry == nullptr) // File could be new, try to find parent directory entry
 		{
 			if (FileSystem::exists(pathToSearch))
@@ -167,7 +159,7 @@ namespace bs
 					if (entry == nullptr)
 						createInternalParentHierarchy(pathToSearch, &newHierarchyParent, &entryParent);
 					else
-						entryParent = static_cast<DirectoryEntry*>(entry);
+						entryParent = static_cast<DirectoryEntry*>(entry.get());
 
 					if (FileSystem::isFile(pathToSearch))
 						addResourceInternal(entryParent, pathToSearch);
@@ -183,28 +175,28 @@ namespace bs
 		{
 			if(FileSystem::isFile(entry->path))
 			{
-				FileEntry* resEntry = static_cast<FileEntry*>(entry);
+				FileEntry* resEntry = static_cast<FileEntry*>(entry.get());
 				if(reimportResourceInternal(resEntry))
 					resourcesToImport++;
 			}
 			else
-				deleteResourceInternal(static_cast<FileEntry*>(entry));
+				deleteResourceInternal(std::static_pointer_cast<FileEntry>(entry));
 		}
 		else if(entry->type == LibraryEntryType::Directory) // Check folder and all subfolders for modifications
 		{
 			if(!FileSystem::isDirectory(entry->path))
 			{
-				deleteDirectoryInternal(static_cast<DirectoryEntry*>(entry));
+				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(entry));
 			}
 			else
 			{
 				Stack<DirectoryEntry*> todo;
-				todo.push(static_cast<DirectoryEntry*>(entry));
+				todo.push(static_cast<DirectoryEntry*>(entry.get()));
 
 				Vector<Path> childFiles;
 				Vector<Path> childDirectories;
 				Vector<bool> existingEntries;
-				Vector<LibraryEntry*> toDelete;
+				Vector<USPtr<LibraryEntry>> toDelete;
 
 				while(!todo.empty())
 				{
@@ -244,7 +236,7 @@ namespace bs
 								if(child->type == LibraryEntryType::File && child->path == filePath)
 								{
 									existingEntries[idx] = true;
-									existingEntry = static_cast<FileEntry*>(child);
+									existingEntry = static_cast<FileEntry*>(child.get());
 									break;
 								}
 
@@ -273,7 +265,7 @@ namespace bs
 							if(child->type == LibraryEntryType::Directory && child->path == dirPath)
 							{
 								existingEntries[idx] = true;
-								existingEntry = static_cast<DirectoryEntry*>(child);
+								existingEntry = static_cast<DirectoryEntry*>(child.get());
 								break;
 							}
 
@@ -296,9 +288,9 @@ namespace bs
 						for(auto& child : toDelete)
 						{
 							if(child->type == LibraryEntryType::Directory)
-								deleteDirectoryInternal(static_cast<DirectoryEntry*>(child));
+								deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(child));
 							else if(child->type == LibraryEntryType::File)
-								deleteResourceInternal(static_cast<FileEntry*>(child));
+								deleteResourceInternal(std::static_pointer_cast<FileEntry>(child));
 						}
 
 						toDelete.clear();
@@ -307,7 +299,7 @@ namespace bs
 					for(auto& child : currentDir->mChildren)
 					{
 						if(child->type == LibraryEntryType::Directory)
-							todo.push(static_cast<DirectoryEntry*>(child));
+							todo.push(static_cast<DirectoryEntry*>(child.get()));
 					}
 				}
 			}
@@ -316,28 +308,28 @@ namespace bs
 		return resourcesToImport;
 	}
 
-	ProjectLibrary::FileEntry* ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
+	USPtr<ProjectLibrary::FileEntry> ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
 		const SPtr<ImportOptions>& importOptions, bool forceReimport, bool synchronous)
 	{
-		FileEntry* newResource = bs_new<FileEntry>(filePath, filePath.getTail(), parent);
+		USPtr<FileEntry> newResource = bs_shared_ptr_new<FileEntry>(filePath, filePath.getTail(), parent);
 		parent->mChildren.push_back(newResource);
 
-		reimportResourceInternal(newResource, importOptions, forceReimport, false, synchronous);
+		reimportResourceInternal(newResource.get(), importOptions, forceReimport, false, synchronous);
 		onEntryAdded(newResource->path);
 
 		return newResource;
 	}
 
-	ProjectLibrary::DirectoryEntry* ProjectLibrary::addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath)
+	USPtr<ProjectLibrary::DirectoryEntry> ProjectLibrary::addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath)
 	{
-		DirectoryEntry* newEntry = bs_new<DirectoryEntry>(dirPath, dirPath.getTail(), parent);
+		USPtr<DirectoryEntry> newEntry = bs_shared_ptr_new<DirectoryEntry>(dirPath, dirPath.getTail(), parent);
 		parent->mChildren.push_back(newEntry);
 
 		onEntryAdded(newEntry->path);
 		return newEntry;
 	}
 
-	void ProjectLibrary::deleteResourceInternal(FileEntry* resource)
+	void ProjectLibrary::deleteResourceInternal(USPtr<FileEntry> resource)
 	{
 		if(resource->meta != nullptr)
 		{
@@ -365,48 +357,48 @@ namespace bs
 
 		DirectoryEntry* parent = resource->parent;
 		auto findIter = std::find_if(parent->mChildren.begin(), parent->mChildren.end(), 
-			[&] (const LibraryEntry* entry) { return entry == resource; });
+			[&] (const USPtr<LibraryEntry>& entry) { return entry == resource; });
 
 		parent->mChildren.erase(findIter);
 
 		Path originalPath = resource->path;
 		onEntryRemoved(originalPath);
 
-		const auto iterQueuedImport = mQueuedImports.find(resource);
+		const auto iterQueuedImport = mQueuedImports.find(resource.get());
 		if(iterQueuedImport != mQueuedImports.end())
 			iterQueuedImport->second->canceled = true;
 
-		removeDependencies(resource);
-		bs_delete(resource);
+		removeDependencies(resource.get());
+		*resource = FileEntry();
 
 		reimportDependants(originalPath);
 	}
 
-	void ProjectLibrary::deleteDirectoryInternal(DirectoryEntry* directory)
+	void ProjectLibrary::deleteDirectoryInternal(USPtr<DirectoryEntry> directory)
 	{
 		if(directory == mRootEntry)
 			mRootEntry = nullptr;
 
-		Vector<LibraryEntry*> childrenToDestroy = directory->mChildren;
+		Vector<USPtr<LibraryEntry>> childrenToDestroy = directory->mChildren;
 		for(auto& child : childrenToDestroy)
 		{
 			if(child->type == LibraryEntryType::Directory)
-				deleteDirectoryInternal(static_cast<DirectoryEntry*>(child));
+				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(child));
 			else
-				deleteResourceInternal(static_cast<FileEntry*>(child));
+				deleteResourceInternal(std::static_pointer_cast<FileEntry>(child));
 		}
 
 		DirectoryEntry* parent = directory->parent;
 		if(parent != nullptr)
 		{
 			auto findIter = std::find_if(parent->mChildren.begin(), parent->mChildren.end(), 
-				[&] (const LibraryEntry* entry) { return entry == directory; });
+				[&] (const USPtr<LibraryEntry>& entry) { return entry == directory; });
 
 			parent->mChildren.erase(findIter);
 		}
 
 		onEntryRemoved(directory->path);
-		bs_delete(directory);
+		*directory = DirectoryEntry();
 	}
 
 	bool ProjectLibrary::reimportResourceInternal(FileEntry* fileEntry, const SPtr<ImportOptions>& importOptions,
@@ -809,14 +801,14 @@ namespace bs
 		return lastModifiedTime <= resource->lastUpdateTime;
 	}
 
-	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const String& pattern)
+	Vector<USPtr<ProjectLibrary::LibraryEntry>> ProjectLibrary::search(const String& pattern)
 	{
 		return search(pattern, {});
 	}
 
-	Vector<ProjectLibrary::LibraryEntry*> ProjectLibrary::search(const String& pattern, const Vector<UINT32>& typeIds)
+	Vector<USPtr<ProjectLibrary::LibraryEntry>> ProjectLibrary::search(const String& pattern, const Vector<UINT32>& typeIds)
 	{
-		Vector<LibraryEntry*> foundEntries;
+		Vector<USPtr<LibraryEntry>> foundEntries;
 
 		std::regex escape("[.^$|()\\[\\]{}*+?\\\\]");
 		String replace("\\\\&");
@@ -834,7 +826,7 @@ namespace bs
 		std::regex searchRegex(searchPattern, std::regex_constants::ECMAScript | std::regex_constants::icase);
 
 		Stack<DirectoryEntry*> todo;
-		todo.push(mRootEntry);
+		todo.push(mRootEntry.get());
 		while (!todo.empty())
 		{
 			DirectoryEntry* dirEntry = todo.top();
@@ -844,13 +836,13 @@ namespace bs
 			{
 				if (std::regex_match(child->elementName, searchRegex))
 				{
-					if (typeIds.size() == 0)
+					if (typeIds.empty())
 						foundEntries.push_back(child);
 					else
 					{
 						if (child->type == LibraryEntryType::File)
 						{
-							FileEntry* childFileEntry = static_cast<FileEntry*>(child);
+							FileEntry* childFileEntry = static_cast<FileEntry*>(child.get());
 							if (childFileEntry->meta != nullptr)
 							{
 								auto& resourceMetas = childFileEntry->meta->getResourceMetaData();
@@ -877,14 +869,14 @@ namespace bs
 
 				if (child->type == LibraryEntryType::Directory)
 				{
-					DirectoryEntry* childDirEntry = static_cast<DirectoryEntry*>(child);
+					DirectoryEntry* childDirEntry = static_cast<DirectoryEntry*>(child.get());
 					todo.push(childDirEntry);
 				}
 			}
 		}
 
 		std::sort(foundEntries.begin(), foundEntries.end(), 
-			[&](const LibraryEntry* a, const LibraryEntry* b) 
+			[&](const USPtr<LibraryEntry>& a, const USPtr<LibraryEntry>& b) 
 		{ 
 			return a->elementName.compare(b->elementName) < 0;
 		});
@@ -892,7 +884,7 @@ namespace bs
 		return foundEntries;
 	}
 
-	ProjectLibrary::LibraryEntry* ProjectLibrary::findEntry(const Path& path) const
+	USPtr<ProjectLibrary::LibraryEntry> ProjectLibrary::findEntry(const Path& path) const
 	{
 		Path relPath;
 		const Path* searchPath;
@@ -912,18 +904,19 @@ namespace bs
 		UINT32 numElems = searchPath->getNumDirectories() + (searchPath->isFile() ? 1 : 0);
 		UINT32 idx = 0;
 
-		LibraryEntry* current = mRootEntry;
+		USPtr<LibraryEntry> rootLibEntry = mRootEntry;
+		USPtr<LibraryEntry>* current = &rootLibEntry;
 		while (current != nullptr)
 		{
 			if (idx == numElems)
-				return current;
+				return *current;
 
 			const String& curElem =
 				(searchPath->isFile() && idx == (numElems - 1)) ? searchPath->getFilename() : (*searchPath)[idx];
 
-			if (current->type == LibraryEntryType::Directory)
+			if ((*current)->type == LibraryEntryType::Directory)
 			{
-				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(current);
+				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(current->get());
 				size_t curElemHash = bs_hash(UTF8::toLower(curElem));
 
 				current = nullptr;
@@ -935,7 +928,7 @@ namespace bs
 					if (Path::comparePathElem(curElem, child->elementName))
 					{
 						idx++;
-						current = child;
+						current = &child;
 						break;
 					}
 				}
@@ -944,7 +937,7 @@ namespace bs
 			{
 				// If this is next to last element, next entry is assumed to be a sub-resource name, which we ignore
 				if (idx == (numElems - 1))
-					return current;
+					return *current;
 				else
 					break; // Not a valid path
 			}
@@ -963,7 +956,7 @@ namespace bs
 		Path filePath = path;
 		filePath.makeParent();
 
-		LibraryEntry* entry = findEntry(filePath);
+		LibraryEntry* entry = findEntry(filePath).get();
 		return entry != nullptr && entry->type == LibraryEntryType::File;
 	}
 
@@ -977,7 +970,7 @@ namespace bs
 			Path filePath = path;
 			filePath.makeParent();
 
-			LibraryEntry* entry = findEntry(filePath);
+			LibraryEntry* entry = findEntry(filePath).get();
 			if (entry == nullptr)
 				return nullptr;
 
@@ -1007,7 +1000,7 @@ namespace bs
 					{
 						if (child->type == LibraryEntryType::File)
 						{
-							FileEntry* fileEntry = static_cast<FileEntry*>(child);
+							FileEntry* fileEntry = static_cast<FileEntry*>(child.get());
 							if (fileEntry->meta == nullptr)
 								return nullptr;
 
@@ -1022,7 +1015,7 @@ namespace bs
 
 		// Not a subresource path, load directly
 		{
-			LibraryEntry* entry = findEntry(path);
+			LibraryEntry* entry = findEntry(path).get();
 			if (entry == nullptr || entry->type == LibraryEntryType::Directory)
 				return nullptr;
 
@@ -1066,14 +1059,14 @@ namespace bs
 		Resources::instance().save(resource, absPath, false);
 
 		Path parentDirPath = absPath.getParent();
-		LibraryEntry* parentEntry = findEntry(parentDirPath);
+		USPtr<LibraryEntry> parentEntry = findEntry(parentDirPath);
 
 		// Register parent hierarchy if not found
 		DirectoryEntry* entryParent = nullptr;
 		if (parentEntry == nullptr)
 			createInternalParentHierarchy(absPath, nullptr, &entryParent);
 		else
-			entryParent = static_cast<DirectoryEntry*>(parentEntry);
+			entryParent = static_cast<DirectoryEntry*>(parentEntry.get());
 
 		addResourceInternal(entryParent, absPath, nullptr, true, true);
 	}
@@ -1094,7 +1087,7 @@ namespace bs
 
 		Resources::instance().save(resource, filePath, true);
 
-		LibraryEntry* fileEntry = findEntry(filePath);
+		LibraryEntry* fileEntry = findEntry(filePath).get();
 		if(fileEntry)
 			reimportResourceInternal(static_cast<FileEntry*>(fileEntry), nullptr, true, false, true);
 	}
@@ -1117,11 +1110,11 @@ namespace bs
 		Path parentPath = fullPath.getParent();
 
 		DirectoryEntry* newEntryParent = nullptr;
-		LibraryEntry* newEntryParentLib = findEntry(parentPath);
+		USPtr<LibraryEntry> newEntryParentLib = findEntry(parentPath);
 		if (newEntryParentLib != nullptr)
 		{
 			assert(newEntryParentLib->type == LibraryEntryType::Directory);
-			newEntryParent = static_cast<DirectoryEntry*>(newEntryParentLib);
+			newEntryParent = static_cast<DirectoryEntry*>(newEntryParentLib.get());
 		}
 
 		DirectoryEntry* newHierarchyParent = nullptr;
@@ -1154,33 +1147,33 @@ namespace bs
 		Path oldMetaPath = getMetaPath(oldFullPath);
 		Path newMetaPath = getMetaPath(newFullPath);
 
-		LibraryEntry* oldEntry = findEntry(oldFullPath);
+		USPtr<LibraryEntry> oldEntry = findEntry(oldFullPath);
 		if(oldEntry != nullptr) // Moving from the Resources folder
 		{
 			// Moved outside of Resources, delete entry & meta file
 			if (!mResourcesFolder.includes(newFullPath))
 			{
 				if(oldEntry->type == LibraryEntryType::File)
-					deleteResourceInternal(static_cast<FileEntry*>(oldEntry));
+					deleteResourceInternal(std::static_pointer_cast<FileEntry>(oldEntry));
 				else if(oldEntry->type == LibraryEntryType::Directory)
-					deleteDirectoryInternal(static_cast<DirectoryEntry*>(oldEntry));
+					deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(oldEntry));
 			}
 			else // Just moving internally
 			{
 				onEntryRemoved(oldEntry->path);
 
-				FileEntry* fileEntry = nullptr;
+				USPtr<FileEntry> fileEntry = nullptr;
 				if (oldEntry->type == LibraryEntryType::File)
 				{
-					fileEntry = static_cast<FileEntry*>(oldEntry);
-					removeDependencies(fileEntry);
+					fileEntry = std::static_pointer_cast<FileEntry>(oldEntry);
+					removeDependencies(fileEntry.get());
 
 					// Update uuid <-> path mapping
 					if(fileEntry->meta != nullptr)
 					{
 						auto& resourceMetas = fileEntry->meta->getResourceMetaData();
 
-						if (resourceMetas.size() > 0)
+						if (!resourceMetas.empty())
 						{
 							mUUIDToPath[resourceMetas[0]->getUUID()] = newFullPath;
 
@@ -1206,11 +1199,11 @@ namespace bs
 				Path parentPath = newFullPath.getParent();
 
 				DirectoryEntry* newEntryParent = nullptr;
-				LibraryEntry* newEntryParentLib = findEntry(parentPath);
+				USPtr<LibraryEntry> newEntryParentLib = findEntry(parentPath);
 				if(newEntryParentLib != nullptr)
 				{
 					assert(newEntryParentLib->type == LibraryEntryType::Directory);
-					newEntryParent = static_cast<DirectoryEntry*>(newEntryParentLib);
+					newEntryParent = static_cast<DirectoryEntry*>(newEntryParentLib.get());
 				}
 
 				DirectoryEntry* newHierarchyParent = nullptr;
@@ -1226,7 +1219,7 @@ namespace bs
 				if(oldEntry->type == LibraryEntryType::Directory) // Update child paths
 				{
 					Stack<LibraryEntry*> todo;
-					todo.push(oldEntry);
+					todo.push(oldEntry.get());
 
 					while(!todo.empty())
 					{
@@ -1240,7 +1233,7 @@ namespace bs
 							child->path.append(child->elementName);
 
 							if(child->type == LibraryEntryType::Directory)
-								todo.push(child);
+								todo.push(child.get());
 						}
 					}
 				}
@@ -1282,7 +1275,7 @@ namespace bs
 		Path parentPath = newFullPath.getParent();
 
 		DirectoryEntry* newEntryParent = nullptr;
-		LibraryEntry* newEntryParentLib = findEntry(parentPath);
+		LibraryEntry* newEntryParentLib = findEntry(parentPath).get();
 		if (newEntryParentLib != nullptr)
 		{
 			assert(newEntryParentLib->type == LibraryEntryType::Directory);
@@ -1290,7 +1283,7 @@ namespace bs
 		}
 
 		// If the source is outside of Resources folder, just plain import the copy
-		LibraryEntry* oldEntry = findEntry(oldFullPath);
+		LibraryEntry* oldEntry = findEntry(oldFullPath).get();
 		if (oldEntry == nullptr)
 		{
 			checkForModifications(newFullPath);
@@ -1314,7 +1307,7 @@ namespace bs
 			assert(oldEntry->type == LibraryEntryType::File);
 			DirectoryEntry* oldDirEntry = static_cast<DirectoryEntry*>(oldEntry);
 
-			DirectoryEntry* newDirEntry = addDirectoryInternal(newEntryParent, newFullPath);
+			DirectoryEntry* newDirEntry = addDirectoryInternal(newEntryParent, newFullPath).get();
 
 			Stack<std::tuple<DirectoryEntry*, DirectoryEntry*>> todo;
 			todo.push(std::make_tuple(oldDirEntry, newDirEntry));
@@ -1334,7 +1327,7 @@ namespace bs
 
 					if (child->type == LibraryEntryType::File)
 					{
-						FileEntry* childResEntry = static_cast<FileEntry*>(child);
+						FileEntry* childResEntry = static_cast<FileEntry*>(child.get());
 
 						SPtr<ImportOptions> importOptions;
 						if (childResEntry->meta != nullptr)
@@ -1344,8 +1337,8 @@ namespace bs
 					}
 					else // Directory
 					{
-						DirectoryEntry* childSourceDirEntry = static_cast<DirectoryEntry*>(child);
-						DirectoryEntry* childDestDirEntry = addDirectoryInternal(destDir, childDestPath);
+						DirectoryEntry* childSourceDirEntry = static_cast<DirectoryEntry*>(child.get());
+						DirectoryEntry* childDestDirEntry = addDirectoryInternal(destDir, childDestPath).get();
 
 						todo.push(std::make_tuple(childSourceDirEntry, childDestDirEntry));
 					}
@@ -1363,19 +1356,19 @@ namespace bs
 		if(FileSystem::exists(fullPath))
 			FileSystem::remove(fullPath);
 
-		LibraryEntry* entry = findEntry(fullPath);
+		USPtr<LibraryEntry> entry = findEntry(fullPath);
 		if(entry != nullptr)
 		{
 			if(entry->type == LibraryEntryType::File)
-				deleteResourceInternal(static_cast<FileEntry*>(entry));
+				deleteResourceInternal(std::static_pointer_cast<FileEntry>(entry));
 			else if(entry->type == LibraryEntryType::Directory)
-				deleteDirectoryInternal(static_cast<DirectoryEntry*>(entry));
+				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(entry));
 		}
 	}
 
 	void ProjectLibrary::reimport(const Path& path, const SPtr<ImportOptions>& importOptions, bool forceReimport)
 	{
-		LibraryEntry* entry = findEntry(path);
+		LibraryEntry* entry = findEntry(path).get();
 		if (entry != nullptr)
 		{
 			if (entry->type == LibraryEntryType::File)
@@ -1398,7 +1391,7 @@ namespace bs
 
 	void ProjectLibrary::setIncludeInBuild(const Path& path, bool include)
 	{
-		LibraryEntry* entry = findEntry(path);
+		LibraryEntry* entry = findEntry(path).get();
 
 		if (entry == nullptr || entry->type == LibraryEntryType::Directory)
 			return;
@@ -1422,7 +1415,7 @@ namespace bs
 
 	void ProjectLibrary::setUserData(const Path& path, const SPtr<IReflectable>& userData)
 	{
-		LibraryEntry* entry = findEntry(path);
+		LibraryEntry* entry = findEntry(path).get();
 
 		if (entry == nullptr || entry->type == LibraryEntryType::Directory)
 			return;
@@ -1446,12 +1439,12 @@ namespace bs
 		fs.encode(fileEntry->meta.get());
 	}
 
-	Vector<ProjectLibrary::FileEntry*> ProjectLibrary::getResourcesForBuild() const
+	Vector<USPtr<ProjectLibrary::FileEntry>> ProjectLibrary::getResourcesForBuild() const
 	{
-		Vector<FileEntry*> output;
+		Vector<USPtr<FileEntry>> output;
 
 		Stack<DirectoryEntry*> todo;
-		todo.push(mRootEntry);
+		todo.push(mRootEntry.get());
 
 		while (!todo.empty())
 		{
@@ -1462,13 +1455,13 @@ namespace bs
 			{
 				if (child->type == LibraryEntryType::File)
 				{
-					FileEntry* resEntry = static_cast<FileEntry*>(child);
+					FileEntry* resEntry = static_cast<FileEntry*>(child.get());
 					if (resEntry->meta != nullptr && resEntry->meta->getIncludeInBuild())
-						output.push_back(resEntry);
+						output.push_back(std::static_pointer_cast<FileEntry>(child));
 				}
 				else if (child->type == LibraryEntryType::Directory)
 				{
-					todo.push(static_cast<DirectoryEntry*>(child));
+					todo.push(static_cast<DirectoryEntry*>(child.get()));
 				}
 			}
 		}
@@ -1488,7 +1481,8 @@ namespace bs
 		return gResources().loadFromUUID(resUUID, false, loadFlags);
 	}
 
-	void ProjectLibrary::createInternalParentHierarchy(const Path& fullPath, DirectoryEntry** newHierarchyRoot, DirectoryEntry** newHierarchyLeaf)
+	void ProjectLibrary::createInternalParentHierarchy(const Path& fullPath, DirectoryEntry** newHierarchyRoot, 
+		DirectoryEntry** newHierarchyLeaf)
 	{
 		Path parentPath = fullPath;
 
@@ -1501,7 +1495,7 @@ namespace bs
 			if(newParentPath == parentPath)
 				break;
 
-			LibraryEntry* newEntryParentLib = findEntry(newParentPath);
+			LibraryEntry* newEntryParentLib = findEntry(newParentPath).get();
 			if(newEntryParentLib != nullptr)
 			{
 				assert(newEntryParentLib->type == LibraryEntryType::Directory);
@@ -1525,7 +1519,7 @@ namespace bs
 			Path curPath = parentPaths.top();
 			parentPaths.pop();
 
-			newEntryParent = addDirectoryInternal(newEntryParent, curPath);
+			newEntryParent = addDirectoryInternal(newEntryParent, curPath).get();
 		}
 
 		if(newHierarchyLeaf != nullptr)
@@ -1563,7 +1557,7 @@ namespace bs
 		mResourcesFolder = Path::BLANK;
 
 		clearEntries();
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		mDependencies.clear();
 		gResources().unregisterResourceManifest(mResourceManifest);
@@ -1583,12 +1577,12 @@ namespace bs
 			{
 				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(entry);
 				for (auto& child : dirEntry->mChildren)
-					makeRelative(child, root);
+					makeRelative(child.get(), root);
 			}
 		};
 
 		Path root = getResourcesFolder();
-		makeRelative(mRootEntry, root);
+		makeRelative(mRootEntry.get(), root);
 	}
 
 	void ProjectLibrary::makeEntriesAbsolute()
@@ -1602,12 +1596,12 @@ namespace bs
 			{
 				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(entry);
 				for (auto& child : dirEntry->mChildren)
-					makeAbsolute(child, root);
+					makeAbsolute(child.get(), root);
 			}
 		};
 
 		Path root = getResourcesFolder();
-		makeAbsolute(mRootEntry, root);
+		makeAbsolute(mRootEntry.get(), root);
 	}
 
 	void ProjectLibrary::saveLibrary()
@@ -1617,7 +1611,7 @@ namespace bs
 
 		// Make all paths relative before saving
 		makeEntriesRelative();		
-		SPtr<ProjectLibraryEntries> libEntries = ProjectLibraryEntries::create(*mRootEntry);
+		SPtr<ProjectLibraryEntries> libEntries = ProjectLibraryEntries::create(mRootEntry);
 
 		Path libraryEntriesPath = mProjectFolder;
 		libraryEntriesPath.append(PROJECT_INTERNAL_DIR);
@@ -1644,7 +1638,7 @@ namespace bs
 		mResourcesFolder = mProjectFolder;
 		mResourcesFolder.append(RESOURCES_DIR);
 
-		mRootEntry = bs_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		Path libraryEntriesPath = mProjectFolder;
 		libraryEntriesPath.append(PROJECT_INTERNAL_DIR);
@@ -1655,10 +1649,7 @@ namespace bs
 			FileDecoder fs(libraryEntriesPath);
 			SPtr<ProjectLibraryEntries> libEntries = std::static_pointer_cast<ProjectLibraryEntries>(fs.decode());
 
-			*mRootEntry = libEntries->getRootEntry();
-			for(auto& child : mRootEntry->mChildren)
-				child->parent = mRootEntry;
-
+			mRootEntry = libEntries->getRootEntry();
 			mRootEntry->parent = nullptr;
 		}
 
@@ -1679,9 +1670,9 @@ namespace bs
 
 		// Load all meta files
 		Stack<DirectoryEntry*> todo;
-		todo.push(mRootEntry);
+		todo.push(mRootEntry.get());
 
-		Vector<LibraryEntry*> deletedEntries;
+		Vector<USPtr<LibraryEntry>> deletedEntries;
 
 		while(!todo.empty())
 		{
@@ -1692,7 +1683,7 @@ namespace bs
 			{
 				if(child->type == LibraryEntryType::File)
 				{
-					FileEntry* resEntry = static_cast<FileEntry*>(child);
+					USPtr<FileEntry> resEntry = std::static_pointer_cast<FileEntry>(child);
 					
 					if (FileSystem::isFile(resEntry->path))
 					{
@@ -1718,7 +1709,7 @@ namespace bs
 						{
 							auto& resourceMetas = resEntry->meta->getResourceMetaData();
 
-							if (resourceMetas.size() > 0)
+							if (!resourceMetas.empty())
 							{
 								mUUIDToPath[resourceMetas[0]->getUUID()] = resEntry->path;
 
@@ -1730,7 +1721,7 @@ namespace bs
 							}
 						}
 
-						addDependencies(resEntry);
+						addDependencies(resEntry.get());
 					}
 					else
 						deletedEntries.push_back(resEntry);
@@ -1738,7 +1729,7 @@ namespace bs
 				else if(child->type == LibraryEntryType::Directory)
 				{
 					if (FileSystem::isDirectory(child->path))
-						todo.push(static_cast<DirectoryEntry*>(child));
+						todo.push(static_cast<DirectoryEntry*>(child.get()));
 					else
 						deletedEntries.push_back(child);
 				}
@@ -1749,15 +1740,9 @@ namespace bs
 		for (auto& deletedEntry : deletedEntries)
 		{
 			if (deletedEntry->type == LibraryEntryType::File)
-			{
-				FileEntry* resEntry = static_cast<FileEntry*>(deletedEntry);
-				deleteResourceInternal(resEntry);
-			}
+				deleteResourceInternal(std::static_pointer_cast<FileEntry>(deletedEntry));
 			else
-			{
-				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(deletedEntry);
-				deleteDirectoryInternal(dirEntry);
-			}
+				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(deletedEntry));
 		}
 
 		// Clean up internal library folder from obsolete files
@@ -1793,7 +1778,7 @@ namespace bs
 		if (mRootEntry == nullptr)
 			return;
 
-		std::function<void(LibraryEntry*)> deleteRecursive =
+		std::function<void(LibraryEntry*)> invalidateRecursive =
 			[&](LibraryEntry* entry)
 		{
 			if (entry->type == LibraryEntryType::Directory)
@@ -1801,15 +1786,20 @@ namespace bs
 				DirectoryEntry* dirEntry = static_cast<DirectoryEntry*>(entry);
 
 				for (auto& child : dirEntry->mChildren)
-					deleteRecursive(child);
-			}
+					invalidateRecursive(child.get());
 
-			bs_delete(entry);
+				*dirEntry = DirectoryEntry();
+			}
+			else
+			{
+				FileEntry* fileEntry = static_cast<FileEntry*>(entry);
+				*fileEntry = FileEntry();
+			}
 		};
 
 		assert(mQueuedImports.empty());
 
-		deleteRecursive(mRootEntry);
+		invalidateRecursive(mRootEntry.get());
 		mRootEntry = nullptr;
 	}
 
@@ -1868,7 +1858,7 @@ namespace bs
 		Vector<Path> dependencies = iterFind->second;
 		for (auto& dependency : dependencies)
 		{
-			LibraryEntry* entry = findEntry(dependency);
+			LibraryEntry* entry = findEntry(dependency).get();
 			if (entry != nullptr && entry->type == LibraryEntryType::File)
 			{
 				FileEntry* resEntry = static_cast<FileEntry*>(entry);

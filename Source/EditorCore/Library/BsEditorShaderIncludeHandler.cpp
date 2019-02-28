@@ -23,7 +23,7 @@ namespace bs
 				return static_resource_cast<ShaderInclude>(Resources::instance().load(path, loadFlags));
 		}
 
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(path);
+		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(path).get();
 		if (entry != nullptr && entry->type == ProjectLibrary::LibraryEntryType::File)
 		{
 			ProjectLibrary::FileEntry* fileEntry = static_cast<ProjectLibrary::FileEntry*>(entry);

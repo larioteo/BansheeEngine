@@ -168,7 +168,6 @@ namespace bs
 		}
 	}
 
-
 	bool ScriptProjectSettings::internal_HasKey(MonoString* name)
 	{
 		String nativeName = MonoUtil::monoToString(name);

@@ -40,7 +40,7 @@ namespace bs
 		gProjectLibrary().onEntryAdded.connect(std::bind(&GUIResourceTreeView::entryAdded, this, _1));
 		gProjectLibrary().onEntryRemoved.connect(std::bind(&GUIResourceTreeView::entryRemoved, this, _1));
 
-		const ProjectLibrary::LibraryEntry* rootEntry = gProjectLibrary().getRootEntry();
+		const ProjectLibrary::LibraryEntry* rootEntry = gProjectLibrary().getRootEntry().get();
 
 		mRootElement.mFullPath = rootEntry->path;
 		mRootElement.mElementName = mRootElement.mFullPath.getTail();
@@ -139,7 +139,7 @@ namespace bs
 					ResourceTreeElement* newChild = addTreeElement(curElem.treeElem, child->path);
 
 					if(child->type == ProjectLibrary::LibraryEntryType::Directory)
-						todo.push(StackElem(child, newChild));
+						todo.push(StackElem(child.get(), newChild));
 				}
 
 				sortTreeElement(curElem.treeElem);
@@ -262,7 +262,7 @@ namespace bs
 		ResourceTreeElement* newElement = addTreeElement(parentElement, path);
 		sortTreeElement(parentElement);
 
-		ProjectLibrary::LibraryEntry* libEntry = gProjectLibrary().findEntry(path);
+		ProjectLibrary::LibraryEntry* libEntry = gProjectLibrary().findEntry(path).get();
 		
 		assert(libEntry != nullptr);
 		updateFromProjectLibraryEntry(newElement, libEntry);

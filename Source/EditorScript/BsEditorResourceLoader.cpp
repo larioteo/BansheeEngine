@@ -10,7 +10,7 @@ namespace bs
 {
 	HResource EditorResourceLoader::load(const Path& path, ResourceLoadFlags flags, bool async) const
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(path);
+		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(path).get();
 
 		if (entry == nullptr || entry->type == ProjectLibrary::LibraryEntryType::Directory)
 			return HResource();

@@ -96,7 +96,7 @@ namespace bs
 			TID_ScriptCode, TID_PlainText, TID_Shader, TID_ShaderInclude
 		};
 
-		Vector<ProjectLibrary::LibraryEntry*> libraryEntries = gProjectLibrary().search("*", scriptTypeIds);
+		Vector<USPtr<ProjectLibrary::LibraryEntry>> libraryEntries = gProjectLibrary().search("*", scriptTypeIds);
 		
 		PlatformType activePlatform = BuildManager::instance().getActivePlatform();
 		Vector<String> frameworkAssemblies = BuildManager::instance().getFrameworkAssemblies(activePlatform);
@@ -132,7 +132,7 @@ namespace bs
 			if (entry->type != ProjectLibrary::LibraryEntryType::File)
 				continue;
 
-			ProjectLibrary::FileEntry* resEntry = static_cast<ProjectLibrary::FileEntry*>(entry);
+			ProjectLibrary::FileEntry* resEntry = static_cast<ProjectLibrary::FileEntry*>(entry.get());
 			if (resEntry->meta->hasTypeId(TID_ScriptCode))
 			{
 				SPtr<ScriptCodeImportOptions> scriptIO = std::static_pointer_cast<ScriptCodeImportOptions>(resEntry->meta->getImportOptions());

@@ -119,7 +119,7 @@ namespace bs
 
 	MonoObject* ScriptProjectLibrary::internal_GetRoot()
 	{
-		return ScriptDirectoryEntry::create(static_cast<const ProjectLibrary::DirectoryEntry*>(gProjectLibrary().getRootEntry()));
+		return ScriptDirectoryEntry::create(gProjectLibrary().getRootEntry());
 	}
 
 	void ScriptProjectLibrary::internal_Reimport(MonoString* path, MonoObject* options, bool force)
@@ -140,14 +140,14 @@ namespace bs
 	{
 		Path assetPath = MonoUtil::monoToString(path);
 
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(assetPath);
+		USPtr<ProjectLibrary::LibraryEntry> entry = gProjectLibrary().findEntry(assetPath);
 		if (entry == nullptr)
 			return nullptr;
 
 		if (entry->type == ProjectLibrary::LibraryEntryType::File)
-			return ScriptFileEntry::create(static_cast<ProjectLibrary::FileEntry*>(entry));
+			return ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(entry));
 		else
-			return ScriptDirectoryEntry::create(static_cast<ProjectLibrary::DirectoryEntry*>(entry));
+			return ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 	}
 
 	bool ScriptProjectLibrary::internal_IsSubresource(MonoString* path)
@@ -208,7 +208,7 @@ namespace bs
 			}
 		}
 
-		Vector<ProjectLibrary::LibraryEntry*> foundEntries = gProjectLibrary().search(strPattern, typeIds);
+		Vector<USPtr<ProjectLibrary::LibraryEntry>> foundEntries = gProjectLibrary().search(strPattern, typeIds);
 
 		UINT32 idx = 0;
 		ScriptArray outArray = ScriptArray::create<ScriptLibraryEntry>((UINT32)foundEntries.size());
@@ -217,9 +217,9 @@ namespace bs
 			MonoObject* managedEntry = nullptr;
 
 			if (entry->type == ProjectLibrary::LibraryEntryType::File)
-				managedEntry = ScriptFileEntry::create(static_cast<ProjectLibrary::FileEntry*>(entry));
+				managedEntry = ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(entry));
 			else
-				managedEntry = ScriptDirectoryEntry::create(static_cast<ProjectLibrary::DirectoryEntry*>(entry));
+				managedEntry = ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 
 			outArray.set(idx, managedEntry);
 			idx++;
@@ -356,11 +356,7 @@ namespace bs
 
 	MonoString* ScriptLibraryEntry::internal_GetPath(ScriptLibraryEntryBase* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr)
-			return nullptr;
-
-		Path relativePath = entry->path;
+		Path relativePath = thisPtr->getInternal()->path;
 		relativePath.makeRelative(gProjectLibrary().getResourcesFolder());
 
 		return MonoUtil::stringToMono(relativePath.toString());
@@ -368,42 +364,37 @@ namespace bs
 
 	MonoString* ScriptLibraryEntry::internal_GetName(ScriptLibraryEntryBase* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr)
-			return nullptr;
-
-		return MonoUtil::stringToMono(entry->elementName);
+		return MonoUtil::stringToMono(thisPtr->getInternal()->elementName);
 	}
 
 	ProjectLibrary::LibraryEntryType ScriptLibraryEntry::internal_GetType(ScriptLibraryEntryBase* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr)
-			return ProjectLibrary::LibraryEntryType::File; // Note: We don't actually know what this entry is, because it doesn't exist anymore
-
-		return entry->type;
+		return thisPtr->getInternal()->type;
 	}
 
 	MonoObject* ScriptLibraryEntry::internal_GetParent(ScriptLibraryEntryBase* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr || entry->parent == nullptr)
+		ProjectLibrary::DirectoryEntry* parent = thisPtr->getInternal()->parent;
+		if(parent == nullptr)
 			return nullptr;
 
-		return ScriptDirectoryEntry::create(entry->parent);
+		USPtr<ProjectLibrary::LibraryEntry> entry = gProjectLibrary().findEntry(parent->path);
+		if (entry == nullptr)
+			return nullptr;
+
+		return ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 	}
 
-	ScriptDirectoryEntry::ScriptDirectoryEntry(MonoObject* instance, const Path& assetPath)
+	ScriptDirectoryEntry::ScriptDirectoryEntry(MonoObject* instance, const USPtr<ProjectLibrary::DirectoryEntry>& entry)
 		:ScriptObject(instance)
 	{
-		mAssetPath = assetPath;
-		mAssetPath.makeRelative(gProjectLibrary().getResourcesFolder());
+		mEntry = entry;
 	}
 
-	MonoObject* ScriptDirectoryEntry::create(const ProjectLibrary::DirectoryEntry* entry)
+	MonoObject* ScriptDirectoryEntry::create(const USPtr<ProjectLibrary::DirectoryEntry>& entry)
 	{
 		MonoObject* managedInstance = metaData.scriptClass->createInstance();
-		bs_new<ScriptDirectoryEntry>(managedInstance, entry->path);
+		bs_new<ScriptDirectoryEntry>(managedInstance, entry);
 
 		return managedInstance;
 	}
@@ -415,21 +406,17 @@ namespace bs
 
 	MonoArray* ScriptDirectoryEntry::internal_GetChildren(ScriptDirectoryEntry* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr || entry->type != ProjectLibrary::LibraryEntryType::Directory)
-			return ScriptArray::create<ScriptLibraryEntry>(0).getInternal();
-
-		ProjectLibrary::DirectoryEntry* dirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(entry);
+		ProjectLibrary::DirectoryEntry* dirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(thisPtr->getInternal().get());
 		ScriptArray outArray = ScriptArray::create<ScriptLibraryEntry>((UINT32)dirEntry->mChildren.size());
 		for (UINT32 i = 0; i < (UINT32)dirEntry->mChildren.size(); i++)
 		{
-			ProjectLibrary::LibraryEntry* childEntry = dirEntry->mChildren[i];
+			USPtr<ProjectLibrary::LibraryEntry> childEntry = dirEntry->mChildren[i];
 			MonoObject* managedChildEntry = nullptr;
 
 			if (childEntry->type == ProjectLibrary::LibraryEntryType::File)
-				managedChildEntry = ScriptFileEntry::create(static_cast<ProjectLibrary::FileEntry*>(childEntry));
+				managedChildEntry = ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(childEntry));
 			else
-				managedChildEntry = ScriptDirectoryEntry::create(static_cast<ProjectLibrary::DirectoryEntry*>(childEntry));
+				managedChildEntry = ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(childEntry));
 
 			outArray.set(i, managedChildEntry);
 		}
@@ -437,17 +424,16 @@ namespace bs
 		return outArray.getInternal();
 	}
 
-	ScriptFileEntry::ScriptFileEntry(MonoObject* instance, const Path& assetPath)
+	ScriptFileEntry::ScriptFileEntry(MonoObject* instance, const USPtr<ProjectLibrary::FileEntry>& entry)
 		:ScriptObject(instance)
 	{
-		mAssetPath = assetPath;
-		mAssetPath.makeRelative(gProjectLibrary().getResourcesFolder());
+		mEntry = entry;
 	}
 
-	MonoObject* ScriptFileEntry::create(const ProjectLibrary::FileEntry* entry)
+	MonoObject* ScriptFileEntry::create(const USPtr<ProjectLibrary::FileEntry>& entry)
 	{
 		MonoObject* managedInstance = metaData.scriptClass->createInstance();
-		bs_new<ScriptFileEntry>(managedInstance, entry->path);
+		bs_new<ScriptFileEntry>(managedInstance, entry);
 
 		return managedInstance;
 	}
@@ -461,11 +447,7 @@ namespace bs
 
 	MonoObject* ScriptFileEntry::internal_GetImportOptions(ScriptFileEntry* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr || entry->type != ProjectLibrary::LibraryEntryType::File)
-			return nullptr;
-
-		ProjectLibrary::FileEntry* fileEntry = static_cast<ProjectLibrary::FileEntry*>(entry);
+		auto* fileEntry = static_cast<ProjectLibrary::FileEntry*>(thisPtr->getInternal().get());
 
 		if (fileEntry->meta != nullptr)
 			return ScriptImportOptions::create(fileEntry->meta->getImportOptions());
@@ -475,22 +457,17 @@ namespace bs
 
 	MonoArray* ScriptFileEntry::internal_GetResourceMetas(ScriptFileEntry* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry != nullptr && entry->type == ProjectLibrary::LibraryEntryType::File)
+		auto* fileEntry = static_cast<ProjectLibrary::FileEntry*>(thisPtr->getInternal().get());
+		if (fileEntry->meta != nullptr)
 		{
-			ProjectLibrary::FileEntry* fileEntry = static_cast<ProjectLibrary::FileEntry*>(entry);
+			auto& resourceMetas = fileEntry->meta->getResourceMetaData();
+			UINT32 numElements = (UINT32)resourceMetas.size();
 
-			if (fileEntry->meta != nullptr)
-			{
-				auto& resourceMetas = fileEntry->meta->getResourceMetaData();
-				UINT32 numElements = (UINT32)resourceMetas.size();
+			ScriptArray output = ScriptArray::create<ScriptResourceMeta>(numElements);
+			for (UINT32 i = 0; i < numElements; i++)
+				output.set(i, ScriptResourceMeta::create(resourceMetas[i]));
 
-				ScriptArray output = ScriptArray::create<ScriptResourceMeta>(numElements);
-				for (UINT32 i = 0; i < numElements; i++)
-					output.set(i, ScriptResourceMeta::create(resourceMetas[i]));
-
-				return output.getInternal();
-			}
+			return output.getInternal();
 		}
 			
 		return ScriptArray::create<ScriptResourceMeta>(0).getInternal();
@@ -498,11 +475,7 @@ namespace bs
 
 	bool ScriptFileEntry::internal_GetIncludeInBuild(ScriptFileEntry* thisPtr)
 	{
-		ProjectLibrary::LibraryEntry* entry = gProjectLibrary().findEntry(thisPtr->getAssetPath());
-		if (entry == nullptr || entry->type != ProjectLibrary::LibraryEntryType::File)
-			return false;
-
-		ProjectLibrary::FileEntry* fileEntry = static_cast<ProjectLibrary::FileEntry*>(entry);
+		auto* fileEntry = static_cast<ProjectLibrary::FileEntry*>(thisPtr->getInternal().get());
 
 		if (fileEntry->meta != nullptr)
 			return fileEntry->meta->getIncludeInBuild();
