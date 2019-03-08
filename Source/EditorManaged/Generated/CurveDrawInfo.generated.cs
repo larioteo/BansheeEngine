@@ -20,7 +20,7 @@ namespace bs.Editor
 		{
 			CurveDrawInfo value = new CurveDrawInfo();
 			value.curve = null;
-			value.color = new Color();
+			value.color = Color.Default();
 
 			return value;
 		}
