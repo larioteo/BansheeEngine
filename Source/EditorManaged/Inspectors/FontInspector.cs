@@ -22,7 +22,7 @@ namespace bs.Editor
         private GUIToggleField boldField;
         private GUIToggleField italicField;
         private GUIIntField dpiField;
-        private GUIButton reimportButton;
+        private GUIReimportButton reimportButton;
 
         private FontImportOptions importOptions;
 
@@ -31,50 +31,6 @@ namespace bs.Editor
         {
             importOptions = GetImportOptions();
             BuildGUI();
-        }
-
-        /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
-        {
-            FontImportOptions newImportOptions = GetImportOptions();
-
-            bool rebuildGUI = false;
-
-            int[] newFontSizes = newImportOptions.FontSizes;
-            if (newFontSizes == null)
-                rebuildGUI |= fontSizes.Array != null;
-            else
-            {
-                if (fontSizes.Array == null)
-                    rebuildGUI = true;
-                else
-                    rebuildGUI |= newFontSizes.Length != fontSizes.Array.GetLength(0);
-            }
-
-            CharRange[] newCharRanges = newImportOptions.CharIndexRanges;
-            if (newCharRanges == null)
-                rebuildGUI |= charRanges.Array != null;
-            else
-            {
-                if (charRanges.Array == null)
-                    rebuildGUI = true;
-                else
-                    rebuildGUI |= newCharRanges.Length != charRanges.Array.GetLength(0);
-            }
-
-            if (rebuildGUI)
-                BuildGUI();
-
-            fontSizes.Refresh();
-            charRanges.Refresh();
-
-            renderModeField.Value = (ulong)newImportOptions.RenderMode;
-            boldField.Value = newImportOptions.Bold;
-            italicField.Value = newImportOptions.Italic;
-            dpiField.Value = newImportOptions.Dpi;
-            importOptions = newImportOptions;
-
-            return InspectableState.NotModified;
         }
 
         /// <summary>
@@ -108,18 +64,67 @@ namespace bs.Editor
             dpiField = new GUIIntField(new LocEdString("DPI"));
             dpiField.OnChanged += x => importOptions.Dpi = x;
 
-            reimportButton = new GUIButton(new LocEdString("Reimport"));
-            reimportButton.OnClick += TriggerReimport;
-
             Layout.AddElement(renderModeField);
             Layout.AddElement(boldField);
             Layout.AddElement(italicField);
             Layout.AddElement(dpiField);
             Layout.AddSpace(10);
 
-            GUILayout reimportButtonLayout = Layout.AddLayoutX();
-            reimportButtonLayout.AddFlexibleSpace();
-            reimportButtonLayout.AddElement(reimportButton);
+            reimportButton = new GUIReimportButton(InspectedResourcePath, Layout, () =>
+            {
+                ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
+            });
+
+            UpdateGUIValues();
+        }
+
+        /// <inheritdoc/>
+        protected internal override InspectableState Refresh()
+        {
+            reimportButton.Update();
+
+            return InspectableState.NotModified;
+        }
+
+        /// <summary>
+        /// Updates the GUI element values from the current import options object.
+        /// </summary>
+        private void UpdateGUIValues()
+        {
+            bool rebuildGUI = false;
+
+            int[] newFontSizes = importOptions.FontSizes;
+            if (newFontSizes == null)
+                rebuildGUI |= fontSizes.Array != null;
+            else
+            {
+                if (fontSizes.Array == null)
+                    rebuildGUI = true;
+                else
+                    rebuildGUI |= newFontSizes.Length != fontSizes.Array.GetLength(0);
+            }
+
+            CharRange[] newCharRanges = importOptions.CharIndexRanges;
+            if (newCharRanges == null)
+                rebuildGUI |= charRanges.Array != null;
+            else
+            {
+                if (charRanges.Array == null)
+                    rebuildGUI = true;
+                else
+                    rebuildGUI |= newCharRanges.Length != charRanges.Array.GetLength(0);
+            }
+
+            if (rebuildGUI)
+                BuildGUI();
+
+            fontSizes.Refresh();
+            charRanges.Refresh();
+
+            renderModeField.Value = (ulong)importOptions.RenderMode;
+            boldField.Value = importOptions.Bold;
+            italicField.Value = importOptions.Italic;
+            dpiField.Value = importOptions.Dpi;
         }
 
         /// <summary>
@@ -146,17 +151,6 @@ namespace bs.Editor
             }
 
             return output;
-        }
-
-        /// <summary>
-        /// Reimports the texture resource according to the currently set import options.
-        /// </summary>
-        private void TriggerReimport()
-        {
-            Texture texture = (Texture)InspectedObject;
-            string resourcePath = ProjectLibrary.GetPath(texture);
-
-            ProjectLibrary.Reimport(resourcePath, importOptions, true);
         }
 
         /// <summary>

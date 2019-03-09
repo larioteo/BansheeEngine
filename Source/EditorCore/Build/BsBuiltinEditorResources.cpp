@@ -47,6 +47,7 @@ namespace bs
 	const char* BuiltinEditorResources::SkinFolder = "Skin/";
 	const char* BuiltinEditorResources::IconFolder = "Icons/";
 	const char* BuiltinEditorResources::Icon3DFolder = "Icons3D/";
+	const char* BuiltinEditorResources::AnimatedSpritesFolder = "AnimatedSprites/";
 	const char* BuiltinEditorResources::ShaderIncludeFolder = "Shaders/Includes/";
 	const char* BuiltinEditorResources::SpriteSubFolder = "Sprites/";
 
@@ -116,6 +117,7 @@ namespace bs
 		EditorIcon3DFolder = BuiltinDataFolder + Icon3DFolder;
 		EditorIconSpritesFolder = EditorIconFolder + SpriteSubFolder;
 		EditorIcon3DSpritesFolder = EditorIcon3DFolder + SpriteSubFolder;
+		EditorAnimatedSpritesFolder = BuiltinDataFolder + AnimatedSpritesFolder + SpriteSubFolder;
 		EditorShaderFolder = BuiltinDataFolder + ShaderFolder;
 		EditorShaderIncludeFolder = BuiltinDataFolder + ShaderIncludeFolder;
 
@@ -167,6 +169,14 @@ namespace bs
 	HSpriteTexture BuiltinEditorResources::getGUIIcon3D(const String& name) const
 	{
 		Path texturePath = EditorIcon3DSpritesFolder;
+		texturePath.append("sprite_" + name + ".asset");
+
+		return gResources().load<SpriteTexture>(texturePath);
+	}
+
+	HSpriteTexture BuiltinEditorResources::getAnimatedSprite(const String& name) const
+	{
+		Path texturePath = EditorAnimatedSpritesFolder;
 		texturePath.append("sprite_" + name + ".asset");
 
 		return gResources().load<SpriteTexture>(texturePath);
@@ -638,6 +648,17 @@ namespace bs
 			case LogMessageIcon::Error:
 				return getGUIIcon("IconError32.png");
 			}
+		}
+
+		return HSpriteTexture();
+	}
+
+	HSpriteTexture BuiltinEditorResources::getSprite(EditorSprites sprite)
+	{
+		switch(sprite)
+		{
+		case EditorSprites::Spinner:
+			return getAnimatedSprite("Spinner.png");
 		}
 
 		return HSpriteTexture();

@@ -186,8 +186,33 @@ namespace bs
 		 *								provided default import options are used.
 		 * @param[in]	forceReimport	Should the resource be reimported even if no changes are detected. This should be
 		 *								true if import options changed since last import.
+		 * @param[in]	synchronous		If true the import will happen synchronously on the calling thread. If false
+		 *								the import operation will be queued for execution on a worker thread. You
+		 *								then must call _finishQueuedImports() after the worker thread finishes to
+		 *								actually finish the import.
 		 */
-		void reimport(const Path& path, const SPtr<ImportOptions>& importOptions = nullptr, bool forceReimport = false);
+		void reimport(const Path& path, const SPtr<ImportOptions>& importOptions = nullptr, bool forceReimport = false,
+			bool synchronous = false);
+
+		/**
+		 * Checks how far along is the import for the specified file.
+		 * 
+		 * @param[in]	path		Path to the resource to check the progress for, absolute or relative to the resources 
+		 *							folder.
+		 * @return					Reports 1 if the file is fully imported. Reports 0 if the import has not started or the
+		 *							file isn't even queued for import. Reports >= 0 if the file is in process of being
+		 *							imported. Note that not all importers support fine grained progress reporting, in which
+		 *							case the import progress will be reported as a binary 0 or 1.
+		 */
+		float getImportProgress(const Path& path) const;
+
+		/** 
+		 * Cancels any queued import tasks. Note that you must call _finishQueuedImports() for the import state to be
+		 * updated. If the import task has already started you will need to wait until it finishes as there is no way to 
+		 * stop running tasks. If the provided file entry isn't being imported, or has already finished imported, the 
+		 * function does nothing. 
+		 */
+		void cancelImport();
 
 		/**
 		 * Determines if this resource will always be included in the build, regardless if it's being referenced or not.
@@ -294,6 +319,7 @@ namespace bs
 			bool pruneMetas = false;
 			bool canceled = false;
 			bool native = false;
+			std::time_t timestamp = 0;
 		};
 
 		/**

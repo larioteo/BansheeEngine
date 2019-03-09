@@ -43,6 +43,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_Save", (void*)&ScriptProjectLibrary::internal_Save);
 		metaData.scriptClass->addInternalCall("Internal_GetRoot", (void*)&ScriptProjectLibrary::internal_GetRoot);
 		metaData.scriptClass->addInternalCall("Internal_Reimport", (void*)&ScriptProjectLibrary::internal_Reimport);
+		metaData.scriptClass->addInternalCall("Internal_GetImportProgress", (void*)&ScriptProjectLibrary::internal_GetImportProgress);
+		metaData.scriptClass->addInternalCall("Internal_CancelImport", (void*)&ScriptProjectLibrary::internal_CancelImport);
 		metaData.scriptClass->addInternalCall("Internal_GetEntry", (void*)&ScriptProjectLibrary::internal_GetEntry);
 		metaData.scriptClass->addInternalCall("Internal_IsSubresource", (void*)&ScriptProjectLibrary::internal_IsSubresource);
 		metaData.scriptClass->addInternalCall("Internal_GetMeta", (void*)&ScriptProjectLibrary::internal_GetMeta);
@@ -122,7 +124,7 @@ namespace bs
 		return ScriptDirectoryEntry::create(gProjectLibrary().getRootEntry());
 	}
 
-	void ScriptProjectLibrary::internal_Reimport(MonoString* path, MonoObject* options, bool force)
+	void ScriptProjectLibrary::internal_Reimport(MonoString* path, MonoObject* options, bool force, bool synchronous)
 	{
 		Path assetPath = MonoUtil::monoToString(path);
 
@@ -133,7 +135,19 @@ namespace bs
 			nativeOptions = scriptOptions->getInternal();
 		}
 
-		gProjectLibrary().reimport(assetPath, nativeOptions, force);
+		gProjectLibrary().reimport(assetPath, nativeOptions, force, synchronous);
+	}
+
+	float ScriptProjectLibrary::internal_GetImportProgress(MonoString* path)
+	{
+		Path assetPath = MonoUtil::monoToString(path);
+
+		return gProjectLibrary().getImportProgress(assetPath);
+	}
+
+	void ScriptProjectLibrary::internal_CancelImport()
+	{
+		gProjectLibrary().cancelImport();
 	}
 
 	MonoObject* ScriptProjectLibrary::internal_GetEntry(MonoString* path)

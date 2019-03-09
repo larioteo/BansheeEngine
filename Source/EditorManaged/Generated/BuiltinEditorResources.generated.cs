@@ -113,6 +113,12 @@ namespace bs.Editor
 			return Internal_getLogMessageIcon(icon, size, dark);
 		}
 
+		/// <summary>Retrieves a builtin editor sprite texture.</summary>
+		public static SpriteTexture GetSprite(EditorSprites sprite)
+		{
+			return Internal_getSprite(sprite);
+		}
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern GUISkin Internal_getSkin();
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -137,6 +143,8 @@ namespace bs.Editor
 		private static extern SpriteTexture Internal_getEditorIcon(EditorIcon icon);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern SpriteTexture Internal_getLogMessageIcon(LogMessageIcon icon, int size, bool dark);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern SpriteTexture Internal_getSprite(EditorSprites sprite);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern string Internal_getEmptyShaderCode();
 		[MethodImpl(MethodImplOptions.InternalCall)]

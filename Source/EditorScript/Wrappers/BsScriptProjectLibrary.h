@@ -70,7 +70,9 @@ namespace bs
 		static MonoObject* internal_Load(MonoString* path);
 		static void internal_Save(MonoObject* resource);
 		static MonoObject* internal_GetRoot();
-		static void internal_Reimport(MonoString* path, MonoObject* options, bool force);
+		static void internal_Reimport(MonoString* path, MonoObject* options, bool force, bool synchronous);
+		static float internal_GetImportProgress(MonoString* path);
+		static void internal_CancelImport();
 		static MonoObject* internal_GetEntry(MonoString* path);
 		static bool internal_IsSubresource(MonoString* path);
 		static MonoObject* internal_GetMeta(MonoString* path);

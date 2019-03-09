@@ -86,8 +86,11 @@ namespace bs
 		return icons;
 	}
 
+	const Path TEMP_DIR = "Temp/";
+	const Path INTERNAL_TEMP_DIR = PROJECT_INTERNAL_DIR + TEMP_DIR;
+
 	const Path ProjectLibrary::RESOURCES_DIR = "Resources/";
-	const Path ProjectLibrary::INTERNAL_RESOURCES_DIR = PROJECT_INTERNAL_DIR + GAME_RESOURCES_FOLDER_NAME;
+	const Path ProjectLibrary::INTERNAL_RESOURCES_DIR = PROJECT_INTERNAL_DIR + RESOURCES_DIR;
 	const char* ProjectLibrary::LIBRARY_ENTRIES_FILENAME = "ProjectLibrary.asset";
 	const char* ProjectLibrary::RESOURCE_MANIFEST_FILENAME = "ResourceManifest.asset";
 
@@ -459,6 +462,7 @@ namespace bs
 			queuedImport->importOptions = curImportOptions;
 			queuedImport->pruneMetas = pruneResourceMetas;
 			queuedImport->native = isNativeResource;
+			queuedImport->timestamp = std::time(nullptr);
 
 			// If import is already queued for this file make the tasks dependant so they don't execute at the same time, 
 			// and so they execute in the proper order
@@ -509,7 +513,7 @@ namespace bs
 					if (!importedResources.empty())
 					{
 						Path outputPath = projectFolder;
-						outputPath.append(INTERNAL_RESOURCES_DIR);
+						outputPath.append(INTERNAL_TEMP_DIR);
 
 						if (!FileSystem::isDirectory(outputPath))
 							FileSystem::createDir(outputPath);
@@ -582,7 +586,7 @@ namespace bs
 					if (resource)
 					{
 						Path outputPath = projectFolder;
-						outputPath.append(INTERNAL_RESOURCES_DIR);
+						outputPath.append(INTERNAL_TEMP_DIR);
 
 						if (!FileSystem::isDirectory(outputPath))
 							FileSystem::createDir(outputPath);
@@ -616,8 +620,6 @@ namespace bs
 				TaskScheduler::instance().addTask(queuedImport->importTask);
 				mQueuedImports[fileEntry] = queuedImport;
 			}
-
-			fileEntry->lastUpdateTime = std::time(nullptr);
 
 			if(synchronous)
 				finishQueuedImport(fileEntry, *queuedImport, true);
@@ -660,8 +662,16 @@ namespace bs
 			fileEntry->meta->mImportOptions = import.importOptions;
 		}
 
+		fileEntry->lastUpdateTime = import.timestamp;
+
 		Path internalResourcesPath = mProjectFolder;
 		internalResourcesPath.append(INTERNAL_RESOURCES_DIR);
+
+		if (!FileSystem::isDirectory(internalResourcesPath))
+			FileSystem::createDir(internalResourcesPath);
+
+		Path tempResourcesPath = mProjectFolder;
+		tempResourcesPath.append(INTERNAL_TEMP_DIR);
 
 		// See which sub-resource metas need to be updated, removed or added based on the new resource set
 		bool isFirst = true;
@@ -671,6 +681,14 @@ namespace bs
 			// this time
 			if (!entry.resource)
 				continue;
+
+			// Copy the resource file from the temporary directory
+			const String uuidStr = entry.uuid.toString();
+
+			tempResourcesPath.setFilename(uuidStr + ".asset");
+			internalResourcesPath.setFilename(uuidStr + ".asset");
+
+			FileSystem::move(tempResourcesPath, internalResourcesPath);
 
 			String name = entry.name;
 			Path::stripInvalid(name);
@@ -741,9 +759,6 @@ namespace bs
 			isFirst = false;
 
 			// Register path in manifest
-			const String uuidStr = entry.uuid.toString();
-
-			internalResourcesPath.setFilename(uuidStr + ".asset");
 			mResourceManifest->registerResource(entry.uuid, internalResourcesPath);
 		}
 
@@ -776,12 +791,16 @@ namespace bs
 
 	bool ProjectLibrary::isUpToDate(FileEntry* resource) const
 	{
+		SPtr<QueuedImport> queuedImport;
+
 		if(resource->meta == nullptr)
 		{
 			// Allow no meta if import in progress
 			const auto iterFind = mQueuedImports.find(resource);
 			if(iterFind == mQueuedImports.end())
 				return false;
+
+			queuedImport = iterFind->second;
 		}
 		else
 		{
@@ -797,8 +816,14 @@ namespace bs
 			}
 		}
 
+		// Note: We're keeping separate update times for queued imports. This allows the import to be cancelled (either by
+		// user or by app crashing), without updating the actual update time. This way the systems knows to try to reimport
+		// the resource on the next check. At the same time we don't want our checkForModifications function to keep
+		// trying to reimport a resource if it's already been queued for import.
+		const std::time_t lastUpdateTime = queuedImport ? queuedImport->timestamp : resource->lastUpdateTime;
 		const std::time_t lastModifiedTime = FileSystem::getLastModifiedTime(resource->path);
-		return lastModifiedTime <= resource->lastUpdateTime;
+
+		return lastModifiedTime <= lastUpdateTime;
 	}
 
 	Vector<USPtr<ProjectLibrary::LibraryEntry>> ProjectLibrary::search(const String& pattern)
@@ -1366,7 +1391,8 @@ namespace bs
 		}
 	}
 
-	void ProjectLibrary::reimport(const Path& path, const SPtr<ImportOptions>& importOptions, bool forceReimport)
+	void ProjectLibrary::reimport(const Path& path, const SPtr<ImportOptions>& importOptions, bool forceReimport,
+		bool synchronous)
 	{
 		LibraryEntry* entry = findEntry(path).get();
 		if (entry != nullptr)
@@ -1374,9 +1400,29 @@ namespace bs
 			if (entry->type == LibraryEntryType::File)
 			{
 				FileEntry* resEntry = static_cast<FileEntry*>(entry);
-				reimportResourceInternal(resEntry, importOptions, forceReimport);
+				reimportResourceInternal(resEntry, importOptions, forceReimport, synchronous);
 			}
 		}
+	}
+
+	float ProjectLibrary::getImportProgress(const Path& path) const
+	{
+		LibraryEntry* entry = findEntry(path).get();
+		if (entry == nullptr)
+			return 0.0f;
+
+		if(entry->type == LibraryEntryType::Directory)
+			return 1.0f;
+
+		// Note: Only supporting binary progress reporting for now
+		const auto iterFind = mQueuedImports.find(static_cast<FileEntry*>(entry));
+		return iterFind != mQueuedImports.end() ? 0.0f : 1.0f;
+	}
+
+	void ProjectLibrary::cancelImport()
+	{
+		for(auto& entry : mQueuedImports)
+			entry.second->canceled = true;
 	}
 
 	void ProjectLibrary::waitForQueuedImport(FileEntry* fileEntry)

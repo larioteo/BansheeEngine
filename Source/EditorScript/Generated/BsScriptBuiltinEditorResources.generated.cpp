@@ -32,6 +32,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getAnimationWindowIcon", (void*)&ScriptBuiltinEditorResources::Internal_getAnimationWindowIcon);
 		metaData.scriptClass->addInternalCall("Internal_getEditorIcon", (void*)&ScriptBuiltinEditorResources::Internal_getEditorIcon);
 		metaData.scriptClass->addInternalCall("Internal_getLogMessageIcon", (void*)&ScriptBuiltinEditorResources::Internal_getLogMessageIcon);
+		metaData.scriptClass->addInternalCall("Internal_getSprite", (void*)&ScriptBuiltinEditorResources::Internal_getSprite);
 		metaData.scriptClass->addInternalCall("Internal_getEmptyShaderCode", (void*)&ScriptBuiltinEditorResources::Internal_getEmptyShaderCode);
 		metaData.scriptClass->addInternalCall("Internal_getEmptyCSScriptCode", (void*)&ScriptBuiltinEditorResources::Internal_getEmptyCSScriptCode);
 
@@ -205,6 +206,22 @@ namespace bs
 	{
 		ResourceHandle<SpriteTexture> tmp__output;
 		tmp__output = BuiltinEditorResources::instance().getLogMessageIcon(icon, size, dark);
+
+		MonoObject* __output;
+		ScriptResourceBase* script__output;
+		script__output = ScriptResourceManager::instance().getScriptResource(tmp__output, true);
+		if(script__output != nullptr)
+			__output = script__output->getManagedInstance();
+		else
+			__output = nullptr;
+
+		return __output;
+	}
+
+	MonoObject* ScriptBuiltinEditorResources::Internal_getSprite(EditorSprites sprite)
+	{
+		ResourceHandle<SpriteTexture> tmp__output;
+		tmp__output = BuiltinEditorResources::instance().getSprite(sprite);
 
 		MonoObject* __output;
 		ScriptResourceBase* script__output;

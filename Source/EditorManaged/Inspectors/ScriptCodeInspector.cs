@@ -21,6 +21,8 @@ namespace bs.Editor
         private GUITexture textBg = new GUITexture(null, EditorStylesInternal.ScrollAreaBg);
         private GUIToggleField isEditorField = new GUIToggleField(new LocEdString("Is editor script"));
 
+        private GUIReimportButton reimportButton;
+
         private string shownText = "";
         private ScriptCodeImportOptions importOptions;
 
@@ -53,23 +55,34 @@ namespace bs.Editor
             textBgPanel.AddElement(textBg);
 
             Layout.AddElement(isEditorField);
+            Layout.AddSpace(10);
 
-            GUIButton reimportButton = new GUIButton(new LocEdString("Reimport"));
-            reimportButton.OnClick += TriggerReimport;
+            reimportButton = new GUIReimportButton(InspectedResourcePath, Layout, () =>
+            {
+                ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
+            });
 
-            GUILayout reimportButtonLayout = Layout.AddLayoutX();
-            reimportButtonLayout.AddElement(reimportButton);
-            reimportButtonLayout.AddFlexibleSpace();
+            UpdateGUIValues();
         }
 
         /// <inheritdoc/>
         protected internal override InspectableState Refresh()
         {
+            reimportButton.Update();
+
+            return InspectableState.NotModified;
+        }
+
+        /// <summary>
+        /// Updates the GUI element values from the current import options object.
+        /// </summary>
+        private void UpdateGUIValues()
+        {
+            isEditorField.Value = importOptions.EditorScript;
+
             ScriptCode scriptCode = InspectedObject as ScriptCode;
             if (scriptCode == null)
-                return InspectableState.NotModified;
-
-            isEditorField.Value = importOptions.EditorScript;
+                return;
 
             string newText = scriptCode.Text;
             string newShownText = scriptCode.Text.Substring(0, MathEx.Min(newText.Length, MAX_SHOWN_CHARACTERS));
@@ -79,8 +92,6 @@ namespace bs.Editor
                 textLabel.SetContent(newShownText);
                 shownText = newShownText;
             }
-
-            return InspectableState.NotModified;
         }
 
         /// <summary>
@@ -111,17 +122,6 @@ namespace bs.Editor
             }
 
             return output;
-        }
-
-        /// <summary>
-        /// Reimports the script code resource according to the currently set import options.
-        /// </summary>
-        private void TriggerReimport()
-        {
-            ScriptCode scriptCode = (ScriptCode)InspectedObject;
-            string resourcePath = ProjectLibrary.GetPath(scriptCode);
-
-            ProjectLibrary.Reimport(resourcePath, importOptions, true);
         }
     }
 

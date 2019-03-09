@@ -14,6 +14,7 @@
 #include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
 #include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
 #include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
+#include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
 
 namespace bs
 {
@@ -40,6 +41,7 @@ namespace bs
 		static void Internal_getAnimationWindowIcon(AnimationWindowIcon icon, __GUIContentImagesInterop* __output);
 		static MonoObject* Internal_getEditorIcon(EditorIcon icon);
 		static MonoObject* Internal_getLogMessageIcon(LogMessageIcon icon, uint32_t size, bool dark);
+		static MonoObject* Internal_getSprite(EditorSprites sprite);
 		static MonoString* Internal_getEmptyShaderCode();
 		static MonoString* Internal_getEmptyCSScriptCode();
 	};

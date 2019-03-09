@@ -24,8 +24,7 @@ namespace bs.Editor
         private GUIEnumField cubemapSourceTypeField = 
             new GUIEnumField(typeof(CubemapSourceType), new LocEdString("Cubemap source"));
 
-        private GUIButton reimportButton = new GUIButton(new LocEdString("Reimport"));
-
+        private GUIReimportButton reimportButton;
         private TextureImportOptions importOptions;
 
         /// <inheritdoc/>
@@ -40,7 +39,6 @@ namespace bs.Editor
             cpuCachedField.OnChanged += x => importOptions.CpuCached = x;
             isCubemapField.OnChanged += x => importOptions.Cubemap = x;
             cubemapSourceTypeField.OnSelectionChanged += x => importOptions.CubemapSourceType = (CubemapSourceType)x;
-            reimportButton.OnClick += TriggerReimport;
 
             Layout.AddElement(formatField);
             Layout.AddElement(generateMipsField);
@@ -51,29 +49,36 @@ namespace bs.Editor
             Layout.AddElement(cubemapSourceTypeField);
             Layout.AddSpace(10);
 
-            GUILayout reimportButtonLayout = Layout.AddLayoutX();
-            reimportButtonLayout.AddFlexibleSpace();
-            reimportButtonLayout.AddElement(reimportButton);
-    }
+            reimportButton = new GUIReimportButton(InspectedResourcePath, Layout, () =>
+            {
+                ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
+            });
+
+            UpdateGUIValues();
+        }
 
         /// <inheritdoc/>
         protected internal override InspectableState Refresh()
         {
-            TextureImportOptions newImportOptions = GetImportOptions();
-
-            formatField.Value = (ulong)newImportOptions.Format;
-            generateMipsField.Value = newImportOptions.GenerateMips;
-            maximumMipsField.Value = newImportOptions.MaxMip;
-            srgbField.Value = newImportOptions.SRGB;
-            cpuCachedField.Value = newImportOptions.CpuCached;
-            isCubemapField.Value = newImportOptions.Cubemap;
-            cubemapSourceTypeField.Value = (ulong) newImportOptions.CubemapSourceType;
-
-            cubemapSourceTypeField.Active = importOptions.Cubemap;
-
-            importOptions = newImportOptions;
+            reimportButton.Update();
 
             return InspectableState.NotModified;
+        }
+
+        /// <summary>
+        /// Updates the GUI element values from the current import options object.
+        /// </summary>
+        private void UpdateGUIValues()
+        {
+            formatField.Value = (ulong)importOptions.Format;
+            generateMipsField.Value = importOptions.GenerateMips;
+            maximumMipsField.Value = importOptions.MaxMip;
+            srgbField.Value = importOptions.SRGB;
+            cpuCachedField.Value = importOptions.CpuCached;
+            isCubemapField.Value = importOptions.Cubemap;
+            cubemapSourceTypeField.Value = (ulong) importOptions.CubemapSourceType;
+
+            cubemapSourceTypeField.Active = importOptions.Cubemap;
         }
 
         /// <summary>
@@ -100,14 +105,6 @@ namespace bs.Editor
             }
 
             return output;
-        }
-
-        /// <summary>
-        /// Reimports the texture resource according to the currently set import options.
-        /// </summary>
-        private void TriggerReimport()
-        {
-            ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
     }
 

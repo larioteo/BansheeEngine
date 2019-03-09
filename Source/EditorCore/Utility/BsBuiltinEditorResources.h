@@ -71,6 +71,12 @@ namespace bs
 		Info, Warning, Error
 	};
 
+	/** Various built-in sprite textures. */
+	enum BS_SCRIPT_EXPORT(api:bed) class EditorSprites
+	{
+		Spinner
+	};
+
 	/**	Contains a set of built-in resources used by the editor. */
 	class BS_ED_EXPORT BS_SCRIPT_EXPORT(n:EditorBuiltin,m:Utility-Editor,api:bed) 
 	BuiltinEditorResources : public bs::Module<BuiltinEditorResources>
@@ -174,6 +180,10 @@ namespace bs
 		BS_SCRIPT_EXPORT()
 		BS_NORREF HSpriteTexture getLogMessageIcon(LogMessageIcon icon, UINT32 size, bool dark) const;
 
+		/** Retrieves a builtin editor sprite texture. */
+		BS_SCRIPT_EXPORT()
+		BS_NORREF HSpriteTexture getSprite(EditorSprites sprite);
+
 		/**	Returns text contained in the default "empty" shader. */
 		BS_SCRIPT_EXPORT(pr:getter,n:EmptyShaderCode)
 		String getEmptyShaderCode() const;
@@ -208,6 +218,9 @@ namespace bs
 		/**	Loads a GUI icon with the specified filename. */
 		HSpriteTexture getGUIIcon3D(const String& name) const;
 
+		/**	Loads an animated sprite with the specified filename. */
+		HSpriteTexture getAnimatedSprite(const String& name) const;
+
 		/**	Loads a shader with the specified filename */
 		HShader getShader(const String& name) const;
 
@@ -237,6 +250,7 @@ namespace bs
 		static const char* SkinFolder;
 		static const char* IconFolder;
 		static const char* Icon3DFolder;
+		static const char* AnimatedSpritesFolder;
 		static const char* ShaderIncludeFolder;
 		static const char* SpriteSubFolder;
 
@@ -247,6 +261,7 @@ namespace bs
 		Path EditorIcon3DFolder;
 		Path EditorIconSpritesFolder;
 		Path EditorIcon3DSpritesFolder;
+		Path EditorAnimatedSpritesFolder;
 		Path EditorShaderFolder;
 		Path EditorShaderIncludeFolder;
 

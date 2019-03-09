@@ -138,6 +138,20 @@
             "UUID": "b6a27d2f-793a-4b02-906a-e0c987ec3b80"
         }
     ],
+	"AnimatedSprites": [
+        {
+            "Path": "Spinner.png",
+            "SpriteUUID": "f3e4fdfa-e5bd-4a00-9619-293e9b196413",
+            "TextureUUID": "c5ad224b-5294-49b3-9a54-d18f6b9d34fa",
+			"Animation":
+			{
+				"NumRows": 3,
+				"NumColumns": 10,
+				"Count": 29,
+				"FPS": 29
+			}
+        }
+	],
     "Skin": [
         {
             "Path": "ButtonActive.png",

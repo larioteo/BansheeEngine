@@ -26,7 +26,7 @@ namespace bs.Editor
         private GUIToggleField keyFrameReductionField;
         private GUIToggleField rootMotionField;
         private GUIArrayField<AnimationSplitInfo, AnimSplitArrayRow> animSplitInfoField;
-        private GUIButton reimportButton;
+        private GUIReimportButton reimportButton;
 
         private MeshImportOptions importOptions;
         private AnimationSplitInfo[] splitInfos;
@@ -43,18 +43,6 @@ namespace bs.Editor
         {
             MeshImportOptions newImportOptions = GetImportOptions();
 
-            animSplitInfoField.Refresh();
-
-            normalsField.Value = newImportOptions.ImportNormals;
-            tangentsField.Value = newImportOptions.ImportTangents;
-            skinField.Value = newImportOptions.ImportSkin;
-            blendShapesField.Value = newImportOptions.ImportBlendShapes;
-            animationField.Value = newImportOptions.ImportAnimation;
-            scaleField.Value = newImportOptions.ImportScale;
-            cpuCachedField.Value = newImportOptions.CpuCached;
-            collisionMeshTypeField.Value = (ulong)newImportOptions.CollisionMeshType;
-            keyFrameReductionField.Value = newImportOptions.ReduceKeyFrames;
-            rootMotionField.Value = newImportOptions.ImportRootMotion;
 
             importOptions = newImportOptions;
 
@@ -78,7 +66,6 @@ namespace bs.Editor
             collisionMeshTypeField = new GUIEnumField(typeof(CollisionMeshType), new LocEdString("Collision mesh"));
             keyFrameReductionField = new GUIToggleField(new LocEdString("Keyframe Reduction"));
             rootMotionField = new GUIToggleField(new LocEdString("Import root motion"));
-            reimportButton = new GUIButton(new LocEdString("Reimport"));
 
             normalsField.OnChanged += x => importOptions.ImportNormals = x;
             tangentsField.OnChanged += x => importOptions.ImportTangents = x;
@@ -90,8 +77,6 @@ namespace bs.Editor
             collisionMeshTypeField.OnSelectionChanged += x => importOptions.CollisionMeshType = (CollisionMeshType)x;
             keyFrameReductionField.OnChanged += x => importOptions.ReduceKeyFrames = x;
             rootMotionField.OnChanged += x => importOptions.ImportRootMotion = x;
-
-            reimportButton.OnClick += TriggerReimport;
 
             Layout.AddElement(normalsField);
             Layout.AddElement(tangentsField);
@@ -114,9 +99,32 @@ namespace bs.Editor
 
             Layout.AddSpace(10);
 
-            GUILayout reimportButtonLayout = Layout.AddLayoutX();
-            reimportButtonLayout.AddFlexibleSpace();
-            reimportButtonLayout.AddElement(reimportButton); 
+            reimportButton = new GUIReimportButton(InspectedResourcePath, Layout, () =>
+            {
+                importOptions.AnimationSplits = splitInfos;
+                ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
+            });
+
+            UpdateGUIValues();
+        }
+
+        /// <summary>
+        /// Updates the GUI element values from the current import options object.
+        /// </summary>
+        private void UpdateGUIValues()
+        {
+            animSplitInfoField.Refresh();
+
+            normalsField.Value = importOptions.ImportNormals;
+            tangentsField.Value = importOptions.ImportTangents;
+            skinField.Value = importOptions.ImportSkin;
+            blendShapesField.Value = importOptions.ImportBlendShapes;
+            animationField.Value = importOptions.ImportAnimation;
+            scaleField.Value = importOptions.ImportScale;
+            cpuCachedField.Value = importOptions.CpuCached;
+            collisionMeshTypeField.Value = (ulong)importOptions.CollisionMeshType;
+            keyFrameReductionField.Value = importOptions.ReduceKeyFrames;
+            rootMotionField.Value = importOptions.ImportRootMotion;
         }
 
         /// <summary>
@@ -143,16 +151,6 @@ namespace bs.Editor
             }
 
             return output;
-        }
-
-        /// <summary>
-        /// Reimports the resource according to the currently set import options.
-        /// </summary>
-        private void TriggerReimport()
-        {
-            importOptions.AnimationSplits = splitInfos;
-
-            ProjectLibrary.Reimport(InspectedResourcePath, importOptions, true);
         }
 
         /// <summary>

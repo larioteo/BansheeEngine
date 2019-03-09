@@ -122,9 +122,33 @@ namespace bs.Editor
         ///                       options are of the correct type for the resource in question. If null is provided default 
         ///                       import options are used.</param>
         /// <param name="force">Should the resource be reimported even if no changes are detected.</param>
-        public static void Reimport(string path, ImportOptions options = null, bool force = false)
+        /// <param name="synchronous">If true the import will happen synchronously on the calling thread. If false the
+        /// import operation will be queued for execution on a worker thread.</param>
+        public static void Reimport(string path, ImportOptions options = null, bool force = false, bool synchronous = false)
         {
-            Internal_Reimport(path, options, force);
+            Internal_Reimport(path, options, force, synchronous);
+        }
+
+        /// <summary>
+        /// Checks how far along is the import for the specified file.
+        /// </summary>
+        /// <param name="path">Path to the file to check, absolute or relative to the resources folder.</param>
+        /// <returns> Reports 1 if the file is fully imported. Reports 0 if the import has not started or the file isn't
+        /// even queued for import. Reports >= 0 if the file is in process of being imported. Note that not all importers
+        /// support fine grained progress reporting, in which case the import progress will be reported as a binary 0 or 1.
+        /// </returns>
+        public static float GetImportProgress(string path)
+        {
+            return Internal_GetImportProgress(path);
+        }
+
+        /// <summary>
+        /// Cancels import for all resources currently queued for import. This method returns immediately but it may take
+        /// some time until imports are fully canceled.
+        /// </summary>
+        public static void CancelImport()
+        {
+            Internal_CancelImport();
         }
 
         /// <summary>
@@ -361,7 +385,13 @@ namespace bs.Editor
         private static extern bool Internal_IsSubresource(string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_Reimport(string path, ImportOptions options, bool force);
+        private static extern void Internal_Reimport(string path, ImportOptions options, bool force, bool synchronous);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float Internal_GetImportProgress(string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_CancelImport();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern LibraryEntry Internal_GetEntry(string path);
