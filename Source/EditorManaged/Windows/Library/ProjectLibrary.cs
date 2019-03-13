@@ -56,6 +56,11 @@ namespace bs.Editor
         /// </summary>
         internal static int InProgressImportCount { get { return Internal_GetInProgressImportCount(); } }
 
+        /// <summary>
+        /// Gets the import progress of all files currently being imported. Returns 0 if no import in progress.
+        /// </summary>
+        internal static float ImportProgressPercent { get; private set; }
+
         private static int totalFilesToImport;
 
         /// <summary>
@@ -321,11 +326,13 @@ namespace bs.Editor
                 if(totalFilesToImport > 0)
                     pct = numRemaining / (float)totalFilesToImport;
 
+                ImportProgressPercent = pct;
                 EditorApplication.SetStatusImporting(true, pct);
             }
             else
             {
                 totalFilesToImport = 0;
+                ImportProgressPercent = 0.0f;
                 EditorApplication.SetStatusImporting(false, 0.0f);
             }
         }

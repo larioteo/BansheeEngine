@@ -291,6 +291,9 @@ namespace bs.Editor
         private static bool unitTestsExecuted;
         private static EditorPersistentData persistentData;
 
+        private static bool delayUnloadProject;
+        private static Action delayUnloadCallback;
+
         #pragma warning disable 0414
         private static EditorApplication instance;
         #pragma warning restore 0414
@@ -373,6 +376,15 @@ namespace bs.Editor
             // Update managers
             ProjectLibrary.Update();
             codeManager.Update();
+
+            if (delayUnloadProject)
+            {
+                delayUnloadProject = false;
+                UnloadProject();
+
+                delayUnloadCallback?.Invoke();
+                delayUnloadCallback = null;
+            }
         }
 
         /// <summary>
@@ -730,9 +742,9 @@ namespace bs.Editor
             }
 
             if (IsProjectLoaded)
-                UnloadProject();
-
-            Internal_LoadProject(path); // Triggers Internal_OnProjectLoaded when done
+                TryUnloadProject(() => Internal_LoadProject(path));
+            else
+                Internal_LoadProject(path); // Triggers Internal_OnProjectLoaded when done
         }
 
         /// <summary>
@@ -828,39 +840,75 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Unloads the currently loaded project. Offers the user a chance to save the current scene if it is modified.
-        /// Automatically saves all project data before unloading.
+        /// Attempts to unload the currently loaded project. Offers the user a chance to save the current scene if it is
+        /// modified. Automatically saves all project data before unloading.
+        /// </summary>
+        /// <param name="onDone">Callback to trigger when project project unload is done.</param>
+        private static void TryUnloadProject(Action onDone)
+        {
+            if (delayUnloadProject)
+                return;
+
+            AskToSaveSceneAndContinue(
+                    () =>
+                {
+                    if (ProjectLibrary.ImportInProgress)
+                    {
+                        ConfirmImportInProgressWindow.Show();
+                        delayUnloadCallback = onDone;
+                        delayUnloadProject = true;
+                    }
+                    else
+                    {
+                        UnloadProject();
+                        onDone?.Invoke();
+                    }
+                });
+        }
+
+        /// <summary>
+        /// Unloads the currently loaded project, without making any checks or requiring confirmation.
         /// </summary>
         private static void UnloadProject()
         {
-            Action continueUnload =
-                () =>
-                {
-                    Scene.Clear();
+            Scene.Clear();
 
-                    if (monitor != null)
-                    {
-                        monitor.Destroy();
-                        monitor = null;
-                    }
+            if (monitor != null)
+            {
+                monitor.Destroy();
+                monitor = null;
+            }
 
-                    LibraryWindow window = EditorWindow.GetWindow<LibraryWindow>();
-                    if(window != null)
-                        window.Reset();
+            LibraryWindow window = EditorWindow.GetWindow<LibraryWindow>();
+            if (window != null)
+                window.Reset();
 
-                    SetSceneDirty(false);
-                    Internal_UnloadProject();
-                    SetStatusProject(false);
-                };
+            SetSceneDirty(false);
+            Internal_UnloadProject();
+            SetStatusProject(false);
+        }
+
+        /// <summary>
+        /// Checks if the current scene is modified and asks the user to save the scene if it is. Triggers the
+        /// <see cref="next"/> callback when done, unless user cancels the operation.
+        /// </summary>
+        /// <param name="next">Callback to trigger after this method finishes.</param>
+        internal static void AskToSaveSceneAndContinue(Action next)
+        {
+            Action trySaveScene = null;
+            trySaveScene = () =>
+            {
+                SaveScene(next, trySaveScene);
+            };
 
             Action<DialogBox.ResultType> dialogCallback =
-            (result) =>
-            {
-                if (result == DialogBox.ResultType.Yes)
-                    SaveScene();
-
-                continueUnload();
-            };
+                (result) =>
+                {
+                    if (result == DialogBox.ResultType.Yes)
+                        trySaveScene();
+                    else if (result == DialogBox.ResultType.No)
+                        next?.Invoke();
+                };
 
             if (IsSceneModified())
             {
@@ -868,7 +916,7 @@ namespace bs.Editor
                     DialogBox.Type.YesNoCancel, dialogCallback);
             }
             else
-                continueUnload();
+                next?.Invoke();
         }
 
         /// <summary>
