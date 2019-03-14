@@ -5,7 +5,7 @@ clone_folder: C:\Projects\Banshee3D
 
 build_script:
   # Setup and CMake configure
-  - cmd: set INSTALL_DIR=C:/Projects/bsf/install
+  - cmd: set INSTALL_DIR=C:/Projects/Banshee3D/install
   - cmd: mkdir "%INSTALL_DIR%"
   - cmd: mkdir Build
   - cmd: cd Build
