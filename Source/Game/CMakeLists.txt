@@ -64,3 +64,24 @@ add_engine_dependencies(Game)
 if(MSVC)
 	target_compile_options(Game PUBLIC /wd4509)
 endif()
+
+# Install
+set(PLATFORM_PATH_PREFIX "")
+if(WIN32)
+	set(PLATFORM_PATH_PREFIX "Win")
+elseif(LINUX)
+	set(PLATFORM_PATH_PREFIX "Linux")
+elseif(APPLE)
+	set(PLATFORM_PATH_PREFIX "macOS")
+else()
+	message(FATAL "Unsupported platform.")
+endif()
+
+if(BS_64BIT)
+	set(PLATFORM_PATH_PREFIX "${PLATFORM_PATH_PREFIX}64")
+endif()
+	
+install(
+	TARGETS Game
+	RUNTIME DESTINATION bin/EditorData/Binaries/${PLATFORM_PATH_PREFIX}
+)

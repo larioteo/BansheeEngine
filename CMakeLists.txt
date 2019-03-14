@@ -6,6 +6,12 @@ set (BSF_SOURCE_DIR ${BSF_DIRECTORY}/Source)
 set (APP_ROOT_DIR ${PROJECT_SOURCE_DIR})
 set (BS_IS_BANSHEE3D 1)
 
+# Version
+set (BS_B3D_VERSION_MAJOR 0)
+set (BS_B3D_VERSION_MINOR 5)
+set (BS_B3D_VERSION_PATCH 0) 
+set (BS_B3D_CURRENT_RELEASE_YEAR 2019)
+
 # Grab BSF
 find_path(SUBMODULE_SOURCES "Source/Foundation/bsfEngine/BsApplication.h" "Source/bsf/")
 if(NOT SUBMODULE_SOURCES)
@@ -66,3 +72,13 @@ add_dependencies(Game MBansheeEngine)
 if(MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Banshee3D)
 endif()
+
+## Install
+install(
+	DIRECTORY Data/
+	DESTINATION bin/EditorData
+	PATTERN "Data/Raw" EXCLUDE
+	PATTERN ".version" EXCLUDE
+	PATTERN ".reqversion" EXCLUDE
+	PATTERN "Settings.asset" EXCLUDE
+)

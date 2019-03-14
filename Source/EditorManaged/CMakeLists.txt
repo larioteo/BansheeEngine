@@ -6,6 +6,8 @@ set(BS_CS_PROJ "MBansheeEditor.csproj")
 
 if(MSVC)
 	include_external_msproject(MBansheeEditor ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ})
+	
+	add_dependencies(MBansheeEditor MBansheeEngine)
 	set_property(TARGET MBansheeEditor PROPERTY FOLDER Script)
 else()
 	find_package(mcs)

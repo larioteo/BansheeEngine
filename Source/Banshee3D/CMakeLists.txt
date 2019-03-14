@@ -36,3 +36,6 @@ install_dll_on_build(Banshee3D ${BSF_DIRECTORY})
 # Make sure 'mono' dlls and other files are copied to our folders
 install_dll_on_build(Banshee3D ${BSF_SOURCE_DIR}/../Dependencies/mono)
 copy_folder_on_build(Banshee3D ${BSF_SOURCE_DIR}/../Dependencies/mono ${PROJECT_BINARY_DIR} bin/Mono "*.*")
+
+# Install
+install_bsf_target(Banshee3D)

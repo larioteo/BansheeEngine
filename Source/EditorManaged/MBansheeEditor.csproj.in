@@ -38,7 +38,7 @@
 ${BS_SHARP_FILE_LIST}
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\bsf\Source\Plugins\bsfSharp\MBansheeEngine.csproj">
+    <ProjectReference Include="..\bsf\Source\Scripting\bsfSharp\MBansheeEngine.csproj">
       <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>
       <Name>MBansheeEngine</Name>
     </ProjectReference>

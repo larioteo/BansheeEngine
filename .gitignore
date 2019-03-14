@@ -31,3 +31,4 @@ Documentation/html
 Source/Experimental
 .vs/*
 Source/EditorManaged/MBansheeEditor.csproj
+bsfImportToolBuild

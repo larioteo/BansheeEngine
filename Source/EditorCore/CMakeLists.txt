@@ -36,3 +36,6 @@ endif()
 
 # IDE specific
 set_property(TARGET EditorCore PROPERTY FOLDER Foundation)
+
+# Install
+install_bsf_target(EditorCore)

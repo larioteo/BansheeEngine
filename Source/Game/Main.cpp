@@ -156,7 +156,7 @@ void runApplication()
 		if (mainScene.isLoaded(false))
 		{
 			HSceneObject root = mainScene->instantiate();
-			HSceneObject oldRoot = gSceneManager().getRootNode();
+			HSceneObject oldRoot = gSceneManager().getMainScene()->getRoot();
 
 			gSceneManager().setRootNode(root);
 			oldRoot->destroy();
