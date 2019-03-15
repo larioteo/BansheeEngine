@@ -15,8 +15,7 @@ namespace bs
 {
 	EditorWidgetBase::EditorWidgetBase(const HString& displayName, const String& name, UINT32 defaultWidth,
 		UINT32 defaultHeight, EditorWidgetContainer& parentContainer)
-		: mName(name), mDisplayName(displayName), mParent(nullptr), mX(0), mY(0), mWidth(0), mHeight(0)
-		, mDefaultWidth(defaultWidth), mDefaultHeight(defaultHeight), mContent(nullptr), mHasFocus(false), mIsActive(true)
+		: mName(name), mDisplayName(displayName), mDefaultWidth(defaultWidth), mDefaultHeight(defaultHeight)
 	{
 		parentContainer.add(*this);
 	}

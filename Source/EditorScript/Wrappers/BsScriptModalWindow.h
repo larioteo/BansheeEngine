@@ -71,7 +71,7 @@ namespace bs
 	class BS_SCR_BED_EXPORT ManagedModalWindow : public ModalWindow
 	{
 	public:
-		ManagedModalWindow(bool allowCloseButton, MonoObject* managedInstance);
+		ManagedModalWindow(bool allowCloseButton, UINT32 width, UINT32 height, MonoObject* managedInstance);
 		~ManagedModalWindow();
 
 		/**
@@ -129,17 +129,17 @@ namespace bs
 		String mNamespace;
 		String mTypename;
 
-		OnInitializeThunkDef mOnInitializeThunk;
-		OnDestroyThunkDef mOnDestroyThunk;
-		UpdateThunkDef mUpdateThunk;
-		MonoMethod* mOnWindowResizedMethod;
+		OnInitializeThunkDef mOnInitializeThunk = nullptr;
+		OnDestroyThunkDef mOnDestroyThunk = nullptr;
+		UpdateThunkDef mUpdateThunk = nullptr;
+		MonoMethod* mOnWindowResizedMethod = nullptr;
 
-		bool mIsInitialized;
+		bool mIsInitialized = false;
 		MonoObject* mManagedInstance;
-		uint32_t mGCHandle;
+		uint32_t mGCHandle = 0;
 
-		ScriptModalWindow* mScriptParent;
-		ScriptGUILayout* mContentsPanel;
+		ScriptModalWindow* mScriptParent = nullptr;
+		ScriptGUILayout* mContentsPanel = nullptr;
 	};
 
 	/** @} */

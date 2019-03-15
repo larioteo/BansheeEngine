@@ -15,9 +15,8 @@
 
 namespace bs
 {
-	ModalWindow::ModalWindow(const HString& title, bool hasCloseButton)
-		: EditorWindowBase(true), mTitleBarPanel(nullptr), mTitleBarBgPanel(nullptr), mTitle(nullptr), mCloseButton(nullptr)
-		, mTitleBarBg(nullptr),mContents(nullptr)
+	ModalWindow::ModalWindow(const HString& title, bool hasCloseButton, UINT32 width, UINT32 height)
+		: EditorWindowBase(true, width, height)
 	{
 		EditorWindowManager::instance().registerWindow(this);
 
@@ -69,11 +68,6 @@ namespace bs
 		mContents->setPosition(1, 1 + getTitleBarHeight());
 
 		updateSize();
-	}
-
-	ModalWindow::~ModalWindow()
-	{
-
 	}
 
 	Vector2I ModalWindow::screenToWindowPos(const Vector2I& screenPos) const

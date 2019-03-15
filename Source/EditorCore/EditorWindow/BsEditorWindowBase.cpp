@@ -13,12 +13,9 @@
 
 namespace bs
 {
-	EditorWindowBase::EditorWindowBase(bool isModal)
+	EditorWindowBase::EditorWindowBase(bool isModal, UINT32 width, UINT32 height)
 		:mOwnsRenderWindow(true), mIsModal(isModal)
 	{
-		UINT32 width = 200;
-		UINT32 height = 200;
-
 		INT32 left = -1;
 		INT32 top = -1;
 

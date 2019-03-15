@@ -21,7 +21,7 @@ namespace bs
 		EditorWidgetContainer& widgets() const { return *mWidgets; }
 
 		/** @copydoc EditorWindowBase::update  */
-		virtual void update() override;
+		void update() override;
 
 		/**	Creates a new empty editor window. */
 		static EditorWindow* create();
@@ -31,7 +31,7 @@ namespace bs
 		EditorWindow();
 
 		/** @copydoc EditorWindowBase::resized  */
-		virtual void resized() override;
+		void resized() override;
 	private:
 		EditorWidgetContainer* mWidgets;
 

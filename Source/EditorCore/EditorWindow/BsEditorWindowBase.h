@@ -64,7 +64,7 @@ namespace bs
 		bool hasFocus() const;
 
 	protected:
-		EditorWindowBase(bool isModal = false);
+		EditorWindowBase(bool isModal = false, UINT32 width = 200, UINT32 height = 200);
 		EditorWindowBase(const SPtr<RenderWindow>& renderWindow);
 
 		/**	Common code for constructing the object to be called from all constructors. */

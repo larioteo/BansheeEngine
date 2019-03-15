@@ -147,14 +147,14 @@ namespace bs
 
 		String mName;
 		HString mDisplayName;
-		EditorWidgetContainer* mParent;
-		INT32 mX, mY;
-		UINT32 mWidth, mHeight;
+		EditorWidgetContainer* mParent = nullptr;
+		INT32 mX = 0, mY = 0;
+		UINT32 mWidth = 0, mHeight = 0;
 		UINT32 mDefaultWidth, mDefaultHeight;
 		UINT32 mIndex = 0;
-		GUIPanel* mContent;
-		bool mHasFocus;
-		bool mIsActive;
+		GUIPanel* mContent = nullptr;
+		bool mHasFocus = false;
+		bool mIsActive = true;
 	};
 
 	/** @} */

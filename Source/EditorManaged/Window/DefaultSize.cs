@@ -9,7 +9,8 @@ namespace bs.Editor
      */
 
     /// <summary>
-    /// Can be placed on <see cref="EditorWindow"/> class to provide a default size for the window when it is first opened.
+    /// Can be placed on <see cref="EditorWindow"/> or <see cref="ModalWindow"/> class to provide a default size for the
+    /// window when it is first opened.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class DefaultSize : Attribute

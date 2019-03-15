@@ -19,7 +19,7 @@ namespace bs
 	class BS_ED_EXPORT ModalWindow : public EditorWindowBase
 	{
 	public:
-		virtual ~ModalWindow();
+		virtual ~ModalWindow() = default;
 
 		/** @copydoc EditorWindowBase::update */
 		void update() override;
@@ -39,7 +39,7 @@ namespace bs
 	protected:
 		friend class EditorWindowManager;
 
-		ModalWindow(const HString& title, bool hasCloseButton = false);
+		ModalWindow(const HString& title, bool hasCloseButton = false, UINT32 width = 200, UINT32 height = 200);
 
 		/**
 		 * Returns the area in which the GUI contents are displayed (not including title bar and other default 
@@ -60,15 +60,15 @@ namespace bs
 		/**	Returns the height in pixels taken up by the title bar. */
 		UINT32 getTitleBarHeight() const;
 
-		GUIPanel* mTitleBarPanel;
-		GUIPanel* mTitleBarBgPanel;
+		GUIPanel* mTitleBarPanel = nullptr;
+		GUIPanel* mTitleBarBgPanel = nullptr;
 
-		GUILabel* mTitle;
-		GUIButton* mCloseButton;
-		GUITexture* mTitleBarBg;
+		GUILabel* mTitle = nullptr;
+		GUIButton* mCloseButton = nullptr;
+		GUITexture* mTitleBarBg = nullptr;
 
 	protected:
-		GUIPanel* mContents;
+		GUIPanel* mContents = nullptr;
 	};
 
 	/** @} */

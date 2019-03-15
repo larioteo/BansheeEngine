@@ -48,7 +48,29 @@ namespace bs
 
 	void ScriptModalWindow::internal_createInstance(MonoObject* instance, bool allowCloseButton)
 	{
-		ManagedModalWindow* modalWindow = bs_new<ManagedModalWindow>(allowCloseButton, instance);
+		::MonoClass* rawMonoClass = MonoUtil::getClass(instance);
+		MonoClass* monoClass = MonoManager::instance().findClass(rawMonoClass);
+
+		MonoAssembly* assembly = MonoManager::instance().getAssembly(EDITOR_ASSEMBLY);
+
+		MonoClass* defaultSizeAttrib = assembly->getClass(EDITOR_NS, "DefaultSize");
+		if (defaultSizeAttrib == nullptr)
+			BS_EXCEPT(InternalErrorException, "Cannot find DefaultSize managed class.");
+
+		MonoField* defaultWidthField = defaultSizeAttrib->getField("width");
+		MonoField* defaultHeightField = defaultSizeAttrib->getField("height");
+
+		int width = 200;
+		int height = 200;
+
+		MonoObject* defaultSizeObj = monoClass->getAttribute(defaultSizeAttrib);
+		if (defaultSizeObj != nullptr)
+		{
+			defaultWidthField->get(defaultSizeObj, &width);
+			defaultHeightField->get(defaultSizeObj, &height);
+		}
+
+		ManagedModalWindow* modalWindow = bs_new<ManagedModalWindow>(allowCloseButton, width, height, instance);
 		ScriptModalWindow* nativeInstance = new (bs_alloc<ScriptModalWindow>()) ScriptModalWindow(modalWindow);
 		modalWindow->setParent(nativeInstance);
 	}
@@ -126,10 +148,8 @@ namespace bs
 			*screenPos = *windowPos;
 	}
 
-	ManagedModalWindow::ManagedModalWindow(bool allowCloseButton, MonoObject* managedInstance)
-		: ModalWindow(HString::dummy(), allowCloseButton), mOnInitializeThunk(nullptr), mOnDestroyThunk(nullptr)
-		, mUpdateThunk(nullptr), mOnWindowResizedMethod(nullptr), mIsInitialized(false), mManagedInstance(managedInstance)
-		, mGCHandle(0), mScriptParent(nullptr), mContentsPanel(nullptr)
+	ManagedModalWindow::ManagedModalWindow(bool allowCloseButton, UINT32 width, UINT32 height, MonoObject* managedInstance)
+		: ModalWindow(HString::dummy(), allowCloseButton, width, height), mManagedInstance(managedInstance)
 	{
 		mGCHandle = MonoUtil::newGCHandle(mManagedInstance);
 		mManagedInstance = MonoUtil::getObjectFromGCHandle(mGCHandle);

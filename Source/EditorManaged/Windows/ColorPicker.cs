@@ -12,6 +12,7 @@ namespace bs.Editor
     /// <summary>
     /// A color picker window that allows the user to select from a gamut of colors.
     /// </summary>
+    [DefaultSize(270, 400)]
     public class ColorPicker : ModalWindow
     {
         private const int SliderIndividualWidth = 150;
@@ -135,8 +136,6 @@ namespace bs.Editor
             : base(false)
         {
             Title = new LocEdString("Color Picker");
-            Width = 270;
-            Height = 400;
 
             colRed = color.r;
             colGreen = color.g;
@@ -199,6 +198,8 @@ namespace bs.Editor
             guiCancel.OnClick += OnCancel;
 
             GUIPanel mainPanel = GUI.AddPanel(0);
+            mainPanel.SetWidth(Width);
+            mainPanel.SetHeight(Height);
             GUILayout v0 = mainPanel.AddLayoutY();
 
             v0.AddSpace(5);
