@@ -624,7 +624,7 @@ namespace bs.Editor
                 case ShaderParameterType.TextureCube:
                     RRef<SpriteTexture> spriteTex = material.GetSpriteTexture(shaderParam.name);
 
-                    if (spriteTex != null)
+                    if (spriteTex != null && spriteTex.IsLoaded)
                         guiElem.SpriteTextureRef = spriteTex;
                     else
                     {
