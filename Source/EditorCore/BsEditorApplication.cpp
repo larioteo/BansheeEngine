@@ -175,6 +175,13 @@ namespace bs
 		// Do nothing, we initialize the script manager at a later stage
 	}
 
+	void EditorApplication::updateScriptManager()
+	{
+		// Do nothing, we need to perform script update before editor window update, but Application::postUpdate (where this
+		// method is normally called from) needs to execute after editor window update.
+	}
+
+
 	void EditorApplication::preUpdate()
 	{
 		Application::preUpdate();
@@ -185,6 +192,8 @@ namespace bs
 
 	void EditorApplication::postUpdate()
 	{
+		ScriptManager::instance().update();
+
 		// Call update on editor widgets before parent's postUpdate because the parent will render the GUI and we need
 		// to ensure editor widget's GUI is updated.
 		EditorWindowManager::instance().update();

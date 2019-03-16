@@ -37,10 +37,9 @@ namespace bs
 
 	void EditorScriptLibrary::update()
 	{
+		EngineScriptLibrary::update();
 
 		EditorScriptManager::instance().update();
-
-		EngineScriptLibrary::update();
 	}
 
 	void EditorScriptLibrary::reload()

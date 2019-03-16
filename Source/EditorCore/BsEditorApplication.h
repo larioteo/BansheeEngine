@@ -101,6 +101,9 @@ namespace bs
 		/** @copydoc Application::startUpScriptManager */
 		void startUpScriptManager() override;
 
+		/** @copydoc Application::updateScriptManager */
+		void updateScriptManager() override;
+
 		/**
 		 * Loads the previously saved editor widget layout from the default location. Can return null if no layout was 
 		 * previously saved.
