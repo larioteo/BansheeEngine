@@ -1,4 +1,17 @@
 ﻿{
+    "AnimatedSprites": [
+        {
+            "Animation": {
+                "Count": 29,
+                "FPS": 29,
+                "NumColumns": 10,
+                "NumRows": 3
+            },
+            "Path": "Spinner.png",
+            "SpriteUUID": "f3e4fdfa-e5bd-4a00-9619-293e9b196413",
+            "TextureUUID": "c5ad224b-5294-49b3-9a54-d18f6b9d34fa"
+        }
+    ],
     "Cursors": null,
     "Fonts": [
         {
@@ -138,20 +151,6 @@
             "UUID": "b6a27d2f-793a-4b02-906a-e0c987ec3b80"
         }
     ],
-	"AnimatedSprites": [
-        {
-            "Path": "Spinner.png",
-            "SpriteUUID": "f3e4fdfa-e5bd-4a00-9619-293e9b196413",
-            "TextureUUID": "c5ad224b-5294-49b3-9a54-d18f6b9d34fa",
-			"Animation":
-			{
-				"NumRows": 3,
-				"NumColumns": 10,
-				"Count": 29,
-				"FPS": 29
-			}
-        }
-	],
     "Skin": [
         {
             "Path": "ButtonActive.png",
@@ -1658,6 +1657,16 @@
             "Path": "SceneCameraOptionsIconOn.png",
             "SpriteUUID": "bc2d60d6-4a4b-eef9-8c87-4a4baad3c2c7",
             "TextureUUID": "b41fb04a-44f2-e17e-b697-44f20a42b34d"
+        },
+        {
+            "Path": "AnimPropertyIcon.png",
+            "SpriteUUID": "82810d60-4853-21ee-7f84-48538849c49b",
+            "TextureUUID": "18214dcb-4385-b33c-3f88-438529bc5a93"
+        },
+        {
+            "Path": "AnimPropertyIconOn.png",
+            "SpriteUUID": "286b300e-4f7e-eb27-32b5-4f7e46839e96",
+            "TextureUUID": "2294df02-43c2-6df5-4598-43c23a1653cb"
         }
     ],
     "SpriteIcons3D": [

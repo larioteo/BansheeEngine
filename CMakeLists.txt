@@ -34,7 +34,7 @@ add_subdirectory(${BSF_SOURCE_DIR})
 
 set (BS_PREBUILT_DEPENDENCIES_VERSION 24)
 set (BS_SRC_DEPENDENCIES_VERSION 15)
-set (BS_BUILTIN_ASSETS_VERSION 16)
+set (BS_BUILTIN_ASSETS_VERSION 17)
 
 # Options
 set(SCRIPT_BINDING_GENERATION OFF CACHE BOOL "If true, script binding generation will be supported through a specialized build target. Enable this if you plan on modifying the scripting API. Requires the SBGen tool dependency.")
