@@ -1,5 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System;
 using System.Collections.Generic;
 using bs;
 
@@ -113,13 +115,15 @@ namespace bs.Editor
         /// <returns>Type of builtin shader, if any.</returns>
         private BuiltinShader ShaderToBuiltin(Shader shader)
         {
-            // Note: Need a better way to detect the builtin shader perhaps (store it in Material?)
-            Shader standardShader = Builtin.GetShader(BuiltinShader.Standard);
-            Shader transparentShader = Builtin.GetShader(BuiltinShader.Transparent);
-;            if(standardShader == shader)
-                return BuiltinShader.Standard;
-            else if(transparentShader == shader)
-                return BuiltinShader.Transparent;
+            // Note: Might be nice to have a better way to detect the builtin shader perhaps (store it in Material?)
+            //   - Or I could just compare UUID's here to avoid loading the shaders
+            var enumValues = Enum.GetValues(typeof(BuiltinShader));
+            for (int i = 1; i < enumValues.Length; i++)
+            {
+                Shader builtinShader = Builtin.GetShader((BuiltinShader) i);
+                if (builtinShader == shader)
+                    return (BuiltinShader) i;
+            }
             
             return BuiltinShader.Custom;
         }
@@ -220,7 +224,9 @@ namespace bs.Editor
     /// </summary>
     internal class MaterialParamFloatGUI : MaterialParamGUI
     {
-        private GUIFloatField guiElem;
+        private GUILayout fieldLayout;
+        private GUIFloatField guiConstant;
+        private GUICurvesField guiCurves;
 
         /// <summary>
         /// Creates a new material parameter GUI.
@@ -232,26 +238,55 @@ namespace bs.Editor
             : base(shaderParam)
         {
             LocString title = new LocEdString(shaderParam.name);
-            guiElem = new GUIFloatField(title);
-            guiElem.OnChanged += (x) =>
+
+            var guiToggle = new GUIToggle(new GUIContent(
+                EditorBuiltin.GetEditorToggleIcon(EditorToggleIcon.AnimateProperty), new LocString("Animate")));
+            guiConstant = new GUIFloatField(title);
+            guiCurves = new GUICurvesField(title);
+
+            bool isAnimated = material.IsAnimated(shaderParam.name);
+            guiConstant.Active = !isAnimated;
+            guiCurves.Active = isAnimated;
+
+            fieldLayout = layout.AddLayoutX();
+            fieldLayout.AddElement(guiConstant);
+            fieldLayout.AddElement(guiCurves);
+            fieldLayout.AddSpace(10);
+            fieldLayout.AddElement(guiToggle);
+
+            guiConstant.OnChanged += (x) =>
             {
                 material.SetFloat(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
             };
 
-            layout.AddElement(guiElem);
+            guiCurves.OnChanged += x =>
+            {
+                material.SetFloatCurve(shaderParam.name, x);
+                EditorApplication.SetDirty(material);
+            };
+
+            guiToggle.OnToggled += x =>
+            {
+                guiConstant.Active = !x;
+                guiCurves.Active = x;
+            };
         }
 
         /// <inheritdoc/>
         internal override void Refresh(Material material)
         {
-            guiElem.Value = material.GetFloat(shaderParam.name);
+            bool isAnimated = material.IsAnimated(shaderParam.name);
+            if (isAnimated)
+                guiCurves.SetCurve(material.GetFloatCurve(shaderParam.name));
+            else
+                guiConstant.Value = material.GetFloat(shaderParam.name);
         }
 
         /// <inheritdoc/>
         internal override void Destroy()
         {
-            guiElem.Destroy();
+            fieldLayout.Destroy();
         }
     }
 
@@ -538,7 +573,9 @@ namespace bs.Editor
     /// </summary>
     internal class MaterialParamColorGUI : MaterialParamGUI
     {
-        private GUIColorField guiElem;
+        private GUILayout fieldLayout;
+        private GUIColorField guiColor;
+        private GUIColorGradientField guiColorGradient;
 
         /// <summary>
         /// Creates a new material parameter GUI.
@@ -550,26 +587,62 @@ namespace bs.Editor
             : base(shaderParam)
         {
             LocString title = new LocEdString(shaderParam.name);
-            guiElem = new GUIColorField(title);
-            guiElem.OnChanged += (x) =>
+
+            var guiToggle = new GUIToggle(new GUIContent( 
+                EditorBuiltin.GetEditorToggleIcon(EditorToggleIcon.AnimateProperty), new LocString("Animate")));
+            guiColor = new GUIColorField(title);
+            guiColorGradient = new GUIColorGradientField(title);
+
+            bool isAnimated = material.IsAnimated(shaderParam.name);
+            guiColor.Active = !isAnimated;
+            guiColorGradient.Active = isAnimated;
+
+            fieldLayout = layout.AddLayoutX();
+            fieldLayout.AddElement(guiColor);
+            fieldLayout.AddElement(guiColorGradient);
+            fieldLayout.AddSpace(10);
+            fieldLayout.AddElement(guiToggle);
+
+            guiColor.OnChanged += (x) =>
             {
                 material.SetColor(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
             };
 
-            layout.AddElement(guiElem);
+            guiColorGradient.OnChanged += x =>
+            {
+                material.SetColorGradient(shaderParam.name, x);
+                EditorApplication.SetDirty(material);
+            };
+
+            guiToggle.OnToggled += x =>
+            {
+                guiColor.Active = !x;
+                guiColorGradient.Active = x;
+
+                if (x)
+                {
+                    ColorGradient gradient = material.GetColorGradient(shaderParam.name);
+                    if (gradient.NumKeys == 0)
+                        material.SetColorGradient(shaderParam.name, new ColorGradient(material.GetColor(shaderParam.name)));
+                }
+            };
         }
 
         /// <inheritdoc/>
         internal override void Refresh(Material material)
         {
-            guiElem.Value = material.GetColor(shaderParam.name);
+            bool isAnimated = material.IsAnimated(shaderParam.name);
+            if (isAnimated)
+                guiColorGradient.Value = material.GetColorGradient(shaderParam.name);
+            else
+                guiColor.Value = material.GetColor(shaderParam.name);
         }
 
         /// <inheritdoc/>
         internal override void Destroy()
         {
-            guiElem.Destroy();
+            fieldLayout.Destroy();
         }
     }
 
@@ -590,7 +663,12 @@ namespace bs.Editor
             : base(shaderParam)
         {
             LocString title = new LocEdString(shaderParam.name);
-            guiElem = new GUITextureField(title);
+
+            GUITextureFieldType type = shaderParam.type == ShaderParameterType.Texture2D ? 
+                GUITextureFieldType.TextureOrSpriteTexture :
+                GUITextureFieldType.Texture;
+
+            guiElem = new GUITextureField(type, title);
 
             switch (shaderParam.type)
             {
@@ -617,22 +695,25 @@ namespace bs.Editor
         /// <inheritdoc/>
         internal override void Refresh(Material material)
         {
+            RRef<Texture> texture;
             switch (shaderParam.type)
             {
                 case ShaderParameterType.Texture2D:
-                case ShaderParameterType.Texture3D:
-                case ShaderParameterType.TextureCube:
                     RRef<SpriteTexture> spriteTex = material.GetSpriteTexture(shaderParam.name);
 
                     if (spriteTex != null && spriteTex.IsLoaded)
                         guiElem.SpriteTextureRef = spriteTex;
                     else
                     {
-                        RRef<Texture> texture = material.GetTexture(shaderParam.name);
+                        texture = material.GetTexture(shaderParam.name);
                         guiElem.TextureRef = texture;
                     }
 
-
+                    break;
+                case ShaderParameterType.Texture3D:
+                case ShaderParameterType.TextureCube:
+                    texture = material.GetTexture(shaderParam.name);
+                    guiElem.TextureRef = texture;
                     break;
             }
         }

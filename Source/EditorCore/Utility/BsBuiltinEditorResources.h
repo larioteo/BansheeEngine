@@ -65,6 +65,12 @@ namespace bs
 		X, Component, SceneObject
 	};
 
+	/**	Types of icons used in various areas throughout the editor, for toggleable elements. */
+	enum BS_SCRIPT_EXPORT(api:bed) class EditorToggleIcon
+	{
+		AnimateProperty
+	};
+
 	/**	Types of icons to be used along with log messages depending on their severity. */
 	enum BS_SCRIPT_EXPORT(api:bed) class LogMessageIcon
 	{
@@ -175,6 +181,10 @@ namespace bs
 		/**	Retrieves an icon that represents a specific generic editor icon. */
 		BS_SCRIPT_EXPORT()
 		BS_NORREF HSpriteTexture getEditorIcon(EditorIcon icon) const;
+
+		/**	Retrieves an icon that represents a specific generic editor icon used for toggleable elements. */
+		BS_SCRIPT_EXPORT()
+		GUIContentImages getEditorToggleIcon(EditorToggleIcon icon) const;
 
 		/**	Retrieves an icon that represents a specific log message type. */
 		BS_SCRIPT_EXPORT()

@@ -117,7 +117,7 @@ namespace bs.Editor
             texture = Texture.Create2D(TEX_WIDTH, TEX_HEIGHT);
             spriteTexture = new SpriteTexture(texture);
 
-            guiGradientTexture = new GUITexture(spriteTexture, GUITextureScaleMode.ScaleToFit);
+            guiGradientTexture = new GUITexture(spriteTexture, GUITextureScaleMode.StretchToFit);
             guiGradientTexture.SetHeight(30);
 
             UpdateTexture();
@@ -193,12 +193,23 @@ namespace bs.Editor
             Color[] colors = new Color[width * height];
 
             float halfPixel = 0.5f / width;
-            for (int x = 0; x < width; x++)
+            if (gradient.NumKeys > 0)
             {
-                Color color = gradient.Evaluate(x / (float)width + halfPixel);
+                for (int x = 0; x < width; x++)
+                {
+                    Color color = gradient.Evaluate(x / (float) width + halfPixel);
 
-                for (int y = 0; y < height; y++)
-                    colors[y * width + x] = color;
+                    for (int y = 0; y < height; y++)
+                        colors[y * width + x] = color;
+                }
+            }
+            else
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                        colors[y * width + x] = Color.Black;
+                }
             }
 
             texture.SetPixels(colors);

@@ -31,6 +31,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_getInspectorWindowIcon", (void*)&ScriptBuiltinEditorResources::Internal_getInspectorWindowIcon);
 		metaData.scriptClass->addInternalCall("Internal_getAnimationWindowIcon", (void*)&ScriptBuiltinEditorResources::Internal_getAnimationWindowIcon);
 		metaData.scriptClass->addInternalCall("Internal_getEditorIcon", (void*)&ScriptBuiltinEditorResources::Internal_getEditorIcon);
+		metaData.scriptClass->addInternalCall("Internal_getEditorToggleIcon", (void*)&ScriptBuiltinEditorResources::Internal_getEditorToggleIcon);
 		metaData.scriptClass->addInternalCall("Internal_getLogMessageIcon", (void*)&ScriptBuiltinEditorResources::Internal_getLogMessageIcon);
 		metaData.scriptClass->addInternalCall("Internal_getSprite", (void*)&ScriptBuiltinEditorResources::Internal_getSprite);
 		metaData.scriptClass->addInternalCall("Internal_getEmptyShaderCode", (void*)&ScriptBuiltinEditorResources::Internal_getEmptyShaderCode);
@@ -200,6 +201,16 @@ namespace bs
 			__output = nullptr;
 
 		return __output;
+	}
+
+	void ScriptBuiltinEditorResources::Internal_getEditorToggleIcon(EditorToggleIcon icon, __GUIContentImagesInterop* __output)
+	{
+		GUIContentImages tmp__output;
+		tmp__output = BuiltinEditorResources::instance().getEditorToggleIcon(icon);
+
+		__GUIContentImagesInterop interop__output;
+		interop__output = ScriptGUIContentImages::toInterop(tmp__output);
+		MonoUtil::valueCopy(__output, &interop__output, ScriptGUIContentImages::getMetaData()->scriptClass->_getInternalClass());
 	}
 
 	MonoObject* ScriptBuiltinEditorResources::Internal_getLogMessageIcon(LogMessageIcon icon, uint32_t size, bool dark)

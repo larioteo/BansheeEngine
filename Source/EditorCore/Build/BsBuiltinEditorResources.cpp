@@ -608,6 +608,32 @@ namespace bs
 		return HSpriteTexture();
 	}
 
+	GUIContentImages BuiltinEditorResources::getEditorToggleIcon(EditorToggleIcon icon) const
+	{
+		HSpriteTexture off;
+		HSpriteTexture on;
+
+		switch (icon)
+		{
+		case EditorToggleIcon::AnimateProperty:
+			off = getGUIIcon("AnimPropertyIcon.png");
+			on = getGUIIcon("AnimPropertyIconOn.png");
+			break;
+		}
+
+		GUIContentImages output;
+		output.normal = off;
+		output.hover = off;
+		output.active = on;
+		output.focused = off;
+		output.normalOn = on;
+		output.hoverOn = on;
+		output.activeOn = on;
+		output.focusedOn = on;
+
+		return output;
+	}
+
 	HSpriteTexture BuiltinEditorResources::getLogMessageIcon(LogMessageIcon icon, UINT32 size, bool dark) const
 	{
 		if (size < 24) // Round to 16

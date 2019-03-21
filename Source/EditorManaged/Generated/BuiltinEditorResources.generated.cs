@@ -107,6 +107,14 @@ namespace bs.Editor
 			return Internal_getEditorIcon(icon);
 		}
 
+		/// <summary>Retrieves an icon that represents a specific generic editor icon used for toggleable elements.</summary>
+		public static GUIContentImages GetEditorToggleIcon(EditorToggleIcon icon)
+		{
+			GUIContentImages temp;
+			Internal_getEditorToggleIcon(icon, out temp);
+			return temp;
+		}
+
 		/// <summary>Retrieves an icon that represents a specific log message type.</summary>
 		public static SpriteTexture GetLogMessageIcon(LogMessageIcon icon, int size, bool dark)
 		{
@@ -141,6 +149,8 @@ namespace bs.Editor
 		private static extern void Internal_getAnimationWindowIcon(AnimationWindowIcon icon, out GUIContentImages __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern SpriteTexture Internal_getEditorIcon(EditorIcon icon);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_getEditorToggleIcon(EditorToggleIcon icon, out GUIContentImages __output);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern SpriteTexture Internal_getLogMessageIcon(LogMessageIcon icon, int size, bool dark);
 		[MethodImpl(MethodImplOptions.InternalCall)]
