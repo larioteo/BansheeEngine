@@ -677,12 +677,23 @@ namespace bs.Editor
                 case ShaderParameterType.TextureCube:
                     guiElem.OnChanged += (x) =>
                     {
-                        Resource resource = x.Value;
-
-                        if(resource is Texture tex)
-                            material.SetTexture(shaderParam.name, tex);
-                        else if(resource is SpriteTexture spriteTex)
-                            material.SetSpriteTexture(shaderParam.name, spriteTex);
+                        string path = ProjectLibrary.GetPath(x.UUID);
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            if (ProjectLibrary.GetEntry(path) is FileEntry fileEntry)
+                            {
+                                if (fileEntry.ResourceMetas.Length > 0)
+                                {
+                                    ResourceMeta meta = fileEntry.ResourceMetas[0];
+                                    if (meta.ResType == ResourceType.SpriteTexture)
+                                        material.SetSpriteTexture(shaderParam.name, x.As<SpriteTexture>());
+                                    else if(meta.ResType == ResourceType.Texture)
+                                        material.SetTexture(shaderParam.name, x.As<Texture>());
+                                }
+                            }
+                        }
+                        else
+                            material.SetTexture(shaderParam.name, null);
 
                         EditorApplication.SetDirty(material);
                     };
@@ -701,7 +712,7 @@ namespace bs.Editor
                 case ShaderParameterType.Texture2D:
                     RRef<SpriteTexture> spriteTex = material.GetSpriteTexture(shaderParam.name);
 
-                    if (spriteTex != null && spriteTex.IsLoaded)
+                    if (spriteTex != null && spriteTex.UUID != UUID.Empty)
                         guiElem.SpriteTextureRef = spriteTex;
                     else
                     {

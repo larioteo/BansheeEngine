@@ -158,12 +158,12 @@ namespace bs
 		if (!filePath.isEmpty())
 		{
 			SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(filePath);
-			if(meta)
+			if(meta && meta->getPreviewIcons().icon128.isLoaded())
 				previewIcon = SpriteTexture::create(meta->getPreviewIcons().icon128);
 			else
 			{
 				// Not ideal. No cached texture so fall back on loading the original asset
-				HResource resource = gResources().load(filePath);
+				HResource resource = gProjectLibrary().load(filePath);
 				if(resource.isLoaded(false))
 				{
 					if (rtti_is_of_type<SpriteTexture>(resource.get()))
@@ -233,7 +233,7 @@ namespace bs
 			Path path = draggedResources->resourcePaths[i];
 
 			SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(draggedResources->resourcePaths[i]);
-			if (meta == nullptr || meta->getTypeID() != TID_Texture)
+			if (meta == nullptr || (meta->getTypeID() != TID_Texture && meta->getTypeID() != TID_SpriteTexture))
 				continue;
 
 			setUUID(meta->getUUID());
