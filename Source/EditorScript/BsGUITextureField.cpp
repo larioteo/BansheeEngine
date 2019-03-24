@@ -65,6 +65,9 @@ namespace bs
 
 		mDropButton->onDataDropped.connect(std::bind(&GUITextureField::dataDropped, this, _1));
 		mDropButton->onClick.connect(std::bind(&GUITextureField::onDropButtonClicked, this));
+
+		mDropButton->setContent(GUIContent(HString("(None)")));
+		mClearButton->setVisible(false);
 	}
 
 	GUITextureField* GUITextureField::create(GUITextureFieldType type, const GUIFieldOptions& options)
