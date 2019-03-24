@@ -63,6 +63,8 @@ namespace bs.Editor
             InspectableState state = genericDrawer.Refresh();
             if (state != InspectableState.NotModified)
             {
+                EditorApplication.SetDirty(spriteTexture);
+
                 // The inspector will by default just assign a resource reference without loading it, make sure we load it
                 // so it can be previewed
                 if (spriteTexture.Texture != null && !spriteTexture.Texture.IsLoaded)
