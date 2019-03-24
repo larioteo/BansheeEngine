@@ -785,7 +785,7 @@ namespace bs.Editor
                 return;
 
             SetStatusProject(true);
-            persistentData.dirtyResources[resource.UUID] = true;
+            persistentData.dirtyResources[resource.UUID] = resource;
         }
 
         /// <summary>

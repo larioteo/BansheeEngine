@@ -15,7 +15,7 @@ namespace bs.Editor
     internal class EditorPersistentData : ManagedComponent
     {
         [SerializeField]
-        internal Dictionary<UUID, bool> dirtyResources = new Dictionary<UUID, bool>();
+        internal Dictionary<UUID, Resource> dirtyResources = new Dictionary<UUID, Resource>();
 
         [SerializeField]
         internal Dictionary<UUID, EditorAnimClipInfo> dirtyAnimClips = new Dictionary<UUID, EditorAnimClipInfo>();
