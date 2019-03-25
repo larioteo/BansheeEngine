@@ -14,6 +14,7 @@ namespace bs.Editor
     public abstract class InspectableRangedField : InspectableField
     {
         protected InspectableFieldStyleInfo style;
+
         /// <summary>
         /// Creates a new inspectable ranged field GUI for the specified property.
         /// </summary>

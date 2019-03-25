@@ -58,7 +58,12 @@ namespace bs.Editor
         /// Singifies that the field containing a class/struct should display the child fields of that objects as if they
         /// were part of the parent class in the inspector.
         /// </summary>
-        Inline = 1 << 7
+        Inline = 1 << 7,
+
+        /// <summary>
+        /// Signifies that a <see cref="RRef{T}"/> should be loaded when assigned to field through the inspector.
+        /// </summary>
+        LoadOnAssign = 1 << 8
     }
 
     /// <summary>

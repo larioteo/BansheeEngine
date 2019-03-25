@@ -15,6 +15,7 @@ namespace bs.Editor
     {
         private GUIResourceField guiField;
         private InspectableState state;
+        private InspectableFieldStyleInfo style;
 
         /// <summary>
         /// Creates a new inspectable resource reference GUI for the specified property.
@@ -26,11 +27,12 @@ namespace bs.Editor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
+        /// <param name="style">Contains information about the field style.</param>
         public InspectableRRef(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout,
-            SerializableProperty property)
+            SerializableProperty property, InspectableFieldStyleInfo style)
             : base(context, title, path, SerializableProperty.FieldType.RRef, depth, layout, property)
         {
-
+            this.style = style;
         }
 
         /// <inheritoc/>
@@ -68,6 +70,9 @@ namespace bs.Editor
         /// <param name="newValue">New resource to reference.</param>
         private void OnFieldValueChanged(RRefBase newValue)
         {
+            if (newValue != null && !newValue.IsLoaded && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.LoadOnAssign))
+                Resources.Load<Resource>(newValue.UUID);
+
             property.SetValue(newValue);
             state = InspectableState.Modified;
         }

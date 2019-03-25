@@ -349,7 +349,7 @@ namespace bs.Editor
                         field = new InspectableResource(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.RRef:
-                        field = new InspectableRRef(context, title, path, depth, layout, property);
+                        field = new InspectableRRef(context, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.GameObjectRef:
                         field = new InspectableGameObjectRef(context, title, path, depth, layout, property);
