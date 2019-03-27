@@ -1,5 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System.Diagnostics;
 using System.IO;
 using bs;
 
@@ -435,6 +437,11 @@ namespace bs.Editor
                         ProgressBar.Show("Opening external code editor...", 1.0f);
 
                         delayedOpenCodeEditorFrame = Time.FrameIdx + 1;
+                    }
+                    else if(meta.ResType == ResourceType.PlainText || meta.ResType == ResourceType.Shader || meta.ResType == ResourceType.ShaderInclude)
+                    {
+                        string absPath = Path.Combine(ProjectLibrary.ResourceFolder, fileEntry.Path);
+                        Process.Start(absPath);
                     }
                 }
             }
