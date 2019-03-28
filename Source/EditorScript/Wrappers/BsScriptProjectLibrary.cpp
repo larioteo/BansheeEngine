@@ -464,7 +464,22 @@ namespace bs
 		auto* fileEntry = static_cast<ProjectLibrary::FileEntry*>(thisPtr->getInternal().get());
 
 		if (fileEntry->meta != nullptr)
-			return ScriptImportOptions::create(fileEntry->meta->getImportOptions());
+		{
+			const SPtr<ImportOptions>& io = fileEntry->meta->getImportOptions();
+			if(!io)
+				return nullptr;
+
+			UINT32 rttiId = io->getRTTI()->getRTTIId(); 
+			const ReflectableTypeInfo* reflTypeInfo = ScriptAssemblyManager::instance().getReflectableTypeInfo(rttiId);
+			if(reflTypeInfo == nullptr)
+			{
+				LOGERR(StringUtil::format("Mapping between a reflectable object and a managed type is missing "
+					"for type \"{0}\"", rttiId))
+				return nullptr;
+			}
+
+			return reflTypeInfo->createCallback(io);
+		}
 		else
 			return nullptr;
 	}
