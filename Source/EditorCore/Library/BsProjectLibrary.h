@@ -316,6 +316,7 @@ namespace bs
 			SPtr<Task> importTask;
 			SPtr<ImportOptions> importOptions;
 			Vector<QueuedImportResource> resources;
+			SPtr<QueuedImport> dependsOn;
 			bool pruneMetas = false;
 			bool canceled = false;
 			bool native = false;

@@ -473,6 +473,10 @@ namespace bs
 			{
 				dependency = iterFind->second->importTask;
 
+				// Need this reference just so the dependency is kept alive, otherwise it goes out of scope when we
+				// remove or overwrite it from mQueuedImports map
+				queuedImport->dependsOn = iterFind->second;
+
 				// Note: We should cancel the task here so it doesn't run unnecessarily. But if the task is already
 				// running it shouldn't be canceled as dependencies still need to wait on it (since cancelling a
 				// running task doesn't actually stop it). Yet there is currently no good wait to check if task
