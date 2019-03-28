@@ -82,10 +82,9 @@ namespace bs
 		void syncSolution(const String& gameProjectName, const CodeProjectReference& engineAssemblyRef, 
 			const CodeProjectReference& editorAssemblyRef) const;
 
-	private:
 		/**	Returns the absolute path at which the external editor solution file should be stored. */
 		Path getSolutionPath() const;
-
+	private:
 		CodeEditor* mActiveEditor;
 		CodeEditorType mActiveEditorType;
 		Map<CodeEditorType, CodeEditorFactory*> mFactoryPerEditor;
@@ -106,7 +105,7 @@ namespace bs
 	class BS_ED_EXPORT CodeEditor
 	{
 	public:
-		virtual ~CodeEditor() { }
+		virtual ~CodeEditor() = default;
 
 		/** 
 		 * @copydoc CodeEditorManager::openFile 

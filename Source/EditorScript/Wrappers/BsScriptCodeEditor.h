@@ -28,6 +28,7 @@ namespace bs
 		static MonoArray* internal_GetAvailableEditors();
 		static void internal_OpenFile(MonoString* path, UINT32 line);
 		static void internal_SyncSolution();
+		static MonoString* internal_GetSolutionPath();
 	};
 
 	/** @} */

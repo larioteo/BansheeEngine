@@ -26,6 +26,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_GetAvailableEditors", (void*)&ScriptCodeEditor::internal_GetAvailableEditors);
 		metaData.scriptClass->addInternalCall("Internal_OpenFile", (void*)&ScriptCodeEditor::internal_OpenFile);
 		metaData.scriptClass->addInternalCall("Internal_SyncSolution", (void*)&ScriptCodeEditor::internal_SyncSolution);
+		metaData.scriptClass->addInternalCall("Internal_GetSolutionPath", (void*)&ScriptCodeEditor::internal_GetSolutionPath);
 	}
 
 	CodeEditorType ScriptCodeEditor::internal_GetActiveEditor()
@@ -66,4 +67,11 @@ namespace bs
 			CodeProjectReference { ENGINE_ASSEMBLY, EngineScriptLibrary::instance().getEngineAssemblyPath() },
 			CodeProjectReference { EDITOR_ASSEMBLY, EditorScriptLibrary::instance().getEditorAssemblyPath() });
 	}
+
+	MonoString* ScriptCodeEditor::internal_GetSolutionPath()
+	{
+		return MonoUtil::stringToMono(CodeEditorManager::instance().getSolutionPath().toString());
+		
+	}
+
 }

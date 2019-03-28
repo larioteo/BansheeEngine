@@ -1,6 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using bs;
 
@@ -69,13 +70,21 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Returns the absolute path at which the code editor solution is stored at.
+        /// </summary>
+        public static string SolutionPath
+        {
+            get { return Internal_GetSolutionPath(); }
+        }
+
+        /// <summary>
         /// Opens a script file in the currently active code editor.
         /// </summary>
         /// <param name="path">Path to the script file to open, either absolute or relative to the project resources folder.</param>
         /// <param name="line">Line in the file to focus the editor on.</param>
         public static void OpenFile(string path, int line)
         {
-            if (IsSolutionDirty)
+            if (IsSolutionDirty || !File.Exists(SolutionPath))
                 SyncSolution();
 
             Internal_OpenFile(path, line);
@@ -112,6 +121,9 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SyncSolution();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetSolutionPath();
     }
 
     /** @} */
