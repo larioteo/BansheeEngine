@@ -19,6 +19,9 @@ namespace bs.Editor
 
         [SerializeField]
         internal Dictionary<UUID, EditorAnimClipInfo> dirtyAnimClips = new Dictionary<UUID, EditorAnimClipInfo>();
+
+        [SerializeField]
+        internal long lastCompileTime;
     }
 
     /** @} */

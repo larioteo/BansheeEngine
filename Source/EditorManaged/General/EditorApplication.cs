@@ -305,7 +305,6 @@ namespace bs.Editor
         internal EditorApplication()
         {
             instance = this;
-            codeManager = new ScriptCodeManager();
 
             const string soName = "EditorPersistentData";
             SceneObject so = Scene.Root.FindChild(soName);
@@ -315,6 +314,8 @@ namespace bs.Editor
             persistentData = so.GetComponent<EditorPersistentData>();
             if (persistentData == null)
                 persistentData = so.AddComponent<EditorPersistentData>();
+
+            codeManager = new ScriptCodeManager();
 
             // Register controls
             InputConfiguration inputConfig = VirtualInput.KeyConfig;

@@ -1,5 +1,8 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using bs;
@@ -27,6 +30,47 @@ namespace bs.Editor
             ProjectLibrary.OnEntryAdded += OnEntryAdded;
             ProjectLibrary.OnEntryRemoved += OnEntryRemoved;
             ProjectLibrary.OnEntryImported += OnEntryImported;
+
+            // Check for missing or out of date assemblies
+            DateTime lastModifiedGameScript = DateTime.MinValue;
+            DateTime lastModifiedEditorScript = DateTime.MinValue;
+
+            LibraryEntry[] scriptEntries = ProjectLibrary.Search("*.cs", new ResourceType[] { ResourceType.ScriptCode });
+            for (int i = 0; i < scriptEntries.Length; i++)
+            {
+                if(scriptEntries[i].Type != LibraryEntryType.File)
+                    continue;
+
+                FileEntry fileEntry = (FileEntry)scriptEntries[i];
+
+                string absPath = Path.Combine(ProjectLibrary.ResourceFolder, fileEntry.Path);
+                ScriptCodeImportOptions io = (ScriptCodeImportOptions) fileEntry.Options;
+                if (io.EditorScript)
+                    lastModifiedEditorScript = File.GetLastWriteTime(absPath);
+                else
+                    lastModifiedGameScript = File.GetLastWriteTime(absPath);
+            }
+
+            DateTime lastCompileTime = new DateTime(EditorApplication.PersistentData.lastCompileTime);
+            if (lastModifiedGameScript != DateTime.MinValue)
+            {
+                string gameAssemblyPath = Path.Combine(EditorApplication.ScriptAssemblyPath,
+                    EditorApplication.ScriptGameAssemblyName);
+
+                isGameAssemblyDirty = (!File.Exists(gameAssemblyPath) || 
+                                      File.GetLastWriteTime(gameAssemblyPath) < lastModifiedGameScript) && 
+                                      (lastModifiedGameScript > lastCompileTime);
+            }
+
+            if (lastModifiedEditorScript != DateTime.MinValue)
+            {
+                string editorAssemblyPath = Path.Combine(EditorApplication.ScriptAssemblyPath,
+                    EditorApplication.ScriptEditorAssemblyName);
+
+                isEditorAssemblyDirty = (!File.Exists(editorAssemblyPath) || 
+                                         File.GetLastWriteTime(editorAssemblyPath) < lastModifiedEditorScript) && 
+                                        (lastModifiedEditorScript > lastCompileTime);
+            }
         }
 
         /// <summary>
@@ -51,6 +95,7 @@ namespace bs.Editor
                                 ScriptAssemblyType.Game, BuildManager.ActivePlatform, true, outputDir);
 
                             EditorApplication.SetStatusCompiling(true);
+                            EditorApplication.PersistentData.lastCompileTime = DateTime.Now.Ticks;
                             isGameAssemblyDirty = false;
                         }
                         else if (isEditorAssemblyDirty)
@@ -59,6 +104,7 @@ namespace bs.Editor
                                 ScriptAssemblyType.Editor, BuildManager.ActivePlatform, true, outputDir);
 
                             EditorApplication.SetStatusCompiling(true);
+                            EditorApplication.PersistentData.lastCompileTime = DateTime.Now.Ticks;
                             isEditorAssemblyDirty = false;
                         }
                     }

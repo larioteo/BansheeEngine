@@ -41,10 +41,7 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected internal override InspectableState Refresh()
         {
-            MeshImportOptions newImportOptions = GetImportOptions();
-
-
-            importOptions = newImportOptions;
+            importOptions = GetImportOptions();
 
             return InspectableState.NotModified;
         }
