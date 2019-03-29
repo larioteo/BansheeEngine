@@ -1,4 +1,4 @@
-namespace BansheeEngine
+namespace bs
 {
 	public class NewComponent : ManagedComponent
 	{
