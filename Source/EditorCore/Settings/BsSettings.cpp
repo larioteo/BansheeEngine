@@ -150,31 +150,28 @@ namespace bs
 		case SettingsValueType::Int:
 		case SettingsValueType::Bool:
 			{
-				size_t lastIdx = mPrimitives.size() - 1;
 				if(bs_swap_and_erase(mPrimitives, mPrimitives.begin() + curIdx))
 				{
 					SettingsKeyInfo& swappedValue = mKeyLookup[mPrimitives[curIdx].key];
-					swappedValue.index = (UINT32)lastIdx;
+					swappedValue.index = (UINT32)curIdx;
 				}
 			}
 			break;
 		case SettingsValueType::String:
 			{
-				size_t lastIdx = mStrings.size() - 1;
 				if(bs_swap_and_erase(mStrings, mStrings.begin() + curIdx))
 				{
 					SettingsKeyInfo& swappedValue = mKeyLookup[mStrings[curIdx].key];
-					swappedValue.index = (UINT32)lastIdx;
+					swappedValue.index = (UINT32)curIdx;
 				}
 			}
 			break;
 		case SettingsValueType::Object:
 			{
-				size_t lastIdx = mObjects.size() - 1;
 				if(bs_swap_and_erase(mObjects, mObjects.begin() + curIdx))
 				{
 					SettingsKeyInfo& swappedValue = mKeyLookup[mObjects[curIdx].key];
-					swappedValue.index = (UINT32)lastIdx;
+					swappedValue.index = (UINT32)curIdx;
 				}
 			}
 			break;
