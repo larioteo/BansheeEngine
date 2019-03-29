@@ -23,6 +23,9 @@ namespace bs.Editor
         internal const string ScaleToolBinding = "ScaleTool";
         internal const string FrameBinding = "SceneFrame";
 
+        private const string CameraPositionKey = "SceneCamera0_Position";
+        private const string CameraRotationKey = "SceneCamera0_Rotation";
+
         private const int HeaderHeight = 20;
         private const float DefaultPlacementDepth = 5.0f;
         private static readonly Color ClearColor = new Color(0.0f, 0.3685f, 0.7969f);
@@ -323,6 +326,12 @@ namespace bs.Editor
         {
             if (camera != null)
             {
+                Vector3 pos = camera.SceneObject.Position;
+                Quaternion rot = camera.SceneObject.Rotation;
+
+                ProjectSettings.SetObject(CameraPositionKey, pos);
+                ProjectSettings.SetObject(CameraRotationKey, rot);
+
                 camera.SceneObject.Destroy(true);
                 camera = null;
             }
@@ -891,8 +900,18 @@ namespace bs.Editor
                 camera.Viewport.Target = renderTexture;
                 camera.Viewport.Area = new Rect2(0.0f, 0.0f, 1.0f, 1.0f);
 
-                sceneCameraSO.Position = new Vector3(0, 0.5f, 1);
-                sceneCameraSO.LookAt(new Vector3(0, 0.5f, 0));
+                Vector3 camPosition = new Vector3(0.0f, 1.7f, 5.0f);
+                object camPosObj = ProjectSettings.GetObject<object>(CameraPositionKey);
+                if (camPosObj is Vector3)
+                    camPosition = (Vector3)camPosObj;
+
+                Quaternion camRotation = Quaternion.Identity;
+                object camRotObj = ProjectSettings.GetObject<object>(CameraRotationKey);
+                if (camRotObj is Quaternion)
+                    camRotation = (Quaternion)camRotObj;
+
+                sceneCameraSO.Position = camPosition;
+                sceneCameraSO.Rotation = camRotation;
 
                 camera.Priority = 2;
                 camera.Viewport.ClearColor = ClearColor;
