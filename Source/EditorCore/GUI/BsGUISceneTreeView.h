@@ -211,7 +211,7 @@ namespace bs
 			for(UINT32 j = 0; j < element->mChildren.size(); j++)
 			{
 				SceneTreeElement* currentChild = static_cast<SceneTreeElement*>(element->mChildren[j]);
-				recurse(element, predicate);
+				recurse(currentChild, predicate);
 			}
 		}
 

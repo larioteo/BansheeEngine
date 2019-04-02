@@ -228,11 +228,18 @@ namespace bs
 		/**	Expands all parents of the provided TreeElement making it interactable. */
 		void expandToElement(TreeElement* element);
 
-		/**	Expands the provided TreeElement making its children interactable. */
-		void expandElement(TreeElement* element);
+		/**	
+		 * Expands the provided TreeElement making its children interactable. Set @p toggleButton to true to change
+		 * the toggle state on the toggle button itself. Set this to false if called from the toggle button callback.
+		 */
+		void expandElement(TreeElement* element, bool toggleButton = true);
 
-		/**	Collapses the provided TreeElement making its children hidden and not interactable. */
-		void collapseElement(TreeElement* element);
+		/**	
+		 * Collapses the provided TreeElement making its children hidden and not interactable. Set @p toggleButton to true 
+		 * to change the toggle state on the toggle button itself. Set this to false if called from the toggle button 
+		 * callback.
+		 */
+		void collapseElement(TreeElement* element, bool toggleButton = true);
 
 		/**	Rebuilds the needed GUI elements for the provided TreeElement. */
 		void updateElementGUI(TreeElement* element);

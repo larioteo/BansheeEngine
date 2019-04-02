@@ -22,6 +22,9 @@ namespace bs.Editor
 
         [SerializeField]
         internal long lastCompileTime;
+
+        [SerializeField]
+        internal EditorSceneData editorSceneData;
     }
 
     /** @} */

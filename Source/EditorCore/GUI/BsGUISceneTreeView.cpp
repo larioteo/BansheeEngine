@@ -615,11 +615,11 @@ namespace bs
 	{
 		const TreeElement* root = &mRootElement;
 
-		SPtr<SceneTreeViewState> state;
+		SPtr<SceneTreeViewState> state = bs_shared_ptr_new<SceneTreeViewState>();
 		recurse(static_cast<SceneTreeElement*>(const_cast<TreeElement*>(root)), [state](SceneTreeElement* element)
 		{
 			if(!element->mSceneObject.isDestroyed())
-				state->elements.emplace_back(element->mSceneObject, element->mIsExpanded);
+				state->elements.push_back({ element->mSceneObject, element->mIsExpanded });
 		});
 
 		return state;

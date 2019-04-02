@@ -53,6 +53,8 @@ namespace bs.Editor
         internal const string DeleteBinding = "Delete";
         internal const string PasteBinding = "Paste";
 
+        internal const string EditorSceneDataPrefix = "__EditorSceneData";
+
         /// <summary>
         /// Determines the active tool shown in the scene view.
         /// </summary>
@@ -222,9 +224,15 @@ namespace bs.Editor
         /// <summary>
         /// Returns an object that can be used for storing data that persists throughout the entire editor session.
         /// </summary>
-        internal static EditorPersistentData PersistentData
+        internal static EditorPersistentData PersistentData => persistentData;
+
+        /// <summary>
+        /// Editor specific data for the currently loaded scene. Can be null if no scene is loaded.
+        /// </summary>
+        internal static EditorSceneData EditorSceneData
         {
-            get { return persistentData; }
+            get => PersistentData.editorSceneData;
+            private set => PersistentData.editorSceneData = value;
         }
 
         /// <summary>
@@ -300,7 +308,7 @@ namespace bs.Editor
 
         /// <summary>
         /// Constructs a new editor application. Called at editor start-up by the runtime, and any time assembly refresh
-        /// occurrs.
+        /// occurs.
         /// </summary>
         internal EditorApplication()
         {
@@ -316,6 +324,9 @@ namespace bs.Editor
                 persistentData = so.AddComponent<EditorPersistentData>();
 
             codeManager = new ScriptCodeManager();
+
+            Scene.OnSceneLoad += OnSceneLoad;
+            Scene.OnSceneUnload += OnSceneUnload;
 
             // Register controls
             InputConfiguration inputConfig = VirtualInput.KeyConfig;
@@ -358,6 +369,46 @@ namespace bs.Editor
                 monitor.OnRemoved += OnAssetModified;
                 monitor.OnModified += OnAssetModified;
             }
+        }
+
+        /// <summary>
+        /// Updates <see cref="EditorSceneData"/> with the current state of the active scene.
+        /// </summary>
+        internal static void UpdateEditorSceneData()
+        {
+            if (EditorSceneData == null)
+                EditorSceneData = EditorSceneData.FromScene(Scene.Root);
+            else
+                EditorSceneData.UpdateFromScene(Scene.Root);
+
+            HierarchyWindow hierarcyWindow = EditorWindow.GetWindow<HierarchyWindow>();
+            hierarcyWindow?.SaveHierarchyState(EditorSceneData);
+        }
+
+
+        /// <summary>
+        /// Triggered when the scene has been loaded.
+        /// </summary>
+        /// <param name="uuid">UUID of the loaded scene.</param>
+        private static void OnSceneUnload(UUID uuid)
+        {
+            UpdateEditorSceneData();
+
+            string key = EditorSceneDataPrefix + uuid;
+            ProjectSettings.SetObject(key, EditorSceneData);
+        }
+
+        /// <summary>
+        /// Triggered when a scene is about to be unloaded.
+        /// </summary>
+        /// <param name="uuid">UUID of the scene to be unloaded.</param>
+        private static void OnSceneLoad(UUID uuid)
+        {
+            string key = EditorSceneDataPrefix + uuid;
+            EditorSceneData = ProjectSettings.GetObject<EditorSceneData>(key);
+
+            if (EditorSceneData == null)
+                EditorSceneData = EditorSceneData.FromScene(Scene.Root);
         }
 
         /// <summary>
@@ -926,6 +977,8 @@ namespace bs.Editor
         /// </summary>
         public static void ReloadAssemblies()
         {
+            UpdateEditorSceneData();
+
             Internal_ReloadAssemblies();
         }
 

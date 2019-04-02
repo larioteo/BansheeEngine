@@ -1,5 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System.Collections.Generic;
 using bs;
 
 namespace bs.Editor
@@ -21,6 +23,7 @@ namespace bs.Editor
         private GUILabel loadLabel;
 
         private bool loadingProgressShown = false;
+        private UUID sceneUUID = UUID.Empty;
 
         /// <summary>
         /// Opens the hierarchy window.
@@ -106,13 +109,57 @@ namespace bs.Editor
         private void OnEditorUpdate()
         {
             UpdateLoadingProgress();
-
             treeView.Update();
+
+            if (Scene.ActiveSceneUUID != sceneUUID)
+            {
+                LoadHierarchyState(EditorApplication.EditorSceneData);
+                sceneUUID = Scene.ActiveSceneUUID;
+            }
         }
 
         private void OnDestroy()
         {
             EditorVirtualInput.OnButtonUp -= OnButtonUp;
+        }
+
+        /// <summary>
+        /// Updates the scene data with data from the hierarchy view.
+        /// </summary>
+        /// <param name="sceneData">Scene data to append hierarchy state to.</param>
+        internal void SaveHierarchyState(EditorSceneData sceneData)
+        {
+            if (treeView == null)
+                return;
+
+            SceneTreeViewState state = treeView.State;
+            Dictionary<UUID, EditorSceneObject> lookup = sceneData.GetLookup();
+
+            foreach (var entry in state.Elements)
+            {
+                if (lookup.TryGetValue(entry.sceneObject.UUID, out EditorSceneObject editorSO))
+                    editorSO.IsExpanded = entry.isExpanded;
+            }
+        }
+
+        /// <summary>
+        /// Loads hierarchy state from the stored scene data.
+        /// </summary>
+        /// <param name="sceneData">Scene data to restore the hierarcy state from.</param>
+        internal void LoadHierarchyState(EditorSceneData sceneData)
+        {
+            SceneTreeViewState state = treeView.State;
+            Dictionary<UUID, EditorSceneObject> lookup = sceneData.GetLookup();
+
+            SceneTreeViewElement[] elements = state.Elements;
+            for(int i = 0; i < elements.Length; i++)
+            {
+                if (lookup.TryGetValue(elements[i].sceneObject.UUID, out EditorSceneObject editorSO))
+                    elements[i].isExpanded = editorSO.IsExpanded;
+            }
+
+            state.Elements = elements;
+            treeView.State = state;
         }
 
         /// <summary>
