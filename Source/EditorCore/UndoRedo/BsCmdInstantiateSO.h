@@ -16,11 +16,9 @@ namespace bs
 	 * A command used for undo/redo purposes. Instantiates scene object(s) from a prefab and removes them as an undo
 	 * operation.
 	 */
-	class BS_ED_EXPORT CmdInstantiateSO : public EditorCommand
+	class BS_ED_EXPORT CmdInstantiateSO final : public EditorCommand
 	{
 	public:
-		~CmdInstantiateSO();
-
 		/**
 		 * Instantiates the specified prefab. Automatically registers the command with undo/redo system.
 		 *

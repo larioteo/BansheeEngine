@@ -7,14 +7,7 @@ namespace bs
 {
 	CmdCreateSO::CmdCreateSO(const String& description, const String& name, UINT32 flags)
 		:EditorCommand(description), mName(name), mFlags(flags)
-	{
-
-	}
-
-	CmdCreateSO::~CmdCreateSO()
-	{
-
-	}
+	{ }
 
 	HSceneObject CmdCreateSO::execute(const String& name, UINT32 flags, const String& description)
 	{
@@ -40,6 +33,7 @@ namespace bs
 
 		if (!mSceneObject.isDestroyed())
 			mSceneObject->destroy(true);
+
 		mSceneObject = nullptr;
 	}
 }

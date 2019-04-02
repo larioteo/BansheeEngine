@@ -13,11 +13,9 @@ namespace bs
 	 */
 
 	/** A command used for undo/redo purposes. Clones scene object(s) and removes them as an undo operation. */
-	class BS_ED_EXPORT CmdCloneSO : public EditorCommand
+	class BS_ED_EXPORT CmdCloneSO final : public EditorCommand
 	{
 	public:
-		~CmdCloneSO();
-
 		/**
 		 * Creates a new scene object by cloning an existing object. Automatically registers the command with undo/redo 
 		 * system.

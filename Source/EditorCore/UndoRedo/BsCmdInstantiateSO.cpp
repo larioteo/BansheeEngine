@@ -8,14 +8,7 @@ namespace bs
 {
 	CmdInstantiateSO::CmdInstantiateSO(const String& description, const HPrefab& prefab)
 		:EditorCommand(description), mPrefab(prefab)
-	{
-
-	}
-
-	CmdInstantiateSO::~CmdInstantiateSO()
-	{
-
-	}
+	{ }
 
 	HSceneObject CmdInstantiateSO::execute(const HPrefab& prefab, const String& description)
 	{

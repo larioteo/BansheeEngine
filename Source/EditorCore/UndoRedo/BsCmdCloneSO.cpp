@@ -7,14 +7,7 @@ namespace bs
 {
 	CmdCloneSO::CmdCloneSO(const String& description, const Vector<HSceneObject>& originals)
 		:EditorCommand(description), mOriginals(originals)
-	{
-
-	}
-
-	CmdCloneSO::~CmdCloneSO()
-	{
-
-	}
+	{ }
 
 	HSceneObject CmdCloneSO::execute(const HSceneObject& sceneObject, const String& description)
 	{
@@ -25,7 +18,7 @@ namespace bs
 		UndoRedo::instance().registerCommand(commandPtr);
 		commandPtr->commit();
 
-		if (commandPtr->mClones.size() > 0)
+		if (!commandPtr->mClones.empty())
 			return commandPtr->mClones[0];
 
 		return HSceneObject();

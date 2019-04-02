@@ -16,7 +16,7 @@ namespace bs
 	 * A command used for undo/redo purposes. It records a scene object parent change operations. It allows you to apply
 	 * the parent change or revert the object to its original parent as needed.
 	 */
-	class BS_ED_EXPORT CmdReparentSO : public EditorCommand
+	class BS_ED_EXPORT CmdReparentSO final : public EditorCommand
 	{
 	public:
 		/**

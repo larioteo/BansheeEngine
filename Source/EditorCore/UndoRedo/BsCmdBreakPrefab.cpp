@@ -7,14 +7,11 @@ namespace bs
 {
 	CmdBreakPrefab::CmdBreakPrefab(const String& description, const HSceneObject& sceneObject)
 		:EditorCommand(description), mSceneObject(sceneObject)
-	{
-
-	}
+	{ }
 
 	CmdBreakPrefab::~CmdBreakPrefab()
 	{
 		mSceneObject = nullptr;
-
 	}
 	
 	void CmdBreakPrefab::execute(const HSceneObject& sceneObject, const String& description)

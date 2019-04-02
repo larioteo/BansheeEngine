@@ -14,7 +14,7 @@ namespace bs
 	 */
 
 	/** A command used for undo/redo purposes. Deletes a scene object and restores it as an undo operation. */
-	class BS_ED_EXPORT CmdDeleteSO : public EditorCommand
+	class BS_ED_EXPORT CmdDeleteSO final : public EditorCommand
 	{
 	public:
 		~CmdDeleteSO();

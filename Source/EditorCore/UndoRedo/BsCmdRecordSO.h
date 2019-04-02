@@ -17,7 +17,7 @@ namespace bs
 	 * A command used for undo/redo purposes. It records a state of the entire scene object at a specific point and allows
 	 * you to restore it to its original values as needed.
 	 */
-	class BS_ED_EXPORT CmdRecordSO : public EditorCommand
+	class BS_ED_EXPORT CmdRecordSO final : public EditorCommand
 	{
 	public:
 		~CmdRecordSO();

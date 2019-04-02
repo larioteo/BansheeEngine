@@ -13,7 +13,7 @@ namespace bs
 	 */
 
 	/** A command used for undo/redo purposes. It breaks a prefab link of a scene object and allows you to restore link. */
-	class BS_ED_EXPORT CmdBreakPrefab : public EditorCommand
+	class BS_ED_EXPORT CmdBreakPrefab final : public EditorCommand
 	{
 	public:
 		~CmdBreakPrefab();

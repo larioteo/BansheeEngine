@@ -13,11 +13,9 @@ namespace bs
 	 */
 
 	/** A command used for undo/redo purposes. Creates a scene object and removes it as an undo operation. */
-	class BS_ED_EXPORT CmdCreateSO : public EditorCommand
+	class BS_ED_EXPORT CmdCreateSO final : public EditorCommand
 	{
 	public:
-		~CmdCreateSO();
-
 		/**
 		 * Creates a new scene object. Automatically registers the command with undo/redo system.
 		 *
