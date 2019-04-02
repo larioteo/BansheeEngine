@@ -611,6 +611,49 @@ namespace bs
 		_markLayoutAsDirty();
 	}
 
+	SPtr<SceneTreeViewState> GUISceneTreeView::getState() const
+	{
+		const TreeElement* root = &mRootElement;
+
+		SPtr<SceneTreeViewState> state;
+		recurse(static_cast<SceneTreeElement*>(const_cast<TreeElement*>(root)), [state](SceneTreeElement* element)
+		{
+			if(!element->mSceneObject.isDestroyed())
+				state->elements.emplace_back(element->mSceneObject, element->mIsExpanded);
+		});
+
+		return state;
+	}
+
+	void GUISceneTreeView::setState(const SPtr<SceneTreeViewState>& state)
+	{
+		UnorderedMap<UINT64, bool> lookup;
+		for(auto& entry : state->elements)
+		{
+			if(entry.sceneObject.isDestroyed())
+				continue;
+
+			lookup[entry.sceneObject->getInstanceId()] = entry.isExpanded;
+		}
+
+		recurse(static_cast<SceneTreeElement*>(&mRootElement), [this, &lookup](SceneTreeElement* element)
+		{
+			if(element->mSceneObject.isDestroyed())
+				return;
+
+			UINT64 instanceId = element->mSceneObject->getInstanceId();
+
+			auto iterFind = lookup.find(instanceId);
+			if(iterFind != lookup.end())
+			{
+				if(iterFind->second)
+					expandElement(element);
+				else
+					collapseElement(element);
+			}
+		});
+	}
+
 	void GUISceneTreeView::createNewSO()
 	{
 		HSceneObject newSO = CmdCreateSO::execute("New", 0, "Created a new SceneObject");

@@ -18,6 +18,15 @@ namespace bs.Editor
     public sealed class GUISceneTreeView : GUIElement
     {
         /// <summary>
+        /// State of the tree view, containing the expand/collapse state of all the elements in the view.
+        /// </summary>
+        public SceneTreeViewState State
+        {
+            get { return Internal_GetState(mCachedPtr); }
+            set { Internal_SetState(mCachedPtr, value);}
+        }
+
+        /// <summary>
         /// Creates a new scene tree view element.
         /// </summary>
         /// <param name="style">Optional style to use for the element. Style controls the look of the element, as well as 
@@ -180,6 +189,12 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_RenameSelection(IntPtr thisPtr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern SceneTreeViewState Internal_GetState(IntPtr thisPtr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetState(IntPtr thisPtr, SceneTreeViewState state);
     }
 
     /** @} */

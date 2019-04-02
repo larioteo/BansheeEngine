@@ -23,6 +23,20 @@ namespace bs
 		HSceneObject* objects;
 	};
 
+	/** Information about a single element in GUISceneTreeView. */
+	struct BS_SCRIPT_EXPORT(pl:true,api:bed) SceneTreeViewElement
+	{
+		HSceneObject sceneObject;
+		bool isExpanded;
+	};
+
+	/** Information about all elements displayed in a GUISceneTreeView. */
+	struct BS_SCRIPT_EXPORT(api:bed) SceneTreeViewState
+	{
+		BS_SCRIPT_EXPORT()
+		Vector<SceneTreeViewElement> elements;
+	};
+
 	/** GUI element that displays all SceneObject%s in the current scene in the active project in a tree view. */
 	class BS_ED_EXPORT GUISceneTreeView : public GUITreeView
 	{
@@ -103,6 +117,12 @@ namespace bs
 		/** @copydoc GUITreeView::paste */
 		void paste() override;
 
+		/** Returns the expand/collapse state of the elements in the tree view, allowing it to be restored later. */
+		SPtr<SceneTreeViewState> getState() const;
+
+		/** Sets the expand/collapse state of the elements in the tree view. */
+		void setState(const SPtr<SceneTreeViewState>& state);
+
 		/** Triggered whenever the selection changes. Call getSelection() to retrieve new selection. */
 		Event<void()> onSelectionChanged; 
 
@@ -181,6 +201,19 @@ namespace bs
 
 		/**	Removes all elements from the list used for copy/cut operations. */
 		void clearCopyList();
+
+		/** Iterates over the tree element hierarchy, starting with the provided element and calls @p predicate. */
+		template<class T>
+		void recurse(SceneTreeElement* element, T predicate) const
+		{
+			predicate(element);
+
+			for(UINT32 j = 0; j < element->mChildren.size(); j++)
+			{
+				SceneTreeElement* currentChild = static_cast<SceneTreeElement*>(element->mChildren[j]);
+				recurse(element, predicate);
+			}
+		}
 
 		/**
 		 * Cleans duplicate objects from the provided scene object list. This involves removing child elements if their

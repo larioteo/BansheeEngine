@@ -11,6 +11,8 @@
 #include "BsScriptGameObjectManager.h"
 #include "Wrappers/BsScriptSceneObject.h"
 
+#include "Generated/BsScriptSceneTreeViewState.generated.h"
+
 using namespace std::placeholders;
 
 namespace bs
@@ -42,6 +44,8 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_DuplicateSelection", (void*)&ScriptGUISceneTreeView::internal_duplicateSelection);
 		metaData.scriptClass->addInternalCall("Internal_DeleteSelection", (void*)&ScriptGUISceneTreeView::internal_deleteSelection);
 		metaData.scriptClass->addInternalCall("Internal_RenameSelection", (void*)&ScriptGUISceneTreeView::internal_renameSelection);
+		metaData.scriptClass->addInternalCall("Internal_GetState", (void*)&ScriptGUISceneTreeView::internal_getState);
+		metaData.scriptClass->addInternalCall("Internal_SetState", (void*)&ScriptGUISceneTreeView::internal_setState);
 
 		onModifiedThunk = (OnModifiedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnModified", 0)->getThunk();
 		onResourceDroppedThunk = (OnResourceDroppedThunkDef)metaData.scriptClass->getMethod("Internal_DoOnResourceDropped", 2)->getThunk();
@@ -128,5 +132,28 @@ namespace bs
 	{
 		GUISceneTreeView* treeView = static_cast<GUISceneTreeView*>(thisPtr->getGUIElement());
 		treeView->renameSelected();
+	}
+
+	MonoObject* ScriptGUISceneTreeView::internal_getState(ScriptGUISceneTreeView* thisPtr)
+	{
+		GUISceneTreeView* treeView = static_cast<GUISceneTreeView*>(thisPtr->getGUIElement());
+		return ScriptSceneTreeViewState::create(treeView->getState());
+	}
+
+	void ScriptGUISceneTreeView::internal_setState(ScriptGUISceneTreeView* thisPtr, MonoObject* obj)
+	{
+		SPtr<SceneTreeViewState> state;
+		if(obj)
+		{
+			ScriptSceneTreeViewState* scriptState = ScriptSceneTreeViewState::toNative(obj);
+			if(scriptState)
+				state = scriptState->getInternal();
+		}
+
+		if(state)
+		{
+			GUISceneTreeView* treeView = static_cast<GUISceneTreeView*>(thisPtr->getGUIElement());
+			treeView->setState(state);
+		}
 	}
 }
