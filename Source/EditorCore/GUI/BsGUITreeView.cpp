@@ -418,9 +418,9 @@ namespace bs
 						treeElement = element->parent;
 				}
 
+				unselectAll();
 				dragAndDropEnded(treeElement);
 				mDragInProgress = false;
-				unselectAll();
 
 				return true;
 			}
