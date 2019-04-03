@@ -33,7 +33,8 @@ namespace bs.Editor
         private bool gridLayout;
 
         private int elementsPerRow;
-        private int horzElementSpacing;
+        private int paddingLeft;
+        private int paddingRight;
 
         private List<LibraryGUIEntry> entries = new List<LibraryGUIEntry>();
         private Dictionary<string, LibraryGUIEntry> entryLookup = new Dictionary<string, LibraryGUIEntry>();
@@ -55,11 +56,19 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Returns horizontal spacing between elements in a grid layout.
+        /// Returns the padding to the left of the first element in a row of elements in a grid layout.
         /// </summary>
-        public int HorzElementSpacing
+        public int PaddingLeft
         {
-            get { return horzElementSpacing; }
+            get { return paddingLeft; }
+        }
+
+        /// <summary>
+        /// Returns the padding to the right of the last element in a row of elements in a grid layout.
+        /// </summary>
+        public int PaddingRight
+        {
+            get { return paddingRight; }
         }
 
         /// <summary>
@@ -194,12 +203,13 @@ namespace bs.Editor
                 }
             }
 
+            int minHorzElemSpacing = 0;
             if (viewType == ProjectViewType.List16)
             {
                 tileSize = 16;
                 gridLayout = false;
                 elementsPerRow = 1;
-                horzElementSpacing = 0;
+                minHorzElemSpacing = 0;
                 int elemWidth = bounds.width;
                 int elemHeight = tileSize;
 
@@ -209,7 +219,7 @@ namespace bs.Editor
                 {
                     ResourceToDisplay entry = resourcesToDisplay[i];
 
-                    LibraryGUIEntry guiEntry = new LibraryGUIEntry(this, main, entry.path, i, elemWidth, elemHeight, 
+                    LibraryGUIEntry guiEntry = new LibraryGUIEntry(this, main, entry.path, i, elemWidth, elemHeight, 0,
                         entry.type);
                     entries.Add(guiEntry);
                     entryLookup[guiEntry.path] = guiEntry;
@@ -232,21 +242,21 @@ namespace bs.Editor
                         tileSize = 64;
                         elemWidth = tileSize;
                         elemHeight = tileSize + 36;
-                        horzElementSpacing = 10;
+                        minHorzElemSpacing = 10;
                         vertElemSpacing = 12;
                         break;
                     case ProjectViewType.Grid48:
                         tileSize = 48;
                         elemWidth = tileSize;
                         elemHeight = tileSize + 36;
-                        horzElementSpacing = 8;
+                        minHorzElemSpacing = 8;
                         vertElemSpacing = 10;
                         break;
                     case ProjectViewType.Grid32:
                         tileSize = 32;
                         elemWidth = tileSize + 16;
                         elemHeight = tileSize + 48;
-                        horzElementSpacing = 6;
+                        minHorzElemSpacing = 6;
                         vertElemSpacing = 10;
                         break;
                 }
@@ -254,11 +264,9 @@ namespace bs.Editor
                 gridLayout = true;
 
                 int availableWidth = bounds.width;
+                elementsPerRow = MathEx.FloorToInt((availableWidth - minHorzElemSpacing) / (float)(elemWidth + minHorzElemSpacing));
 
-                elementsPerRow = MathEx.FloorToInt((availableWidth - horzElementSpacing) / (float)(elemWidth + horzElementSpacing));
-                elementsPerRow = Math.Max(elementsPerRow, 1);
-
-                int numRows = MathEx.CeilToInt(resourcesToDisplay.Count / (float)elementsPerRow);
+                int numRows = MathEx.CeilToInt(resourcesToDisplay.Count / (float)Math.Max(elementsPerRow, 1));
                 int neededHeight = numRows * elemHeight + TOP_MARGIN;
                 if (numRows > 0)
                     neededHeight += (numRows - 1)* vertElemSpacing;
@@ -267,43 +275,78 @@ namespace bs.Editor
                 if (requiresScrollbar)
                 {
                     availableWidth -= parent.ScrollBarWidth;
-                    elementsPerRow = MathEx.FloorToInt((availableWidth - horzElementSpacing) / (float)(elemWidth + horzElementSpacing));
-                    elementsPerRow = Math.Max(elementsPerRow, 1);
+                    elementsPerRow = MathEx.FloorToInt((availableWidth - minHorzElemSpacing) / (float)(elemWidth + minHorzElemSpacing));
                 }
 
-                int extraRowSpace = availableWidth - (elementsPerRow * (elemWidth + horzElementSpacing) + horzElementSpacing);
+                int extraRowSpace = availableWidth - minHorzElemSpacing * 2 - elementsPerRow * elemWidth;
+
+                paddingLeft = minHorzElemSpacing;
+                paddingRight = minHorzElemSpacing;
+                float horzSpacing = 0.0f;
+
+                // Distribute the spacing to the padding, as there are not in-between spaces to apply it to
+                if (extraRowSpace > 0 && elementsPerRow < 2)
+                {
+                    int extraPadding = extraRowSpace / 2;
+                    paddingLeft += extraPadding;
+                    paddingRight += (extraRowSpace - extraPadding);
+
+                    extraRowSpace = 0;
+                }
+                else
+                    horzSpacing = extraRowSpace / (float)(elementsPerRow - 1);
+
+                elementsPerRow = Math.Max(elementsPerRow, 1);
 
                 main.AddSpace(TOP_MARGIN);
                 GUILayoutX rowLayout = main.AddLayoutX();
-                rowLayout.AddSpace(horzElementSpacing);
+                rowLayout.AddSpace(paddingLeft);
 
+                float spacingCounter = 0.0f;
                 int elemsInRow = 0;
                 for (int i = 0; i < resourcesToDisplay.Count; i++)
                 {
                     if (elemsInRow == elementsPerRow && elemsInRow > 0)
                     {
                         main.AddSpace(vertElemSpacing);
-                        rowLayout.AddSpace(extraRowSpace);
                         rowLayout = main.AddLayoutX();
-                        rowLayout.AddSpace(horzElementSpacing);
+                        rowLayout.AddSpace(paddingLeft);
 
                         elemsInRow = 0;
+                        spacingCounter = 0.0f;
                     }
 
                     ResourceToDisplay entry = resourcesToDisplay[i];
+                    elemsInRow++;
+
+                    if (elemsInRow != elementsPerRow)
+                        spacingCounter += horzSpacing;
+
+                    int spacing = (int)spacingCounter;
+                    spacingCounter -= spacing;
 
                     LibraryGUIEntry guiEntry = new LibraryGUIEntry(this, rowLayout, entry.path, i, elemWidth, elemHeight,
-                        entry.type);
+                        spacing, entry.type);
                     entries.Add(guiEntry);
                     entryLookup[guiEntry.path] = guiEntry;
 
-                    rowLayout.AddSpace(horzElementSpacing);
+                    if (elemsInRow == elementsPerRow)
+                        rowLayout.AddSpace(paddingRight);
 
-                    elemsInRow++;
+                    rowLayout.AddSpace(spacing);
                 }
 
                 int extraElements = elementsPerRow - elemsInRow;
-                rowLayout.AddSpace((elemWidth + horzElementSpacing) * extraElements + extraRowSpace);
+                int extraSpacing = 0;
+
+                if (extraElements > 1)
+                {
+                    spacingCounter += (extraElements - 1) * horzSpacing;
+                    extraSpacing += (int)spacingCounter;
+                }
+
+                if (extraElements > 0)
+                    rowLayout.AddSpace(elemWidth * extraElements + extraSpacing + paddingRight);
 
                 main.AddFlexibleSpace();
             }

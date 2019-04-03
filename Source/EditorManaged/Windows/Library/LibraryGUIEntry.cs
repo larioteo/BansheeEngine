@@ -44,6 +44,7 @@ namespace bs.Editor
         public GUITexture icon;
         public GUILabel label;
         public Rect2I bounds;
+        public int spacing;
 
         private GUITexture underlay;
         private GUITexture groupUnderlay;
@@ -73,10 +74,11 @@ namespace bs.Editor
         /// <param name="path">Path to the project library entry to display data for.</param>
         /// <param name="index">Sequential index of the entry in the conent area.</param>
         /// <param name="width">Width of the GUI entry.</param>
-        /// <param name="height">Maximum allowed height for the label.</param>"
+        /// <param name="height">Maximum allowed height for the label.</param>
+        /// <param name="spacing">Spacing between this element and the next element on the same row. 0 if last.</param>
         /// <param name="type">Type of the entry, which controls its style and/or behaviour.</param>
         public LibraryGUIEntry(LibraryGUIContent owner, GUILayout parent, string path, int index, int width, int height,
-            LibraryGUIEntryType type)
+            int spacing, LibraryGUIEntryType type)
         {
             GUILayout entryLayout;
 
@@ -148,6 +150,7 @@ namespace bs.Editor
             this.underlay = null;
             this.type = type;
             this.width = width;
+            this.spacing = spacing;
         }
 
         /// <summary>
@@ -189,12 +192,33 @@ namespace bs.Editor
             {
                 if (owner.GridLayout)
                 {
-                    int offsetToNext = BG_HORZ_PADDING + owner.HorzElementSpacing;
-                    if (type == LibraryGUIEntryType.MultiLast)
-                        offsetToNext = BG_HORZ_PADDING * 2;
+                    bool firstInRow = index % owner.ElementsPerRow == 0;
+                    bool lastInRow = index % owner.ElementsPerRow == (owner.ElementsPerRow - 1);
 
-                    Rect2I bgBounds = new Rect2I(bounds.x - BG_HORZ_PADDING, bounds.y, 
-                        bounds.width + offsetToNext, bounds.height);
+                    int offsetToPrevious = 0;
+                    if (type == LibraryGUIEntryType.MultiFirst)
+                    {
+                        if (firstInRow)
+                            offsetToPrevious = owner.PaddingLeft / 3;
+                        else
+                            offsetToPrevious = spacing / 3;
+                    }
+                    else if (firstInRow)
+                        offsetToPrevious = owner.PaddingLeft;
+
+                    int offsetToNext = spacing;
+                    if (type == LibraryGUIEntryType.MultiLast)
+                    {
+                        if (lastInRow)
+                            offsetToNext = owner.PaddingRight / 3;
+                        else
+                            offsetToNext = spacing / 3;
+                    }
+                    else if (lastInRow)
+                        offsetToNext = owner.PaddingRight + spacing;
+
+                    Rect2I bgBounds = new Rect2I(bounds.x - offsetToPrevious, bounds.y, 
+                        bounds.width + offsetToNext + offsetToPrevious, bounds.height);
                     groupUnderlay.Bounds = bgBounds;
                 }
                 else
