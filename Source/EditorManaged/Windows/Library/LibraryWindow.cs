@@ -410,6 +410,8 @@ namespace bs.Editor
             content.MarkAsPinged(pingPath, false);
             pingPath = path;
             content.MarkAsPinged(pingPath, true);
+
+            ScrollToEntry(pingPath);
         }
 
         /// <summary>
