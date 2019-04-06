@@ -113,7 +113,9 @@ namespace bs.Editor
 
             if (Scene.ActiveSceneUUID != sceneUUID)
             {
-                LoadHierarchyState(EditorApplication.EditorSceneData);
+                if(EditorApplication.EditorSceneData != null)
+                    LoadHierarchyState(EditorApplication.EditorSceneData);
+
                 sceneUUID = Scene.ActiveSceneUUID;
             }
         }
