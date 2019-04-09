@@ -77,19 +77,11 @@ namespace bs
 		}
 		else // Otherwise just additively load them
 		{
-			ScriptAssemblyManager::instance().clearAssemblyInfo();
-
-			MonoManager::instance().loadAssembly(engineAssemblyPath.toString(), ENGINE_ASSEMBLY);
-			ScriptAssemblyManager::instance().loadAssemblyInfo(ENGINE_ASSEMBLY, mEngineTypeMappings);
-
 			if (FileSystem::exists(gameAssemblyPath))
 			{
 				MonoManager::instance().loadAssembly(gameAssemblyPath.toString(), SCRIPT_GAME_ASSEMBLY);
 				ScriptAssemblyManager::instance().loadAssemblyInfo(SCRIPT_GAME_ASSEMBLY, BuiltinTypeMappings());
 			}
-
-			MonoManager::instance().loadAssembly(editorAssemblyPath.toString(), EDITOR_ASSEMBLY);
-			ScriptAssemblyManager::instance().loadAssemblyInfo(EDITOR_ASSEMBLY, mEditorTypeMappings);
 
 			if (FileSystem::exists(editorScriptAssemblyPath))
 			{

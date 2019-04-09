@@ -22,7 +22,7 @@ Use the guide below to get Banshee up and running as quickly as possible. Scroll
 - Build the project using your chosen tool
   - Build files will be placed in `BansheeEngine/Build` folder (e.g. Visual Studio or XCode solution, Makefiles)
 - Run the editor
-  - Editor executable and libraries will be placed in `BansheeEngine/bin` folder
+  - Editor executable and libraries will be placed in `BansheeEngine/build/bin` folder
 	 
 ## Customizing the build
 
@@ -53,6 +53,8 @@ The following dependencies will need to be installed manually. Which ones are re
     - Set up DXSDK_DIR environment variable pointing to the DirectX instalation
   - **Windows SDK** (Required by default on Windows 8 or later)
 	- Optional if you have choosen a different RenderAPI in *CMake* options
+  - **Visual C++ ATL for x86 and x64**
+    - Make sure this is selected in your Visual Studio Installer, or install it via some other means
   - **DirectX Debug Layer** (Required by default on Windows 10)
     - Optional if you have choosen a different RenderAPI in *CMake* options
     - Go to Settings panel (type "Settings" in Start)->System->Apps & features->Manage optional Features->Add a feature->Select "Graphics Tools"
