@@ -114,7 +114,7 @@ namespace bs
 	ProjectLibrary::ProjectLibrary()
 		: mRootEntry(nullptr), mIsLoaded(false)
 	{
-		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_ushared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 	}
 
 	ProjectLibrary::~ProjectLibrary()
@@ -131,7 +131,7 @@ namespace bs
 			return resourcesToImport; // Folder not part of our resources path, so no modifications
 
 		if(mRootEntry == nullptr)
-			mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+			mRootEntry = bs_ushared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		Path pathToSearch = fullPath;
 		USPtr<LibraryEntry> entry = findEntry(pathToSearch);
@@ -183,13 +183,13 @@ namespace bs
 					resourcesToImport++;
 			}
 			else
-				deleteResourceInternal(std::static_pointer_cast<FileEntry>(entry));
+				deleteResourceInternal(static_pointer_cast<FileEntry>(entry));
 		}
 		else if(entry->type == LibraryEntryType::Directory) // Check folder and all subfolders for modifications
 		{
 			if(!FileSystem::isDirectory(entry->path))
 			{
-				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(entry));
+				deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(entry));
 			}
 			else
 			{
@@ -291,9 +291,9 @@ namespace bs
 						for(auto& child : toDelete)
 						{
 							if(child->type == LibraryEntryType::Directory)
-								deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(child));
+								deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(child));
 							else if(child->type == LibraryEntryType::File)
-								deleteResourceInternal(std::static_pointer_cast<FileEntry>(child));
+								deleteResourceInternal(static_pointer_cast<FileEntry>(child));
 						}
 
 						toDelete.clear();
@@ -314,7 +314,7 @@ namespace bs
 	USPtr<ProjectLibrary::FileEntry> ProjectLibrary::addResourceInternal(DirectoryEntry* parent, const Path& filePath, 
 		const SPtr<ImportOptions>& importOptions, bool forceReimport, bool synchronous)
 	{
-		USPtr<FileEntry> newResource = bs_shared_ptr_new<FileEntry>(filePath, filePath.getTail(), parent);
+		USPtr<FileEntry> newResource = bs_ushared_ptr_new<FileEntry>(filePath, filePath.getTail(), parent);
 		parent->mChildren.push_back(newResource);
 
 		reimportResourceInternal(newResource.get(), importOptions, forceReimport, false, synchronous);
@@ -325,7 +325,7 @@ namespace bs
 
 	USPtr<ProjectLibrary::DirectoryEntry> ProjectLibrary::addDirectoryInternal(DirectoryEntry* parent, const Path& dirPath)
 	{
-		USPtr<DirectoryEntry> newEntry = bs_shared_ptr_new<DirectoryEntry>(dirPath, dirPath.getTail(), parent);
+		USPtr<DirectoryEntry> newEntry = bs_ushared_ptr_new<DirectoryEntry>(dirPath, dirPath.getTail(), parent);
 		parent->mChildren.push_back(newEntry);
 
 		onEntryAdded(newEntry->path);
@@ -386,9 +386,9 @@ namespace bs
 		for(auto& child : childrenToDestroy)
 		{
 			if(child->type == LibraryEntryType::Directory)
-				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(child));
+				deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(child));
 			else
-				deleteResourceInternal(std::static_pointer_cast<FileEntry>(child));
+				deleteResourceInternal(static_pointer_cast<FileEntry>(child));
 		}
 
 		DirectoryEntry* parent = directory->parent;
@@ -1183,9 +1183,9 @@ namespace bs
 			if (!mResourcesFolder.includes(newFullPath))
 			{
 				if(oldEntry->type == LibraryEntryType::File)
-					deleteResourceInternal(std::static_pointer_cast<FileEntry>(oldEntry));
+					deleteResourceInternal(static_pointer_cast<FileEntry>(oldEntry));
 				else if(oldEntry->type == LibraryEntryType::Directory)
-					deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(oldEntry));
+					deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(oldEntry));
 			}
 			else // Just moving internally
 			{
@@ -1194,7 +1194,7 @@ namespace bs
 				USPtr<FileEntry> fileEntry = nullptr;
 				if (oldEntry->type == LibraryEntryType::File)
 				{
-					fileEntry = std::static_pointer_cast<FileEntry>(oldEntry);
+					fileEntry = static_pointer_cast<FileEntry>(oldEntry);
 					removeDependencies(fileEntry.get());
 
 					// Update uuid <-> path mapping
@@ -1389,9 +1389,9 @@ namespace bs
 		if(entry != nullptr)
 		{
 			if(entry->type == LibraryEntryType::File)
-				deleteResourceInternal(std::static_pointer_cast<FileEntry>(entry));
+				deleteResourceInternal(static_pointer_cast<FileEntry>(entry));
 			else if(entry->type == LibraryEntryType::Directory)
-				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(entry));
+				deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(entry));
 		}
 	}
 
@@ -1507,7 +1507,7 @@ namespace bs
 				{
 					FileEntry* resEntry = static_cast<FileEntry*>(child.get());
 					if (resEntry->meta != nullptr && resEntry->meta->getIncludeInBuild())
-						output.push_back(std::static_pointer_cast<FileEntry>(child));
+						output.push_back(static_pointer_cast<FileEntry>(child));
 				}
 				else if (child->type == LibraryEntryType::Directory)
 				{
@@ -1607,7 +1607,7 @@ namespace bs
 		mResourcesFolder = Path::BLANK;
 
 		clearEntries();
-		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_ushared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		mDependencies.clear();
 		gResources().unregisterResourceManifest(mResourceManifest);
@@ -1688,7 +1688,7 @@ namespace bs
 		mResourcesFolder = mProjectFolder;
 		mResourcesFolder.append(RESOURCES_DIR);
 
-		mRootEntry = bs_shared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
+		mRootEntry = bs_ushared_ptr_new<DirectoryEntry>(mResourcesFolder, mResourcesFolder.getTail(), nullptr);
 
 		Path libraryEntriesPath = mProjectFolder;
 		libraryEntriesPath.append(PROJECT_INTERNAL_DIR);
@@ -1733,7 +1733,7 @@ namespace bs
 			{
 				if(child->type == LibraryEntryType::File)
 				{
-					USPtr<FileEntry> resEntry = std::static_pointer_cast<FileEntry>(child);
+					USPtr<FileEntry> resEntry = static_pointer_cast<FileEntry>(child);
 					
 					if (FileSystem::isFile(resEntry->path))
 					{
@@ -1790,9 +1790,9 @@ namespace bs
 		for (auto& deletedEntry : deletedEntries)
 		{
 			if (deletedEntry->type == LibraryEntryType::File)
-				deleteResourceInternal(std::static_pointer_cast<FileEntry>(deletedEntry));
+				deleteResourceInternal(static_pointer_cast<FileEntry>(deletedEntry));
 			else
-				deleteDirectoryInternal(std::static_pointer_cast<DirectoryEntry>(deletedEntry));
+				deleteDirectoryInternal(static_pointer_cast<DirectoryEntry>(deletedEntry));
 		}
 
 		// Clean up internal library folder from obsolete files

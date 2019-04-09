@@ -159,9 +159,9 @@ namespace bs
 			return nullptr;
 
 		if (entry->type == ProjectLibrary::LibraryEntryType::File)
-			return ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(entry));
+			return ScriptFileEntry::create(static_pointer_cast<ProjectLibrary::FileEntry>(entry));
 		else
-			return ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
+			return ScriptDirectoryEntry::create(static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 	}
 
 	bool ScriptProjectLibrary::internal_IsSubresource(MonoString* path)
@@ -231,9 +231,9 @@ namespace bs
 			MonoObject* managedEntry = nullptr;
 
 			if (entry->type == ProjectLibrary::LibraryEntryType::File)
-				managedEntry = ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(entry));
+				managedEntry = ScriptFileEntry::create(static_pointer_cast<ProjectLibrary::FileEntry>(entry));
 			else
-				managedEntry = ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
+				managedEntry = ScriptDirectoryEntry::create(static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 
 			outArray.set(idx, managedEntry);
 			idx++;
@@ -396,7 +396,7 @@ namespace bs
 		if (entry == nullptr)
 			return nullptr;
 
-		return ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
+		return ScriptDirectoryEntry::create(static_pointer_cast<ProjectLibrary::DirectoryEntry>(entry));
 	}
 
 	ScriptDirectoryEntry::ScriptDirectoryEntry(MonoObject* instance, const USPtr<ProjectLibrary::DirectoryEntry>& entry)
@@ -428,9 +428,9 @@ namespace bs
 			MonoObject* managedChildEntry = nullptr;
 
 			if (childEntry->type == ProjectLibrary::LibraryEntryType::File)
-				managedChildEntry = ScriptFileEntry::create(std::static_pointer_cast<ProjectLibrary::FileEntry>(childEntry));
+				managedChildEntry = ScriptFileEntry::create(static_pointer_cast<ProjectLibrary::FileEntry>(childEntry));
 			else
-				managedChildEntry = ScriptDirectoryEntry::create(std::static_pointer_cast<ProjectLibrary::DirectoryEntry>(childEntry));
+				managedChildEntry = ScriptDirectoryEntry::create(static_pointer_cast<ProjectLibrary::DirectoryEntry>(childEntry));
 
 			outArray.set(i, managedChildEntry);
 		}

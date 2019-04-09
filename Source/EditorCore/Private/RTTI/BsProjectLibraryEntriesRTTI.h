@@ -20,7 +20,7 @@ namespace bs
 		ProjectLibrary::DirectoryEntry& getRootElement(ProjectLibraryEntries* obj) { return *obj->mRootEntry; }
 		void setRootElement(ProjectLibraryEntries* obj, ProjectLibrary::DirectoryEntry& val)
 		{
-			obj->mRootEntry = bs_shared_ptr_new<ProjectLibrary::DirectoryEntry>(val);
+			obj->mRootEntry = bs_ushared_ptr_new<ProjectLibrary::DirectoryEntry>(val);
 
 			for(auto& child : obj->mRootEntry->mChildren)
 				child->parent = obj->mRootEntry.get();
@@ -174,7 +174,7 @@ namespace bs
 
 				if (childType == ProjectLibrary::LibraryEntryType::File)
 				{
-					USPtr<ProjectLibrary::FileEntry> childResEntry = bs_shared_ptr_new<ProjectLibrary::FileEntry>();
+					USPtr<ProjectLibrary::FileEntry> childResEntry = bs_ushared_ptr_new<ProjectLibrary::FileEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
 					memory = rttiReadElem(*childResEntry, memory);
 
@@ -183,7 +183,7 @@ namespace bs
 				}
 				else if (childType == ProjectLibrary::LibraryEntryType::Directory)
 				{
-					USPtr<ProjectLibrary::DirectoryEntry> childDirEntry = bs_shared_ptr_new<ProjectLibrary::DirectoryEntry>();
+					USPtr<ProjectLibrary::DirectoryEntry> childDirEntry = bs_ushared_ptr_new<ProjectLibrary::DirectoryEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
 					memory = rttiReadElem(*childDirEntry, memory);
 

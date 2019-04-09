@@ -5,6 +5,7 @@
 #include "BsEditorPrerequisites.h"
 #include "Utility/BsModule.h"
 #include "Threading/BsAsyncOp.h"
+#include "Utility/BsUSPtr.h"
 
 namespace bs
 {
