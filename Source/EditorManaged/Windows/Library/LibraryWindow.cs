@@ -202,7 +202,6 @@ namespace bs.Editor
 
             contentScrollArea = new GUIScrollArea(GUIOption.FlexibleWidth(), GUIOption.FlexibleHeight());
             contentLayout.AddElement(contentScrollArea);
-            contentLayout.AddFlexibleSpace();
 
             entryContextMenu = LibraryMenu.CreateContextMenu(this);
             content = new LibraryGUIContent(this, contentScrollArea);

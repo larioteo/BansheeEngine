@@ -217,7 +217,7 @@ namespace bs.Editor
                     else if (lastInRow)
                         offsetToNext = owner.PaddingRight + spacing;
 
-                    Rect2I bgBounds = new Rect2I(bounds.x - offsetToPrevious, bounds.y, 
+                    Rect2I bgBounds = new Rect2I(bounds.x - offsetToPrevious, bounds.y,
                         bounds.width + offsetToNext + offsetToPrevious, bounds.height);
                     groupUnderlay.Bounds = bgBounds;
                 }

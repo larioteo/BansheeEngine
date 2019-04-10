@@ -166,10 +166,10 @@ namespace bs.Editor
             mainPanel = parent.Layout.AddPanel();
 
             GUIPanel contentPanel = mainPanel.AddPanel(1);
-            overlay = new GUIPanel(0);//mainPanel.AddPanel(0));mainPanel.AddPanel(0);
-            underlay = new GUIPanel(2);//mainPanel.AddPanel(2));mainPanel.AddPanel(2);
-            deepUnderlay = new GUIPanel(3);//ainPanel.AddPanel(3));mainPanel.AddPanel(3);
-            renameOverlay = new GUIPanel(-1);//mainPanel.AddPanel(-1));mainPanel.AddPanel(-1);
+            overlay = mainPanel.AddPanel(0);
+            underlay = mainPanel.AddPanel(2);
+            deepUnderlay = mainPanel.AddPanel(3);
+            renameOverlay = mainPanel.AddPanel(-1);
 
             main = contentPanel.AddLayoutY();
 
@@ -352,18 +352,17 @@ namespace bs.Editor
                 main.AddFlexibleSpace();
             }
 
+            // Fix bounds as that makes GUI updates faster
+            underlay.Bounds = main.Bounds;
+            overlay.Bounds = main.Bounds;
+            deepUnderlay.Bounds = main.Bounds;
+            renameOverlay.Bounds = main.Bounds;
+
             for (int i = 0; i < entries.Count; i++)
             {
                 LibraryGUIEntry guiEntry = entries[i];
                 guiEntry.Initialize();
             }
-
-            // Important to add panels after all elements on them have been initialized, as we avoid expensive layout
-            // updates time we request GUI element bounds after adding a new element
-            mainPanel.AddElement(overlay);
-            mainPanel.AddElement(underlay);
-            mainPanel.AddElement(deepUnderlay);
-            mainPanel.AddElement(renameOverlay);
         }
 
         /// <summary>
