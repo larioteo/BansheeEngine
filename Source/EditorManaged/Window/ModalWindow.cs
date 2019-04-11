@@ -36,6 +36,26 @@ namespace bs.Editor
             set { Internal_SetHeight(mCachedPtr, value); }
         }
 
+        /// <summary>
+        /// Width of the content area of the window, in pixels. The content area represents the area of the window not
+        /// including the title bar and the border.
+        /// </summary>
+        public int ContentWidth
+        {
+            get { return Internal_GetContentWidth(mCachedPtr); }
+            set { Internal_SetContentWidth(mCachedPtr, value); }
+        }
+
+        /// <summary>
+        /// Height of the content area of the window, in pixels. The content area represents the area of the window not
+        /// including the title bar and the border.
+        /// </summary>
+        public int ContentHeight
+        {
+            get { return Internal_GetContentHeight(mCachedPtr); }
+            set { Internal_SetContentHeight(mCachedPtr, value); }
+        }
+
         protected GUIPanel GUI;
 
         /// <summary>
@@ -125,6 +145,18 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int Internal_SetHeight(IntPtr nativeInstance, int value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_GetContentWidth(IntPtr nativeInstance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_SetContentWidth(IntPtr nativeInstance, int value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_GetContentHeight(IntPtr nativeInstance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_SetContentHeight(IntPtr nativeInstance, int value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_ScreenToWindowPos(IntPtr nativeInstance, ref Vector2I position, out Vector2I windowPos);

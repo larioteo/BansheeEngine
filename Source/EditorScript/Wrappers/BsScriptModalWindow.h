@@ -54,6 +54,10 @@ namespace bs
 		static UINT32 internal_getHeight(ScriptModalWindow* thisPtr);
 		static void internal_setWidth(ScriptModalWindow* thisPtr, UINT32 value);
 		static void internal_setHeight(ScriptModalWindow* thisPtr, UINT32 value);
+		static UINT32 internal_getContentWidth(ScriptModalWindow* thisPtr);
+		static UINT32 internal_getContentHeight(ScriptModalWindow* thisPtr);
+		static void internal_setContentWidth(ScriptModalWindow* thisPtr, UINT32 value);
+		static void internal_setContentHeight(ScriptModalWindow* thisPtr, UINT32 value);
 		static void internal_setTitle(ScriptModalWindow* thisPtr, MonoObject* title);
 		static void internal_screenToWindowPos(ScriptModalWindow* thisPtr, Vector2I* screenPos, Vector2I* windowPos);
 		static void internal_windowToScreenPos(ScriptModalWindow* thisPtr, Vector2I* windowPos, Vector2I* screenPos);
@@ -114,10 +118,10 @@ namespace bs
 		MonoObject* getManagedInstance() const { return mManagedInstance; }
 	protected:
 		/** @copydoc ModalWindow::resized */
-		virtual void resized() override;
+		void resized() override;
 
 		/** @copydoc ModalWindow::close */
-		virtual void close() override;
+		void close() override;
 
 	private:
 		friend class ScriptModalWindow;

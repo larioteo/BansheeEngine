@@ -33,6 +33,24 @@ namespace bs
 		/** @copydoc EditorWindowBase::setSize */
 		void setSize(UINT32 width, UINT32 height) override;
 
+		/**	
+		 * Returns the width of the content area of the window, in pixels. The content area represents the area of the
+		 * window not including the title bar and the border.
+		 */
+		UINT32 getContentWidth() const;
+
+		/**	
+		 * Returns the height of the content area of the window, in pixels. The content area represents the area of the
+		 * window not including the title bar and the border.
+		 */
+		UINT32 getContentHeight() const;
+
+		/** 
+		 * Sets the width & height of the content area of the window, in pixels. The content area represents the area of
+		 * the window not including the titlebar and the border.
+		 */
+		void setContentSize(UINT32 width, UINT32 height);
+
 		/** Converts screen pointer coordinates into coordinates relative to the window content's GUI panel. */
 		Vector2I screenToWindowPos(const Vector2I& screenPos) const;
 

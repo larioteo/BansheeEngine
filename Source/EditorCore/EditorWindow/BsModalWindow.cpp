@@ -116,6 +116,24 @@ namespace bs
 		updateSize();
 	}
 
+	UINT32 ModalWindow::getContentWidth() const
+	{
+		return getWidth() - 2;
+	}
+
+	UINT32 ModalWindow::getContentHeight() const
+	{
+		return getHeight() - getTitleBarHeight() - 2;
+	}
+
+	void ModalWindow::setContentSize(UINT32 width, UINT32 height)
+	{
+		UINT32 actualWidth = width + 2;
+		UINT32 actualHeight = height + getTitleBarHeight() + 2;
+
+		setSize(actualWidth, actualHeight);
+	}
+
 	void ModalWindow::resized()
 	{
 		EditorWindowBase::resized();
@@ -140,7 +158,7 @@ namespace bs
 
 	Rect2I ModalWindow::getContentArea() const
 	{
-		return Rect2I(1, 1 + getTitleBarHeight(), getWidth() - 2, getHeight() - getTitleBarHeight() - 2);
+		return Rect2I(1, 1 + getTitleBarHeight(), getContentWidth(), getContentHeight());
 	}
 
 	UINT32 ModalWindow::getTitleBarHeight() const

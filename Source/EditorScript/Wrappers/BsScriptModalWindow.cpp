@@ -39,6 +39,10 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_GetHeight", (void*)&ScriptModalWindow::internal_getHeight);
 		metaData.scriptClass->addInternalCall("Internal_SetWidth", (void*)&ScriptModalWindow::internal_setWidth);
 		metaData.scriptClass->addInternalCall("Internal_SetHeight", (void*)&ScriptModalWindow::internal_setHeight);
+		metaData.scriptClass->addInternalCall("Internal_GetContentWidth", (void*)&ScriptModalWindow::internal_getContentWidth);
+		metaData.scriptClass->addInternalCall("Internal_GetContentHeight", (void*)&ScriptModalWindow::internal_getContentHeight);
+		metaData.scriptClass->addInternalCall("Internal_SetContentWidth", (void*)&ScriptModalWindow::internal_setContentWidth);
+		metaData.scriptClass->addInternalCall("Internal_SetContentHeight", (void*)&ScriptModalWindow::internal_setContentHeight);
 		metaData.scriptClass->addInternalCall("Internal_SetTitle", (void*)&ScriptModalWindow::internal_setTitle);
 		metaData.scriptClass->addInternalCall("Internal_ScreenToWindowPos", (void*)&ScriptModalWindow::internal_screenToWindowPos);
 		metaData.scriptClass->addInternalCall("Internal_WindowToScreenPos", (void*)&ScriptModalWindow::internal_windowToScreenPos);
@@ -127,6 +131,34 @@ namespace bs
 	}
 
 	void ScriptModalWindow::internal_setHeight(ScriptModalWindow* thisPtr, UINT32 value)
+	{
+		if (thisPtr->mModalWindow != nullptr)
+			thisPtr->mModalWindow->setSize(thisPtr->mModalWindow->getWidth(), value);
+	}
+
+	UINT32 ScriptModalWindow::internal_getContentWidth(ScriptModalWindow* thisPtr)
+	{
+		if (thisPtr->mModalWindow != nullptr)
+			return thisPtr->mModalWindow->getContentWidth();
+
+		return 0;
+	}
+
+	UINT32 ScriptModalWindow::internal_getContentHeight(ScriptModalWindow* thisPtr)
+	{
+		if (thisPtr->mModalWindow != nullptr)
+			return thisPtr->mModalWindow->getContentHeight();
+
+		return 0;
+	}
+
+	void ScriptModalWindow::internal_setContentWidth(ScriptModalWindow* thisPtr, UINT32 value)
+	{
+		if (thisPtr->mModalWindow != nullptr)
+			thisPtr->mModalWindow->setSize(value, thisPtr->mModalWindow->getHeight());
+	}
+
+	void ScriptModalWindow::internal_setContentHeight(ScriptModalWindow* thisPtr, UINT32 value)
 	{
 		if (thisPtr->mModalWindow != nullptr)
 			thisPtr->mModalWindow->setSize(thisPtr->mModalWindow->getWidth(), value);

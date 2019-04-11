@@ -198,8 +198,8 @@ namespace bs.Editor
             guiCancel.OnClick += OnCancel;
 
             GUIPanel mainPanel = GUI.AddPanel(0);
-            mainPanel.SetWidth(Width);
-            mainPanel.SetHeight(Height);
+            mainPanel.SetWidth(ContentWidth);
+            mainPanel.SetHeight(ContentHeight);
             GUILayout v0 = mainPanel.AddLayoutY();
 
             v0.AddSpace(5);
@@ -277,8 +277,8 @@ namespace bs.Editor
             v0.AddSpace(5);
 
             GUIPanel overlay = GUI.AddPanel(-1);
-            overlay.SetWidth(Width);
-            overlay.SetHeight(Height);
+            overlay.SetWidth(ContentWidth);
+            overlay.SetHeight(ContentHeight);
 
             overlay.AddElement(guiSliderVert);
             overlay.AddElement(guiSliderRHorz);
