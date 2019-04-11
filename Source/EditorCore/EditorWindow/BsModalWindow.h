@@ -30,6 +30,9 @@ namespace bs
 		/**	Changes the text in the modal window title bar. */
 		void setTitle(const HString& title);
 
+		/** @copydoc EditorWindowBase::setSize */
+		void setSize(UINT32 width, UINT32 height) override;
+
 		/** Converts screen pointer coordinates into coordinates relative to the window content's GUI panel. */
 		Vector2I screenToWindowPos(const Vector2I& screenPos) const;
 

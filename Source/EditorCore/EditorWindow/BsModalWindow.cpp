@@ -109,6 +109,13 @@ namespace bs
 		mTitle->setContent(GUIContent(title));
 	}
 
+	void ModalWindow::setSize(UINT32 width, UINT32 height)
+	{
+		EditorWindowBase::setSize(width, height);
+		
+		updateSize();
+	}
+
 	void ModalWindow::resized()
 	{
 		EditorWindowBase::resized();
