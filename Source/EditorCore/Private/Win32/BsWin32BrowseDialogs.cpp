@@ -175,6 +175,6 @@ namespace bs
 			std::cref(defaultPath), std::cref(filterList), std::ref(paths), _1), 
 			CTQF_InternalQueue | CTQF_BlockUntilComplete);
 
-		return returnValue.getReturnValue<bool>();
+		return any_cast<bool>(returnValue.getGenericReturnValue());
 	}
 }

@@ -174,7 +174,7 @@ namespace bs
 
 		assert(op.hasCompleted());
 
-		PickResults pickResults = op.getReturnValue<PickResults>();
+		PickResults pickResults = any_cast<PickResults>(op.getGenericReturnValue());
 		if (data != nullptr)
 		{
 			data->pickPosition = cam->screenToWorldPointDeviceDepth(position, pickResults.depth);
