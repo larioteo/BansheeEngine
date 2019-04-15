@@ -65,6 +65,23 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Scrolls to and selects the specified resource path then start a rename operation.
+        /// </summary>
+        /// <param name="path">Path to the resource to rename</param>
+        /// <param name="window">Reference to the library window</param>
+        private static void StartRename(string path, LibraryWindow window)
+        {
+            if (window == null)
+                return;
+
+            window.Refresh();
+            window.HasFocus = true;
+            window.GoToEntry(path);
+            window.Select(path);
+            window.RenameSelection();
+        }
+
+        /// <summary>
         /// Creates a new material with the default shader in the currently selected project library folder.
         /// </summary>
         [MenuItem("Resources/Create/Folder", 9051, false, "IsLibraryWindowActive")]
@@ -74,7 +91,9 @@ namespace bs.Editor
             if (win == null)
                 return;
 
-            LibraryUtility.CreateFolder(win.SelectedFolder);
+            string path = LibraryUtility.CreateFolder(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>
@@ -88,7 +107,9 @@ namespace bs.Editor
             if(win == null)
                 return;
 
-            LibraryUtility.CreateEmptyMaterial(win.SelectedFolder);
+            string path = LibraryUtility.CreateEmptyMaterial(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>
@@ -130,7 +151,9 @@ namespace bs.Editor
             if (win == null)
                 return;
 
-            LibraryUtility.CreateEmptySpriteTexture(win.SelectedFolder);
+            string path = LibraryUtility.CreateEmptySpriteTexture(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>
@@ -143,7 +166,9 @@ namespace bs.Editor
             if (win == null)
                 return;
 
-            LibraryUtility.CreateEmptyGUISkin(win.SelectedFolder);
+            string path = LibraryUtility.CreateEmptyGUISkin(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>
@@ -156,7 +181,9 @@ namespace bs.Editor
             if (win == null)
                 return;
 
-            LibraryUtility.CreateEmptyStringTable(win.SelectedFolder);
+            string path = LibraryUtility.CreateEmptyStringTable(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>
@@ -169,7 +196,9 @@ namespace bs.Editor
             if (win == null)
                 return;
 
-            LibraryUtility.CreateEmptyPhysicsMaterial(win.SelectedFolder);
+            string path = LibraryUtility.CreateEmptyPhysicsMaterial(win.SelectedFolder);
+
+            StartRename(path, win);
         }
 
         /// <summary>

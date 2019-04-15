@@ -116,7 +116,7 @@ namespace bs.Editor
         /// <returns>Instance of the loaded resource, or null if not found.</returns>
         public static T Load<T>(string path) where T : Resource
         {
-            return (T) Internal_Load(path);
+            return (T)Internal_Load(path);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace bs.Editor
                 int numRemaining = totalFilesToImport - inProgressImports;
 
                 float pct = 1.0f;
-                if(totalFilesToImport > 0)
+                if (totalFilesToImport > 0)
                     pct = numRemaining / (float)totalFilesToImport;
 
                 ImportProgressPercent = pct;

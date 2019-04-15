@@ -753,9 +753,27 @@ namespace bs.Editor
 
         /// <summary>
         /// Scrolls the contents GUI area so that the element at the specified path becomes visible.
+        /// If the entry is in a subdirectory then the subdirectory is entered first.
         /// </summary>
         /// <param name="path">Project library path to the element.</param>
-        private void ScrollToEntry(string path)
+        internal void GoToEntry(string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                string parentDir = PathEx.GetParent(path);
+
+                if (!PathEx.Compare(parentDir, CurrentFolder))
+                    EnterDirectory(parentDir);
+            }
+
+            ScrollToEntry(path);
+        }
+
+        /// <summary>
+        /// Scrolls the contents GUI area so that the element at the specified path becomes visible.
+        /// </summary>
+        /// <param name="path">Project library path to the element.</param>
+        internal void ScrollToEntry(string path)
         {
             LibraryGUIEntry entryGUI;
             if (!content.TryGetEntry(path, out entryGUI))
@@ -785,7 +803,7 @@ namespace bs.Editor
         /// <summary>
         /// Rebuilds the library window GUI. Should be called any time the active folder or contents change.
         /// </summary>
-        private void Refresh()
+        internal void Refresh()
         {
             requiresRefresh = false;
 
