@@ -66,6 +66,12 @@ namespace bs.Editor
             return state;
         }
 
+        /// <inheritdoc />
+        public override InspectableField FindPath(string path)
+        {
+            return FindPath(path, children);
+        }
+
         /// <inheritdoc/>
         protected internal override void Initialize(int index)
         {

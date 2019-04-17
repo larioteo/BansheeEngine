@@ -66,7 +66,7 @@ namespace bs
 
 		/** @} */
 	protected:
-		virtual ~GUIIntField();
+		virtual ~GUIIntField() = default;
 
 		/** @copydoc GUIElement::_hasCustomCursor */
 		bool _hasCustomCursor(Vector2I position, CursorType& type) const override;
@@ -79,12 +79,6 @@ namespace bs
 
 		/**	Triggered when the input box value changes. */
 		void valueChanged(const String& newValue);
-
-		/**
-		 * Triggered when the input box value changes, but unlike the previous overload the value is parsed into an integer
-		 * value.
-		 */
-		void valueChanged(INT32 newValue);
 
 		/**	Triggers when the input box receives or loses keyboard focus. */
 		void focusChanged(bool focus);

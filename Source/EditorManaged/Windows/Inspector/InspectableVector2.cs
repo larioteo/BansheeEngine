@@ -42,6 +42,7 @@ namespace bs.Editor
                 guiField.OnChanged += OnFieldValueChanged;
                 guiField.OnConfirmed += OnFieldValueConfirm;
                 guiField.OnFocusLost += OnFieldValueConfirm;
+                guiField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -60,12 +61,20 @@ namespace bs.Editor
             return oldState;
         }
 
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            guiField.Focus = true;
+        }
+
         /// <summary>
         /// Triggered when the user changes the field value.
         /// </summary>
         /// <param name="newValue">New value of the 2D vector field.</param>
         private void OnFieldValueChanged(Vector2 newValue)
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue(newValue);
             state |= InspectableState.ModifyInProgress;
         }

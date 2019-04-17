@@ -7,9 +7,7 @@
 #include "GUI/BsGUIWidget.h"
 #include "GUI/BsGUIMouseEvent.h"
 #include "Platform/BsCursor.h"
-#include "UndoRedo/BsUndoRedo.h"
 #include "RenderAPI/BsViewport.h"
-#include "UndoRedo/BsCmdInputFieldValueChange.h"
 #include <regex>
 
 using namespace std::placeholders;
@@ -35,11 +33,6 @@ namespace bs
 
 		setValue(0);
 		mInputBox->setText("0");
-	}
-
-	GUIIntField::~GUIIntField()
-	{
-
 	}
 
 	bool GUIIntField::_hasCustomCursor(const Vector2I position, CursorType& type) const
@@ -135,7 +128,7 @@ namespace bs
 					mLastDragPos += (newValue - oldValue) * DRAG_SPEED + jumpAmount;
 
 					if (oldValue != newValue)
-						valueChanged(newValue);
+						_setValue(newValue, true);
 				}
 			}
 
@@ -220,27 +213,18 @@ namespace bs
 
 	void GUIIntField::valueChanged(const String& newValue)
 	{
-		valueChanged(parseINT32(newValue));
-	}
-
-	void GUIIntField::valueChanged(INT32 newValue)
-	{
-		CmdInputFieldValueChange<GUIIntField, INT32>::execute(this, newValue);
+		_setValue(parseINT32(newValue), true);
 	}
 
 	void GUIIntField::focusChanged(bool focus)
 	{
 		if (focus)
 		{
-			UndoRedo::instance().pushGroup("InputBox");
-
 			mHasInputFocus = true;
 			onFocusChanged(true);
 		}
 		else
 		{
-			UndoRedo::instance().popGroup("InputBox");
-
 			setText(applyRangeAndStep(mValue));
 
 			mHasInputFocus = false;

@@ -41,6 +41,7 @@ namespace bs.Editor
                 guiDistributionField.OnChanged += OnFieldValueChanged;
                 guiDistributionField.OnConfirmed += OnFieldValueConfirm;
                 guiDistributionField.OnFocusLost += OnFieldValueConfirm;
+                guiDistributionField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiDistributionField);
             }
@@ -64,6 +65,8 @@ namespace bs.Editor
         /// </summary>
         private void OnFieldValueChanged()
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue(guiDistributionField.Value);
             state |= InspectableState.ModifyInProgress;
         }

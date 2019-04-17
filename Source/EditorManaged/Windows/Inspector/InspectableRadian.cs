@@ -52,6 +52,7 @@ namespace bs.Editor
                 guiFloatField.OnChanged += OnFieldValueChanged;
                 guiFloatField.OnConfirmed += OnFieldValueConfirm;
                 guiFloatField.OnFocusLost += OnFieldValueConfirm;
+                guiFloatField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiFloatField);
             }
@@ -70,12 +71,20 @@ namespace bs.Editor
             return oldState;
         }
 
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            guiFloatField.Focus = true;
+        }
+
         /// <summary>
         /// Triggered when the user inputs a new floating point value.
         /// </summary>
         /// <param name="newValue">New value of the float field.</param>
         private void OnFieldValueChanged(float newValue)
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue(new Radian(newValue));
             state |= InspectableState.ModifyInProgress;
         }

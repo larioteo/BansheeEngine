@@ -50,6 +50,7 @@ namespace bs.Editor
 
                     layersValue = layers;
 
+                    RecordStateForUndo();
                     property.SetValue(layers);
                     state |= InspectableState.ModifyInProgress | InspectableState.Modified;
                 };

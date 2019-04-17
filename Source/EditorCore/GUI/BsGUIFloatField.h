@@ -66,7 +66,7 @@ namespace bs
 
 		/** @} */
 	protected:
-		virtual ~GUIFloatField();
+		virtual ~GUIFloatField() = default;
 
 		/** @copydoc GUIElementContainer::_hasCustomCursor */
 		bool _hasCustomCursor(Vector2I position, CursorType& type) const override;
@@ -78,10 +78,7 @@ namespace bs
 		void styleUpdated() override;
 
 		/**	Triggered when the input box value changes. */
-		void valueChanging(const String& newValue);
-
-		/** Triggered when the input box value changes and is confirmed. */
-		void valueChanged(float newValue);
+		void valueChanged(const String& newValue);
 
 		/**	Triggers when the input box receives or loses keyboard focus. */
 		void focusChanged(bool focus);

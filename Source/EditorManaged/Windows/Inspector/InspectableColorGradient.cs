@@ -63,6 +63,8 @@ namespace bs.Editor
         /// <param name="newValue">New value of the gradient field.</param>
         private void OnFieldValueChanged(ColorGradient newValue)
         {
+            RecordStateForUndo();
+
             property.SetValue(newValue);
             state = InspectableState.Modified;
         }

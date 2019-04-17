@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text;
 using bs;
 
 namespace bs.Editor
@@ -58,11 +60,53 @@ namespace bs.Editor
             dictionaryGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
+        /// <inheritdoc />
+        public override InspectableField FindPath(string path)
+        {
+            string subPath = GetSubPath(path);
+
+            if (string.IsNullOrEmpty(subPath))
+                return null;
+
+            bool isKey = false;
+            if (subPath.StartsWith("Key["))
+                isKey = true;
+            else if (subPath.StartsWith("Value["))
+                isKey = false;
+            else
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < subPath.Length; i++)
+            {
+                if (path[i] == ']')
+                    break;
+
+                if (!char.IsNumber(path[i]))
+                    return null;
+
+                sb.Append(path[i]);
+            }
+
+            if (!int.TryParse(sb.ToString(), out int idx))
+                return null;
+
+            if (idx >= dictionaryGUIField.NumRows)
+                return null;
+
+            InspectableDictionaryGUIRow row = dictionaryGUIField.GetRow(idx);
+
+            if (isKey)
+                return row.FieldKey;
+
+            return row.FieldValue;
+        }
+
         /// <summary>
         /// Creates GUI elements that allow viewing and manipulation of a <see cref="SerializableDictionary"/> referenced
         /// by a serializable property.
         /// </summary>
-        public class InspectableDictionaryGUI : GUIDictionaryFieldBase
+        private class InspectableDictionaryGUI : GUIDictionaryFieldBase
         {
             private SerializableProperty property;
             private IDictionary dictionary;
@@ -86,6 +130,14 @@ namespace bs.Editor
             public string Path
             {
                 get { return path; }
+            }
+
+            /// <summary>
+            /// Returns the number of rows in the array.
+            /// </summary>
+            public int NumRows
+            {
+                get { return GetNumRows(); }
             }
 
             /// <summary>
@@ -136,6 +188,19 @@ namespace bs.Editor
                 guiDictionary.BuildGUI();
 
                 return guiDictionary;
+            }
+
+            /// <summary>
+            /// Returns an array row at the specified index.
+            /// </summary>
+            /// <param name="idx">Index of the row.</param>
+            /// <returns>Array row representation or null if index is out of range.</returns>
+            public InspectableDictionaryGUIRow GetRow(int idx)
+            {
+                if (idx < GetNumRows())
+                    return (InspectableDictionaryGUIRow)rows[idx];
+
+                return null;
             }
 
             /// <inheritdoc/>
@@ -253,6 +318,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void AddEntry(object key, object value)
             {
+                RecordStateForUndo();
+
                 SerializableProperty keyProperty = (SerializableProperty)key;
                 SerializableProperty valueProperty = (SerializableProperty)value;
 
@@ -265,6 +332,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void RemoveEntry(object key)
             {
+                RecordStateForUndo();
+
                 SerializableProperty keyProperty = (SerializableProperty)key;
 
                 dictionary.Remove(keyProperty.GetValue<object>());
@@ -306,6 +375,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override KeyValuePair<object, object> CloneElement(int index)
             {
+                RecordStateForUndo();
+
                 SerializableProperty keyProperty = (SerializableProperty)GetKey(index);
                 SerializableProperty valueProperty = (SerializableProperty)GetValue(keyProperty);
 
@@ -331,6 +402,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateDictionary()
             {
+                RecordStateForUndo();
+
                 dictionary = property.CreateDictionaryInstance();
                 numElements = dictionary.Count;
                 property.SetValue(dictionary);
@@ -341,11 +414,23 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void DeleteDictionary()
             {
+                RecordStateForUndo();
+
                 dictionary = null;
                 numElements = 0;
                 property.SetValue<object>(null);
 
                 UpdateKeys();
+            }
+
+            /// <summary>
+            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
+            /// before making changes to the field value.
+            /// </summary>
+            protected void RecordStateForUndo()
+            {
+                if (context.Component != null)
+                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
             }
 
             /// <summary>
@@ -362,9 +447,17 @@ namespace bs.Editor
         /// </summary>
         private class InspectableDictionaryGUIRow : GUIDictionaryFieldRow
         {
+            /// <summary>
+            /// Inspectable field displaying the key on the dictionary row.
+            /// </summary>
+            public InspectableField FieldKey { get; private set; }
+
+            /// <summary>
+            /// Inspectable field displaying the value on the dictionary row.
+            /// </summary>
+            public InspectableField FieldValue { get; private set; }
+
             private GUILayoutY keyLayout;
-            private InspectableField fieldKey;
-            private InspectableField fieldValue;
 
             /// <inheritdoc/>
             protected override GUILayoutX CreateKeyGUI(GUILayoutY layout)
@@ -374,10 +467,10 @@ namespace bs.Editor
                 SerializableProperty property = GetKey<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Key[" + RowIdx + "]";
-                fieldKey = CreateField(dictParent.Context, "Key", entryPath, 0, Depth + 1,
+                FieldKey = CreateField(dictParent.Context, "Key", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
 
-                return fieldKey.GetTitleLayout();
+                return FieldKey.GetTitleLayout();
             }
 
             /// <inheritdoc/>
@@ -387,7 +480,7 @@ namespace bs.Editor
                 SerializableProperty property = GetValue<SerializableProperty>();
 
                 string entryPath = dictParent.Path + "Value[" + RowIdx + "]";
-                fieldValue = CreateField(dictParent.Context, "Value", entryPath, 0, Depth + 1,
+                FieldValue = CreateField(dictParent.Context, "Value", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property);
             }
 
@@ -400,10 +493,10 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override InspectableState Refresh()
             {
-                fieldKey.Property = GetKey<SerializableProperty>();
-                fieldValue.Property = GetValue<SerializableProperty>();
+                FieldKey.Property = GetKey<SerializableProperty>();
+                FieldValue.Property = GetValue<SerializableProperty>();
 
-                return fieldValue.Refresh(0);
+                return FieldValue.Refresh(0);
             }
         }
     }

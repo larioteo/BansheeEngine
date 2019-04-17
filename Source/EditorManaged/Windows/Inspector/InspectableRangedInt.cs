@@ -44,6 +44,7 @@ namespace bs.Editor
                     guiIntField.Step = style.StepStyle.Step;
                 guiIntField.OnChanged += OnFieldValueChanged;
                 guiIntField.OnFocusLost += OnFieldValueConfirm;
+                guiIntField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiIntField);
             }
@@ -62,12 +63,20 @@ namespace bs.Editor
             return oldState;
         }
 
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            guiIntField.Focus = true;
+        }
+
         /// <summary>
         /// Triggered when the user inputs a new integer value.
         /// </summary>
         /// <param name="newValue">New value of the float field.</param>
         private void OnFieldValueChanged(float newValue)
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue((int)newValue);
             state |= InspectableState.ModifyInProgress;
         }

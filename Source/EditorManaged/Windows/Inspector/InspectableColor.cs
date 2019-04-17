@@ -65,6 +65,8 @@ namespace bs.Editor
         /// <param name="newValue">New value of the color field.</param>
         private void OnFieldValueChanged(Color newValue)
         {
+            RecordStateForUndo();
+
             property.SetValue(newValue);
             state = InspectableState.Modified;
         }

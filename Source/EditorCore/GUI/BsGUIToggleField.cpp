@@ -4,7 +4,6 @@
 #include "GUI/BsGUILayout.h"
 #include "GUI/BsGUIToggle.h"
 #include "GUI/BsGUILabel.h"
-#include "UndoRedo/BsCmdInputFieldValueChange.h"
 
 using namespace std::placeholders;
 
@@ -59,7 +58,7 @@ namespace bs
 
 	void GUIToggleField::valueChanged(bool newValue)
 	{
-		CmdInputFieldValueChange<GUIToggleField, bool>::execute(this, newValue);
+		_setValue(newValue, true);
 	}
 
 	const String& GUIToggleField::getGUITypeName()

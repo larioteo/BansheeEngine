@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using bs;
 
 namespace bs.Editor
@@ -58,6 +59,39 @@ namespace bs.Editor
             listGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
+        /// <inheritdoc />
+        public override InspectableField FindPath(string path)
+        {
+            string subPath = GetSubPath(path);
+
+            if (string.IsNullOrEmpty(subPath) || subPath.Length < 3 || subPath[0] != '[')
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < subPath.Length; i++)
+            {
+                if (path[i] == ']')
+                    break;
+
+                if (!char.IsNumber(path[i]))
+                    return null;
+
+                sb.Append(path[i]);
+            }
+
+            if (!int.TryParse(sb.ToString(), out int idx))
+                return null;
+
+            if (idx >= listGUIField.NumRows)
+                return null;
+
+            InspectableListGUIRow row = listGUIField.GetRow(idx);
+            if (row != null)
+                return row.Field;
+
+            return null;
+        }
+
         /// <summary>
         /// Handles creation of GUI elements for a GUI list field that displays a <see cref="SerializableList"/> object.
         /// </summary>
@@ -83,6 +117,14 @@ namespace bs.Editor
             public string Path
             {
                 get { return path; }
+            }
+
+            /// <summary>
+            /// Returns the number of rows in the array.
+            /// </summary>
+            public int NumRows
+            {
+                get { return GetNumRows(); }
             }
 
             /// <summary>
@@ -129,6 +171,19 @@ namespace bs.Editor
                 listGUI.BuildGUI();
 
                 return listGUI;
+            }
+
+            /// <summary>
+            /// Returns a list row at the specified index.
+            /// </summary>
+            /// <param name="idx">Index of the row.</param>
+            /// <returns>List row representation or null if index is out of range.</returns>
+            public InspectableListGUIRow GetRow(int idx)
+            {
+                if (idx < GetNumRows())
+                    return (InspectableListGUIRow)rows[idx];
+
+                return null;
             }
 
             /// <inheritdoc/>
@@ -202,6 +257,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateList()
             {
+                RecordStateForUndo();
+
                 list = property.CreateListInstance(0);
                 property.SetValue(list);
                 numElements = 0;
@@ -210,6 +267,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void ResizeList()
             {
+                RecordStateForUndo();
+
                 int size = guiSizeField.Value;
 
                 IList newList = property.CreateListInstance(size);
@@ -226,6 +285,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void ClearList()
             {
+                RecordStateForUndo();
+
                 property.SetValue<object>(null);
                 list = null;
                 numElements = 0;
@@ -234,6 +295,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void DeleteElement(int index)
             {
+                RecordStateForUndo();
+
                 if (index >= 0 && index < list.Count)
                     list.RemoveAt(index);
 
@@ -243,6 +306,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void CloneElement(int index)
             {
+                RecordStateForUndo();
+
                 SerializableList serializableList = property.GetList();
 
                 if (index >= 0 && index < list.Count)
@@ -254,6 +319,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void MoveUpElement(int index)
             {
+                RecordStateForUndo();
+
                 if ((index - 1) >= 0)
                 {
                     object previousEntry = list[index - 1];
@@ -266,6 +333,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void MoveDownElement(int index)
             {
+                RecordStateForUndo();
+
                 if ((index + 1) < list.Count)
                 {
                     object nextEntry = list[index + 1];
@@ -274,6 +343,16 @@ namespace bs.Editor
                     list[index] = nextEntry;
                 }
             }
+
+            /// <summary>
+            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
+            /// before making changes to the field value.
+            /// </summary>
+            protected void RecordStateForUndo()
+            {
+                if (context.Component != null)
+                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+            }
         }
 
         /// <summary>
@@ -281,7 +360,10 @@ namespace bs.Editor
         /// </summary>
         private class InspectableListGUIRow : GUIListFieldRow
         {
-            private InspectableField field;
+            /// <summary>
+            /// Inspectable field displayed on the list row.
+            /// </summary>
+            public InspectableField Field { get; private set; }
 
             /// <inheritdoc/>
             protected override GUILayoutX CreateGUI(GUILayoutY layout)
@@ -290,17 +372,17 @@ namespace bs.Editor
                 SerializableProperty property = GetValue<SerializableProperty>();
 
                 string entryPath = listParent.Path + "[" + SeqIndex + "]";
-                field = CreateField(listParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
+                Field = CreateField(listParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property, new InspectableFieldStyleInfo());
 
-                return field.GetTitleLayout();
+                return Field.GetTitleLayout();
             }
 
             /// <inheritdoc/>
             protected internal override InspectableState Refresh()
             {
-                field.Property = GetValue<SerializableProperty>();
-                return field.Refresh(0);
+                Field.Property = GetValue<SerializableProperty>();
+                return Field.Refresh(0);
             }
         }
     }

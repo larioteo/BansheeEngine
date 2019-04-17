@@ -19,12 +19,21 @@ namespace bs.Editor
         private GenericInspectorDrawer drawer;
 
         /// <inheritdoc/>
+        internal override void FocusOnField(string path)
+        {
+            drawer.FocusOnField(path);
+        }
+
+        /// <inheritdoc/>
         protected internal override void Initialize()
         {
             if (InspectedObject == null)
                 LoadResource();
 
-            drawer = new GenericInspectorDrawer(InspectedObject, new InspectableContext(Persistent), Layout);
+            Component inspectedComponent = InspectedObject as Component;
+
+            drawer = new GenericInspectorDrawer(InspectedObject, new InspectableContext(Persistent, inspectedComponent), 
+                Layout);
 
             isEmpty = drawer.Fields.Count == 0;
             base.SetVisible(!isEmpty);
@@ -92,6 +101,16 @@ namespace bs.Editor
             }
 
             return state;
+        }
+
+        /// <summary>
+        /// Changes keyboard focus to the provided field.
+        /// </summary>
+        /// <param name="path">Path to the field on the object being inspected.</param>
+        public void FocusOnField(string path)
+        {
+            InspectableField field = InspectableField.FindPath(path, Fields);
+            field?.SetHasFocus();
         }
     }
 

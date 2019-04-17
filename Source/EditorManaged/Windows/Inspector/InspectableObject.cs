@@ -83,7 +83,11 @@ namespace bs.Editor
                             prefix = type.Namespace + ".";
 
                         createContextMenu.AddItem(prefix + type.Name,
-                            () => property.SetValue(Activator.CreateInstance(type)));
+                            () =>
+                            {
+                                RecordStateForUndo();
+                                property.SetValue(Activator.CreateInstance(type));
+                            });
                     }
                 }
             }
@@ -128,6 +132,12 @@ namespace bs.Editor
             }
 
             return state;
+        }
+
+        /// <inheritdoc />
+        public override InspectableField FindPath(string path)
+        {
+            return FindPath(path, children);
         }
 
         /// <summary>
@@ -308,7 +318,10 @@ namespace bs.Editor
             if (createContextMenu == null)
             {
                 if (instantiableTypes.Length > 0)
+                {
+                    RecordStateForUndo();
                     property.SetValue(Activator.CreateInstance(instantiableTypes[0]));
+                }
             }
             else
             {
@@ -325,6 +338,7 @@ namespace bs.Editor
         /// </summary>
         private void OnClearButtonClicked()
         {
+            RecordStateForUndo();
             property.SetValue<object>(null);
         }
 

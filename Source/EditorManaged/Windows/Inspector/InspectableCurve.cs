@@ -63,6 +63,8 @@ namespace bs.Editor
         /// <param name="newValue">New curve.</param>
         private void OnFieldValueChanged(AnimationCurve newValue)
         {
+            RecordStateForUndo();
+
             property.SetValue(newValue);
             state = InspectableState.Modified;
         }

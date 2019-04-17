@@ -51,9 +51,9 @@ namespace bs
 		HSceneObject mSceneObject;
 		EditorUtility::SceneObjProxy mSceneObjectProxy;
 
-		UINT8* mSerializedObject;
-		UINT32 mSerializedObjectSize;
-		UINT64 mSerializedObjectParentId;
+		UINT8* mSerializedObject = nullptr;
+		UINT32 mSerializedObjectSize = 0;
+		UINT64 mSerializedObjectParentId = 0;
 	};
 
 	/** @} */

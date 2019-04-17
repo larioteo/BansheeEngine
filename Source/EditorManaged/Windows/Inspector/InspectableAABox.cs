@@ -55,11 +55,13 @@ namespace bs.Editor
                 Vector3 min = x - bounds.Size * 0.5f;
                 Vector3 max = x + bounds.Size * 0.5f;
 
+                RecordStateForUndoIfNeeded();
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
             centerField.OnConfirmed += OnFieldValueConfirm;
             centerField.OnFocusLost += OnFieldValueConfirm;
+            centerField.OnFocusGained += RecordStateForUndoRequested;
 
             sizeField.OnChanged += x =>
             {
@@ -67,11 +69,13 @@ namespace bs.Editor
                 Vector3 min = bounds.Center - x * 0.5f;
                 Vector3 max = bounds.Center + x * 0.5f;
 
+                RecordStateForUndoIfNeeded();
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
             sizeField.OnConfirmed += OnFieldValueConfirm;
             sizeField.OnFocusLost += OnFieldValueConfirm;
+            sizeField.OnFocusGained += RecordStateForUndoRequested;
         }
 
         /// <inheritdoc/>
@@ -90,6 +94,15 @@ namespace bs.Editor
                 state = InspectableState.NotModified;
 
             return oldState;
+        }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName == "center")
+                centerField.Focus = true;
+            else
+                sizeField.Focus = true;
         }
 
         /// <summary>

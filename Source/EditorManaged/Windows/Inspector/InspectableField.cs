@@ -27,7 +27,8 @@ namespace bs.Editor
         protected string title;
         protected string path;
         protected int depth;
-        protected SerializableProperty.FieldType type; 
+        protected SerializableProperty.FieldType type;
+        private bool undoRecordNeeded = true;
 
         /// <summary>
         /// Property this field is displaying contents of.
@@ -117,6 +118,123 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Moves keyboard focus to this field.
+        /// </summary>
+        /// <param name="subFieldName">
+        /// Name of the sub-field to focus on. Only relevant if the inspectable field represents multiple GUI
+        /// input elements.
+        /// </param>
+        public virtual void SetHasFocus(string subFieldName = null) { }
+
+        /// <summary>
+        /// Searches for a child field with the specified path.
+        /// </summary>
+        /// <param name="path">
+        /// Path relative to the current field. Path entries are readable field names separated with "/". Fields within
+        /// categories are placed within a special category group, surrounded by "[]". Some examples:
+        /// - myField
+        /// - myObject/myField
+        /// - myObject/[myCategory]/myField
+        /// </param>
+        /// <returns>Matching field if one is found, null otherwise.</returns>
+        public virtual InspectableField FindPath(string path)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for a field with the specified path.
+        /// </summary>
+        /// <param name="path">
+        /// Path to search for. Path entries are readable field names separated with "/". Fields within categories are
+        /// placed within a special category group, surrounded by "[]". Some examples:
+        /// - myField
+        /// - myObject/myField
+        /// - myObject/[myCategory]/myField
+        /// </param>
+        /// <param name="fields">List of fields to search. Children will be searched recursively.</param>
+        /// <returns>Matching field if one is found, null otherwise.</returns>
+        public static InspectableField FindPath(string path, IEnumerable<InspectableField> fields)
+        {
+            string subPath = GetSubPath(path);
+            foreach (var field in fields)
+            {
+                InspectableField foundField = null;
+
+                if (field.path == subPath)
+                    foundField = field;
+                else
+                    foundField = field.FindPath(subPath);
+
+                if (foundField != null)
+                    return foundField;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the top-most part of the provided field path.
+        /// See <see cref="FindPath(string, IEnumerable{InspectableField})"/> for more information about paths.
+        /// </summary>
+        /// <param name="path">Path to return the sub-path of.</param>
+        /// <returns>Top-most part of the path (section before the first "/")</returns>
+        public static string GetSubPath(string path)
+        {
+            StringBuilder sb = new StringBuilder();
+            bool gotFirstChar = false;
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (path[i] == '/')
+                {
+                    if (!gotFirstChar)
+                    {
+                        gotFirstChar = true;
+                        continue;
+                    }
+
+                    break;
+                }
+
+                sb.Append(path[i]);
+                gotFirstChar = true;
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
+        /// before making changes to the field value.
+        /// </summary>
+        protected void RecordStateForUndo()
+        {
+            if(context.Component != null)
+                UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+        }
+
+        /// <summary>
+        /// Checks if the system needs to record the state of the current object for undo purposes, and performs the record
+        /// if needed. This can be requested by calling <see cref="RecordStateForUndoRequested"/>
+        /// </summary>
+        protected void RecordStateForUndoIfNeeded()
+        {
+            if (!undoRecordNeeded)
+                return;
+
+            RecordStateForUndo();
+            undoRecordNeeded = false;
+        }
+
+        /// <summary>
+        /// Notifies the system that the next call to <see cref="RecordStateForUndoIfNeeded"/> should record the state.
+        /// </summary>
+        protected void RecordStateForUndoRequested()
+        {
+            undoRecordNeeded = true;
+        }
+
+        /// <summary>
         /// Allows the user to override the default inspector GUI for a specific field in an object. If this method
         /// returns null the default field will be used instead.
         /// </summary>
@@ -184,7 +302,7 @@ namespace bs.Editor
                     string newCategory = field.Style.CategoryName;
                     if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
                     {
-                        string categoryPath = path + "/[" + newCategory + "]";
+                        string categoryPath = string.IsNullOrEmpty(path) ? $"[{newCategory}]" : $"{path}/[{newCategory}]";
                         category = new InspectableCategory(context, newCategory, categoryPath, depth, 
                             new InspectableFieldLayout(layout));
 
@@ -218,7 +336,7 @@ namespace bs.Editor
                 }
 
                 string fieldName = GetReadableIdentifierName(field.Name);
-                string childPath = string.IsNullOrEmpty(path) ? fieldName : path + "/" + fieldName;
+                string childPath = string.IsNullOrEmpty(path) ? fieldName : $"{path}/{fieldName}";
 
                 InspectableField inspectableField = null;
 
@@ -453,19 +571,26 @@ namespace bs.Editor
         /// <summary>
         /// Creates a new context.
         /// </summary>
-        public InspectableContext()
+        /// <param name="component">
+        /// Component object that inspector fields are editing. Can be null if the object being edited is not a component.
+        /// </param>
+        public InspectableContext(Component component = null)
         {
             Persistent = new SerializableProperties();
+            Component = component;
         }
 
-
         /// <summary>
-        /// Creates a new context with user-provided peristent property storage.
+        /// Creates a new context with user-provided persistent property storage.
         /// </summary>
         /// <param name="persistent">Existing object into which to inspectable fields can store persistent data.</param>
-        public InspectableContext(SerializableProperties persistent)
+        /// <param name="component">
+        /// Component object that inspector fields are editing. Can be null if the object being edited is not a component.
+        /// </param>
+        public InspectableContext(SerializableProperties persistent, Component component = null)
         {
             Persistent = persistent;
+            Component = component;
         }
 
         /// <summary>
@@ -473,6 +598,11 @@ namespace bs.Editor
         /// and restored when it is re-opened.
         /// </summary>
         public SerializableProperties Persistent { get; }
+
+        /// <summary>
+        /// Component object that inspector fields are editing. Can be null if the object being edited is not a component.
+        /// </summary>
+        public Component Component { get; }
     }
 
     /** @} */

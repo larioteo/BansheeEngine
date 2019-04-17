@@ -29,6 +29,8 @@ namespace bs
 			return;
 
 		SPtr<EditorCommand> command = removeLastFromUndoStack();
+		if(!command)
+			return;
 		
 		mRedoStackPtr = (mRedoStackPtr + 1) % MAX_STACK_ELEMENTS;
 		mRedoStack[mRedoStackPtr] = command;
@@ -54,8 +56,8 @@ namespace bs
 
 	void UndoRedo::pushGroup(const String& name)
 	{
-		mGroups.push(GroupData());
-		GroupData& newGroup = mGroups.top();
+		mGroups.push_back(GroupData());
+		GroupData& newGroup = mGroups.back();
 
 		newGroup.name = name;
 		newGroup.numEntries = 0;
@@ -68,7 +70,7 @@ namespace bs
 		if(mGroups.empty())
 			BS_EXCEPT(InvalidStateException, "Attempting to pop an UndoRedo group that doesn't exist: " + name);
 
-		GroupData& topGroup = mGroups.top();
+		GroupData& topGroup = mGroups.back();
 		if(topGroup.name != name)
 			BS_EXCEPT(InvalidStateException, "Attempting to pop invalid UndoRedo group. Got: " + name + ". Expected: " + topGroup.name);
 
@@ -82,7 +84,7 @@ namespace bs
 			mUndoNumElements--;
 		}
 
-		mGroups.pop();
+		mGroups.pop_back();
 		clearRedoStack();
 	}
 
@@ -175,17 +177,15 @@ namespace bs
 		mUndoStackPtr = (mUndoStackPtr - 1) % MAX_STACK_ELEMENTS;
 		mUndoNumElements--;
 
-		if(!mGroups.empty())
+		for(auto iter = mGroups.rbegin(); iter != mGroups.rend(); ++iter)
 		{
-			GroupData& topGroup = mGroups.top();
+			GroupData& group = *iter;
 
-			if(topGroup.numEntries == 0)
+			if(group.numEntries > 0)
 			{
-				BS_EXCEPT(InvalidStateException, "Removing an element from UndoRedo stack while in an " \
-					"invalid UndoRedo group. Current group: " + topGroup.name);
+				group.numEntries--;
+				break;
 			}
-
-			topGroup.numEntries--;
 		}
 
 		return command;
@@ -202,7 +202,7 @@ namespace bs
 
 		if(!mGroups.empty())
 		{
-			GroupData& topGroup = mGroups.top();
+			GroupData& topGroup = mGroups.back();
 			topGroup.numEntries = std::min(topGroup.numEntries + 1, MAX_STACK_ELEMENTS);
 		}
 
@@ -221,8 +221,7 @@ namespace bs
 			mUndoNumElements--;
 		}
 
-		while(!mGroups.empty())
-			mGroups.pop();
+		mGroups.clear();
 	}
 
 	void UndoRedo::clearRedoStack()

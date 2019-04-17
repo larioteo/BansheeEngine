@@ -4,7 +4,7 @@
 #include "GUI/BsGUILayoutX.h"
 #include "GUI/BsGUILabel.h"
 #include "GUI/BsGUIInputBox.h"
-#include "UndoRedo/BsCmdInputFieldValueChange.h"
+#include "UndoRedo/BsUndoRedo.h"
 
 using namespace std::placeholders;
 
@@ -32,11 +32,6 @@ namespace bs
 		mInputBox->onValueChanged.connect(std::bind(&GUITextField::valueChanged, this, _1));
 		mInputBox->onFocusChanged.connect(std::bind(&GUITextField::focusChanged, this, _1));
 		mInputBox->onConfirm.connect(std::bind(&GUITextField::inputConfirmed, this));
-	}
-
-	GUITextField::~GUITextField()
-	{
-
 	}
 
 	GUITextField* GUITextField::create(bool multiline, const GUIContent& labelContent, UINT32 labelWidth, const GUIOptions& options,
@@ -190,22 +185,18 @@ namespace bs
 
 	void GUITextField::valueChanged(const String& newValue)
 	{
-		CmdInputFieldValueChange<GUITextField, String>::execute(this, newValue);
+		_setValue(newValue, true);
 	}
 
 	void GUITextField::focusChanged(bool focus)
 	{
 		if (focus)
 		{
-			UndoRedo::instance().pushGroup("InputBox");
-
 			mHasInputFocus = true;
 			onFocusChanged(true);
 		}
 		else
 		{
-			UndoRedo::instance().popGroup("InputBox");
-
 			mHasInputFocus = false;
 			onFocusChanged(false);
 		}

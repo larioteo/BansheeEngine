@@ -1,6 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using System;
+using System.Text;
 using bs;
 
 namespace bs.Editor
@@ -66,6 +67,39 @@ namespace bs.Editor
             arrayGUIField.OnExpand += x => context.Persistent.SetBool(path + "_Expanded", x);
         }
 
+        /// <inheritdoc />
+        public override InspectableField FindPath(string path)
+        {
+            string subPath = GetSubPath(path);
+
+            if (string.IsNullOrEmpty(subPath) || subPath.Length < 3 || subPath[0] != '[')
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < subPath.Length; i++)
+            {
+                if (path[i] == ']')
+                    break;
+
+                if (!char.IsNumber(path[i]))
+                    return null;
+
+                sb.Append(path[i]);
+            }
+
+            if (!int.TryParse(sb.ToString(), out int idx))
+                return null;
+
+            if (idx >= arrayGUIField.NumRows)
+                return null;
+
+            InspectableArrayGUIRow row = arrayGUIField.GetRow(idx);
+            if (row != null)
+                return row.Field;
+
+            return null;
+        }
+
         /// <summary>
         /// Handles creation of GUI elements for a GUI list field that displays a <see cref="SerializableArray"/> object.
         /// </summary>
@@ -100,6 +134,14 @@ namespace bs.Editor
             public InspectableFieldStyleInfo Style
             {
                 get { return style; }
+            }
+
+            /// <summary>
+            /// Returns the number of rows in the array.
+            /// </summary>
+            public int NumRows
+            {
+                get { return GetNumRows();  }
             }
 
             /// <summary>
@@ -149,6 +191,19 @@ namespace bs.Editor
                 guiArray.BuildGUI();
                 
                 return guiArray;
+            }
+
+            /// <summary>
+            /// Returns an array row at the specified index.
+            /// </summary>
+            /// <param name="idx">Index of the row.</param>
+            /// <returns>Array row representation or null if index is out of range.</returns>
+            public InspectableArrayGUIRow GetRow(int idx)
+            {
+                if (idx < GetNumRows())
+                    return (InspectableArrayGUIRow)rows[idx];
+
+                return null;
             }
 
             /// <inheritdoc/>
@@ -249,6 +304,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateList()
             {
+                RecordStateForUndo();
+
                 array = property.CreateArrayInstance(new int[1] { 0 });
                 property.SetValue(array);
                 numElements = 0;
@@ -257,6 +314,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void ResizeList()
             {
+                RecordStateForUndo();
+
                 int size = guiSizeField.Value; // TODO - Support multi-rank arrays
 
                 Array newArray = property.CreateArrayInstance(new int[] { size });
@@ -278,6 +337,8 @@ namespace bs.Editor
                     CreateList();
                 else
                 {
+                    RecordStateForUndo();
+
                     property.SetValue<object>(null);
                     array = null;
                     numElements = 0;
@@ -287,6 +348,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void DeleteElement(int index)
             {
+                RecordStateForUndo();
+
                 int size = MathEx.Max(0, array.Length - 1);
                 Array newArray = property.CreateArrayInstance(new int[] { size });
 
@@ -308,6 +371,8 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void CloneElement(int index)
             {
+                RecordStateForUndo();
+
                 SerializableArray array = property.GetArray();
 
                 int size = array.GetLength() + 1;
@@ -338,6 +403,8 @@ namespace bs.Editor
             {
                 if ((index - 1) >= 0)
                 {
+                    RecordStateForUndo();
+
                     object previousEntry = array.GetValue(index - 1);
 
                     array.SetValue(array.GetValue(index), index - 1);
@@ -354,6 +421,8 @@ namespace bs.Editor
             {
                 if ((index + 1) < array.Length)
                 {
+                    RecordStateForUndo();
+
                     object nextEntry = array.GetValue(index + 1);
 
                     array.SetValue(array.GetValue(index), index + 1);
@@ -364,6 +433,16 @@ namespace bs.Editor
                         property.SetValue(array);
                 }
             }
+
+            /// <summary>
+            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
+            /// before making changes to the field value.
+            /// </summary>
+            protected void RecordStateForUndo()
+            {
+                if (context.Component != null)
+                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+            }
         }
 
         /// <summary>
@@ -371,7 +450,10 @@ namespace bs.Editor
         /// </summary>
         private class InspectableArrayGUIRow : GUIListFieldRow
         {
-            private InspectableField field;
+            /// <summary>
+            /// Inspectable field displayed on the array row.
+            /// </summary>
+            public InspectableField Field { get; private set; }
 
             /// <inheritdoc/>
             protected override GUILayoutX CreateGUI(GUILayoutY layout)
@@ -383,17 +465,17 @@ namespace bs.Editor
                 styleInfo.StyleFlags &= ~InspectableFieldStyleFlags.NativeWrapper;
 
                 string entryPath = arrayParent.Path + "[" + SeqIndex + "]";
-                field = CreateField(arrayParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
+                Field = CreateField(arrayParent.Context, SeqIndex + ".", entryPath, 0, Depth + 1,
                     new InspectableFieldLayout(layout), property, styleInfo);
 
-                return field.GetTitleLayout();
+                return Field.GetTitleLayout();
             }
 
             /// <inheritdoc/>
             protected internal override InspectableState Refresh()
             {
-                field.Property = GetValue<SerializableProperty>();
-                return field.Refresh(0);
+                Field.Property = GetValue<SerializableProperty>();
+                return Field.Refresh(0);
             }
         }
     }

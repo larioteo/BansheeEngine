@@ -9,11 +9,8 @@
 namespace bs
 {
 	CmdDeleteSO::CmdDeleteSO(const String& description, const HSceneObject& sceneObject)
-		: EditorCommand(description), mSceneObject(sceneObject), mSerializedObject(nullptr), mSerializedObjectSize(0)
-		, mSerializedObjectParentId(0)
-	{
-
-	}
+		: EditorCommand(description), mSceneObject(sceneObject)
+	{ }
 
 	CmdDeleteSO::~CmdDeleteSO()
 	{
@@ -56,9 +53,6 @@ namespace bs
 
 	void CmdDeleteSO::revert()
 	{
-		if (mSceneObject == nullptr)
-			return;
-
 		HSceneObject parent;
 		if (mSerializedObjectParentId != 0)
 			parent = static_object_cast<SceneObject>(GameObjectManager::instance().getObject(mSerializedObjectParentId));
@@ -79,23 +73,24 @@ namespace bs
 		restored->setParent(parent);
 
 		restored->_instantiate();
+		mSceneObject = restored->getHandle();
 	}
 
 	void CmdDeleteSO::recordSO(const HSceneObject& sceneObject)
 	{
-		bool isInstantiated = !mSceneObject->hasFlag(SOF_DontInstantiate);
-		mSceneObject->_setFlags(SOF_DontInstantiate);
+		bool isInstantiated = !sceneObject->hasFlag(SOF_DontInstantiate);
+		sceneObject->_setFlags(SOF_DontInstantiate);
 
 		MemorySerializer serializer;
-		mSerializedObject = serializer.encode(mSceneObject.get(), mSerializedObjectSize);
+		mSerializedObject = serializer.encode(sceneObject.get(), mSerializedObjectSize);
 
 		if (isInstantiated)
-			mSceneObject->_unsetFlags(SOF_DontInstantiate);
+			sceneObject->_unsetFlags(SOF_DontInstantiate);
 
-		HSceneObject parent = mSceneObject->getParent();
+		HSceneObject parent = sceneObject->getParent();
 		if (parent != nullptr)
 			mSerializedObjectParentId = parent->getInstanceId();
 
-		mSceneObjectProxy = EditorUtility::createProxy(mSceneObject);
+		mSceneObjectProxy = EditorUtility::createProxy(sceneObject);
 	}
 }

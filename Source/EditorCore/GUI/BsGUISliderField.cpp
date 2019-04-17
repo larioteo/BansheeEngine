@@ -6,7 +6,6 @@
 #include "GUI/BsGUISpace.h"
 #include "GUI/BsGUISlider.h"
 #include "GUI/BsGUILabel.h"
-#include "UndoRedo/BsCmdInputFieldValueChange.h"
 #include <regex>
 
 using namespace std::placeholders;
@@ -33,11 +32,6 @@ namespace bs
 
 		setValue(0);
 		mInputBox->setText("0");
-	}
-
-	GUISliderField::~GUISliderField()
-	{
-
 	}
 
 	float GUISliderField::getValue() const
@@ -128,16 +122,15 @@ namespace bs
 	{
 		float newFloatValue = parseFloat(mInputBox->getText());
 		if (mSlider->getValue() != newFloatValue) {
-			if (confirmed) {
-				CmdInputFieldValueChange<GUISliderField, float>::execute(this, newFloatValue);
-			}
+			if (confirmed)
+				_setValue(newFloatValue, true);
 			else
 			{
 				mSlider->setValue(newFloatValue);
 				onValueChanged(mSlider->getValue());
 			}
 		}
-		else if (mInputBox->getText() == "" && confirmed) //Avoid leaving label blank
+		else if (mInputBox->getText().empty() && confirmed) //Avoid leaving label blank
 		{
 			mInputBox->setText("0");
 		}
@@ -147,14 +140,11 @@ namespace bs
 	{
 		if (focus)
 		{
-			UndoRedo::instance().pushGroup("InputBox");
-
 			mHasInputFocus = true;
 			onFocusChanged(true);
 		}
 		else
 		{
-			UndoRedo::instance().popGroup("InputBox");
 			inputBoxValueChanged();
 
 			mHasInputFocus = false;

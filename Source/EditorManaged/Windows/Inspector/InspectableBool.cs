@@ -59,12 +59,20 @@ namespace bs.Editor
             return oldState;
         }
 
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            guiField.Focus = true;
+        }
+
         /// <summary>
         /// Triggered when the user toggles the toggle button.
         /// </summary>
         /// <param name="newValue">New value of the toggle button.</param>
         private void OnFieldValueChanged(bool newValue)
         {
+            RecordStateForUndo();
+
             property.SetValue(newValue);
             state = InspectableState.Modified;
         }

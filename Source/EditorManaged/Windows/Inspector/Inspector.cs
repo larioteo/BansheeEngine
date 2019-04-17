@@ -143,6 +143,12 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Changes keyboard focus to the provided field.
+        /// </summary>
+        /// <param name="path">Path to the field on the object being inspected.</param>
+        internal virtual void FocusOnField(string path) { }
+
+        /// <summary>
         /// Loads the currently inspected resource into the <see cref="InspectedObject"/> field. By default resources
         /// are not loaded and you can only retrieve their path through <see cref="InspectedResourcePath"/>.
         /// </summary>

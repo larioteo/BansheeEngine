@@ -62,6 +62,8 @@ namespace bs.Editor
         /// </summary>
         private void OnFieldValueChanged()
         {
+            RecordStateForUndo();
+
             property.SetValue(guiDistributionField.Value);
             state |= InspectableState.ModifyInProgress | InspectableState.Modified;
         }

@@ -118,7 +118,6 @@ set(BS_BANSHEEEDITOR_INC_GUI
 set(BS_BANSHEEEDITOR_INC_UNDOREDO
 	"UndoRedo/BsEditorCommand.h"
 	"UndoRedo/BsCmdReparentSO.h"
-	"UndoRedo/BsCmdInputFieldValueChange.h"
 	"UndoRedo/BsCmdRecordSO.h"
 	"UndoRedo/BsCmdDeleteSO.h"
 	"UndoRedo/BsCmdCreateSO.h"

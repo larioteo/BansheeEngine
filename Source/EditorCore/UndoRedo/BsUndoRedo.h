@@ -94,7 +94,7 @@ namespace bs
 
 		UINT32 mNextCommandId;
 
-		Stack<GroupData> mGroups;
+		Vector<GroupData> mGroups;
 	};
 
 	/** @} */

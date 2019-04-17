@@ -42,6 +42,7 @@ namespace bs.Editor
                 guiField.OnChanged += OnFieldValueChanged;
                 guiField.OnConfirmed += OnFieldValueConfirm;
                 guiField.OnFocusLost += OnFieldValueConfirm;
+                guiField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -66,6 +67,8 @@ namespace bs.Editor
         /// <param name="newValue">New value of the text field.</param>
         private void OnFieldValueChanged(string newValue)
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue(newValue);
             state |= InspectableState.ModifyInProgress;
         }

@@ -67,7 +67,6 @@ namespace bs.Editor
 
         private SceneObject activeSO;
         private InspectableState modifyState;
-        private int undoCommandIdx = -1;
         private GUITextBox soNameInput;
         private GUIToggle soActiveToggle;
         private GUIEnumField soMobility;
@@ -546,9 +545,6 @@ namespace bs.Editor
         /// <param name="paths">A set of absolute resource paths that were selected.</param>
         private void OnSelectionChanged(SceneObject[] objects, string[] paths)
         {
-            if (currentType == InspectorType.SceneObject && modifyState == InspectableState.NotModified)
-                UndoRedo.Global.PopCommand(undoCommandIdx);
-
             Clear();
             modifyState = InspectableState.NotModified;
 
@@ -583,12 +579,7 @@ namespace bs.Editor
             else if (objects.Length == 1)
             {
                 if (objects[0] != null)
-                {
-                    UndoRedo.RecordSO(objects[0]);
-                    undoCommandIdx = UndoRedo.Global.TopCommandId;
-
                     SetObjectToInspect(objects[0]);
-                }
             }
             else if (paths.Length == 1)
             {

@@ -52,6 +52,7 @@ namespace bs.Editor
                 guiIntField.OnChanged += OnFieldValueChanged;
                 guiIntField.OnConfirmed += OnFieldValueConfirm;
                 guiIntField.OnFocusLost += OnFieldValueConfirm;
+                guiIntField.OnFocusGained += RecordStateForUndoRequested;
 
                 layout.AddElement(layoutIndex, guiIntField);
             }
@@ -70,12 +71,20 @@ namespace bs.Editor
             return oldState;
         }
 
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            guiIntField.Focus = true;
+        }
+
         /// <summary>
         /// Triggered when the user inputs a new integer value.
         /// </summary>
         /// <param name="newValue">New value of the int field.</param>
         private void OnFieldValueChanged(int newValue)
         {
+            RecordStateForUndoIfNeeded();
+
             property.SetValue(newValue);
             state |= InspectableState.ModifyInProgress;
         }

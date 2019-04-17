@@ -71,7 +71,7 @@ namespace bs
 
 		/** @} */
 	protected:
-		virtual ~GUISliderField();
+		virtual ~GUISliderField() = default;
 
 		/** @copydoc GUIElementContainer::styleUpdated */
 		void styleUpdated() override;

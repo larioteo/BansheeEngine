@@ -181,8 +181,6 @@ namespace bs
 	protected:
 		static const UINT32 DEFAULT_LABEL_WIDTH;
 
-		virtual ~GUITextField();
-
 		/** @copydoc GUIElement::styleUpdated */
 		void styleUpdated() override;
 

@@ -8,7 +8,6 @@
 #include "GUI/BsGUIMouseEvent.h"
 #include "RenderAPI/BsViewport.h"
 #include "Platform/BsCursor.h"
-#include "UndoRedo/BsCmdInputFieldValueChange.h"
 #include <regex>
 
 using namespace std::placeholders;
@@ -26,7 +25,7 @@ namespace bs
 		mInputBox = GUIInputBox::create(false, GUIOptions(GUIOption::flexibleWidth()), getSubStyleName(getInputStyleType()));
 		mInputBox->setFilter(&GUIFloatField::floatFilter);
 
-		mInputBox->onValueChanged.connect(std::bind((void(GUIFloatField::*)(const String&))&GUIFloatField::valueChanging, this, _1));
+		mInputBox->onValueChanged.connect(std::bind((void(GUIFloatField::*)(const String&))&GUIFloatField::valueChanged, this, _1));
 		mInputBox->onFocusChanged.connect(std::bind(&GUIFloatField::focusChanged, this, _1));
 		mInputBox->onConfirm.connect(std::bind(&GUIFloatField::inputConfirmed, this));
 
@@ -34,11 +33,6 @@ namespace bs
 
 		setValue(0);
 		mInputBox->setText("0");
-	}
-
-	GUIFloatField::~GUIFloatField()
-	{
-
 	}
 
 	bool GUIFloatField::_hasCustomCursor(const Vector2I position, CursorType& type) const
@@ -117,7 +111,7 @@ namespace bs
 					mLastDragPos = event.getPosition().x + jumpAmount;
 
 					if (oldValue != newValue)
-						valueChanged(newValue);
+						_setValue(newValue, true);
 				}
 			}
 
@@ -200,29 +194,20 @@ namespace bs
 		mInputBox->setStyle(getSubStyleName(getInputStyleType()));
 	}
 
-	void GUIFloatField::valueChanging(const String& newValue)
+	void GUIFloatField::valueChanged(const String& newValue)
 	{
-		valueChanged(parseFloat(newValue));
-	}
-
-	void GUIFloatField::valueChanged(float newValue)
-	{
-		CmdInputFieldValueChange<GUIFloatField, float>::execute(this, newValue);
+		_setValue(parseFloat(newValue), true);
 	}
 
 	void GUIFloatField::focusChanged(bool focus)
 	{
 		if (focus)
 		{
-			UndoRedo::instance().pushGroup("InputBox");
-
 			mHasInputFocus = true;
 			onFocusChanged(true);
 		}
 		else
 		{
-			UndoRedo::instance().popGroup("InputBox");
-
 			setText(applyRangeAndStep(mValue));
 
 			mHasInputFocus = false;
