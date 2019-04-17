@@ -49,7 +49,7 @@ namespace bs.Editor
         /// </summary>
         protected void BuildGUI(PlaneCollider collider)
         {
-            normalField.OnChanged += x =>
+            normalField.OnValueChanged += x =>
             {
                 normal = x;
                 collider.Normal = x;
@@ -57,7 +57,7 @@ namespace bs.Editor
                 MarkAsModified();
             };
             normalField.OnFocusLost += ConfirmModify;
-            normalField.OnConfirmed += ConfirmModify;
+            normalField.OnConfirm += x => ConfirmModify();
 
             distanceField.OnChanged += x => { collider.Distance = x; MarkAsModified(); };
             distanceField.OnFocusLost += ConfirmModify;

@@ -83,9 +83,9 @@ namespace bs.Editor
 			return Internal_getTime(mCachedPtr, pixel);
 		}
 
-		/// <summary>Finds the pixel offset relative to the GUI element's origin for the specified time.</summary>
+		/// <summary>Finds the pixel offset relative to the GUI element&apos;s origin for the specified time.</summary>
 		/// <param name="time">Time value to return the offset for.</param>
-		/// <returns>Offset in pixels relative to GUI element's origin</returns>
+		/// <returns>Offset in pixels relative to GUI element&apos;s origin</returns>
 		public int GetOffset(float time)
 		{
 			return Internal_getOffset0(mCachedPtr, time);

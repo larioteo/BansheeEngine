@@ -308,7 +308,7 @@ namespace bs.Editor
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector2Field(title);
-            guiElem.OnChanged += (x) =>
+            guiElem.OnValueChanged += (x) =>
             {
                 material.SetVector2(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
@@ -348,7 +348,7 @@ namespace bs.Editor
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector3Field(title);
-            guiElem.OnChanged += (x) =>
+            guiElem.OnValueChanged += (x) =>
             {
                 material.SetVector3(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
@@ -388,7 +388,7 @@ namespace bs.Editor
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector4Field(title);
-            guiElem.OnChanged += (x) =>
+            guiElem.OnValueChanged += (x) =>
             {
                 material.SetVector4(shaderParam.name, x);
                 EditorApplication.SetDirty(material);

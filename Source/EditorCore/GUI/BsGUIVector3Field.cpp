@@ -15,20 +15,19 @@ namespace bs
 
 	GUIVector3Field::GUIVector3Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
-		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel),
-		mFieldX(nullptr), mFieldY(nullptr), mFieldZ(nullptr)
+		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
-		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getXFieldStyleType()));
-		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getYFieldStyleType()));
-		mFieldZ = GUIFloatField::create(HString("Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(getZFieldStyleType()));
+		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(X_FIELD_STYLE_TYPE));
+		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(Y_FIELD_STYLE_TYPE));
+		mFieldZ = GUIFloatField::create(HString("Z"), ELEMENT_LABEL_WIDTH, getSubStyleName(Z_FIELD_STYLE_TYPE));
 
-		mFieldX->onValueChanged.connect(std::bind(&GUIVector3Field::valueChanged, this, _1));
-		mFieldY->onValueChanged.connect(std::bind(&GUIVector3Field::valueChanged, this, _1));
-		mFieldZ->onValueChanged.connect(std::bind(&GUIVector3Field::valueChanged, this, _1));
+		mFieldX->onValueChanged.connect([this](float val) { valueChanged(val, VectorComponent::X); });
+		mFieldY->onValueChanged.connect([this](float val) { valueChanged(val, VectorComponent::Y); });
+		mFieldZ->onValueChanged.connect([this](float val) { valueChanged(val, VectorComponent::Z); });
 
-		mFieldX->onConfirm.connect(std::bind(&GUIVector3Field::inputConfirmed, this));
-		mFieldY->onConfirm.connect(std::bind(&GUIVector3Field::inputConfirmed, this));
-		mFieldZ->onConfirm.connect(std::bind(&GUIVector3Field::inputConfirmed, this));
+		mFieldX->onConfirm.connect([this]() { inputConfirmed(VectorComponent::X); });
+		mFieldY->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Y); });
+		mFieldZ->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Z); });
 
 		mLayout->addElement(mFieldX);
 		mLayout->addNewElement<GUIFixedSpace>(5);
@@ -59,6 +58,17 @@ namespace bs
 		return mFieldX->hasInputFocus() || mFieldY->hasInputFocus() || mFieldZ->hasInputFocus();
 	}
 
+	void GUIVector3Field::setInputFocus(VectorComponent component, bool focus)
+	{
+		switch(component)
+		{
+		case VectorComponent::X: mFieldX->setFocus(focus); break;
+		case VectorComponent::Y: mFieldY->setFocus(focus); break;
+		case VectorComponent::Z: mFieldZ->setFocus(focus); break;
+		default: break;
+		}
+	}
+
 	void GUIVector3Field::setTint(const Color& color)
 	{
 		if (mLabel != nullptr)
@@ -74,43 +84,27 @@ namespace bs
 		if (mLabel != nullptr)
 			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
 
-		mFieldX->setStyle(getSubStyleName(getXFieldStyleType()));
-		mFieldY->setStyle(getSubStyleName(getYFieldStyleType()));
-		mFieldZ->setStyle(getSubStyleName(getZFieldStyleType()));
+		mFieldX->setStyle(getSubStyleName(X_FIELD_STYLE_TYPE));
+		mFieldY->setStyle(getSubStyleName(Y_FIELD_STYLE_TYPE));
+		mFieldZ->setStyle(getSubStyleName(Z_FIELD_STYLE_TYPE));
 	}
 
-	void GUIVector3Field::valueChanged(float newValue)
+	void GUIVector3Field::valueChanged(float newValue, VectorComponent component)
 	{
+		onComponentChanged(newValue, component);
+
 		Vector3 value = getValue();
 		onValueChanged(value);
 	}
 
-	void GUIVector3Field::inputConfirmed()
+	void GUIVector3Field::inputConfirmed(VectorComponent component)
 	{
-		onConfirm();
+		onConfirm(component);
 	}
 
 	const String& GUIVector3Field::getGUITypeName()
 	{
 		static String typeName = "GUIVector3Field";
 		return typeName;
-	}
-
-	const String& GUIVector3Field::getXFieldStyleType()
-	{
-		static String LABEL_STYLE_TYPE = "XFloatField";
-		return LABEL_STYLE_TYPE;
-	}
-
-	const String& GUIVector3Field::getYFieldStyleType()
-	{
-		static String LABEL_STYLE_TYPE = "YFloatField";
-		return LABEL_STYLE_TYPE;
-	}
-
-	const String& GUIVector3Field::getZFieldStyleType()
-	{
-		static String LABEL_STYLE_TYPE = "ZFloatField";
-		return LABEL_STYLE_TYPE;
 	}
 }

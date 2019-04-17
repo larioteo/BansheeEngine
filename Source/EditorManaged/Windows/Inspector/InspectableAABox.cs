@@ -49,7 +49,7 @@ namespace bs.Editor
             boundsContent.AddElement(centerField);
             boundsContent.AddElement(sizeField);
 
-            centerField.OnChanged += x =>
+            centerField.OnValueChanged += x =>
             {
                 AABox bounds = property.GetValue<AABox>();
                 Vector3 min = x - bounds.Size * 0.5f;
@@ -59,11 +59,11 @@ namespace bs.Editor
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
-            centerField.OnConfirmed += OnFieldValueConfirm;
+            centerField.OnConfirm += x => OnFieldValueConfirm();
             centerField.OnFocusLost += OnFieldValueConfirm;
             centerField.OnFocusGained += RecordStateForUndoRequested;
 
-            sizeField.OnChanged += x =>
+            sizeField.OnValueChanged += x =>
             {
                 AABox bounds = property.GetValue<AABox>();
                 Vector3 min = bounds.Center - x * 0.5f;
@@ -73,7 +73,7 @@ namespace bs.Editor
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
-            sizeField.OnConfirmed += OnFieldValueConfirm;
+            sizeField.OnConfirm += x => OnFieldValueConfirm();
             sizeField.OnFocusLost += OnFieldValueConfirm;
             sizeField.OnFocusGained += RecordStateForUndoRequested;
         }

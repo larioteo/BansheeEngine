@@ -43,8 +43,8 @@ namespace bs.Editor
                 guiField = new GUIVector3Field(new GUIContent(title));
                 guiField.Value = quatValue.ToEuler();
 
-                guiField.OnChanged += OnFieldValueChanged;
-                guiField.OnConfirmed += OnFieldValueConfirm;
+                guiField.OnValueChanged += OnFieldValueChanged;
+                guiField.OnConfirm += x => OnFieldValueConfirm();
                 guiField.OnFocusLost += OnFieldValueConfirm;
                 guiField.OnFocusGained += RecordStateForUndoRequested;
 

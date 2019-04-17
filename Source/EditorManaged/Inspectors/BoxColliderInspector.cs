@@ -47,13 +47,13 @@ namespace bs.Editor
         /// </summary>
         protected void BuildGUI(BoxCollider collider)
         {
-            centerField.OnChanged += x => { collider.Center = x; MarkAsModified(); };
+            centerField.OnValueChanged += x => { collider.Center = x; MarkAsModified(); };
             centerField.OnFocusLost += ConfirmModify;
-            centerField.OnConfirmed += ConfirmModify;
+            centerField.OnConfirm += x => ConfirmModify();
 
-            extentsField.OnChanged += x => { collider.Extents = x; MarkAsModified(); };
+            extentsField.OnValueChanged += x => { collider.Extents = x; MarkAsModified(); };
             extentsField.OnFocusLost += ConfirmModify;
-            extentsField.OnConfirmed += ConfirmModify;
+            extentsField.OnConfirm += x => ConfirmModify();
 
             Layout.AddElement(centerField);
             Layout.AddElement(extentsField);

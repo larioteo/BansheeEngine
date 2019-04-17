@@ -71,21 +71,21 @@ namespace bs.Editor
 
             if(showOffsets)
             { 
-                targetOffsetField.OnChanged += x =>
+                targetOffsetField.OnValueChanged += x =>
                 {
                     joint.SetTransform(JointBody.Target, x, joint.GetRotation(JointBody.Target));
                     MarkAsModified();
                 };
                 targetOffsetField.OnFocusLost += ConfirmModify;
-                targetOffsetField.OnConfirmed += ConfirmModify;
+                targetOffsetField.OnConfirm += x => ConfirmModify();
 
-                anchorOffsetField.OnChanged += x =>
+                anchorOffsetField.OnValueChanged += x =>
                 {
                     joint.SetTransform(JointBody.Anchor, x, joint.GetRotation(JointBody.Anchor));
                     MarkAsModified();
                 };
                 anchorOffsetField.OnFocusLost += ConfirmModify;
-                anchorOffsetField.OnConfirmed += ConfirmModify;
+                anchorOffsetField.OnConfirm += x => ConfirmModify();
             }
 
             breakForceField.OnChanged += x => { joint.BreakForce = x; MarkAsModified(); };

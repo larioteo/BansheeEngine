@@ -47,9 +47,9 @@ namespace bs.Editor
         /// </summary>
         protected void BuildGUI(SphereCollider collider)
         {
-            centerField.OnChanged += x => { collider.Center = x; MarkAsModified(); };
+            centerField.OnValueChanged += x => { collider.Center = x; MarkAsModified(); };
             centerField.OnFocusLost += ConfirmModify;
-            centerField.OnConfirmed += ConfirmModify;
+            centerField.OnConfirm += x => ConfirmModify();
 
             radiusField.OnChanged += x => { collider.Radius = x; MarkAsModified(); };
             radiusField.OnFocusLost += ConfirmModify;

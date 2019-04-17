@@ -15,16 +15,15 @@ namespace bs
 
 	GUIVector2Field::GUIVector2Field(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
-		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel),
-		mFieldX(nullptr), mFieldY(nullptr)
+		:TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
-		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(getXFieldStyleType()));
-		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(getYFieldStyleType()));
+		mFieldX = GUIFloatField::create(HString("X"), ELEMENT_LABEL_WIDTH, getSubStyleName(X_FIELD_STYLE_TYPE));
+		mFieldY = GUIFloatField::create(HString("Y"), ELEMENT_LABEL_WIDTH, getSubStyleName(Y_FIELD_STYLE_TYPE));
 
-		mFieldX->onValueChanged.connect(std::bind(&GUIVector2Field::valueChanged, this, _1));
-		mFieldY->onValueChanged.connect(std::bind(&GUIVector2Field::valueChanged, this, _1));
-		mFieldX->onConfirm.connect(std::bind(&GUIVector2Field::inputConfirmed, this));
-		mFieldY->onConfirm.connect(std::bind(&GUIVector2Field::inputConfirmed, this));
+		mFieldX->onValueChanged.connect([this](float val) { valueChanged(val, VectorComponent::X); });
+		mFieldY->onValueChanged.connect([this](float val) { valueChanged(val, VectorComponent::Y); });
+		mFieldX->onConfirm.connect([this]() { inputConfirmed(VectorComponent::X); });
+		mFieldY->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Y); });
 
 		mLayout->addElement(mFieldX);
 		mLayout->addNewElement<GUIFixedSpace>(5);
@@ -51,6 +50,16 @@ namespace bs
 		return mFieldX->hasInputFocus() || mFieldY->hasInputFocus();
 	}
 
+	void GUIVector2Field::setInputFocus(VectorComponent component, bool focus)
+	{
+		switch(component)
+		{
+		case VectorComponent::X: mFieldX->setFocus(focus); break;
+		case VectorComponent::Y: mFieldY->setFocus(focus); break;
+		default: break;
+		}
+	}
+
 	void GUIVector2Field::setTint(const Color& color)
 	{
 		if (mLabel != nullptr)
@@ -60,15 +69,17 @@ namespace bs
 		mFieldY->setTint(color);
 	}
 
-	void GUIVector2Field::valueChanged(float newValue)
+	void GUIVector2Field::valueChanged(float newValue, VectorComponent component)
 	{
+		onComponentChanged(newValue, component);
+
 		Vector2 value = getValue();
 		onValueChanged(value);
 	}
 
-	void GUIVector2Field::inputConfirmed()
+	void GUIVector2Field::inputConfirmed(VectorComponent component)
 	{
-		onConfirm();
+		onConfirm(component);
 	}
 
 	void GUIVector2Field::styleUpdated()
@@ -76,25 +87,13 @@ namespace bs
 		if (mLabel != nullptr)
 			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
 
-		mFieldX->setStyle(getSubStyleName(getXFieldStyleType()));
-		mFieldY->setStyle(getSubStyleName(getYFieldStyleType()));
+		mFieldX->setStyle(getSubStyleName(X_FIELD_STYLE_TYPE));
+		mFieldY->setStyle(getSubStyleName(Y_FIELD_STYLE_TYPE));
 	}
 
 	const String& GUIVector2Field::getGUITypeName()
 	{
 		static String typeName = "GUIVector2Field";
 		return typeName;
-	}
-
-	const String& GUIVector2Field::getXFieldStyleType()
-	{
-		static String LABEL_STYLE_TYPE = "XFloatField";
-		return LABEL_STYLE_TYPE;
-	}
-
-	const String& GUIVector2Field::getYFieldStyleType()
-	{
-		static String LABEL_STYLE_TYPE = "YFloatField";
-		return LABEL_STYLE_TYPE;
 	}
 }

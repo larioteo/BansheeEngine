@@ -86,7 +86,7 @@ namespace bs.Editor
 
             cullingField.OnChanged += x => { animation.Cull = x; MarkAsModified(); ConfirmModify(); };
             overrideBoundsField.OnChanged += x => { animation.UseBounds = x; MarkAsModified(); ConfirmModify(); };
-            centerField.OnChanged += x =>
+            centerField.OnValueChanged += x =>
             {
                 AABox bounds = animation.Bounds;
                 Vector3 min = x - bounds.Size*0.5f;
@@ -95,10 +95,10 @@ namespace bs.Editor
                 animation.Bounds = new AABox(min, max);
                 MarkAsModified();
             };
-            centerField.OnConfirmed += ConfirmModify;
+            centerField.OnConfirm += x => ConfirmModify();
             centerField.OnFocusLost += ConfirmModify;
 
-            sizeField.OnChanged += x =>
+            sizeField.OnValueChanged += x =>
             {
                 AABox bounds = animation.Bounds;
                 Vector3 min = bounds.Center - x * 0.5f;
@@ -107,7 +107,7 @@ namespace bs.Editor
                 animation.Bounds = new AABox(min, max);
                 MarkAsModified();
             };
-            sizeField.OnConfirmed += ConfirmModify;
+            sizeField.OnConfirm += x => ConfirmModify();
             sizeField.OnFocusLost += ConfirmModify;
 
             Layout.AddElement(animationClipField);

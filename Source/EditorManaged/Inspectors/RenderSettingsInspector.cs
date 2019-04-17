@@ -246,21 +246,21 @@ namespace bs.Editor
         {
             this.settings = settings;
 
-            saturationField.OnChanged += x => { this.settings.Saturation = x; MarkAsModified(); };
+            saturationField.OnValueChanged += x => { this.settings.Saturation = x; MarkAsModified(); };
             saturationField.OnFocusLost += ConfirmModify;
-            saturationField.OnConfirmed += ConfirmModify;
+            saturationField.OnConfirm += x => ConfirmModify();
 
-            contrastField.OnChanged += x => { this.settings.Contrast = x; MarkAsModified(); };
+            contrastField.OnValueChanged += x => { this.settings.Contrast = x; MarkAsModified(); };
             contrastField.OnFocusLost += ConfirmModify;
-            contrastField.OnConfirmed += ConfirmModify;
+            contrastField.OnConfirm += x => ConfirmModify();
 
-            gainField.OnChanged += x => { this.settings.Gain = x; MarkAsModified(); };
+            gainField.OnValueChanged += x => { this.settings.Gain = x; MarkAsModified(); };
             gainField.OnFocusLost += ConfirmModify;
-            gainField.OnConfirmed += ConfirmModify;
+            gainField.OnConfirm += x => ConfirmModify();
 
-            offsetField.OnChanged += x => { this.settings.Offset = x; MarkAsModified(); };
+            offsetField.OnValueChanged += x => { this.settings.Offset = x; MarkAsModified(); };
             offsetField.OnFocusLost += ConfirmModify;
-            offsetField.OnConfirmed += ConfirmModify;
+            offsetField.OnConfirm += x => ConfirmModify();
 
             layout.AddElement(saturationField);
             layout.AddElement(contrastField);

@@ -92,7 +92,7 @@ namespace bs.Editor
             heightField.OnConfirmed += ConfirmModify;
             heightField.OnFocusLost += ConfirmModify;
 
-            orientationField.OnChanged += x =>
+            orientationField.OnValueChanged += x =>
             {
                 orientation = x;
                 Quaternion rotation = Quaternion.FromEuler(x);
@@ -100,7 +100,7 @@ namespace bs.Editor
                 controller.Up = rotation.Rotate(Vector3.YAxis);
                 MarkAsModified();
             };
-            orientationField.OnConfirmed += ConfirmModify;
+            orientationField.OnConfirm += x => ConfirmModify();
             orientationField.OnFocusLost += ConfirmModify;
 
             contactOffsetField.OnChanged += x => { controller.ContactOffset = x; MarkAsModified(); };

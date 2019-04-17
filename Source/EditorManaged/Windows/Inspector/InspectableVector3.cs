@@ -39,8 +39,8 @@ namespace bs.Editor
             if (property.Type == SerializableProperty.FieldType.Vector3)
             {
                 guiField = new GUIVector3Field(new GUIContent(title));
-                guiField.OnChanged += OnFieldValueChanged;
-                guiField.OnConfirmed += OnFieldValueConfirm;
+                guiField.OnValueChanged += OnFieldValueChanged;
+                guiField.OnConfirm += x => OnFieldValueConfirm();
                 guiField.OnFocusLost += OnFieldValueConfirm;
                 guiField.OnFocusGained += RecordStateForUndoRequested;
 

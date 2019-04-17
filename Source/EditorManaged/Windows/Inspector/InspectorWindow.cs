@@ -274,22 +274,22 @@ namespace bs.Editor
             soPos = new GUIVector3Field(new LocEdString("Position"), 50);
             sceneObjectLayout.AddElement(soPos);
 
-            soPos.OnChanged += OnPositionChanged;
-            soPos.OnConfirmed += OnModifyConfirm;
+            soPos.OnValueChanged += OnPositionChanged;
+            soPos.OnConfirm += x => OnModifyConfirm();
             soPos.OnFocusLost += OnModifyConfirm;
 
             soRot = new GUIVector3Field(new LocEdString("Rotation"), 50);
             sceneObjectLayout.AddElement(soRot);
 
-            soRot.OnChanged += OnRotationChanged;
-            soRot.OnConfirmed += OnModifyConfirm;
+            soRot.OnValueChanged += OnRotationChanged;
+            soRot.OnConfirm += x => OnModifyConfirm();
             soRot.OnFocusLost += OnModifyConfirm;
 
             soScale = new GUIVector3Field(new LocEdString("Scale"), 50);
             sceneObjectLayout.AddElement(soScale);
 
-            soScale.OnChanged += OnScaleChanged;
-            soScale.OnConfirmed += OnModifyConfirm;
+            soScale.OnValueChanged += OnScaleChanged;
+            soScale.OnConfirm += x => OnModifyConfirm();
             soScale.OnFocusLost += OnModifyConfirm;
 
             sceneObjectLayout.AddFlexibleSpace();

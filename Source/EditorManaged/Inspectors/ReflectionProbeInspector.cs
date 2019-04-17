@@ -41,8 +41,8 @@ namespace bs.Editor
                 radiusField.OnConfirmed += ConfirmModify;
                 radiusField.OnFocusLost += ConfirmModify;
 
-                extentsField.OnChanged += x => { probe.Extents = x; MarkAsModified(); };
-                extentsField.OnConfirmed += ConfirmModify;
+                extentsField.OnValueChanged += x => { probe.Extents = x; MarkAsModified(); };
+                extentsField.OnConfirm += x => ConfirmModify();
                 extentsField.OnFocusLost += ConfirmModify;
 
                 customTextureField.OnChanged += x =>

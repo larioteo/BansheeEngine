@@ -109,21 +109,21 @@ namespace bs.Editor
                 Persistent.SetBool("drive_Expanded", x);
             };
 
-            drivePositionField.OnChanged += x => { joint.SetDriveTransform(x, joint.DriveRotation); MarkAsModified(); };
+            drivePositionField.OnValueChanged += x => { joint.SetDriveTransform(x, joint.DriveRotation); MarkAsModified(); };
             drivePositionField.OnFocusLost += ConfirmModify;
-            drivePositionField.OnConfirmed += ConfirmModify;
+            drivePositionField.OnConfirm += x => ConfirmModify();
 
-            driveRotationField.OnChanged += x => { joint.SetDriveTransform(joint.DrivePosition, Quaternion.FromEuler(x)); MarkAsModified(); };
+            driveRotationField.OnValueChanged += x => { joint.SetDriveTransform(joint.DrivePosition, Quaternion.FromEuler(x)); MarkAsModified(); };
             driveRotationField.OnFocusLost += ConfirmModify;
-            driveRotationField.OnConfirmed += ConfirmModify;
+            driveRotationField.OnConfirm += x => ConfirmModify();
 
-            driveLinVelocityField.OnChanged += x => { joint.SetDriveVelocity(x, joint.DriveAngularVelocity); MarkAsModified(); };
+            driveLinVelocityField.OnValueChanged += x => { joint.SetDriveVelocity(x, joint.DriveAngularVelocity); MarkAsModified(); };
             driveLinVelocityField.OnFocusLost += ConfirmModify;
-            driveLinVelocityField.OnConfirmed += ConfirmModify;
+            driveLinVelocityField.OnConfirm += x => ConfirmModify();
 
-            driveAngVelocityField.OnChanged += x => { joint.SetDriveVelocity(joint.DriveLinearVelocity, x); MarkAsModified(); };
+            driveAngVelocityField.OnValueChanged += x => { joint.SetDriveVelocity(joint.DriveLinearVelocity, x); MarkAsModified(); };
             driveAngVelocityField.OnFocusLost += ConfirmModify;
-            driveAngVelocityField.OnConfirmed += ConfirmModify;
+            driveAngVelocityField.OnConfirm += x => ConfirmModify();
 
             for (int i = 0; i < (int) D6JointAxis.Count; i++)
                 Layout.AddElement(motionFields[i]);

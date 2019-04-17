@@ -277,6 +277,24 @@ namespace bs
 		}
 	}
 
+	template<class T, class F> 
+	void addOnConfirmCallback(T* field, F func)
+	{
+		field->onConfirm.connect(func);
+	}
+
+	template<class F> 
+	void addOnConfirmCallback(GUIVector2Field* field, F func)
+	{
+		field->onConfirm.connect([func](VectorComponent) { func(); });
+	}
+
+	template<class F> 
+	void addOnConfirmCallback(GUIVector3Field* field, F func)
+	{
+		field->onConfirm.connect([func](VectorComponent) { func(); });
+	}
+
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::rebuild()
 	{
@@ -309,7 +327,7 @@ namespace bs
 
 				onConstantModified();
 			});
-			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
+			addOnConfirmCallback(mMinInput, [this]() { onConstantConfirmed(); });
 
 			valueLayout->addElement(mMinInput);
 			break;
@@ -328,7 +346,7 @@ namespace bs
 
 				onConstantModified();
 			});
-			mMinInput->onConfirm.connect([this]() { onConstantConfirmed(); });
+			addOnConfirmCallback(mMinInput, [this]() { onConstantConfirmed(); });
 
 			mMaxInput->setValue(mMaxConstant);
 			mMaxInput->onValueChanged.connect([this](T value)
@@ -338,7 +356,7 @@ namespace bs
 
 				onConstantModified();
 			});
-			mMaxInput->onConfirm.connect([this]() { onConstantConfirmed(); });
+			addOnConfirmCallback(mMaxInput, [this]() { onConstantConfirmed(); });
 
 			mLabels[0] = valueLayout->addNewElement<GUILabel>(HString("Min."), "HeaderLight");
 			valueLayout->addElement(mMinInput);

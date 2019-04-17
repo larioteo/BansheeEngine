@@ -85,10 +85,10 @@ namespace bs.Editor
 		}
 
 		/// <summary>
-		/// Converts coordinate in curve space (time, value) into pixel coordinates relative to this element's origin.
+		/// Converts coordinate in curve space (time, value) into pixel coordinates relative to this element&apos;s origin.
 		/// </summary>
 		/// <param name="curveCoords">Time and value of the location to convert.</param>
-		/// <returns>Coordinates relative to this element's origin, in pixels.</returns>
+		/// <returns>Coordinates relative to this element&apos;s origin, in pixels.</returns>
 		public Vector2I CurveToPixelSpace(Vector2 curveCoords)
 		{
 			Vector2I temp;

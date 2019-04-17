@@ -95,7 +95,7 @@ namespace bs.Editor
                 ConfirmModify();
             };
 
-            positionField.OnConfirmed += () =>
+            positionField.OnConfirm += x =>
             {
                 AABox gridVolume = lpv.GridVolume;
                 Vector3 extents = (gridVolume.Maximum - gridVolume.Minimum) * 0.5f;
@@ -112,7 +112,7 @@ namespace bs.Editor
                 ConfirmModify();
             };
 
-            sizeField.OnConfirmed += () =>
+            sizeField.OnConfirm += x =>
             {
                 AABox gridVolume = lpv.GridVolume;
 
@@ -128,7 +128,7 @@ namespace bs.Editor
                 ConfirmModify();
             };
 
-            densityField.OnConfirmed += () =>
+            densityField.OnConfirm += x =>
             {
                 AABox gridVolume = lpv.GridVolume;
 

@@ -39,14 +39,14 @@ namespace bs.Editor
 			get { return Internal_getDefaultAAFont(); }
 		}
 
-		/// <summary>Returns text contained in the default "empty" shader.</summary>
+		/// <summary>Returns text contained in the default &quot;empty&quot; shader.</summary>
 		[NativeWrapper]
 		public static string EmptyShaderCode
 		{
 			get { return Internal_getEmptyShaderCode(); }
 		}
 
-		/// <summary>Returns text contained in the default "empty" C# script.</summary>
+		/// <summary>Returns text contained in the default &quot;empty&quot; C# script.</summary>
 		[NativeWrapper]
 		public static string EmptyCSScriptCode
 		{
@@ -61,7 +61,7 @@ namespace bs.Editor
 			return Internal_getProjectLibraryIcon(icon, size);
 		}
 
-		/// <summary>Retrieves an icon that may be displayed on the main window's toolbar.</summary>
+		/// <summary>Retrieves an icon that may be displayed on the main window&apos;s toolbar.</summary>
 		public static SpriteTexture GetToolbarIcon(ToolbarIcon icon)
 		{
 			return Internal_getToolbarIcon(icon);

@@ -51,11 +51,11 @@ namespace bs.Editor
         /// </summary>
         protected void BuildGUI(CapsuleCollider collider)
         {
-            centerField.OnChanged += x => { collider.Center = x; MarkAsModified(); };
+            centerField.OnValueChanged += x => { collider.Center = x; MarkAsModified(); };
             centerField.OnFocusLost += ConfirmModify;
-            centerField.OnConfirmed += ConfirmModify;
+            centerField.OnConfirm += x => ConfirmModify();
 
-            orientationField.OnChanged += x =>
+            orientationField.OnValueChanged += x =>
             {
                 orientation = x;
                 Quaternion rotation = Quaternion.FromEuler(x);
@@ -64,7 +64,7 @@ namespace bs.Editor
                 MarkAsModified();
             };
             orientationField.OnFocusLost += ConfirmModify;
-            orientationField.OnConfirmed += ConfirmModify;
+            orientationField.OnConfirm += x => ConfirmModify();
 
             radiusField.OnChanged += x => { collider.Radius = x; MarkAsModified(); };
             radiusField.OnFocusLost += ConfirmModify;

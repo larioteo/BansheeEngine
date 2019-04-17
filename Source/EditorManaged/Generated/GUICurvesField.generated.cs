@@ -128,7 +128,7 @@ namespace bs.Editor
 
 		/// <summary>
 		/// Returns the minimal curve represented by the field containing a curve range. Returns the only available curve if the 
-		/// field doesn't represent a range.
+		/// field doesn&apos;t represent a range.
 		/// </summary>
 		[NotNull]
 		[PassByCopy]
@@ -140,7 +140,7 @@ namespace bs.Editor
 
 		/// <summary>
 		/// Returns the maximal curve represented by the field containing a curve range. Returns the only available curve if the 
-		/// field doesn't represent a range.
+		/// field doesn&apos;t represent a range.
 		/// </summary>
 		[NotNull]
 		[PassByCopy]
