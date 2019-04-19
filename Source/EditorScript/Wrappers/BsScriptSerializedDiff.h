@@ -27,8 +27,9 @@ namespace bs
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static MonoObject* internal_CreateDiff(ScriptSerializedObject* oldObj, MonoObject* newObj);
+		static MonoObject* internal_CreateDiff(ScriptSerializedObject* oldObj, ScriptSerializedObject* newObj);
 		static void internal_ApplyDiff(ScriptSerializedDiff* thisPtr, MonoObject* obj);
+		static bool internal_IsEmpty(ScriptSerializedDiff* thisPtr);
 	};
 
 	/** @} */

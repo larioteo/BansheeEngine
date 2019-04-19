@@ -39,7 +39,7 @@ namespace bs.Editor
             if (property.Type == SerializableProperty.FieldType.Vector2)
             {
                 guiField = new GUIVector2Field(new GUIContent(title));
-                guiField.OnValueChanged += OnFieldValueChanged;
+                guiField.OnComponentChanged += OnFieldValueChanged;
                 guiField.OnConfirm += x => OnFieldValueConfirm();
                 guiField.OnFocusLost += OnFieldValueConfirm;
                 guiField.OnFocusGained += RecordStateForUndoRequested;
@@ -64,18 +64,24 @@ namespace bs.Editor
         /// <inheritdoc />
         public override void SetHasFocus(string subFieldName = null)
         {
-            guiField.Focus = true;
+            if(subFieldName == "X")
+                guiField.SetInputFocus(VectorComponent.X, true);
+            else if(subFieldName == "Y")
+                guiField.SetInputFocus(VectorComponent.Y, true);
+            else
+                guiField.SetInputFocus(VectorComponent.X, true);
         }
 
         /// <summary>
-        /// Triggered when the user changes the field value.
+        /// Triggered when the user changes the field value of a single component.
         /// </summary>
-        /// <param name="newValue">New value of the 2D vector field.</param>
-        private void OnFieldValueChanged(Vector2 newValue)
+        /// <param name="newValue">New value of a single component in the 3D vector field.</param>
+        /// <param name="component">Component that was changed.</param>
+        private void OnFieldValueChanged(float newValue, VectorComponent component)
         {
-            RecordStateForUndoIfNeeded();
+            RecordStateForUndoIfNeeded(component.ToString());
 
-            property.SetValue(newValue);
+            property.SetValue(guiField.Value);
             state |= InspectableState.ModifyInProgress;
         }
 

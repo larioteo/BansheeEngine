@@ -39,7 +39,7 @@ namespace bs.Editor
             if (property.Type == SerializableProperty.FieldType.Vector3)
             {
                 guiField = new GUIVector3Field(new GUIContent(title));
-                guiField.OnValueChanged += OnFieldValueChanged;
+                guiField.OnComponentChanged += OnFieldValueChanged;
                 guiField.OnConfirm += x => OnFieldValueConfirm();
                 guiField.OnFocusLost += OnFieldValueConfirm;
                 guiField.OnFocusGained += RecordStateForUndoRequested;
@@ -61,21 +61,29 @@ namespace bs.Editor
             return oldState;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override void SetHasFocus(string subFieldName = null)
         {
-            guiField.Focus = true;
+            if(subFieldName == "X")
+                guiField.SetInputFocus(VectorComponent.X, true);
+            else if(subFieldName == "Y")
+                guiField.SetInputFocus(VectorComponent.Y, true);
+            else if(subFieldName == "Z")
+                guiField.SetInputFocus(VectorComponent.Z, true);
+            else
+                guiField.SetInputFocus(VectorComponent.X, true);
         }
 
         /// <summary>
-        /// Triggered when the user changes the field value.
+        /// Triggered when the user changes the field value of a single component.
         /// </summary>
-        /// <param name="newValue">New value of the 3D vector field.</param>
-        private void OnFieldValueChanged(Vector3 newValue)
+        /// <param name="newValue">New value of a single component in the 3D vector field.</param>
+        /// <param name="component">Component that was changed.</param>
+        private void OnFieldValueChanged(float newValue, VectorComponent component)
         {
-            RecordStateForUndoIfNeeded();
+            RecordStateForUndoIfNeeded(component.ToString());
 
-            property.SetValue(newValue);
+            property.SetValue(guiField.Value);
             state |= InspectableState.ModifyInProgress;
         }
 

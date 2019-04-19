@@ -425,6 +425,11 @@ namespace bs.Editor
         /// </summary>
         internal void OnEditorUpdate()
         {
+            // Record game-object undo diffs. It's fine doing this here as we only record game objects during input
+            // callbacks, which are called before update. If that changes then we might need to move this at a later
+            // stage in the frame.
+            GameObjectUndo.ResolveDiffs();
+
             // Update managers
             ProjectLibrary.Update();
             codeManager.Update();

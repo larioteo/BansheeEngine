@@ -19,12 +19,13 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_CreateDiff", (void*)&ScriptSerializedDiff::internal_CreateDiff);
 		metaData.scriptClass->addInternalCall("Internal_ApplyDiff", (void*)&ScriptSerializedDiff::internal_ApplyDiff);
+		metaData.scriptClass->addInternalCall("Internal_IsEmpty", (void*)&ScriptSerializedDiff::internal_IsEmpty);
 	}
 
-	MonoObject* ScriptSerializedDiff::internal_CreateDiff(ScriptSerializedObject* oldObj, MonoObject* newObj)
+	MonoObject* ScriptSerializedDiff::internal_CreateDiff(ScriptSerializedObject* oldObj, ScriptSerializedObject* newObj)
 	{
 		SPtr<ManagedSerializableObject> oldSerializedObject = oldObj->getInternal();
-		SPtr<ManagedSerializableObject> newSerializedObject = ManagedSerializableObject::createFromExisting(newObj);
+		SPtr<ManagedSerializableObject> newSerializedObject = newObj->getInternal();
 
 		if (oldSerializedObject == nullptr || newSerializedObject == nullptr)
 			return nullptr;
@@ -42,10 +43,18 @@ namespace bs
 
 	void ScriptSerializedDiff::internal_ApplyDiff(ScriptSerializedDiff* thisPtr, MonoObject* obj)
 	{
+		if(thisPtr->mSerializedDiff == nullptr)
+			return;
+
 		SPtr<ManagedSerializableObject> serializedObject = ManagedSerializableObject::createFromExisting(obj);
 		if (serializedObject == nullptr)
 			return;
 
 		thisPtr->mSerializedDiff->apply(serializedObject);
+	}
+
+	bool ScriptSerializedDiff::internal_IsEmpty(ScriptSerializedDiff* thisPtr)
+	{
+		return thisPtr->mSerializedDiff != nullptr;
 	}
 }

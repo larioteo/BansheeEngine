@@ -38,7 +38,7 @@ namespace bs.Editor
             public GUILayout title;
             public GUIPanel panel;
             public Inspector inspector;
-            public UInt64 instanceId;
+            public UUID uuid;
             public bool folded;
         }
 
@@ -193,7 +193,7 @@ namespace bs.Editor
                 inspectorLayout.AddSpace(COMPONENT_SPACING);
 
                 InspectorComponent data = new InspectorComponent();
-                data.instanceId = allComponents[i].InstanceId;
+                data.uuid = allComponents[i].UUID;
                 data.folded = false;
 
                 data.foldout = new GUIToggle(allComponents[i].GetType().Name, EditorStyles.Foldout);
@@ -212,7 +212,7 @@ namespace bs.Editor
                 data.inspector = InspectorUtility.GetInspector(allComponents[i].GetType());
                 data.inspector.Initialize(data.panel, allComponents[i], persistentProperties);
 
-                bool isExpanded = data.inspector.Persistent.GetBool(data.instanceId + "_Expanded", true);
+                bool isExpanded = data.inspector.Persistent.GetBool(data.uuid + "_Expanded", true);
                 data.foldout.Value = isExpanded;
 
                 if (!isExpanded)
@@ -274,21 +274,21 @@ namespace bs.Editor
             soPos = new GUIVector3Field(new LocEdString("Position"), 50);
             sceneObjectLayout.AddElement(soPos);
 
-            soPos.OnValueChanged += OnPositionChanged;
+            soPos.OnComponentChanged += OnPositionChanged;
             soPos.OnConfirm += x => OnModifyConfirm();
             soPos.OnFocusLost += OnModifyConfirm;
 
             soRot = new GUIVector3Field(new LocEdString("Rotation"), 50);
             sceneObjectLayout.AddElement(soRot);
 
-            soRot.OnValueChanged += OnRotationChanged;
+            soRot.OnComponentChanged += OnRotationChanged;
             soRot.OnConfirm += x => OnModifyConfirm();
             soRot.OnFocusLost += OnModifyConfirm;
 
             soScale = new GUIVector3Field(new LocEdString("Scale"), 50);
             sceneObjectLayout.AddElement(soScale);
 
-            soScale.OnValueChanged += OnScaleChanged;
+            soScale.OnComponentChanged += OnScaleChanged;
             soScale.OnConfirm += x => OnModifyConfirm();
             soScale.OnFocusLost += OnModifyConfirm;
 
@@ -424,7 +424,7 @@ namespace bs.Editor
                 {
                     for (int i = 0; i < inspectorComponents.Count; i++)
                     {
-                        if (inspectorComponents[i].instanceId != allComponents[i].InstanceId)
+                        if (inspectorComponents[i].uuid != allComponents[i].UUID)
                         {
                             requiresRebuild = true;
                             break;
@@ -594,7 +594,7 @@ namespace bs.Editor
         /// <param name="expanded">Determines whether to display or hide component contents.</param>
         private void OnComponentFoldoutToggled(InspectorComponent inspectorData, bool expanded)
         {
-            inspectorData.inspector.Persistent.SetBool(inspectorData.instanceId + "_Expanded", expanded);
+            inspectorData.inspector.Persistent.SetBool(inspectorData.uuid + "_Expanded", expanded);
             inspectorData.inspector.SetVisible(expanded);
             inspectorData.folded = !expanded;
 
@@ -670,6 +670,52 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Changes keyboard focus to a specific field on the component with the provided UUID.
+        /// </summary>
+        /// <param name="uuid">UUID of the component on which to select the field.</param>
+        /// <param name="path">Path to the field on the object being inspected.</param>
+        internal void FocusOnField(UUID uuid, string path)
+        {
+            if (activeSO == null)
+                return;
+
+            Debug.Log("FOCUS ON " + uuid + " " + activeSO.UUID + " " + path);
+            if (activeSO.UUID == uuid)
+            {
+                if(path == "Position.X")
+                    soPos.SetInputFocus(VectorComponent.X, true);
+                else if(path == "Position.Y")
+                    soPos.SetInputFocus(VectorComponent.Y, true);
+                else if(path == "Position.Z")
+                    soPos.SetInputFocus(VectorComponent.Z, true);
+                else if(path == "Rotation.X")
+                    soRot.SetInputFocus(VectorComponent.X, true);
+                else if(path == "Rotation.Y")
+                    soRot.SetInputFocus(VectorComponent.Y, true);
+                else if(path == "Rotation.Z")
+                    soRot.SetInputFocus(VectorComponent.Z, true);
+                else if(path == "Scale.X")
+                    soScale.SetInputFocus(VectorComponent.X, true);
+                else if(path == "Scale.Y")
+                    soScale.SetInputFocus(VectorComponent.Y, true);
+                else if(path == "Scale.Z")
+                    soScale.SetInputFocus(VectorComponent.Z, true);
+                else if (path == "Name")
+                    soNameInput.Focus = true;
+            }
+            else
+            {
+                foreach (var entry in inspectorComponents)
+                {
+                    if (entry.uuid != uuid)
+                        continue;
+
+                    entry.inspector.FocusOnField(path);
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the size of the title bar area that is displayed for <see cref="SceneObject"/> specific fields.
         /// </summary>
         /// <returns>Area of the title bar, relative to the window.</returns>
@@ -685,6 +731,7 @@ namespace bs.Editor
         {
             if (activeSO != null)
             {
+                RecordSceneObjectHeaderForUndo("Name");
                 activeSO.Name = name;
 
                 modifyState |= InspectableState.ModifyInProgress;
@@ -699,7 +746,10 @@ namespace bs.Editor
         private void OnSceneObjectActiveStateToggled(bool active)
         {
             if (activeSO != null)
+            {
+                RecordSceneObjectHeaderForUndo("Active");
                 activeSO.Active = active;
+            }
         }
 
         /// <summary>
@@ -715,16 +765,19 @@ namespace bs.Editor
         /// Triggered when the position value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="value">New value of the field.</param>
-        private void OnPositionChanged(Vector3 value)
+        /// <param name="value">New value of the component that changed.</param>
+        /// <param name="component">Identifier of the component that changed.</param>
+        private void OnPositionChanged(float value, VectorComponent component)
         {
             if (activeSO == null)
                 return;
 
+            RecordSceneObjectHeaderForUndo("Position." + component);
+
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
-                activeSO.Position = value;
+                activeSO.Position = soPos.Value;
             else
-                activeSO.LocalPosition = value;
+                activeSO.LocalPosition = soPos.Value;
 
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();
@@ -734,13 +787,16 @@ namespace bs.Editor
         /// Triggered when the rotation value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="value">New value of the field.</param>
-        private void OnRotationChanged(Vector3 value)
+        /// <param name="value">New value of the component that changed.</param>
+        /// <param name="component">Identifier of the component that changed.</param>
+        private void OnRotationChanged(float value, VectorComponent component)
         {
             if (activeSO == null)
                 return;
 
-            Quaternion rotation = Quaternion.FromEuler(value);
+            RecordSceneObjectHeaderForUndo("Rotation." + component);
+
+            Quaternion rotation = Quaternion.FromEuler(soRot.Value);
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
                 activeSO.Rotation = rotation;
             else
@@ -755,13 +811,16 @@ namespace bs.Editor
         /// Triggered when the scale value in the currently active <see cref="SceneObject"/> changes. Updates the 
         /// necessary GUI elements.
         /// </summary>
-        /// <param name="value">New value of the field.</param>
-        private void OnScaleChanged(Vector3 value)
+        /// <param name="value">New value of the component that changed.</param>
+        /// <param name="component">Identifier of the component that changed.</param>
+        private void OnScaleChanged(float value, VectorComponent component)
         {
             if (activeSO == null)
                 return;
 
-            activeSO.LocalScale = value;
+            RecordSceneObjectHeaderForUndo("Scale." + component);
+
+            activeSO.LocalScale = soScale.Value;
 
             modifyState = InspectableState.ModifyInProgress;
             EditorApplication.SetSceneDirty();
@@ -796,6 +855,16 @@ namespace bs.Editor
             }
 
             dropAreas[dropAreas.Length - 1] = new Rect2I(0, yOffset, contentBounds.width, contentBounds.height - yOffset);
+        }
+
+        /// <summary>
+        /// Records the current state of a scene object field for the purposes of undo/redo. Generally this should be
+        /// called just before making changes to the field value.
+        /// </summary>
+        /// <param name="name">Name of the field being changed.</param>
+        private void RecordSceneObjectHeaderForUndo(string name)
+        {
+            GameObjectUndo.RecordSceneObjectHeader(activeSO, name);
         }
     }
 

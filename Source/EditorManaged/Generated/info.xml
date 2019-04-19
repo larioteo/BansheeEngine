@@ -87,6 +87,19 @@
 	<class native="AnimationSplitInfo" script="AnimationSplitInfo">
 		<doc>Information about how to split an AnimationClip into multiple separate clips.</doc>
 	</class>
+	<enum native="SceneObjectDiffFlags" script="SceneObjectDiffFlags">
+		<doc>Flags that mark which portion of a scene-object is modified.</doc>
+		<enumentry native="Name" script="Name">
+		</enumentry>
+		<enumentry native="Position" script="Position">
+		</enumentry>
+		<enumentry native="Rotation" script="Rotation">
+		</enumentry>
+		<enumentry native="Scale" script="Scale">
+		</enumentry>
+		<enumentry native="Active" script="Active">
+		</enumentry>
+	</enum>
 	<struct native="CurveDrawInfo" script="CurveDrawInfo">
 		<doc>Curve and a color to draw it in.</doc>
 		<ctor>

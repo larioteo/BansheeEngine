@@ -19,8 +19,6 @@ namespace bs.Editor
     /// </summary>
     public abstract class InspectableField
     {
-        private const int IndentAmount = 5;
-
         protected InspectableContext context;
         protected InspectableFieldLayout layout;
         protected SerializableProperty property;
@@ -207,22 +205,30 @@ namespace bs.Editor
         /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
         /// before making changes to the field value.
         /// </summary>
-        protected void RecordStateForUndo()
+        /// <param name="subPath">Additional path to append to the end of the current field path.</param>
+        protected void RecordStateForUndo(string subPath = null)
         {
-            if(context.Component != null)
-                UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+            if (context.Component != null)
+            {
+                string fullPath = path;
+                if (!string.IsNullOrEmpty(subPath))
+                    fullPath = path.TrimEnd('/') + '/' + subPath.TrimStart('/');
+
+                GameObjectUndo.RecordComponent(context.Component, fullPath);
+            }
         }
 
         /// <summary>
         /// Checks if the system needs to record the state of the current object for undo purposes, and performs the record
         /// if needed. This can be requested by calling <see cref="RecordStateForUndoRequested"/>
         /// </summary>
-        protected void RecordStateForUndoIfNeeded()
+        /// <param name="subPath">Additional path to append to the end of the current field path.</param>
+        protected void RecordStateForUndoIfNeeded(string subPath = null)
         {
             if (!undoRecordNeeded)
                 return;
 
-            RecordStateForUndo();
+            RecordStateForUndo(subPath);
             undoRecordNeeded = false;
         }
 
