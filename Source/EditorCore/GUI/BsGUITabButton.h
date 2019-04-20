@@ -79,12 +79,6 @@ namespace bs
 		/**	Returns the unique index for this tab button. */
 		UINT32 getIndex() const { return mIndex; }
 
-		/** @copydoc GUIToggle::toggleOn */
-		void toggleOn() override;
-
-		/** @copydoc GUIToggle::toggleOff */
-		void toggleOff() override;
-
 		/** Changes the button state to dragged or not dragged, resulting primarily in a visual change. */
 		void _setDraggedState(bool active);
 
@@ -102,8 +96,14 @@ namespace bs
 	protected:
 		GUITabButton(const String& styleName, const SPtr<GUIToggleGroup>& toggleGroup, UINT32 index, const GUIContent& content, const GUIDimensions& dimensions);
 
+		/** @copydoc GUIToggle::toggleOn */
+		void _toggleOn(bool triggerEvents) override;
+
+		/** @copydoc GUIToggle::toggleOff */
+		void _toggleOff(bool triggerEvents) override;
+
 		/** @copydoc GUIElement::_mouseEvent */
-		virtual bool _mouseEvent(const GUIMouseEvent& ev) override;
+		bool _mouseEvent(const GUIMouseEvent& ev) override;
 
 		UINT32 mIndex;
 		Vector2I mDragStartPosition;

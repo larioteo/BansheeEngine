@@ -32,6 +32,7 @@ namespace bs
 
 		setValue(0);
 		mInputBox->setText("0");
+		mFocusElement = mInputBox;
 	}
 
 	float GUISliderField::getValue() const

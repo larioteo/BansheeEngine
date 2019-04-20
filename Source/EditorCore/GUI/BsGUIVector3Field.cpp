@@ -62,9 +62,9 @@ namespace bs
 	{
 		switch(component)
 		{
-		case VectorComponent::X: mFieldX->setFocus(focus); break;
-		case VectorComponent::Y: mFieldY->setFocus(focus); break;
-		case VectorComponent::Z: mFieldZ->setFocus(focus); break;
+		case VectorComponent::X: mFieldX->setFocus(focus, true); break;
+		case VectorComponent::Y: mFieldY->setFocus(focus, true); break;
+		case VectorComponent::Z: mFieldZ->setFocus(focus, true); break;
 		default: break;
 		}
 	}

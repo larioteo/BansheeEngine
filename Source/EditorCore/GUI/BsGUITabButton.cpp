@@ -52,18 +52,18 @@ namespace bs
 			getStyleName<GUITabButton>(styleName), toggleGroup, index, content, GUIDimensions::create(options));
 	}
 
-	void GUITabButton::toggleOn()
+	void GUITabButton::_toggleOn(bool triggerEvents)
 	{
 		_setElementDepth(0);
 
-		GUIToggle::toggleOn();
+		GUIToggle::_toggleOn(triggerEvents);
 	}
 
-	void GUITabButton::toggleOff()
+	void GUITabButton::_toggleOff(bool triggerEvents)
 	{
 		_setElementDepth(2);
 
-		GUIToggle::toggleOff();
+		GUIToggle::_toggleOff(triggerEvents);
 	}
 
 	void GUITabButton::_setDraggedState(bool active) 

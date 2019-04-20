@@ -33,6 +33,7 @@ namespace bs
 
 		setValue(0);
 		mInputBox->setText("0");
+		mFocusElement = mInputBox;
 	}
 
 	bool GUIFloatField::_hasCustomCursor(const Vector2I position, CursorType& type) const
@@ -228,7 +229,7 @@ namespace bs
 		// problems can occur when user types in "0." and the field
 		// updates back to "0" effectively making "." unusable
 		float curValue = parseFloat(mInputBox->getText());
-		if (value != curValue)
+		if (value != curValue || mInputBox->getText().empty())
 			mInputBox->setText(toString(value));
 	}
 
