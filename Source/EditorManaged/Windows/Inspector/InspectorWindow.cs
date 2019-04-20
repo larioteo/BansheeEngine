@@ -75,6 +75,7 @@ namespace bs.Editor
         private GUIVector3Field soPos;
         private GUIVector3Field soRot;
         private GUIVector3Field soScale;
+        private bool undoRecordNeeded = true;
 
         private Quaternion lastRotation;
 
@@ -253,6 +254,7 @@ namespace bs.Editor
             soNameInput.Text = activeSO.Name;
             soNameInput.OnChanged += OnSceneObjectRename;
             soNameInput.OnConfirmed += OnModifyConfirm;
+            soNameInput.OnFocusGained += RecordStateForUndoRequested;
             soNameInput.OnFocusLost += OnModifyConfirm;
 
             nameLayout.AddElement(soActiveToggle);
@@ -276,6 +278,7 @@ namespace bs.Editor
 
             soPos.OnComponentChanged += OnPositionChanged;
             soPos.OnConfirm += x => OnModifyConfirm();
+            soPos.OnFocusGained += RecordStateForUndoRequested;
             soPos.OnFocusLost += OnModifyConfirm;
 
             soRot = new GUIVector3Field(new LocEdString("Rotation"), 50);
@@ -283,6 +286,7 @@ namespace bs.Editor
 
             soRot.OnComponentChanged += OnRotationChanged;
             soRot.OnConfirm += x => OnModifyConfirm();
+            soRot.OnFocusGained += RecordStateForUndoRequested;
             soRot.OnFocusLost += OnModifyConfirm;
 
             soScale = new GUIVector3Field(new LocEdString("Scale"), 50);
@@ -290,6 +294,7 @@ namespace bs.Editor
 
             soScale.OnComponentChanged += OnScaleChanged;
             soScale.OnConfirm += x => OnModifyConfirm();
+            soScale.OnFocusGained += RecordStateForUndoRequested;
             soScale.OnFocusLost += OnModifyConfirm;
 
             sceneObjectLayout.AddFlexibleSpace();
@@ -303,7 +308,7 @@ namespace bs.Editor
         /// </summary>
         /// <param name="forceUpdate">If true, the GUI elements will be updated regardless of whether a change was
         ///                           detected or not.</param>
-        private void RefreshSceneObjectFields(bool forceUpdate)
+        internal void RefreshSceneObjectFields(bool forceUpdate)
         {
             if (activeSO == null)
                 return;
@@ -377,18 +382,18 @@ namespace bs.Editor
 
             Vector3 scale = activeSO.LocalScale;
 
-            if (!soPos.HasInputFocus)
+            if (!soPos.HasInputFocus || forceUpdate)
                 soPos.Value = position;
 
             // Avoid updating the rotation unless actually changed externally, since switching back and forth between
             // quaternion and euler angles can cause weird behavior
-            if (!soRot.HasInputFocus && rotation != lastRotation)
+            if ((!soRot.HasInputFocus && rotation != lastRotation) || forceUpdate)
             {
                 soRot.Value = rotation.ToEuler();
                 lastRotation = rotation;
             }
 
-            if (!soScale.HasInputFocus)
+            if (!soScale.HasInputFocus || forceUpdate)
                 soScale.Value = scale;
         }
 
@@ -864,7 +869,19 @@ namespace bs.Editor
         /// <param name="name">Name of the field being changed.</param>
         private void RecordSceneObjectHeaderForUndo(string name)
         {
+            if (!undoRecordNeeded)
+                return;
+
             GameObjectUndo.RecordSceneObjectHeader(activeSO, name);
+            undoRecordNeeded = false;
+        }
+
+        /// <summary>
+        /// Notifies the system that the next call to <see cref="RecordSceneObjectHeaderForUndo"/> should record the state.
+        /// </summary>
+        private void RecordStateForUndoRequested()
+        {
+            undoRecordNeeded = true;
         }
     }
 
