@@ -53,11 +53,13 @@ namespace bs.Editor
                 if (obj.IsDestroyed)
                     return;
 
-                SerializedDiff oldToNew = SerializedDiff.Create(orgState, obj);
-                if (oldToNew.IsEmpty)
+                SerializedObject newState = SerializedObject.Create(obj);
+
+                SerializedDiff oldToNew = SerializedDiff.Create(orgState, newState);
+                if (oldToNew == null || oldToNew.IsEmpty)
                     return;
 
-                SerializedDiff newToOld = SerializedDiff.Create(obj, orgState);
+                SerializedDiff newToOld = SerializedDiff.Create(newState, orgState);
                 UndoRedo.Global.RegisterCommand(new RecordComponentUndo(obj, path, oldToNew, newToOld));
             }
         }
@@ -279,6 +281,8 @@ namespace bs.Editor
         private SceneObjectDiff newToOld;
         private SceneObjectDiff oldToNew;
 
+        private RecordSceneObjectHeaderUndo() { }
+
         /// <summary>
         /// Creates the new scene object undo command.
         /// </summary>
@@ -377,6 +381,8 @@ namespace bs.Editor
         private string fieldPath;
         private SerializedDiff newToOld;
         private SerializedDiff oldToNew;
+
+        private RecordComponentUndo() { }
 
         /// <summary>
         /// Creates the new component undo command.

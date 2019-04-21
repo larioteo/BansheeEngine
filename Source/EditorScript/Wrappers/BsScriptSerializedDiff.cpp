@@ -6,10 +6,16 @@
 #include "Serialization/BsManagedSerializableObject.h"
 #include "Wrappers/BsScriptSerializedObject.h"
 #include "Serialization/BsManagedSerializableDiff.h"
+#include "Serialization/BsBinaryDiff.h"
+#include "Reflection/BsRTTIType.h"
+#include "Serialization/BsSerializedObject.h"
+#include "Serialization/BsScriptAssemblyManager.h"
+#include "Utility/BsUtility.h"
+#include "Serialization/BsBinaryDiff.h"
 
 namespace bs
 {
-	ScriptSerializedDiff::ScriptSerializedDiff(MonoObject* instance, const SPtr<ManagedSerializableDiff>& obj)
+	ScriptSerializedDiff::ScriptSerializedDiff(MonoObject* instance, const SPtr<IReflectable>& obj)
 		: ScriptObject(instance), mSerializedDiff(obj)
 	{
 
@@ -24,21 +30,36 @@ namespace bs
 
 	MonoObject* ScriptSerializedDiff::internal_CreateDiff(ScriptSerializedObject* oldObj, ScriptSerializedObject* newObj)
 	{
-		SPtr<ManagedSerializableObject> oldSerializedObject = oldObj->getInternal();
-		SPtr<ManagedSerializableObject> newSerializedObject = newObj->getInternal();
+		SPtr<IReflectable> oldSerializedObject = oldObj->getInternal();
+		SPtr<IReflectable> newSerializedObject = newObj->getInternal();
 
 		if (oldSerializedObject == nullptr || newSerializedObject == nullptr)
 			return nullptr;
 
-		oldSerializedObject->serialize();
-		newSerializedObject->serialize();
+		auto oldManagedSerializedObject = rtti_cast<ManagedSerializableObject>(oldSerializedObject);
+		auto newManagedSerializedObject = rtti_cast<ManagedSerializableObject>(newSerializedObject);
 
-		SPtr<ManagedSerializableDiff> diff = ManagedSerializableDiff::create(oldSerializedObject, newSerializedObject);
+		auto oldNativeSerializedObj = rtti_cast<SerializedObject>(oldSerializedObject);
+		auto newNativeSerializedObj = rtti_cast<SerializedObject>(newSerializedObject);
 
-		MonoObject* instance = metaData.scriptClass->createInstance();
-		new (bs_alloc<ScriptSerializedDiff>()) ScriptSerializedDiff(instance, diff);
+		SPtr<IReflectable> diff;
+		if(oldManagedSerializedObject != nullptr && newManagedSerializedObject != nullptr)
+			diff = ManagedSerializableDiff::create(oldManagedSerializedObject, newManagedSerializedObject);
+		else if(oldNativeSerializedObj != nullptr && newNativeSerializedObj != nullptr)
+		{
+			BinaryDiff diffHandler;
+			diff = diffHandler.generateDiff(oldNativeSerializedObj, newNativeSerializedObj);
+		}
 
-		return instance;
+		if(diff)
+		{
+			MonoObject* instance = metaData.scriptClass->createInstance();
+			new (bs_alloc<ScriptSerializedDiff>()) ScriptSerializedDiff(instance, diff);
+
+			return instance;
+		}
+
+		return nullptr;
 	}
 
 	void ScriptSerializedDiff::internal_ApplyDiff(ScriptSerializedDiff* thisPtr, MonoObject* obj)
@@ -46,15 +67,29 @@ namespace bs
 		if(thisPtr->mSerializedDiff == nullptr)
 			return;
 
-		SPtr<ManagedSerializableObject> serializedObject = ManagedSerializableObject::createFromExisting(obj);
-		if (serializedObject == nullptr)
-			return;
+		SPtr<ManagedSerializableDiff> managedDiff = rtti_cast<ManagedSerializableDiff>(thisPtr->mSerializedDiff);
+		if(managedDiff != nullptr)
+		{
+			SPtr<ManagedSerializableObject> serializedObject = ManagedSerializableObject::createFromExisting(obj);
+			if (!serializedObject)
+				return;
 
-		thisPtr->mSerializedDiff->apply(serializedObject);
+			managedDiff->apply(serializedObject);
+		}
+		else
+		{
+			SPtr<IReflectable> nativeValue = ScriptAssemblyManager::instance().getReflectableFromManagedObject(obj);
+			if (!nativeValue)
+				return;
+
+			IDiff& diffHandler = nativeValue->getRTTI()->getDiffHandler();
+			CoreSerializationContext serzContext;
+			diffHandler.applyDiff(nativeValue, rtti_cast<SerializedObject>(thisPtr->mSerializedDiff), &serzContext);
+		}
 	}
 
 	bool ScriptSerializedDiff::internal_IsEmpty(ScriptSerializedDiff* thisPtr)
 	{
-		return thisPtr->mSerializedDiff != nullptr;
+		return thisPtr->mSerializedDiff == nullptr;
 	}
 }

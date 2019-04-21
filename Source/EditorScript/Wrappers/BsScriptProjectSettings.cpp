@@ -92,7 +92,7 @@ namespace bs
 		SPtr<IReflectable> nativeValue;
 		if(value != nullptr)
 		{
-			nativeValue = ScriptAssemblyManager::getReflectableFromManagedObject(value);
+			nativeValue = ScriptAssemblyManager::instance().getReflectableFromManagedObject(value);
 
 			if(!nativeValue)
 				return;

@@ -28,7 +28,7 @@ namespace bs.Editor
         /// </summary>
         /// <param name="obj">Component to serialize.</param>
         /// <returns>Object containing serialized data.</returns>
-        public static SerializedObject Create(ManagedComponent obj)
+        public static SerializedObject Create(Component obj)
         {
             if (obj == null)
                 return null;

@@ -89,7 +89,7 @@ namespace bs
 				else
 				{
 					ScriptGameObjectManager& sgoManager = ScriptGameObjectManager::instance();
-					ScriptComponentBase* scriptComponent = sgoManager.getBuiltinScriptComponent(component, false);
+					ScriptComponentBase* scriptComponent = sgoManager.getBuiltinScriptComponent(component);
 
 					if (scriptComponent)
 					{

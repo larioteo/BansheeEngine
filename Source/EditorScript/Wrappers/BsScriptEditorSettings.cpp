@@ -278,7 +278,6 @@ namespace bs
 		settings->setString(nativeName, nativeValue);
 	}
 
-
 	void ScriptEditorSettings::internal_SetObject(MonoString* name, MonoObject* value)
 	{
 		String nativeName = MonoUtil::monoToString(name);
@@ -286,7 +285,7 @@ namespace bs
 		SPtr<IReflectable> nativeValue;
 		if(value != nullptr)
 		{
-			nativeValue = ScriptAssemblyManager::getReflectableFromManagedObject(value);
+			nativeValue = ScriptAssemblyManager::instance().getReflectableFromManagedObject(value);
 
 			if(!nativeValue)
 				return;

@@ -18,17 +18,17 @@ namespace bs
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SerializedObject")
 
 		/** Returns the serialized object wrapped by this object. */
-		SPtr<ManagedSerializableObject> getInternal() const { return mSerializedObject; }
+		SPtr<IReflectable> getInternal() const { return mSerializedObject; }
 
 	private:
-		ScriptSerializedObject(MonoObject* instance, const SPtr<ManagedSerializableObject>& obj);
+		ScriptSerializedObject(MonoObject* instance, const SPtr<IReflectable>& obj);
 
-		SPtr<ManagedSerializableObject> mSerializedObject;
+		SPtr<IReflectable> mSerializedObject;
 
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static MonoObject* internal_CreateComponent(ScriptManagedComponent* componentPtr);
+		static MonoObject* internal_CreateComponent(ScriptComponentBase* componentPtr);
 		static MonoObject* internal_CreateResource(ScriptManagedResource* resourcePtr);
 		static MonoObject* internal_CreateGeneric(MonoObject* obj);
 		static MonoObject* internal_Deserialize(ScriptSerializedObject* thisPtr);

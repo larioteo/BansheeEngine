@@ -20,9 +20,9 @@ namespace bs
 		SCRIPT_OBJ(EDITOR_ASSEMBLY, EDITOR_NS, "SerializedDiff")
 
 	private:
-		ScriptSerializedDiff(MonoObject* instance, const SPtr<ManagedSerializableDiff>& obj);
+		ScriptSerializedDiff(MonoObject* instance, const SPtr<IReflectable>& obj);
 
-		SPtr<ManagedSerializableDiff> mSerializedDiff;
+		SPtr<IReflectable> mSerializedDiff;
 
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
