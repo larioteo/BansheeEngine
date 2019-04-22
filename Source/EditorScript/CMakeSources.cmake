@@ -68,7 +68,6 @@ set(BS_EDITORSCRIPT_SRC_WRAPPERS
 	"Wrappers/BsScriptUnitTests.cpp"
 	"Wrappers/BsScriptSerializedObject.cpp"
 	"Wrappers/BsScriptSerializedDiff.cpp"
-	"Wrappers/BsScriptSerializedSceneObject.cpp"
 )
 
 set(BS_EDITORSCRIPT_SRC_NOFILTER
@@ -123,7 +122,6 @@ set(BS_EDITORSCRIPT_INC_WRAPPERS
 	"Wrappers/BsScriptHandleDrawing.h"
 	"Wrappers/BsScriptSerializedObject.h"
 	"Wrappers/BsScriptSerializedDiff.h"	
-	"Wrappers/BsScriptSerializedSceneObject.h"
 )
 
 set(BS_EDITORSCRIPT_INC_WRAPPERS_GUI

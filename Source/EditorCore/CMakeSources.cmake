@@ -33,6 +33,7 @@ set(BS_BANSHEEEDITOR_INC_SCENE
 	"Scene/BsScenePicking.h"
 	"Scene/BsSelection.h"
 	"Scene/BsSelectionRenderer.h"
+	"Scene/BsSerializedSceneObject.h"
 )
 
 set(BS_BANSHEEEDITOR_SRC_GUI
@@ -150,6 +151,7 @@ set(BS_BANSHEEEDITOR_SRC_SCENE
 	"Scene/BsSelection.cpp"
 	"Scene/BsScenePicking.cpp"
 	"Scene/BsSceneGrid.cpp"
+	"Scene/BsSerializedSceneObject.cpp"
 )
 
 set(BS_BANSHEEEDITOR_INC_NOFILTER

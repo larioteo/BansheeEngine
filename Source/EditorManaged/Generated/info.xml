@@ -319,6 +319,9 @@
 		<field name="icon256" type="RRef&lt;Texture&gt;">
 		</field>
 	</struct>
+	<class native="SerializedSceneObject" script="SerializedSceneObject">
+		<doc>Serializes the current state of a scene object and allows that state to be restored. The advantage of using this  class versus normal serialization is that the deserialization happens into the original scene object, instead of creating a new scene object.</doc>
+	</class>
 	<enum native="ProjectLibraryIcon" script="ProjectLibraryIcon">
 		<doc>Types of valid icons used when viewing the project library.</doc>
 		<enumentry native="ShaderInclude" script="ShaderInclude">
