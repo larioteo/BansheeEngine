@@ -47,6 +47,11 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Returns the path to the field.
+        /// </summary>
+        public string Path => path;
+
+        /// <summary>
         /// Creates a new inspectable field GUI for the specified property.
         /// </summary>
         /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
@@ -128,7 +133,7 @@ namespace bs.Editor
         /// Searches for a child field with the specified path.
         /// </summary>
         /// <param name="path">
-        /// Path relative to the current field. Path entries are readable field names separated with "/". Fields within
+        /// Path relative to the current field. Path entries are field names separated with "/". Fields within
         /// categories are placed within a special category group, surrounded by "[]". Some examples:
         /// - myField
         /// - myObject/myField
@@ -150,19 +155,20 @@ namespace bs.Editor
         /// - myObject/myField
         /// - myObject/[myCategory]/myField
         /// </param>
+        /// <param name="depth">Path depth at which the provided set of fields is at.</param>
         /// <param name="fields">List of fields to search. Children will be searched recursively.</param>
         /// <returns>Matching field if one is found, null otherwise.</returns>
-        public static InspectableField FindPath(string path, IEnumerable<InspectableField> fields)
+        public static InspectableField FindPath(string path, int depth, IEnumerable<InspectableField> fields)
         {
-            string subPath = GetSubPath(path);
+            string subPath = GetSubPath(path, depth + 1);
             foreach (var field in fields)
             {
                 InspectableField foundField = null;
 
-                if (field.path == subPath)
+                if (field.path == path)
                     foundField = field;
-                else
-                    foundField = field.FindPath(subPath);
+                else if (field.path == subPath)
+                    foundField = field.FindPath(path);
 
                 if (foundField != null)
                     return foundField;
@@ -173,13 +179,18 @@ namespace bs.Editor
 
         /// <summary>
         /// Returns the top-most part of the provided field path.
-        /// See <see cref="FindPath(string, IEnumerable{InspectableField})"/> for more information about paths.
+        /// See <see cref="FindPath(string, int, IEnumerable{InspectableField})"/> for more information about paths.
         /// </summary>
         /// <param name="path">Path to return the sub-path of.</param>
-        /// <returns>Top-most part of the path (section before the first "/")</returns>
-        public static string GetSubPath(string path)
+        /// <param name="count">Number of path elements to retrieve.</param>
+        /// <returns>First <paramref name="count"/> elements of the path.</returns>
+        public static string GetSubPath(string path, int count)
         {
+            if (count <= 0)
+                return null;
+
             StringBuilder sb = new StringBuilder();
+            int foundSections = 0;
             bool gotFirstChar = false;
             for (int i = 0; i < path.Length; i++)
             {
@@ -191,7 +202,10 @@ namespace bs.Editor
                         continue;
                     }
 
-                    break;
+                    foundSections++;
+
+                    if (foundSections == count)
+                        break;
                 }
 
                 sb.Append(path[i]);
@@ -329,19 +343,23 @@ namespace bs.Editor
                 }
 
                 int currentIndex;
+                int childDepth;
                 GUILayoutY parentLayout;
                 if (category != null)
                 {
                     currentIndex = categoryIndex;
                     parentLayout = category.ChildLayout;
+                    childDepth = depth + 1;
                 }
                 else
                 {
                     currentIndex = rootIndex;
                     parentLayout = layout;
+                    childDepth = depth;
                 }
 
-                string fieldName = GetReadableIdentifierName(field.Name);
+                string fieldName = field.Name;
+                string readableName = GetReadableIdentifierName(fieldName);
                 string childPath = string.IsNullOrEmpty(path) ? fieldName : $"{path}/{fieldName}";
 
                 InspectableField inspectableField = null;
@@ -352,8 +370,8 @@ namespace bs.Editor
 
                 if (inspectableField == null)
                 {
-                    inspectableField = CreateField(context, fieldName, childPath,
-                        currentIndex, depth, new InspectableFieldLayout(parentLayout), field.GetProperty(), 
+                    inspectableField = CreateField(context, readableName, childPath,
+                        currentIndex, childDepth, new InspectableFieldLayout(parentLayout), field.GetProperty(), 
                         InspectableFieldStyle.Create(field));
                 }
 

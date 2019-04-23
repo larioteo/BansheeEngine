@@ -137,7 +137,7 @@ namespace bs.Editor
         /// <inheritdoc />
         public override InspectableField FindPath(string path)
         {
-            return FindPath(path, children);
+            return FindPath(path, depth, children);
         }
 
         /// <summary>

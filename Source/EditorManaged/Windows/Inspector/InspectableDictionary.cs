@@ -63,43 +63,58 @@ namespace bs.Editor
         /// <inheritdoc />
         public override InspectableField FindPath(string path)
         {
-            string subPath = GetSubPath(path);
+            string subPath = GetSubPath(path, depth + 1);
 
             if (string.IsNullOrEmpty(subPath))
                 return null;
 
-            bool isKey = false;
-            if (subPath.StartsWith("Key["))
-                isKey = true;
-            else if (subPath.StartsWith("Value["))
-                isKey = false;
-            else
-                return null;
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 1; i < subPath.Length; i++)
+            int lastLeftIdx = subPath.LastIndexOf("Key[");
+            int lastRightIdx = -1;
+            bool isKey;
+            if (lastLeftIdx != -1)
             {
-                if (path[i] == ']')
-                    break;
+                lastRightIdx = subPath.LastIndexOf(']', lastLeftIdx);
+                isKey = true;
+            }
+            else
+            {
+                lastLeftIdx = subPath.LastIndexOf("Value[");
+                lastRightIdx = subPath.LastIndexOf(']', lastLeftIdx);
 
-                if (!char.IsNumber(path[i]))
-                    return null;
-
-                sb.Append(path[i]);
+                isKey = false;
             }
 
-            if (!int.TryParse(sb.ToString(), out int idx))
+            if (lastLeftIdx == -1 || lastRightIdx == -1)
                 return null;
+
+            int count = lastRightIdx - 1 - lastLeftIdx;
+            if (count <= 0)
+                return null;
+
+            string arrayIdxStr = subPath.Substring(lastLeftIdx, count);
+
+            if (!int.TryParse(arrayIdxStr, out int idx))
+                return null;;
 
             if (idx >= dictionaryGUIField.NumRows)
                 return null;
 
             InspectableDictionaryGUIRow row = dictionaryGUIField.GetRow(idx);
-
+            InspectableField field = null;
             if (isKey)
-                return row.FieldKey;
+                field = row?.FieldKey;
+            else
+                field = row?.FieldValue;
 
-            return row.FieldValue;
+            if (field != null)
+            {
+                if (field.Path == path)
+                    return field;
+
+                return field.FindPath(path);
+            }
+
+            return null;
         }
 
         /// <summary>

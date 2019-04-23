@@ -109,7 +109,7 @@ namespace bs.Editor
         /// <param name="path">Path to the field on the object being inspected.</param>
         public void FocusOnField(string path)
         {
-            InspectableField field = InspectableField.FindPath(path, Fields);
+            InspectableField field = InspectableField.FindPath(path, 0, Fields);
             field?.SetHasFocus();
         }
     }

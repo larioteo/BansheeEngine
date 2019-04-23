@@ -684,7 +684,6 @@ namespace bs.Editor
             if (activeSO == null)
                 return;
 
-            Debug.Log("FOCUS ON " + uuid + " " + activeSO.UUID + " " + path);
             if (activeSO.UUID == uuid)
             {
                 if(path == "Position.X")

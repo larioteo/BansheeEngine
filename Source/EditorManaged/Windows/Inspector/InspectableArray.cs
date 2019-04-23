@@ -70,32 +70,39 @@ namespace bs.Editor
         /// <inheritdoc />
         public override InspectableField FindPath(string path)
         {
-            string subPath = GetSubPath(path);
+            string subPath = GetSubPath(path, depth + 1);
 
-            if (string.IsNullOrEmpty(subPath) || subPath.Length < 3 || subPath[0] != '[')
+            if (string.IsNullOrEmpty(subPath))
                 return null;
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 1; i < subPath.Length; i++)
-            {
-                if (path[i] == ']')
-                    break;
+            int lastLeftIdx = subPath.LastIndexOf('[');
+            int lastRightIdx = subPath.LastIndexOf(']', lastLeftIdx);
 
-                if (!char.IsNumber(path[i]))
-                    return null;
+            if (lastLeftIdx == -1 || lastRightIdx == -1)
+                return null;
 
-                sb.Append(path[i]);
-            }
+            int count = lastRightIdx - 1 - lastLeftIdx;
+            if (count <= 0)
+                return null;
 
-            if (!int.TryParse(sb.ToString(), out int idx))
+            string arrayIdxStr = subPath.Substring(lastLeftIdx, count);
+
+            if (!int.TryParse(arrayIdxStr, out int idx))
                 return null;
 
             if (idx >= arrayGUIField.NumRows)
                 return null;
 
             InspectableArrayGUIRow row = arrayGUIField.GetRow(idx);
-            if (row != null)
-                return row.Field;
+            InspectableField field = row?.Field;
+
+            if (field != null)
+            {
+                if (field.Path == path)
+                    return field;
+
+                return field.FindPath(path);
+            }
 
             return null;
         }
