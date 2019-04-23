@@ -28,9 +28,7 @@ namespace bs
 		/************************************************************************/
 		/* 								CLR HOOKS						   		*/
 		/************************************************************************/
-		static MonoObject* internal_CreateComponent(ScriptComponentBase* componentPtr);
-		static MonoObject* internal_CreateResource(ScriptManagedResource* resourcePtr);
-		static MonoObject* internal_CreateGeneric(MonoObject* obj);
+		static MonoObject* internal_Create(MonoObject* obj);
 		static MonoObject* internal_Deserialize(ScriptSerializedObject* thisPtr);
 	};
 
