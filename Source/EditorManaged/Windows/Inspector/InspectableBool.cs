@@ -71,10 +71,12 @@ namespace bs.Editor
         /// <param name="newValue">New value of the toggle button.</param>
         private void OnFieldValueChanged(bool newValue)
         {
-            RecordStateForUndo();
+            StartUndo();
 
             property.SetValue(newValue);
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

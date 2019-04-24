@@ -50,9 +50,13 @@ namespace bs.Editor
                         guiFloatField.SetRange(style.RangeStyle.Min, style.RangeStyle.Max);
                 }
                 guiFloatField.OnChanged += OnFieldValueChanged;
-                guiFloatField.OnConfirmed += OnFieldValueConfirm;
+                guiFloatField.OnConfirmed += () =>
+                {
+                    OnFieldValueConfirm();
+                    StartUndo();
+                };
                 guiFloatField.OnFocusLost += OnFieldValueConfirm;
-                guiFloatField.OnFocusGained += RecordStateForUndoRequested;
+                guiFloatField.OnFocusGained += StartUndo;
 
                 layout.AddElement(layoutIndex, guiFloatField);
             }
@@ -83,8 +87,6 @@ namespace bs.Editor
         /// <param name="newValue">New value of the float field.</param>
         private void OnFieldValueChanged(float newValue)
         {
-            RecordStateForUndoIfNeeded();
-
             property.SetValue(new Radian(newValue));
             state |= InspectableState.ModifyInProgress;
         }
@@ -96,6 +98,8 @@ namespace bs.Editor
         {
             if (state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

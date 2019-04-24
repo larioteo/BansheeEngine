@@ -55,13 +55,21 @@ namespace bs.Editor
                 Vector3 min = x - bounds.Size * 0.5f;
                 Vector3 max = x + bounds.Size * 0.5f;
 
-                RecordStateForUndoIfNeeded();
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
-            centerField.OnConfirm += x => OnFieldValueConfirm();
-            centerField.OnFocusLost += OnFieldValueConfirm;
-            centerField.OnFocusGained += RecordStateForUndoRequested;
+            centerField.OnConfirm += x =>
+            {
+                OnFieldValueConfirm();
+                StartUndo("center." + x.ToString());
+            };
+            centerField.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if (focus)
+                    StartUndo("center." + comp.ToString());
+                else
+                    OnFieldValueConfirm();
+            };
 
             sizeField.OnValueChanged += x =>
             {
@@ -69,13 +77,21 @@ namespace bs.Editor
                 Vector3 min = bounds.Center - x * 0.5f;
                 Vector3 max = bounds.Center + x * 0.5f;
 
-                RecordStateForUndoIfNeeded();
                 property.SetValue(new AABox(min, max));
                 state |= InspectableState.ModifyInProgress;
             };
-            sizeField.OnConfirm += x => OnFieldValueConfirm();
-            sizeField.OnFocusLost += OnFieldValueConfirm;
-            sizeField.OnFocusGained += RecordStateForUndoRequested;
+            sizeField.OnConfirm += x =>
+            {
+                OnFieldValueConfirm();
+                StartUndo("size." + x.ToString());
+            };
+            sizeField.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if (focus)
+                    StartUndo("size." + comp.ToString());
+                else
+                    OnFieldValueConfirm();
+            };
         }
 
         /// <inheritdoc/>
@@ -99,10 +115,31 @@ namespace bs.Editor
         /// <inheritdoc />
         public override void SetHasFocus(string subFieldName = null)
         {
-            if (subFieldName == "center")
-                centerField.Focus = true;
-            else
-                sizeField.Focus = true;
+            if (subFieldName != null && subFieldName.StartsWith("center."))
+            {
+                string component = subFieldName.Remove(0, "center.".Length);
+                if (component == "X")
+                    centerField.SetInputFocus(VectorComponent.X, true);
+                else if (component == "Y")
+                    centerField.SetInputFocus(VectorComponent.Y, true);
+                else if (component == "Z")
+                    centerField.SetInputFocus(VectorComponent.Z, true);
+                else
+                    centerField.SetInputFocus(VectorComponent.X, true);
+            }
+
+            if (subFieldName != null && subFieldName.StartsWith("size."))
+            {
+                string component = subFieldName.Remove(0, "size.".Length);
+                if (component == "X")
+                    sizeField.SetInputFocus(VectorComponent.X, true);
+                else if (component == "Y")
+                    sizeField.SetInputFocus(VectorComponent.Y, true);
+                else if (component == "Z")
+                    sizeField.SetInputFocus(VectorComponent.Z, true);
+                else
+                    sizeField.SetInputFocus(VectorComponent.X, true);
+            }
         }
 
         /// <summary>
@@ -112,6 +149,8 @@ namespace bs.Editor
         {
             if (state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

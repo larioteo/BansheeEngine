@@ -62,6 +62,10 @@ namespace bs
 		BS_SCRIPT_EXPORT()
 		Event<void(float, VectorComponent)> onComponentChanged;
 
+		/**	Triggered when an individual component loses or gains focus. */
+		BS_SCRIPT_EXPORT()
+		Event<void(bool, VectorComponent)> onComponentFocusChanged;
+
 		/** Triggered when the user hits the Enter key with any of the component input boxes in focus. */
 		BS_SCRIPT_EXPORT()
 		Event<void(VectorComponent)> onConfirm;

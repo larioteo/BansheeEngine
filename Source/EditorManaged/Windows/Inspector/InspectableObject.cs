@@ -85,8 +85,9 @@ namespace bs.Editor
                         createContextMenu.AddItem(prefix + type.Name,
                             () =>
                             {
-                                RecordStateForUndo();
+                                StartUndo();
                                 property.SetValue(Activator.CreateInstance(type));
+                                EndUndo();
                             });
                     }
                 }
@@ -319,8 +320,9 @@ namespace bs.Editor
             {
                 if (instantiableTypes.Length > 0)
                 {
-                    RecordStateForUndo();
+                    StartUndo();
                     property.SetValue(Activator.CreateInstance(instantiableTypes[0]));
+                    EndUndo();
                 }
             }
             else
@@ -338,8 +340,9 @@ namespace bs.Editor
         /// </summary>
         private void OnClearButtonClicked()
         {
-            RecordStateForUndo();
+            StartUndo();
             property.SetValue<object>(null);
+            EndUndo();
         }
 
         /// <summary>

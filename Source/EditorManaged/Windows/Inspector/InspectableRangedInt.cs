@@ -44,7 +44,7 @@ namespace bs.Editor
                     guiIntField.Step = style.StepStyle.Step;
                 guiIntField.OnChanged += OnFieldValueChanged;
                 guiIntField.OnFocusLost += OnFieldValueConfirm;
-                guiIntField.OnFocusGained += RecordStateForUndoRequested;
+                guiIntField.OnFocusGained += StartUndo;
 
                 layout.AddElement(layoutIndex, guiIntField);
             }
@@ -75,8 +75,6 @@ namespace bs.Editor
         /// <param name="newValue">New value of the float field.</param>
         private void OnFieldValueChanged(float newValue)
         {
-            RecordStateForUndoIfNeeded();
-
             property.SetValue((int)newValue);
             state |= InspectableState.ModifyInProgress;
         }
@@ -88,6 +86,8 @@ namespace bs.Editor
         {
             if (state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

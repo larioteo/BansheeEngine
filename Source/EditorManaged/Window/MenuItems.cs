@@ -840,6 +840,7 @@ namespace bs.Editor
                 return;
             }
 
+            GameObjectUndo.ResolveDiffs();
             UndoRedo.Global.Undo();
         }
 

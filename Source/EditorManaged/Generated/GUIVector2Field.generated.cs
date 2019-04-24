@@ -106,6 +106,9 @@ namespace bs.Editor
 		/// <summary>Reports the new value of an individual vector component when the user changes it.</summary>
 		public event Action<float, VectorComponent> OnComponentChanged;
 
+		/// <summary>Triggered when an individual component loses or gains focus.</summary>
+		public event Action<bool, VectorComponent> OnComponentFocusChanged;
+
 		/// <summary>Triggered when the user hits the Enter key with any of the component input boxes in focus.</summary>
 		public event Action<VectorComponent> OnConfirm;
 
@@ -140,6 +143,10 @@ namespace bs.Editor
 		private void Internal_onComponentChanged(float p0, VectorComponent p1)
 		{
 			OnComponentChanged?.Invoke(p0, p1);
+		}
+		private void Internal_onComponentFocusChanged(bool p0, VectorComponent p1)
+		{
+			OnComponentFocusChanged?.Invoke(p0, p1);
 		}
 		private void Internal_onConfirm(VectorComponent p0)
 		{

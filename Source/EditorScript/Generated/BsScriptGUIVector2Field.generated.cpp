@@ -14,6 +14,7 @@ namespace bs
 {
 	ScriptGUIVector2Field::onValueChangedThunkDef ScriptGUIVector2Field::onValueChangedThunk; 
 	ScriptGUIVector2Field::onComponentChangedThunkDef ScriptGUIVector2Field::onComponentChangedThunk; 
+	ScriptGUIVector2Field::onComponentFocusChangedThunkDef ScriptGUIVector2Field::onComponentFocusChangedThunk; 
 	ScriptGUIVector2Field::onConfirmThunkDef ScriptGUIVector2Field::onConfirmThunk; 
 
 	ScriptGUIVector2Field::ScriptGUIVector2Field(MonoObject* managedInstance, GUIVector2Field* value)
@@ -21,6 +22,7 @@ namespace bs
 	{
 		value->onValueChanged.connect(std::bind(&ScriptGUIVector2Field::onValueChanged, this, std::placeholders::_1));
 		value->onComponentChanged.connect(std::bind(&ScriptGUIVector2Field::onComponentChanged, this, std::placeholders::_1, std::placeholders::_2));
+		value->onComponentFocusChanged.connect(std::bind(&ScriptGUIVector2Field::onComponentFocusChanged, this, std::placeholders::_1, std::placeholders::_2));
 		value->onConfirm.connect(std::bind(&ScriptGUIVector2Field::onConfirm, this, std::placeholders::_1));
 	}
 
@@ -38,6 +40,7 @@ namespace bs
 
 		onValueChangedThunk = (onValueChangedThunkDef)metaData.scriptClass->getMethodExact("Internal_onValueChanged", "Vector2&")->getThunk();
 		onComponentChangedThunk = (onComponentChangedThunkDef)metaData.scriptClass->getMethodExact("Internal_onComponentChanged", "single,VectorComponent")->getThunk();
+		onComponentFocusChangedThunk = (onComponentFocusChangedThunkDef)metaData.scriptClass->getMethodExact("Internal_onComponentFocusChanged", "bool,VectorComponent")->getThunk();
 		onConfirmThunk = (onConfirmThunkDef)metaData.scriptClass->getMethodExact("Internal_onConfirm", "VectorComponent")->getThunk();
 	}
 
@@ -51,6 +54,11 @@ namespace bs
 	void ScriptGUIVector2Field::onComponentChanged(float p0, VectorComponent p1)
 	{
 		MonoUtil::invokeThunk(onComponentChangedThunk, getManagedInstance(), p0, p1);
+	}
+
+	void ScriptGUIVector2Field::onComponentFocusChanged(bool p0, VectorComponent p1)
+	{
+		MonoUtil::invokeThunk(onComponentFocusChangedThunk, getManagedInstance(), p0, p1);
 	}
 
 	void ScriptGUIVector2Field::onConfirm(VectorComponent p0)

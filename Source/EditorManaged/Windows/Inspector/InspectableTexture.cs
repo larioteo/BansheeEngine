@@ -63,7 +63,7 @@ namespace bs.Editor
         /// <param name="newValue">New resource to reference.</param>
         private void OnFieldValueChanged(RRefBase newValue)
         {
-            RecordStateForUndo();
+            StartUndo();
 
             if (property.Type == SerializableProperty.FieldType.Resource)
                 property.SetValue(newValue.GenericValue);
@@ -71,6 +71,8 @@ namespace bs.Editor
                 property.SetValue(newValue);
 
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

@@ -50,9 +50,13 @@ namespace bs.Editor
                         guiIntField.SetRange((int) style.RangeStyle.Min, (int) style.RangeStyle.Max);
                 }
                 guiIntField.OnChanged += OnFieldValueChanged;
-                guiIntField.OnConfirmed += OnFieldValueConfirm;
+                guiIntField.OnConfirmed += () =>
+                {
+                    OnFieldValueConfirm();
+                    StartUndo();
+                };
                 guiIntField.OnFocusLost += OnFieldValueConfirm;
-                guiIntField.OnFocusGained += RecordStateForUndoRequested;
+                guiIntField.OnFocusGained += StartUndo;
 
                 layout.AddElement(layoutIndex, guiIntField);
             }
@@ -83,8 +87,6 @@ namespace bs.Editor
         /// <param name="newValue">New value of the int field.</param>
         private void OnFieldValueChanged(int newValue)
         {
-            RecordStateForUndoIfNeeded();
-
             property.SetValue(newValue);
             state |= InspectableState.ModifyInProgress;
         }
@@ -94,8 +96,12 @@ namespace bs.Editor
         /// </summary>
         private void OnFieldValueConfirm()
         {
+            StartUndo();
+
             if(state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

@@ -264,17 +264,19 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateList()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 list = property.CreateListInstance(0);
                 property.SetValue(list);
                 numElements = 0;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected override void ResizeList()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 int size = guiSizeField.Value;
 
@@ -287,33 +289,39 @@ namespace bs.Editor
                 property.SetValue(newList);
                 list = newList;
                 numElements = list.Count;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected override void ClearList()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 property.SetValue<object>(null);
                 list = null;
                 numElements = 0;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected internal override void DeleteElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 if (index >= 0 && index < list.Count)
                     list.RemoveAt(index);
 
                 numElements = list.Count;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected internal override void CloneElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 SerializableList serializableList = property.GetList();
 
@@ -321,12 +329,14 @@ namespace bs.Editor
                     list.Add(SerializableUtility.Clone(serializableList.GetProperty(index).GetValue<object>()));
 
                 numElements = list.Count;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected internal override void MoveUpElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 if ((index - 1) >= 0)
                 {
@@ -335,12 +345,14 @@ namespace bs.Editor
                     list[index - 1] = list[index];
                     list[index] = previousEntry;
                 }
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected internal override void MoveDownElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 if ((index + 1) < list.Count)
                 {
@@ -349,16 +361,27 @@ namespace bs.Editor
                     list[index + 1] = list[index];
                     list[index] = nextEntry;
                 }
+
+                EndUndo();
             }
 
             /// <summary>
-            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
-            /// before making changes to the field value.
+            /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+            /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
             /// </summary>
-            protected void RecordStateForUndo()
+            protected void StartUndo()
             {
                 if (context.Component != null)
-                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+                    GameObjectUndo.RecordComponent(context.Component, path);
+            }
+
+            /// <summary>
+            /// Finishes recording an undo command started via <see cref="StartUndo"/>. If any changes are detected on the
+            /// field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
+            /// </summary>
+            protected void EndUndo()
+            {
+                GameObjectUndo.ResolveDiffs();
             }
         }
 

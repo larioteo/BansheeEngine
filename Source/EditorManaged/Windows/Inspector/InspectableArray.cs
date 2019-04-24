@@ -311,17 +311,19 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateList()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 array = property.CreateArrayInstance(new int[1] { 0 });
                 property.SetValue(array);
                 numElements = 0;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected override void ResizeList()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 int size = guiSizeField.Value; // TODO - Support multi-rank arrays
 
@@ -334,6 +336,8 @@ namespace bs.Editor
                 property.SetValue(newArray);
                 array = newArray;
                 numElements = size;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
@@ -344,18 +348,20 @@ namespace bs.Editor
                     CreateList();
                 else
                 {
-                    RecordStateForUndo();
+                    StartUndo();
 
                     property.SetValue<object>(null);
                     array = null;
                     numElements = 0;
+
+                    EndUndo();
                 }
             }
 
             /// <inheritdoc/>
             protected internal override void DeleteElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 int size = MathEx.Max(0, array.Length - 1);
                 Array newArray = property.CreateArrayInstance(new int[] { size });
@@ -373,12 +379,14 @@ namespace bs.Editor
                 property.SetValue(newArray);
                 array = newArray;
                 numElements = array.Length;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
             protected internal override void CloneElement(int index)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 SerializableArray array = property.GetArray();
 
@@ -403,6 +411,8 @@ namespace bs.Editor
                 property.SetValue(newArray);
                 this.array = newArray;
                 numElements = newArray.Length;
+
+                EndUndo();
             }
 
             /// <inheritdoc/>
@@ -410,7 +420,7 @@ namespace bs.Editor
             {
                 if ((index - 1) >= 0)
                 {
-                    RecordStateForUndo();
+                    StartUndo();
 
                     object previousEntry = array.GetValue(index - 1);
 
@@ -428,7 +438,7 @@ namespace bs.Editor
             {
                 if ((index + 1) < array.Length)
                 {
-                    RecordStateForUndo();
+                    StartUndo();
 
                     object nextEntry = array.GetValue(index + 1);
 
@@ -438,17 +448,28 @@ namespace bs.Editor
                     // Natively wrapped arrays are passed by copy
                     if(style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NativeWrapper))
                         property.SetValue(array);
+
+                    EndUndo();
                 }
             }
 
             /// <summary>
-            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
-            /// before making changes to the field value.
+            /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+            /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
             /// </summary>
-            protected void RecordStateForUndo()
+            protected void StartUndo()
             {
                 if (context.Component != null)
-                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+                    GameObjectUndo.RecordComponent(context.Component, path);
+            }
+
+            /// <summary>
+            /// Finishes recording an undo command started via <see cref="StartUndo"/>. If any changes are detected on the
+            /// field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
+            /// </summary>
+            protected void EndUndo()
+            {
+                GameObjectUndo.ResolveDiffs();
             }
         }
 

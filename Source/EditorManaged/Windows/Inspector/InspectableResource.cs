@@ -64,10 +64,12 @@ namespace bs.Editor
         {
             Resource res = Resources.Load<Resource>(newValue.UUID);
 
-            RecordStateForUndo();
+            StartUndo();
 
             property.SetValue(res);
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

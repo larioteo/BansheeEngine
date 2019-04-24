@@ -75,7 +75,6 @@ namespace bs.Editor
         private GUIVector3Field soPos;
         private GUIVector3Field soRot;
         private GUIVector3Field soScale;
-        private bool undoRecordNeeded = true;
 
         private Quaternion lastRotation;
 
@@ -253,8 +252,12 @@ namespace bs.Editor
             soNameInput = new GUITextBox(false, GUIOption.FlexibleWidth(180));
             soNameInput.Text = activeSO.Name;
             soNameInput.OnChanged += OnSceneObjectRename;
-            soNameInput.OnConfirmed += OnModifyConfirm;
-            soNameInput.OnFocusGained += RecordStateForUndoRequested;
+            soNameInput.OnConfirmed += () =>
+            {
+                OnModifyConfirm();
+                StartUndo("name");
+            };
+            soNameInput.OnFocusGained += () => StartUndo("name");
             soNameInput.OnFocusLost += OnModifyConfirm;
 
             nameLayout.AddElement(soActiveToggle);
@@ -277,25 +280,52 @@ namespace bs.Editor
             sceneObjectLayout.AddElement(soPos);
 
             soPos.OnComponentChanged += OnPositionChanged;
-            soPos.OnConfirm += x => OnModifyConfirm();
-            soPos.OnFocusGained += RecordStateForUndoRequested;
-            soPos.OnFocusLost += OnModifyConfirm;
+            soPos.OnConfirm += x =>
+            {
+                OnModifyConfirm();
+                StartUndo("position." + x.ToString());
+            };
+            soPos.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if (focus)
+                    StartUndo("position." + comp.ToString());
+                else
+                    OnModifyConfirm();
+            };
 
             soRot = new GUIVector3Field(new LocEdString("Rotation"), 50);
             sceneObjectLayout.AddElement(soRot);
 
             soRot.OnComponentChanged += OnRotationChanged;
-            soRot.OnConfirm += x => OnModifyConfirm();
-            soRot.OnFocusGained += RecordStateForUndoRequested;
-            soRot.OnFocusLost += OnModifyConfirm;
+            soRot.OnConfirm += x =>
+            {
+                OnModifyConfirm();
+                StartUndo("rotation." + x.ToString());
+            };
+            soRot.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if (focus)
+                    StartUndo("rotation." + comp.ToString());
+                else
+                    OnModifyConfirm();
+            };
 
             soScale = new GUIVector3Field(new LocEdString("Scale"), 50);
             sceneObjectLayout.AddElement(soScale);
 
             soScale.OnComponentChanged += OnScaleChanged;
-            soScale.OnConfirm += x => OnModifyConfirm();
-            soScale.OnFocusGained += RecordStateForUndoRequested;
-            soScale.OnFocusLost += OnModifyConfirm;
+            soScale.OnConfirm += x =>
+            {
+                OnModifyConfirm();
+                StartUndo("scale." + x.ToString());
+            };
+            soScale.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if (focus)
+                    StartUndo("scale." + comp.ToString());
+                else
+                    OnModifyConfirm();
+            };
 
             sceneObjectLayout.AddFlexibleSpace();
 
@@ -686,25 +716,25 @@ namespace bs.Editor
 
             if (activeSO.UUID == uuid)
             {
-                if(path == "Position.X")
+                if(path == "position.X")
                     soPos.SetInputFocus(VectorComponent.X, true);
-                else if(path == "Position.Y")
+                else if(path == "position.Y")
                     soPos.SetInputFocus(VectorComponent.Y, true);
-                else if(path == "Position.Z")
+                else if(path == "position.Z")
                     soPos.SetInputFocus(VectorComponent.Z, true);
-                else if(path == "Rotation.X")
+                else if(path == "rotation.X")
                     soRot.SetInputFocus(VectorComponent.X, true);
-                else if(path == "Rotation.Y")
+                else if(path == "rotation.Y")
                     soRot.SetInputFocus(VectorComponent.Y, true);
-                else if(path == "Rotation.Z")
+                else if(path == "rotation.Z")
                     soRot.SetInputFocus(VectorComponent.Z, true);
-                else if(path == "Scale.X")
+                else if(path == "scale.X")
                     soScale.SetInputFocus(VectorComponent.X, true);
-                else if(path == "Scale.Y")
+                else if(path == "scale.Y")
                     soScale.SetInputFocus(VectorComponent.Y, true);
-                else if(path == "Scale.Z")
+                else if(path == "scale.Z")
                     soScale.SetInputFocus(VectorComponent.Z, true);
-                else if (path == "Name")
+                else if (path == "name")
                     soNameInput.Focus = true;
             }
             else
@@ -735,7 +765,6 @@ namespace bs.Editor
         {
             if (activeSO != null)
             {
-                RecordSceneObjectHeaderForUndo("Name");
                 activeSO.Name = name;
 
                 modifyState |= InspectableState.ModifyInProgress;
@@ -751,8 +780,9 @@ namespace bs.Editor
         {
             if (activeSO != null)
             {
-                RecordSceneObjectHeaderForUndo("Active");
+                StartUndo("active");
                 activeSO.Active = active;
+                EndUndo();
             }
         }
 
@@ -763,6 +793,8 @@ namespace bs.Editor
         {
             if (modifyState.HasFlag(InspectableState.ModifyInProgress))
                 modifyState = InspectableState.Modified;
+
+            EndUndo();
         }
 
         /// <summary>
@@ -775,8 +807,6 @@ namespace bs.Editor
         {
             if (activeSO == null)
                 return;
-
-            RecordSceneObjectHeaderForUndo("Position." + component);
 
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
                 activeSO.Position = soPos.Value;
@@ -797,8 +827,6 @@ namespace bs.Editor
         {
             if (activeSO == null)
                 return;
-
-            RecordSceneObjectHeaderForUndo("Rotation." + component);
 
             Quaternion rotation = Quaternion.FromEuler(soRot.Value);
             if (EditorApplication.ActiveCoordinateMode == HandleCoordinateMode.World)
@@ -821,8 +849,6 @@ namespace bs.Editor
         {
             if (activeSO == null)
                 return;
-
-            RecordSceneObjectHeaderForUndo("Scale." + component);
 
             activeSO.LocalScale = soScale.Value;
 
@@ -862,25 +888,24 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Records the current state of a scene object field for the purposes of undo/redo. Generally this should be
-        /// called just before making changes to the field value.
+        /// Notifies the system to start recording a new undo command. Any changes to scene object fields after this is
+        /// called will be recorded in the command. User must call <see cref="EndUndo"/> after the field is done being
+        /// changed.
         /// </summary>
         /// <param name="name">Name of the field being changed.</param>
-        private void RecordSceneObjectHeaderForUndo(string name)
+        private void StartUndo(string name)
         {
-            if (!undoRecordNeeded)
-                return;
-
-            GameObjectUndo.RecordSceneObjectHeader(activeSO, name);
-            undoRecordNeeded = false;
+            if (activeSO != null)
+                GameObjectUndo.RecordSceneObjectHeader(activeSO, name);
         }
 
         /// <summary>
-        /// Notifies the system that the next call to <see cref="RecordSceneObjectHeaderForUndo"/> should record the state.
+        /// Finishes recording an undo command started via <see cref="StartUndo(string)"/>. If any changes are detected on
+        /// the field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
         /// </summary>
-        private void RecordStateForUndoRequested()
+        private void EndUndo()
         {
-            undoRecordNeeded = true;
+            GameObjectUndo.ResolveDiffs();
         }
     }
 

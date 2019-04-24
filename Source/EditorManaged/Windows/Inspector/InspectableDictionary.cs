@@ -333,7 +333,7 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override void AddEntry(object key, object value)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 SerializableProperty keyProperty = (SerializableProperty)key;
                 SerializableProperty valueProperty = (SerializableProperty)value;
@@ -341,19 +341,21 @@ namespace bs.Editor
                 dictionary.Add(keyProperty.GetValue<object>(), valueProperty.GetValue<object>());
                 numElements = dictionary.Count;
 
+                EndUndo();
                 UpdateKeys();
             }
 
             /// <inheritdoc/>
             protected internal override void RemoveEntry(object key)
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 SerializableProperty keyProperty = (SerializableProperty)key;
 
                 dictionary.Remove(keyProperty.GetValue<object>());
                 numElements = dictionary.Count;
 
+                EndUndo();
                 UpdateKeys();
             }
 
@@ -390,8 +392,6 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected internal override KeyValuePair<object, object> CloneElement(int index)
             {
-                RecordStateForUndo();
-
                 SerializableProperty keyProperty = (SerializableProperty)GetKey(index);
                 SerializableProperty valueProperty = (SerializableProperty)GetValue(keyProperty);
 
@@ -417,35 +417,46 @@ namespace bs.Editor
             /// <inheritdoc/>
             protected override void CreateDictionary()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 dictionary = property.CreateDictionaryInstance();
                 numElements = dictionary.Count;
                 property.SetValue(dictionary);
 
+                EndUndo();
                 UpdateKeys();
             }
 
             /// <inheritdoc/>
             protected override void DeleteDictionary()
             {
-                RecordStateForUndo();
+                StartUndo();
 
                 dictionary = null;
                 numElements = 0;
                 property.SetValue<object>(null);
 
+                EndUndo();
                 UpdateKeys();
             }
 
             /// <summary>
-            /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
-            /// before making changes to the field value.
+            /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+            /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
             /// </summary>
-            protected void RecordStateForUndo()
+            protected void StartUndo()
             {
                 if (context.Component != null)
-                    UndoRedo.RecordSO(context.Component.SceneObject, false, "Field change: \"" + path + "\"");
+                    GameObjectUndo.RecordComponent(context.Component, path);
+            }
+
+            /// <summary>
+            /// Finishes recording an undo command started via <see cref="StartUndo"/>. If any changes are detected on the
+            /// field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
+            /// </summary>
+            protected void EndUndo()
+            {
+                GameObjectUndo.ResolveDiffs();
             }
 
             /// <summary>

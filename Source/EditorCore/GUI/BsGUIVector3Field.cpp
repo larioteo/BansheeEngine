@@ -29,6 +29,10 @@ namespace bs
 		mFieldY->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Y); });
 		mFieldZ->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Z); });
 
+		mFieldX->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::X); });
+		mFieldY->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::Y); });
+		mFieldZ->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::Z); });
+
 		mLayout->addElement(mFieldX);
 		mLayout->addNewElement<GUIFixedSpace>(5);
 		mLayout->addElement(mFieldY);

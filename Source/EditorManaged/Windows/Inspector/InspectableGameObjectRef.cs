@@ -64,10 +64,12 @@ namespace bs.Editor
         /// <param name="newValue">New game object to reference.</param>
         private void OnFieldValueChanged(GameObject newValue)
         {
-            RecordStateForUndo();
+            StartUndo();
 
             property.SetValue(newValue);
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

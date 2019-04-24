@@ -43,10 +43,19 @@ namespace bs.Editor
                 guiField = new GUIVector3Field(new GUIContent(title));
                 guiField.Value = quatValue.ToEuler();
 
-                guiField.OnValueChanged += OnFieldValueChanged;
-                guiField.OnConfirm += x => OnFieldValueConfirm();
-                guiField.OnFocusLost += OnFieldValueConfirm;
-                guiField.OnFocusGained += RecordStateForUndoRequested;
+                guiField.OnComponentChanged += OnFieldValueChanged;
+                guiField.OnConfirm += x =>
+                {
+                    OnFieldValueConfirm();
+                    StartUndo(x.ToString());
+                };
+                guiField.OnComponentFocusChanged += (focus, comp) =>
+                {
+                    if (focus)
+                        StartUndo(comp.ToString());
+                    else
+                        OnFieldValueConfirm();
+                };
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -75,20 +84,24 @@ namespace bs.Editor
         /// <inheritdoc />
         public override void SetHasFocus(string subFieldName = null)
         {
-            guiField.Focus = true;
+            if (subFieldName == "X")
+                guiField.SetInputFocus(VectorComponent.X, true);
+            else if (subFieldName == "Y")
+                guiField.SetInputFocus(VectorComponent.Y, true);
+            else if (subFieldName == "Z")
+                guiField.SetInputFocus(VectorComponent.Z, true);
+            else
+                guiField.SetInputFocus(VectorComponent.X, true);
         }
 
         /// <summary>
-        /// Triggered when the user changes the field value.
+        /// Triggered when the user changes the field value of a single component.
         /// </summary>
-        /// <param name="newValue">New value of the 3D vector field.</param>
-        private void OnFieldValueChanged(Vector3 newValue)
+        /// <param name="newValue">New value of a single component in the 3D vector field.</param>
+        /// <param name="component">Component that was changed.</param>
+        private void OnFieldValueChanged(float newValue, VectorComponent component)
         {
-            RecordStateForUndoIfNeeded();
-
-            quatValue = Quaternion.FromEuler(newValue);
-
-            property.SetValue(quatValue);
+            property.SetValue(guiField.Value);
             state |= InspectableState.ModifyInProgress;
         }
 
@@ -99,6 +112,8 @@ namespace bs.Editor
         {
             if (state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

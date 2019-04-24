@@ -26,7 +26,6 @@ namespace bs.Editor
         protected string path;
         protected int depth;
         protected SerializableProperty.FieldType type;
-        private bool undoRecordNeeded = true;
 
         /// <summary>
         /// Property this field is displaying contents of.
@@ -216,11 +215,19 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Records the current state of the field for the purposes of undo/redo. Generally this should be called just
-        /// before making changes to the field value.
+        /// Zero parameter wrapper for <see cref="StartUndo(string)"/>
+        /// </summary>
+        protected void StartUndo()
+        {
+            StartUndo(null);
+        }
+
+        /// <summary>
+        /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+        /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
         /// </summary>
         /// <param name="subPath">Additional path to append to the end of the current field path.</param>
-        protected void RecordStateForUndo(string subPath = null)
+        protected void StartUndo(string subPath)
         {
             if (context.Component != null)
             {
@@ -233,25 +240,12 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Checks if the system needs to record the state of the current object for undo purposes, and performs the record
-        /// if needed. This can be requested by calling <see cref="RecordStateForUndoRequested"/>
+        /// Finishes recording an undo command started via <see cref="StartUndo(string)"/>. If any changes are detected on
+        /// the field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
         /// </summary>
-        /// <param name="subPath">Additional path to append to the end of the current field path.</param>
-        protected void RecordStateForUndoIfNeeded(string subPath = null)
+        protected void EndUndo()
         {
-            if (!undoRecordNeeded)
-                return;
-
-            RecordStateForUndo(subPath);
-            undoRecordNeeded = false;
-        }
-
-        /// <summary>
-        /// Notifies the system that the next call to <see cref="RecordStateForUndoIfNeeded"/> should record the state.
-        /// </summary>
-        protected void RecordStateForUndoRequested()
-        {
-            undoRecordNeeded = true;
+            GameObjectUndo.ResolveDiffs();
         }
 
         /// <summary>

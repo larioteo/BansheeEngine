@@ -42,7 +42,7 @@ namespace bs.Editor
                 guiField.OnValueChanged += OnFieldValueChanged;
                 guiField.OnConfirm += x => OnFieldValueConfirm();
                 guiField.OnFocusLost += OnFieldValueConfirm;
-                guiField.OnFocusGained += RecordStateForUndoRequested;
+                guiField.OnFocusGained += StartUndo;
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -76,12 +76,14 @@ namespace bs.Editor
         /// <param name="newValue">New value of the 3D vector field.</param>
         private void OnFieldValueChanged(Vector4 newValue)
         {
-            RecordStateForUndoIfNeeded();
+            StartUndo();
 
             Quaternion quaternion = new Quaternion(newValue.x, newValue.y, newValue.y, newValue.w);
 
             property.SetValue(quaternion);
             state |= InspectableState.ModifyInProgress;
+
+            EndUndo();
         }
 
         /// <summary>

@@ -50,9 +50,12 @@ namespace bs.Editor
 
                     layersValue = layers;
 
-                    RecordStateForUndo();
+                    StartUndo();
+
                     property.SetValue(layers);
                     state |= InspectableState.ModifyInProgress | InspectableState.Modified;
+
+                    EndUndo();
                 };
 
                 layout.AddElement(layoutIndex, guiLayerMaskField);

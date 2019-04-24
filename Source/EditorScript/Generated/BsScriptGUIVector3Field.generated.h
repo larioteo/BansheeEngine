@@ -23,12 +23,15 @@ namespace bs
 	private:
 		void onValueChanged(const Vector3& p0);
 		void onComponentChanged(float p0, VectorComponent p1);
+		void onComponentFocusChanged(bool p0, VectorComponent p1);
 		void onConfirm(VectorComponent p0);
 
 		typedef void(BS_THUNKCALL *onValueChangedThunkDef) (MonoObject*, MonoObject* p0, MonoException**);
 		static onValueChangedThunkDef onValueChangedThunk;
 		typedef void(BS_THUNKCALL *onComponentChangedThunkDef) (MonoObject*, float p0, VectorComponent p1, MonoException**);
 		static onComponentChangedThunkDef onComponentChangedThunk;
+		typedef void(BS_THUNKCALL *onComponentFocusChangedThunkDef) (MonoObject*, bool p0, VectorComponent p1, MonoException**);
+		static onComponentFocusChangedThunkDef onComponentFocusChangedThunk;
 		typedef void(BS_THUNKCALL *onConfirmThunkDef) (MonoObject*, VectorComponent p0, MonoException**);
 		static onConfirmThunkDef onConfirmThunk;
 

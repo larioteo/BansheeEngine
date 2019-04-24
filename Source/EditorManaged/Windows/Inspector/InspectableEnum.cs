@@ -63,10 +63,12 @@ namespace bs.Editor
         /// <param name="newValue">Newly selected list box value.</param>
         private void OnFieldValueChanged(ulong newValue)
         {
-            RecordStateForUndo();
+            StartUndo();
 
             property.SetValue(newValue);
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

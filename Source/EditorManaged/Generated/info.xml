@@ -69,6 +69,13 @@
 			<param name="p1" type="VectorComponent">
 			</param>
 		</event>
+		<event native="onComponentFocusChanged" script="OnComponentFocusChanged" static="false">
+			<doc>Triggered when an individual component loses or gains focus.</doc>
+			<param name="p0" type="bool">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
 		<event native="onConfirm" script="OnConfirm" static="false">
 			<doc>Triggered when the user hits the Enter key with any of the component input boxes in focus.</doc>
 			<param name="p0" type="VectorComponent">
@@ -274,6 +281,13 @@
 			<param name="p1" type="VectorComponent">
 			</param>
 		</event>
+		<event native="onComponentFocusChanged" script="OnComponentFocusChanged" static="false">
+			<doc>Triggered when an individual component loses or gains focus.</doc>
+			<param name="p0" type="bool">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
 		<event native="onConfirm" script="OnConfirm" static="false">
 			<doc>Triggered when the user hits the Enter key with any of the component input boxes in focus.</doc>
 			<param name="p0" type="VectorComponent">
@@ -290,6 +304,13 @@
 		<event native="onComponentChanged" script="OnComponentChanged" static="false">
 			<doc>Reports the new value of an individual vector component when the user changes it.</doc>
 			<param name="p0" type="float">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onComponentFocusChanged" script="OnComponentFocusChanged" static="false">
+			<doc>Triggered when an individual component loses or gains focus.</doc>
+			<param name="p0" type="bool">
 			</param>
 			<param name="p1" type="VectorComponent">
 			</param>

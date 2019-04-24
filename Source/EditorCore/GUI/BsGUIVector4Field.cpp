@@ -32,6 +32,11 @@ namespace bs
 		mFieldZ->onConfirm.connect([this]() { inputConfirmed(VectorComponent::Z); });
 		mFieldW->onConfirm.connect([this]() { inputConfirmed(VectorComponent::W); });
 
+		mFieldX->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::X); });
+		mFieldY->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::Y); });
+		mFieldZ->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::Z); });
+		mFieldW->onFocusChanged.connect([this](bool val) { onComponentFocusChanged(val, VectorComponent::W); });
+
 		mLayout->removeElement(mLabel);
 
 		GUILayout* layout = mLayout->addNewElement<GUILayoutY>();

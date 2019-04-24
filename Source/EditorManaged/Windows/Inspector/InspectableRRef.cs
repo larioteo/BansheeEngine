@@ -73,10 +73,12 @@ namespace bs.Editor
             if (newValue != null && !newValue.IsLoaded && style.StyleFlags.HasFlag(InspectableFieldStyleFlags.LoadOnAssign))
                 Resources.Load<Resource>(newValue.UUID);
 
-            RecordStateForUndo();
+            StartUndo();
 
             property.SetValue(newValue);
             state = InspectableState.Modified;
+
+            EndUndo();
         }
     }
 

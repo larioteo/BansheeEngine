@@ -40,9 +40,18 @@ namespace bs.Editor
             {
                 guiField = new GUIVector3Field(new GUIContent(title));
                 guiField.OnComponentChanged += OnFieldValueChanged;
-                guiField.OnConfirm += x => OnFieldValueConfirm();
-                guiField.OnFocusLost += OnFieldValueConfirm;
-                guiField.OnFocusGained += RecordStateForUndoRequested;
+                guiField.OnConfirm += x =>
+                {
+                    OnFieldValueConfirm();
+                    StartUndo(x.ToString());
+                };
+                guiField.OnComponentFocusChanged += (focus, comp) =>
+                {
+                    if(focus)
+                        StartUndo(comp.ToString());
+                    else
+                        OnFieldValueConfirm();
+                };
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -81,8 +90,6 @@ namespace bs.Editor
         /// <param name="component">Component that was changed.</param>
         private void OnFieldValueChanged(float newValue, VectorComponent component)
         {
-            RecordStateForUndoIfNeeded(component.ToString());
-
             property.SetValue(guiField.Value);
             state |= InspectableState.ModifyInProgress;
         }
@@ -94,6 +101,8 @@ namespace bs.Editor
         {
             if (state.HasFlag(InspectableState.ModifyInProgress))
                 state |= InspectableState.Modified;
+
+            EndUndo();
         }
     }
 
