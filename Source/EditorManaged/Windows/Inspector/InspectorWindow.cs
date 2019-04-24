@@ -372,9 +372,10 @@ namespace bs.Editor
                     };
                     btnRevertPrefab.OnClick += () =>
                     {
-                        UndoRedo.RecordSO(activeSO, true, "Reverting \"" + activeSO.Name + "\" to prefab.");
-
+                        GameObjectUndo.RecordSceneObject(activeSO, true, "Reverting \"" + activeSO.Name + "\" to prefab.");
                         PrefabUtility.RevertPrefab(activeSO);
+
+                        GameObjectUndo.ResolveDiffs();
                         EditorApplication.SetSceneDirty();
                     };
                     btnBreakPrefab.OnClick += () =>

@@ -119,10 +119,10 @@ set(BS_BANSHEEEDITOR_INC_GUI
 set(BS_BANSHEEEDITOR_INC_UNDOREDO
 	"UndoRedo/BsEditorCommand.h"
 	"UndoRedo/BsCmdReparentSO.h"
-	"UndoRedo/BsCmdRecordSO.h"
 	"UndoRedo/BsCmdDeleteSO.h"
 	"UndoRedo/BsCmdCreateSO.h"
 	"UndoRedo/BsCmdCloneSO.h"
+	"UndoRedo/BsCmdRenameSO.h"
 	"UndoRedo/BsCmdInstantiateSO.h"
 	"UndoRedo/BsCmdBreakPrefab.h"
 	"UndoRedo/BsUndoRedo.h"
@@ -211,10 +211,10 @@ set(BS_BANSHEEEDITOR_SRC_SETTINGS
 set(BS_BANSHEEEDITOR_SRC_UNDOREDO
 	"UndoRedo/BsEditorCommand.cpp"
 	"UndoRedo/BsCmdReparentSO.cpp"
-	"UndoRedo/BsCmdRecordSO.cpp"
 	"UndoRedo/BsCmdDeleteSO.cpp"
 	"UndoRedo/BsCmdCreateSO.cpp"
 	"UndoRedo/BsCmdCloneSO.cpp"
+	"UndoRedo/BsCmdRenameSO.cpp"
 	"UndoRedo/BsCmdInstantiateSO.cpp"
 	"UndoRedo/BsCmdBreakPrefab.cpp"
 	"UndoRedo/BsUndoRedo.cpp"

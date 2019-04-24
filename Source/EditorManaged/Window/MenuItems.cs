@@ -24,10 +24,11 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Camera component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Camera component");
             Camera cam = so.AddComponent<Camera>();
             cam.Main = true;
 
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -41,8 +42,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Renderable component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Renderable component");
             so.AddComponent<Renderable>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -56,8 +59,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Particle System component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Particle System component");
             so.AddComponent<ParticleSystem>();
+            
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -71,8 +76,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Decal component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Decal component");
             so.AddComponent<Decal>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -86,9 +93,11 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Light component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Light component");
             Light light = so.AddComponent<Light>();
             light.Type = LightType.Radial;
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -102,9 +111,11 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Light component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Light component");
             Light light = so.AddComponent<Light>();
             light.Type = LightType.Spot;
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -118,9 +129,11 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Light component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Light component");
             Light light = so.AddComponent<Light>();
             light.Type = LightType.Directional;
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -134,8 +147,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added an Skybox component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added an Skybox component");
             so.AddComponent<Skybox>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -149,8 +164,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added an ReflectionProbe component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added an ReflectionProbe component");
             so.AddComponent<ReflectionProbe>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -164,8 +181,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a Light Probe Volume component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Light Probe Volume component");
             so.AddComponent<LightProbeVolume>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -179,8 +198,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added a GUIWidget component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a GUIWidget component");
             so.AddComponent<GUIWidget>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -199,9 +220,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a BoxCollider component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a BoxCollider component");
             so.AddComponent<BoxCollider>();
 
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -220,8 +242,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a SphereCollider component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a SphereCollider component");
             so.AddComponent<SphereCollider>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -240,8 +264,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a CapsuleCollider component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a CapsuleCollider component");
             so.AddComponent<CapsuleCollider>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -260,8 +286,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a MeshCollider component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a MeshCollider component");
             so.AddComponent<MeshCollider>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -280,8 +308,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a PlaneCollider component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a PlaneCollider component");
             so.AddComponent<PlaneCollider>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -300,8 +330,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a Rigidbody component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a Rigidbody component");
             so.AddComponent<Rigidbody>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -320,8 +352,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a CharacterController component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a CharacterController component");
             so.AddComponent<CharacterController>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -340,8 +374,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a FixedJoint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a FixedJoint component");
             so.AddComponent<FixedJoint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -360,8 +396,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a DistanceJoint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a DistanceJoint component");
             so.AddComponent<DistanceJoint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -380,8 +418,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a HingeJoint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a HingeJoint component");
             so.AddComponent<HingeJoint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -400,8 +440,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a SphericalJoint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a SphericalJoint component");
             so.AddComponent<SphericalJoint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -420,8 +462,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a SliderJoint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a SliderJoint component");
             so.AddComponent<SliderJoint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -440,8 +484,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a D6Joint component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a D6Joint component");
             so.AddComponent<D6Joint>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -460,8 +506,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a AudioListener component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a AudioListener component");
             so.AddComponent<AudioListener>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -480,8 +528,10 @@ namespace bs.Editor
                 FocusOnHierarchyOrScene();
             }
 
-            UndoRedo.RecordSO(so, false, "Added a AudioSource component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added a AudioSource component");
             so.AddComponent<AudioSource>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -495,8 +545,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added an Animation component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added an Animation component");
             so.AddComponent<Animation>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -511,8 +563,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, false, "Added an Bone component");
+            GameObjectUndo.RecordSceneObject(so, false, "Added an Bone component");
             so.AddComponent<Bone>();
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 
@@ -754,9 +808,10 @@ namespace bs.Editor
             if (so == null)
                 return;
 
-            UndoRedo.RecordSO(so, true, "Reverting \"" + so.Name + "\" to prefab.");
-
+            GameObjectUndo.RecordSceneObject(so, true, "Reverting \"" + so.Name + "\" to prefab.");
             PrefabUtility.RevertPrefab(so);
+
+            GameObjectUndo.ResolveDiffs();
             EditorApplication.SetSceneDirty();
         }
 

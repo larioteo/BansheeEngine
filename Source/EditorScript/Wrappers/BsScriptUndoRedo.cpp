@@ -8,7 +8,6 @@
 #include "BsMonoUtil.h"
 #include "BsScriptGameObjectManager.h"
 #include "UndoRedo/BsUndoRedo.h"
-#include "UndoRedo/BsCmdRecordSO.h"
 #include "UndoRedo/BsCmdCloneSO.h"
 #include "UndoRedo/BsCmdCreateSO.h"
 #include "UndoRedo/BsCmdDeleteSO.h"
@@ -40,7 +39,6 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_Clear", (void*)&ScriptUndoRedo::internal_Clear);
 		metaData.scriptClass->addInternalCall("Internal_GetTopCommandId", (void*)&ScriptUndoRedo::internal_GetTopCommandId);
 		metaData.scriptClass->addInternalCall("Internal_PopCommand", (void*)&ScriptUndoRedo::internal_PopCommand);
-		metaData.scriptClass->addInternalCall("Internal_RecordSO", (void*)&ScriptUndoRedo::internal_RecordSO);
 		metaData.scriptClass->addInternalCall("Internal_CloneSO", (void*)&ScriptUndoRedo::internal_CloneSO);
 		metaData.scriptClass->addInternalCall("Internal_CloneSOMulti", (void*)&ScriptUndoRedo::internal_CloneSOMulti);
 		metaData.scriptClass->addInternalCall("Internal_Instantiate", (void*)&ScriptUndoRedo::internal_Instantiate);
@@ -147,12 +145,6 @@ namespace bs
 	{
 		UndoRedo* undoRedo = thisPtr->mUndoRedo != nullptr ? thisPtr->mUndoRedo.get() : UndoRedo::instancePtr();
 		undoRedo->popCommand(id);
-	}
-
-	void ScriptUndoRedo::internal_RecordSO(ScriptSceneObject* soPtr, bool recordHierarchy, MonoString* description)
-	{
-		String nativeDescription = MonoUtil::monoToString(description);
-		CmdRecordSO::execute(soPtr->getHandle(), recordHierarchy, nativeDescription);
 	}
 
 	MonoObject* ScriptUndoRedo::internal_CloneSO(ScriptSceneObject* soPtr, MonoString* description)

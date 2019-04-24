@@ -118,19 +118,6 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Records a state of the entire scene object at a specific point and allows you to restore it to its original 
-        /// values as needed. Undo operation recorded in global undo/redo stack.
-        /// </summary>
-        /// <param name="so">Scene object to record.</param>
-        /// <param name="recordHierarchy">If true all children of this object will also be recorded.</param>
-        /// <param name="description">Optional description of what exactly the command does.</param>
-        public static void RecordSO(SceneObject so, bool recordHierarchy = false, string description = "")
-        {
-            if (so != null)
-                Internal_RecordSO(so.GetCachedPtr(), recordHierarchy, description);
-        }
-
-        /// <summary>
         /// Creates new scene object(s) by cloning existing objects. Undo operation recorded in global undo/redo stack.
         /// </summary>
         /// <param name="so">Scene object(s) to clone.</param>
@@ -298,9 +285,6 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetTopCommandId(IntPtr thisPtr);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_RecordSO(IntPtr soPtr, bool recordHierarchy, string description);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern SceneObject Internal_CloneSO(IntPtr soPtr, string description);

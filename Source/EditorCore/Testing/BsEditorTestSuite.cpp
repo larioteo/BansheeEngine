@@ -2,7 +2,6 @@
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "Testing/BsEditorTestSuite.h"
 #include "Scene/BsSceneObject.h"
-#include "UndoRedo/BsCmdRecordSO.h"
 #include "UndoRedo/BsCmdDeleteSO.h"
 #include "UndoRedo/BsUndoRedo.h"
 #include "Reflection/BsRTTIType.h"
@@ -15,6 +14,7 @@
 #include "Scene/BsPrefabDiff.h"
 #include "FileSystem/BsFileSystem.h"
 #include "Scene/BsSceneManager.h"
+#include "Scene/BsSerializedSceneObject.h"
 
 namespace bs
 {
@@ -439,10 +439,10 @@ namespace bs
 		cmpExternal->ref1 = so1_1;
 		cmpExternal->ref2 = static_object_cast<Component>(cmpA1_1);
 
-		CmdRecordSO::execute(so0_0);
+		auto serializedSO = bs_shared_ptr_new<SerializedSceneObject>(so0_0);
 		cmpB1_1->val1 = "ModifiedValue";
 		so0_0->setName("modified");
-		UndoRedo::instance().undo();
+		serializedSO->restore();
 
 		BS_TEST_ASSERT(!so0_0.isDestroyed());
 		BS_TEST_ASSERT(!so1_0.isDestroyed());

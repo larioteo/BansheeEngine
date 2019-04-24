@@ -49,7 +49,6 @@ namespace bs
 		static void internal_Clear(ScriptUndoRedo* thisPtr);
 		static UINT32 internal_GetTopCommandId(ScriptUndoRedo* thisPtr);
 		static void internal_PopCommand(ScriptUndoRedo* thisPtr, UINT32 id);
-		static void internal_RecordSO(ScriptSceneObject* soPtr, bool recordHierarchy, MonoString* description);
 		static MonoObject* internal_CloneSO(ScriptSceneObject* soPtr, MonoString* description);
 		static MonoArray* internal_CloneSOMulti(MonoArray* soPtrs, MonoString* description);
 		static MonoObject* internal_Instantiate(ScriptPrefab* prefabPtr, MonoString* description);

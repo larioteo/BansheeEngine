@@ -67,7 +67,6 @@ namespace bs
 		if (mSerializedObjectParentId != 0)
 			parent = static_object_cast<SceneObject>(GameObjectManager::instance().getObject(mSerializedObjectParentId));
 
-
 		HSceneObject* children = nullptr;
 		UINT32 numChildren = 0;
 		if (!mSceneObject.isDestroyed())

@@ -4,8 +4,8 @@
 #include "Scene/BsSceneObject.h"
 #include "Scene/BsSceneManager.h"
 #include "GUI/BsGUISkin.h"
-#include "UndoRedo/BsCmdRecordSO.h"
 #include "UndoRedo/BsCmdReparentSO.h"
+#include "UndoRedo/BsCmdRenameSO.h"
 #include "UndoRedo/BsCmdDeleteSO.h"
 #include "UndoRedo/BsCmdCloneSO.h"
 #include "UndoRedo/BsCmdCreateSO.h"
@@ -273,8 +273,7 @@ namespace bs
 		SceneTreeElement* sceneTreeElement = static_cast<SceneTreeElement*>(element);
 
 		HSceneObject so = sceneTreeElement->mSceneObject;
-		CmdRecordSO::execute(so, false, "Renamed \"" + so->getName() + "\"");
-		so->setName(name);
+		CmdRenameSO::execute(so, name);
 
 		onModified();
 	}
