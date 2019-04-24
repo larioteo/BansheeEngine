@@ -289,15 +289,23 @@ namespace bs.Editor
             int depth, GUILayoutY layout, FieldOverrideCallback overrideCallback = null)
         {
             // Retrieve fields and sort by order
-            SerializableField[] fields = obj.Fields;
-            Array.Sort(fields,
-                (x, y) =>
-                {
-                    int orderX = x.Flags.HasFlag(SerializableFieldAttributes.Order) ? x.Style.Order : 0;
-                    int orderY = y.Flags.HasFlag(SerializableFieldAttributes.Order) ? y.Style.Order : 0;
+            List<SerializableField> fields = new List<SerializableField>();
 
-                    return orderX.CompareTo(orderY);
-                });
+            while (obj != null)
+            {
+                SerializableField[] subTypeFields = obj.Fields;
+                Array.Sort(subTypeFields,
+                    (x, y) =>
+                    {
+                        int orderX = x.Flags.HasFlag(SerializableFieldAttributes.Order) ? x.Style.Order : 0;
+                        int orderY = y.Flags.HasFlag(SerializableFieldAttributes.Order) ? y.Style.Order : 0;
+
+                        return orderX.CompareTo(orderY);
+                    });
+
+                fields.AddRange(subTypeFields);
+                obj = obj.Base;
+            }
 
             // Generate per-field GUI while grouping by category
             int rootIndex = 0;
