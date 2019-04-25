@@ -24,6 +24,7 @@ after_build:
  - ps: Move-Item -Path ../install/bin/* -Destination ./
  - ps: mkdir bin
  - ps: Move-Item -Path ./Mono -Destination ./bin
+ - ps: Move-Item -Path ./Assemblies -Destination ./bin
  - ps: cd ..
  - ps: >-
       if($env:APPVEYOR_REPO_TAG -eq "true") 
