@@ -561,6 +561,7 @@ namespace bs.Editor
 
                         if (DragDrop.DropInProgress)
                         {
+                            GameObjectUndo.RecordSceneObject(activeSO, false, $"Added component \"{draggedComponentType.Name}\" to \"{activeSO.Name}\"");
                             activeSO.AddComponent(draggedComponentType);
 
                             modifyState = InspectableState.Modified;
@@ -645,10 +646,12 @@ namespace bs.Editor
         {
             if (activeSO != null)
             {
+                GameObjectUndo.RecordSceneObject(activeSO, false, $"Removed component \"{componentType.Name}\" from \"{activeSO.Name}\"");
                 activeSO.RemoveComponent(componentType);
 
                 modifyState = InspectableState.Modified;
                 EditorApplication.SetSceneDirty();
+                GameObjectUndo.ResolveDiffs();
             }
         }
 

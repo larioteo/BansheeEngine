@@ -109,6 +109,8 @@ namespace bs.Editor
                         isDragged = true;
 
                         SceneObject[] selectedSceneObjects = Selection.SceneObjects;
+                        GameObjectUndo.RecordSceneObjectHeader(selectedSceneObjects);
+
                         activeSelection = new HandledObject[selectedSceneObjects.Length];
                         for (int i = 0; i < selectedSceneObjects.Length; i++)
                             activeSelection[i] = new HandledObject(selectedSceneObjects[i]);
@@ -119,6 +121,9 @@ namespace bs.Editor
                 }
                 else
                 {
+                    if (isDragged)
+                        GameObjectUndo.ResolveDiffs();
+
                     isDragged = false;
                     activeSelection = null;
                 }

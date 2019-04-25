@@ -65,15 +65,15 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Contains information about a scene object that needs its diff recorded. Note this will not record the entire
+        /// Contains information about scene objects that needs their diff recorded. Note this will not record the entire
         /// scene object, but rather just its name, transform, active state and potentially other similar properties.
         /// It's components as well as hierarchy state are ignored.
         /// </summary>
         private struct SceneObjectHeaderToRecord
         {
-            private SceneObject obj;
+            private SceneObject[] objs;
             private string path;
-            private SceneObjectState orgState;
+            private SceneObjectState[] orgStates;
 
             /// <summary>
             /// Creates a new object instance, recording the current state of the scene object header.
@@ -84,10 +84,28 @@ namespace bs.Editor
             /// </param>
             internal SceneObjectHeaderToRecord(SceneObject obj, string path)
             {
-                this.obj = obj;
+                this.objs = new [] { obj };
                 this.path = path;
 
-                orgState = SceneObjectState.Create(obj);
+                orgStates = new [] { SceneObjectState.Create(obj) };
+            }
+
+            /// <summary>
+            /// Creates a new object instance, recording the current state of the scene object header for multiple scene
+            /// objects.
+            /// </summary>
+            /// <param name="objs">Scene objects to record the state of.</param>
+            /// <param name="path">
+            /// Path to the field which should be focused when performing the undo/redo operation.
+            /// </param>
+            internal SceneObjectHeaderToRecord(SceneObject[] objs, string path)
+            {
+                this.objs = objs;
+                this.path = path;
+
+                orgStates = new SceneObjectState[objs.Length];
+                for(int i = 0; i < orgStates.Length; i++)
+                    orgStates[i] = SceneObjectState.Create(objs[i]);
             }
 
             /// <summary>
@@ -96,15 +114,29 @@ namespace bs.Editor
             /// </summary>
             internal void RecordCommand()
             {
-                if (obj.IsDestroyed)
+                if (objs == null)
                     return;
 
-                SceneObjectDiff oldToNew = SceneObjectDiff.Create(orgState, SceneObjectState.Create(obj));
-                if (oldToNew.flags == 0)
-                    return;
+                List<SceneObjectHeaderUndo> headers = new List<SceneObjectHeaderUndo>();
+                for (int i = 0; i < objs.Length; i++)
+                {
+                    SceneObject obj = objs[i];
+                    SceneObjectState orgState = orgStates[i];
 
-                SceneObjectDiff newToOld = SceneObjectDiff.Create(SceneObjectState.Create(obj), orgState);
-                UndoRedo.Global.RegisterCommand(new RecordSceneObjectHeaderUndo(obj, path, oldToNew, newToOld));
+                    if (obj.IsDestroyed)
+                        continue;
+
+                    SceneObjectDiff oldToNew = SceneObjectDiff.Create(orgState, SceneObjectState.Create(obj));
+                    if (oldToNew.flags == 0)
+                        continue;
+
+                    SceneObjectDiff newToOld = SceneObjectDiff.Create(SceneObjectState.Create(obj), orgState);
+                    headers.Add(new SceneObjectHeaderUndo(obj, newToOld, oldToNew));
+
+                }
+
+                if (headers.Count > 0)
+                    UndoRedo.Global.RegisterCommand(new RecordSceneObjectHeaderUndo(headers, path));
             }
         }
 
@@ -149,7 +181,6 @@ namespace bs.Editor
             }
         }
 
-
         private static List<ComponentToRecord> components = new List<ComponentToRecord>();
         private static List<SceneObjectHeaderToRecord> sceneObjectHeaders = new List<SceneObjectHeaderToRecord>();
         private static List<SceneObjectToRecord> sceneObjects = new List<SceneObjectToRecord>();
@@ -185,6 +216,21 @@ namespace bs.Editor
         public static void RecordSceneObjectHeader(SceneObject obj, string fieldName)
         {
             SceneObjectHeaderToRecord so = new SceneObjectHeaderToRecord(obj, fieldName);
+            sceneObjectHeaders.Add(so);
+        }
+
+        /// <summary>
+        /// Records the current state of the provided scene object header, and generates a diff with the next state at the
+        /// end of the frame. If change is detected an undo operation will be recorded. Generally you want to call this
+        /// just before you are about to make a change to the scene object header.
+        ///
+        /// Note this will not record the entire scene object, but rather just its name, transform, active state and
+        /// potentially other similar properties. It's components as well as hierarchy state are ignored.
+        /// </summary>
+        /// <param name="objs">Scene objects to record the state of.</param>
+        public static void RecordSceneObjectHeader(SceneObject[] objs)
+        {
+            SceneObjectHeaderToRecord so = new SceneObjectHeaderToRecord(objs, null);
             sceneObjectHeaders.Add(so);
         }
 
@@ -335,6 +381,23 @@ namespace bs.Editor
     }
 
     /// <summary>
+    /// Contains information about two separate states of a scene object header.
+    /// </summary>
+    internal struct SceneObjectHeaderUndo
+    {
+        internal SceneObject obj;
+        internal SceneObjectDiff newToOld;
+        internal SceneObjectDiff oldToNew;
+
+        internal SceneObjectHeaderUndo(SceneObject obj, SceneObjectDiff newToOld, SceneObjectDiff oldToNew)
+        {
+            this.obj = obj;
+            this.newToOld = newToOld;
+            this.oldToNew = oldToNew;
+        }
+    }
+
+    /// <summary>
     /// Stores the field changes in a <see cref="SceneObject"/> as a difference between two states. Allows those changes to
     /// be reverted and re-applied. Does not record changes to scene object components or hierarchy, but just the fields
     /// considered its header (such as name, local transform and active state).
@@ -342,49 +405,45 @@ namespace bs.Editor
     [SerializeObject]
     internal class RecordSceneObjectHeaderUndo : UndoableCommand
     {
-        private SceneObject obj;
         private string fieldPath;
-        private SceneObjectDiff newToOld;
-        private SceneObjectDiff oldToNew;
+        private List<SceneObjectHeaderUndo> headers;
 
         private RecordSceneObjectHeaderUndo() { }
 
         /// <summary>
-        /// Creates the new scene object undo command.
+        /// Creates the new scene object header undo command.
         /// </summary>
-        /// <param name="obj">Scene object on which to apply the performed changes.</param>
+        /// <param name="headers">Information about recorded states of scene object headers.</param>
         /// <param name="fieldPath">
         /// Optional path that controls which is the field being modified and should receive input focus when the command
         /// is executed. Note that the diffs applied have no restriction on how many fields they can modify at once, but
         /// only one field will receive focus.</param>
-        /// <param name="oldToNew">
-        /// Difference that can be applied to the old object in order to get the new object state.
-        /// </param>
-        /// <param name="newToOld">
-        /// Difference that can be applied to the new object in order to get the old object state.
-        /// </param>
-        public RecordSceneObjectHeaderUndo(SceneObject obj, string fieldPath, SceneObjectDiff oldToNew, 
-            SceneObjectDiff newToOld)
+        public RecordSceneObjectHeaderUndo(List<SceneObjectHeaderUndo> headers, string fieldPath)
         {
-            this.obj = obj;
+            this.headers = headers;
             this.fieldPath = fieldPath;
-            this.oldToNew = oldToNew;
-            this.newToOld = newToOld;
         }
 
         /// <inheritdoc/>
         protected override void Commit()
         {
-            if (obj == null)
+            if (headers == null)
                 return;
 
-            if (obj.IsDestroyed)
+            foreach (var header in headers)
             {
-                Debug.LogWarning("Attempting to commit state on a destroyed game-object.");
-                return;
+                if (header.obj == null)
+                    continue;
+
+                if (header.obj.IsDestroyed)
+                {
+                    Debug.LogWarning("Attempting to commit state on a destroyed game-object.");
+                    continue;
+                }
+
+                header.oldToNew.Apply(header.obj);
             }
 
-            oldToNew.Apply(obj);
             FocusOnField();
             RefreshInspector();
         }
@@ -392,16 +451,23 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected override void Revert()
         {
-            if (obj == null)
+            if (headers == null)
                 return;
 
-            if (obj.IsDestroyed)
+            foreach (var header in headers)
             {
-                Debug.LogWarning("Attempting to revert state on a destroyed game-object.");
-                return;
+                if (header.obj == null)
+                    continue;
+
+                if (header.obj.IsDestroyed)
+                {
+                    Debug.LogWarning("Attempting to revert state on a destroyed game-object.");
+                    continue;
+                }
+
+                header.newToOld.Apply(header.obj);
             }
 
-            newToOld.Apply(obj);
             FocusOnField();
             RefreshInspector();
         }
@@ -412,15 +478,29 @@ namespace bs.Editor
         /// </summary>
         private void FocusOnField()
         {
-            if (obj != null)
+            if (headers != null && headers.Count > 0)
             {
-                if (Selection.SceneObject != obj)
-                    Selection.SceneObject = obj;
+                if (headers.Count == 1)
+                {
+                    if (Selection.SceneObject != headers[0].obj)
+                        Selection.SceneObject = headers[0].obj;
+                }
+                else
+                {
+                    List<SceneObject> objs = new List<SceneObject>();
+                    foreach (var header in headers)
+                    {
+                        if(header.obj != null)
+                            objs.Add(header.obj);
+                    }
+
+                    Selection.SceneObjects = objs.ToArray();
+                }
 
                 if (!string.IsNullOrEmpty(fieldPath))
                 {
                     InspectorWindow inspectorWindow = EditorWindow.GetWindow<InspectorWindow>();
-                    inspectorWindow?.FocusOnField(obj.UUID, fieldPath);
+                    inspectorWindow?.FocusOnField(headers[0].obj.UUID, fieldPath);
                 }
             }
         }
