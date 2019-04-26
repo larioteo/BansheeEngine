@@ -30,6 +30,81 @@ namespace bs
 	/** Spacing between two internal elements, in pixels. */
 	static constexpr UINT32 ELEM_SPACING = 5;
 
+	namespace impl
+	{
+		template<class T, class F>
+		void addOnConfirmCallback(T* field, F func)
+		{
+			field->onConfirm.connect([func]() { func(VectorComponent::X); });
+		}
+
+		template<class F>
+		void addOnConfirmCallback(GUIVector2Field* field, F func)
+		{
+			field->onConfirm.connect([func](VectorComponent x) { func(x); });
+		}
+
+		template<class F>
+		void addOnConfirmCallback(GUIVector3Field* field, F func)
+		{
+			field->onConfirm.connect([func](VectorComponent x) { func(x); });
+		}
+
+		template<class T, class F>
+		void addOnValueChangedCallback(T* field, F func)
+		{
+			field->onValueChanged.connect([func](float val) { func(val, VectorComponent::X); });
+		}
+
+		template<class F>
+		void addOnValueChangedCallback(GUIVector2Field* field, F func)
+		{
+			field->onComponentChanged.connect([func](float val, VectorComponent x) { func(val, x); });
+		}
+
+		template<class F>
+		void addOnValueChangedCallback(GUIVector3Field* field, F func)
+		{
+			field->onComponentChanged.connect([func](float val, VectorComponent x) { func(val, x); });
+		}
+
+		template<class T, class F>
+		void addOnInputChangedCallback(T* field, F func)
+		{
+			field->onFocusChanged.connect([func](bool val) { func(val, VectorComponent::X); });
+		}
+
+		template<class F>
+		void addOnInputChangedCallback(GUIVector2Field* field, F func)
+		{
+			field->onComponentFocusChanged.connect([func](bool val, VectorComponent x) { func(val, x); });
+		}
+
+		template<class F>
+		void addOnInputChangedCallback(GUIVector3Field* field, F func)
+		{
+			field->onComponentFocusChanged.connect([func](bool val, VectorComponent x) { func(val, x); });
+		}
+
+		template<class T>
+		void setFocus(T* field, VectorComponent component, bool focus)
+		{
+			field->setFocus(focus);
+		}
+
+		template<>
+		void setFocus(GUIVector2Field* field, VectorComponent component, bool focus)
+		{
+			field->setInputFocus(component, focus);
+		}
+
+		template<>
+		void setFocus(GUIVector3Field* field, VectorComponent component, bool focus)
+		{
+			field->setInputFocus(component, focus);
+		}
+	}
+
 	template<class T, class SELF>
 	TGUIDistributionField<T, SELF>::TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
@@ -166,6 +241,33 @@ namespace bs
 		return false;
 	}
 
+	template <class T, class SELF>
+	void TGUIDistributionField<T, SELF>::setInputFocus(RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus)
+	{
+		switch(mPropertyType)
+		{
+		case PDT_Constant:
+		case PDT_RandomRange:
+			if(rangeComponent == RangeComponent::Min)
+				impl::setFocus(mMinInput, vectorComponent, focus);
+			else
+				impl::setFocus(mMaxInput, vectorComponent, focus);
+
+			break;
+		case PDT_Curve:
+		case PDT_RandomCurveRange:
+		{
+			for (UINT32 i = 0; i < NumComponents; i++)
+			{
+				if ((VectorComponent)i == vectorComponent && mCurveDisplay[i])
+					mCurveDisplay[i]->setFocus(focus);
+			}
+		}
+			break;
+		}
+		
+	}
+
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::setTint(const Color& color)
 	{
@@ -277,24 +379,6 @@ namespace bs
 		}
 	}
 
-	template<class T, class F> 
-	void addOnConfirmCallback(T* field, F func)
-	{
-		field->onConfirm.connect(func);
-	}
-
-	template<class F> 
-	void addOnConfirmCallback(GUIVector2Field* field, F func)
-	{
-		field->onConfirm.connect([func](VectorComponent) { func(); });
-	}
-
-	template<class F> 
-	void addOnConfirmCallback(GUIVector3Field* field, F func)
-	{
-		field->onConfirm.connect([func](VectorComponent) { func(); });
-	}
-
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::rebuild()
 	{
@@ -320,14 +404,22 @@ namespace bs
 				mCurveDisplay[i] = nullptr;
 
 			mMinInput->setValue(mMinConstant);
-			mMinInput->onValueChanged.connect([this](T value)
-			{
-				mMinConstant = value;
-				mValue = TDistribution<T>(value);
 
-				onConstantModified();
+			impl::addOnValueChangedCallback(mMinInput, [this](float value, VectorComponent component)
+			{
+				mMinConstant = mMinInput->getValue();
+				mValue = TDistribution<T>(mMinConstant);
+
+				onConstantModified(RangeComponent::Min, component);
 			});
-			addOnConfirmCallback(mMinInput, [this]() { onConstantConfirmed(); });
+			impl::addOnConfirmCallback(mMinInput, [this](VectorComponent component)
+			{
+				onConstantConfirmed(RangeComponent::Min, component);
+			});
+			impl::addOnInputChangedCallback(mMinInput, [this](bool focus, VectorComponent component)
+			{
+				onConstantFocusChanged(focus, RangeComponent::Min, component);
+			});
 
 			valueLayout->addElement(mMinInput);
 			break;
@@ -339,24 +431,40 @@ namespace bs
 				mCurveDisplay[i] = nullptr;
 
 			mMinInput->setValue(mMinConstant);
-			mMinInput->onValueChanged.connect([this](T value)
-			{
-				mMinConstant = value;
-				mValue = TDistribution<T>(value, mMaxConstant);
 
-				onConstantModified();
+			impl::addOnValueChangedCallback(mMinInput, [this](float value, VectorComponent component)
+			{
+				mMinConstant = mMinInput->getValue();
+				mValue = TDistribution<T>(mMinConstant, mMaxConstant);
+
+				onConstantModified(RangeComponent::Min, component);
 			});
-			addOnConfirmCallback(mMinInput, [this]() { onConstantConfirmed(); });
+			impl::addOnConfirmCallback(mMinInput, [this](VectorComponent component)
+			{
+				onConstantConfirmed(RangeComponent::Min, component);
+			});
+			impl::addOnInputChangedCallback(mMinInput, [this](bool focus, VectorComponent component)
+			{
+				onConstantFocusChanged(focus, RangeComponent::Min, component);
+			});
 
 			mMaxInput->setValue(mMaxConstant);
-			mMaxInput->onValueChanged.connect([this](T value)
-			{
-				mMaxConstant = value;
-				mValue = TDistribution<T>(mMinConstant, value);
 
-				onConstantModified();
+			impl::addOnValueChangedCallback(mMaxInput, [this](float value, VectorComponent component)
+			{
+				mMaxConstant = mMaxInput->getValue();
+				mValue = TDistribution<T>(mMinConstant, mMaxConstant);
+
+				onConstantModified(RangeComponent::Max, component);
 			});
-			addOnConfirmCallback(mMaxInput, [this]() { onConstantConfirmed(); });
+			impl::addOnConfirmCallback(mMaxInput, [this](VectorComponent component)
+			{
+				onConstantConfirmed(RangeComponent::Max, component);
+			});
+			impl::addOnInputChangedCallback(mMaxInput, [this](bool focus, VectorComponent component)
+			{
+				onConstantFocusChanged(focus, RangeComponent::Max, component);
+			});
 
 			mLabels[0] = valueLayout->addNewElement<GUILabel>(HString("Min."), "HeaderLight");
 			valueLayout->addElement(mMinInput);
@@ -386,13 +494,12 @@ namespace bs
 
 				mCurveDisplay[i]->setPadding(3);
 				mCurveDisplay[i]->centerAndZoom();
-				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
+				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked((VectorComponent)i); });
 
 				if(i != 0)
 					valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);
 
 				valueLayout->addElement(mCurveDisplay[i]);
-
 			}
 
 			break;
@@ -417,7 +524,7 @@ namespace bs
 				mCurveDisplay[i]->setCurveRange(mMinCurve[i], mMaxCurve[i]);
 				mCurveDisplay[i]->setPadding(3);
 				mCurveDisplay[i]->centerAndZoom();
-				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked(i); });
+				mCurveDisplay[i]->onClicked.connect([this,i]() { onClicked((VectorComponent)i); });
 
 				if(i != 0)
 					valueLayout->addNewElement<GUIFixedSpace>(ELEM_SPACING);

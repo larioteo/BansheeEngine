@@ -135,6 +135,29 @@
 	</enum>
 	<class native="GUIVector2DistributionField" script="GUIVector2DistributionField">
 		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays an input field for a 2D vector distribution.</doc>
+		<event native="onConstantModified" script="OnConstantModified" static="false">
+			<doc>Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantConfirmed" script="OnConstantConfirmed" static="false">
+			<doc>Triggered when the user confirms inputs in the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantFocusChanged" script="OnConstantFocusChanged" static="false">
+			<doc>Triggered when a GUI field representing an individual component loses or gains focus. This only applies to input fields representing the non-curve (constant) distribution types.</doc>
+			<param name="p0" type="bool">
+			</param>
+			<param name="p1" type="RangeComponent">
+			</param>
+			<param name="p2" type="VectorComponent">
+			</param>
+		</event>
 	</class>
 	<enum native="EditorToggleIcon" script="EditorToggleIcon">
 		<doc>Types of icons used in various areas throughout the editor, for toggleable elements.</doc>
@@ -256,9 +279,55 @@
 	</class>
 	<class native="GUIFloatDistributionField" script="GUIFloatDistributionField">
 		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays an input field for a floating point distribution.</doc>
+		<event native="onConstantModified" script="OnConstantModified" static="false">
+			<doc>Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantConfirmed" script="OnConstantConfirmed" static="false">
+			<doc>Triggered when the user confirms inputs in the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantFocusChanged" script="OnConstantFocusChanged" static="false">
+			<doc>Triggered when a GUI field representing an individual component loses or gains focus. This only applies to input fields representing the non-curve (constant) distribution types.</doc>
+			<param name="p0" type="bool">
+			</param>
+			<param name="p1" type="RangeComponent">
+			</param>
+			<param name="p2" type="VectorComponent">
+			</param>
+		</event>
 	</class>
 	<class native="GUIVector3DistributionField" script="GUIVector3DistributionField">
 		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays an input field for a 3D vector distribution.</doc>
+		<event native="onConstantModified" script="OnConstantModified" static="false">
+			<doc>Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantConfirmed" script="OnConstantConfirmed" static="false">
+			<doc>Triggered when the user confirms inputs in the non-curve (constant) values of the distribution. Only relevant  if the distribution is not a curve distribution.</doc>
+			<param name="p0" type="RangeComponent">
+			</param>
+			<param name="p1" type="VectorComponent">
+			</param>
+		</event>
+		<event native="onConstantFocusChanged" script="OnConstantFocusChanged" static="false">
+			<doc>Triggered when a GUI field representing an individual component loses or gains focus. This only applies to input fields representing the non-curve (constant) distribution types.</doc>
+			<param name="p0" type="bool">
+			</param>
+			<param name="p1" type="RangeComponent">
+			</param>
+			<param name="p2" type="VectorComponent">
+			</param>
+		</event>
 	</class>
 	<struct native="SceneTreeViewElement" script="SceneTreeViewElement">
 		<doc>Information about a single element in GUISceneTreeView.</doc>

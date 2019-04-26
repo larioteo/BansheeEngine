@@ -106,21 +106,42 @@ namespace bs.Editor
 
 		/// <summary>
 		/// Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution.  
-		/// Provides the sequential index of the clicked curve (0 - x, 1 - y, 2 - z).
+		/// Provides the index of the clicked curve.
 		/// </summary>
-		partial void OnClicked(int p0);
+		partial void OnClicked(VectorComponent p0);
 
 		/// <summary>
-		/// Triggered when the user modifies either of the non-curve (constant) values of the distribution. Only relevant if the 
+		/// Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant  if 
+		/// the distribution is not a curve distribution.
+		/// </summary>
+		public event Action<RangeComponent, VectorComponent> OnConstantModified;
+
+		/// <summary>
+		/// Triggered when the user confirms inputs in the non-curve (constant) values of the distribution. Only relevant  if the 
 		/// distribution is not a curve distribution.
 		/// </summary>
-		partial void OnConstantModified();
+		public event Action<RangeComponent, VectorComponent> OnConstantConfirmed;
 
 		/// <summary>
-		/// Triggered when the user confirms inputs in either of the non-curve (constant) values of the distribution. Only  
-		/// relevant if the distribution is not a curve distribution.
+		/// Triggered when a GUI field representing an individual component loses or gains focus. This only applies to input 
+		/// fields representing the non-curve (constant) distribution types.
 		/// </summary>
-		partial void OnConstantConfirmed();
+		public event Action<bool, RangeComponent, VectorComponent> OnConstantFocusChanged;
+
+		/// <summary>Sets input focus to a specific component&apos;s input box.</summary>
+		/// <param name="rangeComponent">
+		/// Whether to focus on the minimum or the maximum part of the range. Only relevant if the distribution represents a 
+		/// constant range.
+		/// </param>
+		/// <param name="vectorComponent">
+		/// Vector component to focus on. Only relevant of the distribution constant is a vector type, and if the current 
+		/// distribution type is a non-curve (constant) type.
+		/// </param>
+		/// <param name="focus">True to enable focus, false to disable.</param>
+		public void SetInputFocus(RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus)
+		{
+			Internal_setInputFocus(mCachedPtr, rangeComponent, vectorComponent, focus);
+		}
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern FloatDistribution Internal_getValue(IntPtr thisPtr);
@@ -131,6 +152,8 @@ namespace bs.Editor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Internal_hasInputFocus(IntPtr thisPtr);
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void Internal_setInputFocus(IntPtr thisPtr, RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus);
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, int labelWidth, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create0(GUIFloatDistributionField managedInstance, ref GUIContent labelContent, string style);
@@ -140,17 +163,21 @@ namespace bs.Editor
 		private static extern void Internal_create2(GUIFloatDistributionField managedInstance, LocString labelText, string style);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_create3(GUIFloatDistributionField managedInstance, string style);
-		private void Internal_onClicked(int p0)
+		private void Internal_onClicked(VectorComponent p0)
 		{
 			OnClicked(p0);
 		}
-		private void Internal_onConstantModified()
+		private void Internal_onConstantModified(RangeComponent p0, VectorComponent p1)
 		{
-			OnConstantModified();
+			OnConstantModified?.Invoke(p0, p1);
 		}
-		private void Internal_onConstantConfirmed()
+		private void Internal_onConstantConfirmed(RangeComponent p0, VectorComponent p1)
 		{
-			OnConstantConfirmed();
+			OnConstantConfirmed?.Invoke(p0, p1);
+		}
+		private void Internal_onConstantFocusChanged(bool p0, RangeComponent p1, VectorComponent p2)
+		{
+			OnConstantFocusChanged?.Invoke(p0, p1, p2);
 		}
 	}
 

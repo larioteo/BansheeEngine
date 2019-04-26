@@ -15,13 +15,15 @@ namespace bs
 	ScriptGUIVector3DistributionField::onClickedThunkDef ScriptGUIVector3DistributionField::onClickedThunk; 
 	ScriptGUIVector3DistributionField::onConstantModifiedThunkDef ScriptGUIVector3DistributionField::onConstantModifiedThunk; 
 	ScriptGUIVector3DistributionField::onConstantConfirmedThunkDef ScriptGUIVector3DistributionField::onConstantConfirmedThunk; 
+	ScriptGUIVector3DistributionField::onConstantFocusChangedThunkDef ScriptGUIVector3DistributionField::onConstantFocusChangedThunk; 
 
 	ScriptGUIVector3DistributionField::ScriptGUIVector3DistributionField(MonoObject* managedInstance, GUIVector3DistributionField* value)
 		:TScriptGUIElement(managedInstance, value)
 	{
 		value->onClicked.connect(std::bind(&ScriptGUIVector3DistributionField::onClicked, this, std::placeholders::_1));
-		value->onConstantModified.connect(std::bind(&ScriptGUIVector3DistributionField::onConstantModified, this));
-		value->onConstantConfirmed.connect(std::bind(&ScriptGUIVector3DistributionField::onConstantConfirmed, this));
+		value->onConstantModified.connect(std::bind(&ScriptGUIVector3DistributionField::onConstantModified, this, std::placeholders::_1, std::placeholders::_2));
+		value->onConstantConfirmed.connect(std::bind(&ScriptGUIVector3DistributionField::onConstantConfirmed, this, std::placeholders::_1, std::placeholders::_2));
+		value->onConstantFocusChanged.connect(std::bind(&ScriptGUIVector3DistributionField::onConstantFocusChanged, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 	}
 
 	void ScriptGUIVector3DistributionField::initRuntimeData()
@@ -30,30 +32,37 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_setValue", (void*)&ScriptGUIVector3DistributionField::Internal_setValue);
 		metaData.scriptClass->addInternalCall("Internal_getType", (void*)&ScriptGUIVector3DistributionField::Internal_getType);
 		metaData.scriptClass->addInternalCall("Internal_hasInputFocus", (void*)&ScriptGUIVector3DistributionField::Internal_hasInputFocus);
+		metaData.scriptClass->addInternalCall("Internal_setInputFocus", (void*)&ScriptGUIVector3DistributionField::Internal_setInputFocus);
 		metaData.scriptClass->addInternalCall("Internal_create", (void*)&ScriptGUIVector3DistributionField::Internal_create);
 		metaData.scriptClass->addInternalCall("Internal_create0", (void*)&ScriptGUIVector3DistributionField::Internal_create0);
 		metaData.scriptClass->addInternalCall("Internal_create1", (void*)&ScriptGUIVector3DistributionField::Internal_create1);
 		metaData.scriptClass->addInternalCall("Internal_create2", (void*)&ScriptGUIVector3DistributionField::Internal_create2);
 		metaData.scriptClass->addInternalCall("Internal_create3", (void*)&ScriptGUIVector3DistributionField::Internal_create3);
 
-		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "int")->getThunk();
-		onConstantModifiedThunk = (onConstantModifiedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantModified", "")->getThunk();
-		onConstantConfirmedThunk = (onConstantConfirmedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantConfirmed", "")->getThunk();
+		onClickedThunk = (onClickedThunkDef)metaData.scriptClass->getMethodExact("Internal_onClicked", "VectorComponent")->getThunk();
+		onConstantModifiedThunk = (onConstantModifiedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantModified", "RangeComponent,VectorComponent")->getThunk();
+		onConstantConfirmedThunk = (onConstantConfirmedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantConfirmed", "RangeComponent,VectorComponent")->getThunk();
+		onConstantFocusChangedThunk = (onConstantFocusChangedThunkDef)metaData.scriptClass->getMethodExact("Internal_onConstantFocusChanged", "bool,RangeComponent,VectorComponent")->getThunk();
 	}
 
-	void ScriptGUIVector3DistributionField::onClicked(int32_t p0)
+	void ScriptGUIVector3DistributionField::onClicked(VectorComponent p0)
 	{
 		MonoUtil::invokeThunk(onClickedThunk, getManagedInstance(), p0);
 	}
 
-	void ScriptGUIVector3DistributionField::onConstantModified()
+	void ScriptGUIVector3DistributionField::onConstantModified(RangeComponent p0, VectorComponent p1)
 	{
-		MonoUtil::invokeThunk(onConstantModifiedThunk, getManagedInstance());
+		MonoUtil::invokeThunk(onConstantModifiedThunk, getManagedInstance(), p0, p1);
 	}
 
-	void ScriptGUIVector3DistributionField::onConstantConfirmed()
+	void ScriptGUIVector3DistributionField::onConstantConfirmed(RangeComponent p0, VectorComponent p1)
 	{
-		MonoUtil::invokeThunk(onConstantConfirmedThunk, getManagedInstance());
+		MonoUtil::invokeThunk(onConstantConfirmedThunk, getManagedInstance(), p0, p1);
+	}
+
+	void ScriptGUIVector3DistributionField::onConstantFocusChanged(bool p0, RangeComponent p1, VectorComponent p2)
+	{
+		MonoUtil::invokeThunk(onConstantFocusChangedThunk, getManagedInstance(), p0, p1, p2);
 	}
 	MonoObject* ScriptGUIVector3DistributionField::Internal_getValue(ScriptGUIVector3DistributionField* thisPtr)
 	{
@@ -96,6 +105,11 @@ namespace bs
 		__output = tmp__output;
 
 		return __output;
+	}
+
+	void ScriptGUIVector3DistributionField::Internal_setInputFocus(ScriptGUIVector3DistributionField* thisPtr, RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus)
+	{
+		static_cast<GUIVector3DistributionField*>(thisPtr->getGUIElement())->setInputFocus(rangeComponent, vectorComponent, focus);
 	}
 
 	void ScriptGUIVector3DistributionField::Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style)

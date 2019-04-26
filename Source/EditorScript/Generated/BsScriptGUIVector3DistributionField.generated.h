@@ -7,6 +7,8 @@
 #include "../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 #include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
+#include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
+#include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 
 namespace bs
 {
@@ -21,21 +23,25 @@ namespace bs
 		ScriptGUIVector3DistributionField(MonoObject* managedInstance, GUIVector3DistributionField* value);
 
 	private:
-		void onClicked(int32_t p0);
-		void onConstantModified();
-		void onConstantConfirmed();
+		void onClicked(VectorComponent p0);
+		void onConstantModified(RangeComponent p0, VectorComponent p1);
+		void onConstantConfirmed(RangeComponent p0, VectorComponent p1);
+		void onConstantFocusChanged(bool p0, RangeComponent p1, VectorComponent p2);
 
-		typedef void(BS_THUNKCALL *onClickedThunkDef) (MonoObject*, int32_t p0, MonoException**);
+		typedef void(BS_THUNKCALL *onClickedThunkDef) (MonoObject*, VectorComponent p0, MonoException**);
 		static onClickedThunkDef onClickedThunk;
-		typedef void(BS_THUNKCALL *onConstantModifiedThunkDef) (MonoObject*, MonoException**);
+		typedef void(BS_THUNKCALL *onConstantModifiedThunkDef) (MonoObject*, RangeComponent p0, VectorComponent p1, MonoException**);
 		static onConstantModifiedThunkDef onConstantModifiedThunk;
-		typedef void(BS_THUNKCALL *onConstantConfirmedThunkDef) (MonoObject*, MonoException**);
+		typedef void(BS_THUNKCALL *onConstantConfirmedThunkDef) (MonoObject*, RangeComponent p0, VectorComponent p1, MonoException**);
 		static onConstantConfirmedThunkDef onConstantConfirmedThunk;
+		typedef void(BS_THUNKCALL *onConstantFocusChangedThunkDef) (MonoObject*, bool p0, RangeComponent p1, VectorComponent p2, MonoException**);
+		static onConstantFocusChangedThunkDef onConstantFocusChangedThunk;
 
 		static MonoObject* Internal_getValue(ScriptGUIVector3DistributionField* thisPtr);
 		static void Internal_setValue(ScriptGUIVector3DistributionField* thisPtr, MonoObject* value);
 		static PropertyDistributionType Internal_getType(ScriptGUIVector3DistributionField* thisPtr);
 		static bool Internal_hasInputFocus(ScriptGUIVector3DistributionField* thisPtr);
+		static void Internal_setInputFocus(ScriptGUIVector3DistributionField* thisPtr, RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus);
 		static void Internal_create(MonoObject* managedInstance, __GUIContentInterop* labelContent, uint32_t labelWidth, MonoString* style);
 		static void Internal_create0(MonoObject* managedInstance, __GUIContentInterop* labelContent, MonoString* style);
 		static void Internal_create1(MonoObject* managedInstance, MonoObject* labelText, uint32_t labelWidth, MonoString* style);

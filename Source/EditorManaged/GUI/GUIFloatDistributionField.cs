@@ -6,16 +6,11 @@ namespace bs.Editor
     partial class GUIFloatDistributionField
     {
         /// <summary>
-        /// Triggered when the distribution in the field changes.
+        /// Triggered when one of the curves in the distribution changes.
         /// </summary>
-        public event Action OnChanged;
+        public event Action OnCurveChanged;
 
-        /// <summary>
-        /// Triggered whenever user confirms input in one of the floating point fields.
-        /// </summary>
-        public event Action OnConfirmed;
-
-        partial void OnClicked(int component)
+        partial void OnClicked(VectorComponent component)
         {
             FloatDistribution distribution = Value;
 
@@ -27,7 +22,7 @@ namespace bs.Editor
                         return;
 
                     Value = new FloatDistribution(curve);
-                    OnChanged?.Invoke();
+                    OnCurveChanged?.Invoke();
                 });
             }
             else if (DistributionType == PropertyDistributionType.RandomCurveRange)
@@ -39,19 +34,9 @@ namespace bs.Editor
                             return;
 
                         Value = new FloatDistribution(minCurve, maxCurve);
-                        OnChanged?.Invoke();
+                        OnCurveChanged?.Invoke();
                     });
             }
-        }
-
-        partial void OnConstantModified()
-        {
-            OnChanged?.Invoke();
-        }
-
-        partial void OnConstantConfirmed()
-        {
-            OnConfirmed?.Invoke();
         }
     }
 }

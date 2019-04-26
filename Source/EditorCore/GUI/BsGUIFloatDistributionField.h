@@ -70,25 +70,45 @@ namespace bs
 		bool hasInputFocus() const;
 
 		/** 
-		 * Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution. 
-		 * Provides the sequential index of the clicked curve (0 - x, 1 - y, 2 - z).
+		 * Sets input focus to a specific component's input box. 
+		 *
+		 * @param[in]	rangeComponent		Whether to focus on the minimum or the maximum part of the range. Only relevant
+		 *									if the distribution represents a constant range.
+		 * @param[in]	vectorComponent		Vector component to focus on. Only relevant of the distribution constant is
+		 *									a vector type, and if the current distribution type is a non-curve (constant)
+		 *									type.
+		 * @param[in]	focus				True to enable focus, false to disable.
 		 */
-		BS_SCRIPT_EXPORT(in:true)
-		Event<void(INT32)> onClicked;
+		BS_SCRIPT_EXPORT()
+		void setInputFocus(RangeComponent rangeComponent, VectorComponent vectorComponent, bool focus);
 
 		/** 
-		 * Triggered when the user modifies either of the non-curve (constant) values of the distribution. Only relevant
+		 * Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution. 
+		 * Provides the index of the clicked curve.
+		 */
+		BS_SCRIPT_EXPORT(in:true)
+		Event<void(VectorComponent)> onClicked;
+
+		/** 
+		 * Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant 
 		 * if the distribution is not a curve distribution.
 		 */
-		BS_SCRIPT_EXPORT(in:true)
-		Event<void()> onConstantModified;
+		BS_SCRIPT_EXPORT()
+		Event<void(RangeComponent, VectorComponent)> onConstantModified;
 
 		/** 
-		 * Triggered when the user confirms inputs in either of the non-curve (constant) values of the distribution. Only 
-		 * relevant if the distribution is not a curve distribution.
+		 * Triggered when the user confirms inputs in the non-curve (constant) values of the distribution. Only relevant 
+		 * if the distribution is not a curve distribution.
 		 */
-		BS_SCRIPT_EXPORT(in:true)
-		Event<void()> onConstantConfirmed;
+		BS_SCRIPT_EXPORT()
+		Event<void(RangeComponent, VectorComponent)> onConstantConfirmed;
+
+		/**	
+		 * Triggered when a GUI field representing an individual component loses or gains focus. This only applies to
+		 * input fields representing the non-curve (constant) distribution types.
+		 */
+		BS_SCRIPT_EXPORT()
+		Event<void(bool, RangeComponent, VectorComponent)> onConstantFocusChanged;
 
 		/** @name Internal 
 		 *  @{

@@ -38,10 +38,36 @@ namespace bs.Editor
             if (property != null)
             {
                 guiDistributionField = new GUIFloatDistributionField(new GUIContent(title));
-                guiDistributionField.OnChanged += OnFieldValueChanged;
-                guiDistributionField.OnConfirmed += OnFieldValueConfirm;
-                guiDistributionField.OnFocusLost += OnFieldValueConfirm;
-                guiDistributionField.OnFocusGained += StartUndo;
+                guiDistributionField.OnCurveChanged += () =>
+                {
+                    StartUndo();
+                    property.SetValue(guiDistributionField.Value);
+                    state |= InspectableState.ModifyInProgress;
+                    EndUndo();
+                };
+                    
+                guiDistributionField.OnConstantModified += (x, y) => OnFieldValueChanged();
+                guiDistributionField.OnConstantConfirmed += (rangeComp, vectorComp) =>
+                {
+                    OnFieldValueConfirm();
+
+                    if(rangeComp == RangeComponent.Min)
+                        StartUndo("min." + vectorComp.ToString());
+                    else
+                        StartUndo("max." + vectorComp.ToString());
+                };
+                guiDistributionField.OnConstantFocusChanged += (focus, rangeComp, vectorComp) =>
+                {
+                    if (focus)
+                    {
+                        if (rangeComp == RangeComponent.Min)
+                            StartUndo("min." + vectorComp.ToString());
+                        else
+                            StartUndo("max." + vectorComp.ToString());
+                    }
+                    else
+                        OnFieldValueConfirm();
+                };
 
                 layout.AddElement(layoutIndex, guiDistributionField);
             }
@@ -58,6 +84,16 @@ namespace bs.Editor
                 state = InspectableState.NotModified;
 
             return oldState;
+        }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName != null && subFieldName.StartsWith("min."))
+                guiDistributionField.SetInputFocus(RangeComponent.Min, VectorComponent.X, true);
+
+            if (subFieldName != null && subFieldName.StartsWith("max."))
+                guiDistributionField.SetInputFocus(RangeComponent.Max, VectorComponent.X, true);
         }
 
         /// <summary>
