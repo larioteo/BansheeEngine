@@ -47,7 +47,7 @@ namespace bs
 
 		SPtr<IReflectable> newRTTIObject() override
 		{
-			return GameObjectRTTI::createGameObject<TestComponentA>();
+			return SceneObject::createEmptyComponent<TestComponentA>();
 		}
 	};
 
@@ -80,7 +80,7 @@ namespace bs
 
 		SPtr<IReflectable> newRTTIObject() override
 		{
-			return GameObjectRTTI::createGameObject<TestComponentB>();
+			return SceneObject::createEmptyComponent<TestComponentB>();
 		}
 	};
 
@@ -352,7 +352,7 @@ namespace bs
 
 		SPtr<IReflectable> newRTTIObject() override
 		{
-			return GameObjectRTTI::createGameObject<TestComponentC>();
+			return SceneObject::createEmptyComponent<TestComponentC>();
 		}
 	};
 
@@ -381,7 +381,7 @@ namespace bs
 
 		SPtr<IReflectable> newRTTIObject() override
 		{
-			return GameObjectRTTI::createGameObject<TestComponentD>();
+			return SceneObject::createEmptyComponent<TestComponentD>();
 		}
 	};
 

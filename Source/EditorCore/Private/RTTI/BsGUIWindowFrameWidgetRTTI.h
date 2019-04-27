@@ -35,7 +35,7 @@ namespace bs
 
 		SPtr<IReflectable> newRTTIObject() override
 		{
-			return GameObjectRTTI::createGameObject<WindowFrameWidget>();
+			return SceneObject::createEmptyComponent<WindowFrameWidget>();
 		}
 	};
 
