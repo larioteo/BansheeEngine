@@ -1,3 +1,6 @@
+# Generate the assembly info file
+configure_file("${PROJECT_SOURCE_DIR}/Source/EditorManaged/Properties/AssemblyInfo.cs.in" "${PROJECT_SOURCE_DIR}/Source/EditorManaged/Properties/AssemblyInfo.cs")
+
 # Generate the CS project file
 generate_csharp_project(${PROJECT_SOURCE_DIR}/Source/EditorManaged MBansheeEditor bs.Editor MBansheeEditor)
 

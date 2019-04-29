@@ -3,7 +3,7 @@ include(CMakeSources.cmake)
 	
 # Target
 if(WIN32)
-	add_executable(Game WIN32 ${BS_GAME_SRC})
+	add_executable(Game WIN32 ${BS_GAME_SRC} Game.rc)
 else()
 	add_executable(Game ${BS_GAME_SRC})
 endif()

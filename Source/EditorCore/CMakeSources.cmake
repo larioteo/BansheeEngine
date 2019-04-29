@@ -264,6 +264,7 @@ set(BS_BANSHEEEDITOR_INC_WIN32
 set(BS_BANSHEEEDITOR_SRC_WIN32
 	"Private/Win32/BsVSCodeEditor.cpp"
 	"Private/Win32/BsWin32BrowseDialogs.cpp"
+	"Private/Win32/BsEditorWin32Resource.rc"
 )
 
 set(BS_BANSHEEEDITOR_SRC_LINUX
