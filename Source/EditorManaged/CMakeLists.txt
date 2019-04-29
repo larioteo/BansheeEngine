@@ -5,10 +5,21 @@ generate_csharp_project(${PROJECT_SOURCE_DIR}/Source/EditorManaged MBansheeEdito
 set(BS_CS_PROJ "MBansheeEditor.csproj")
 
 if(MSVC)
-	include_external_msproject(MBansheeEditor ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ})
+	if(CMAKE_GENERATOR MATCHES "Visual Studio")
+		include_external_msproject(MBansheeEditor ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ})
 	
-	add_dependencies(MBansheeEditor MBansheeEngine)
-	set_property(TARGET MBansheeEditor PROPERTY FOLDER Script)
+		add_dependencies(MBansheeEditor MBansheeEngine)
+		set_property(TARGET MBansheeEditor PROPERTY FOLDER Script)
+	else()
+		# Generator expressions don't support 'A' else 'B', otherwise
+		# this could be simplified to 'Debug' else 'Release'.
+		# Another possible improvement for this would be if we support
+		# all configuration types (e.g. RelWithDebInfo, etc) in MBansheeEditor
+		# then we could use $<CONFIG>
+		add_custom_target(MBansheeEditor
+				COMMAND msbuild /p:Configuration=$<$<CONFIG:Debug>:Debug>$<$<NOT:$<CONFIG:Debug>>:Release> ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ}
+				COMMENT "Building managed assembly \"MBansheeEditor\"")
+	endif()
 else()
 	find_package(mcs)
 
