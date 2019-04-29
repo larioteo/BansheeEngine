@@ -23,6 +23,7 @@ namespace bs.Editor
 
             drawer.AddDefault(joint, typeof(D6Joint));
 
+            drawer.BeginCategory("Motion constraints");
             for (int i = 0; i < (int)D6JointAxis.Count; i++)
             {
                 D6JointAxis axis = (D6JointAxis)i;
@@ -31,6 +32,7 @@ namespace bs.Editor
                 drawer.AddField(entryName, () => joint.GetMotion(axis), x => joint.SetMotion(axis, x));
             }
 
+            drawer.BeginCategory("Drive");
             drawer.AddField("Drive position", () => joint.DrivePosition, x => joint.SetDriveTransform(x, joint.DriveRotation));
             drawer.AddField("Drive rotation", () => joint.DriveRotation.ToEuler(), x => joint.SetDriveTransform(joint.DrivePosition, Quaternion.FromEuler(x)));
             drawer.AddField("Drive linear velocity", () => joint.DriveLinearVelocity, x => joint.SetDriveVelocity(x, joint.DriveAngularVelocity));
@@ -43,6 +45,8 @@ namespace bs.Editor
 
                 drawer.AddField(entryName, () => joint.GetDrive(type), x => joint.SetDrive(type, x));
             }
+
+            drawer.EndCategory();
         }
     }
 

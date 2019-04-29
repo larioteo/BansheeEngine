@@ -253,6 +253,11 @@ namespace bs.Editor
         private int rootIndex;
         private List<ConditionalInfo> conditionals;
 
+        // Category
+        private int categoryIndex;
+        private string categoryName;
+        private InspectableCategory category;
+
         /// <summary>
         /// Creates new empty inspector field drawer.
         /// </summary>
@@ -338,10 +343,6 @@ namespace bs.Editor
             }
 
             // Generate per-field GUI while grouping by category
-            int categoryIndex = 0;
-            string categoryName = null;
-            InspectableCategory category = null;
-
             foreach (var field in fields)
             {
                 if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
@@ -351,71 +352,23 @@ namespace bs.Editor
                 {
                     string newCategory = field.Style.CategoryName;
                     if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
-                    {
-                        string categoryPath = string.IsNullOrEmpty(path) ? $"[{newCategory}]" : $"{path}/[{newCategory}]";
-                        category = new InspectableCategory(context, newCategory, categoryPath, depth,
-                            new InspectableFieldLayout(layout));
-
-                        category.Initialize(rootIndex);
-                        category.Refresh(rootIndex);
-                        rootIndex += category.GetNumLayoutElements();
-
-                        Fields.Add(category);
-
-                        categoryName = newCategory;
-                        categoryIndex = 0;
-                    }
+                        BeginCategory(newCategory);
                     else
-                    {
-                        categoryName = null;
-                        category = null;
-                    }
-                }
-
-                int currentIndex;
-                int childDepth;
-                GUILayoutY parentLayout;
-                if (category != null)
-                {
-                    currentIndex = categoryIndex;
-                    parentLayout = category.ChildLayout;
-                    childDepth = depth + 1;
-                }
-                else
-                {
-                    currentIndex = rootIndex;
-                    parentLayout = layout;
-                    childDepth = depth;
+                        EndCategory();
                 }
 
                 string fieldName = field.Name;
                 string readableName = InspectableField.GetReadableIdentifierName(fieldName);
-                string childPath = string.IsNullOrEmpty(path) ? fieldName : $"{path}/{fieldName}";
 
-                InspectableField inspectableField = null;
-
+                Func<string, InspectableFieldLayout, int, int, InspectableField> callback = null;
                 if (overrideCallback != null)
-                    inspectableField = overrideCallback(field, context, path, new InspectableFieldLayout(parentLayout),
-                        currentIndex, depth);
-
-                if (inspectableField == null)
                 {
-                    inspectableField = InspectableField.CreateField(context, readableName, childPath,
-                        currentIndex, childDepth, new InspectableFieldLayout(parentLayout), field.GetProperty(),
-                        InspectableFieldStyle.Create(field));
+                    callback = (path, fieldLayout, layoutIndex, depth) =>
+                        overrideCallback(field, context, path, fieldLayout, layoutIndex, depth);
                 }
 
-                if (category != null)
-                    category.AddChild(inspectableField);
-                else
-                    Fields.Add(inspectableField);
-
-                currentIndex += inspectableField.GetNumLayoutElements();
-
-                if (category != null)
-                    categoryIndex = currentIndex;
-                else
-                    rootIndex = currentIndex;
+                AddFieldInternal(readableName, fieldName, field.GetProperty(), InspectableFieldStyle.Create(field),
+                    callback);
             }
         }
 
@@ -428,15 +381,64 @@ namespace bs.Editor
         /// <param name="setter">Method that sets a new value of the field.</param>
         public void AddField<T>(string name, Func<T> getter, Action<T> setter)
         {
+            SerializableProperty property = SerializableProperty.Create(getter, setter);
+            AddFieldInternal(name, name, property, null, null);
+        }
+
+        /// <summary>
+        /// Creates a new field accessing the provided property.
+        /// </summary>
+        /// <param name="title">Title to display on the field.</param>
+        /// <param name="name">Name of the field.</param>
+        /// <param name="property">Property used to access the field contents.</param>
+        /// <param name="style">Optional style used to customize the look of the field.</param>
+        /// <param name="fieldCreateCallback">
+        /// Optional callback allowing the caller to override how is the field created.
+        /// </param>
+        private void AddFieldInternal(string title, string name, SerializableProperty property, 
+            InspectableFieldStyleInfo style, 
+            Func<string, InspectableFieldLayout, int, int, InspectableField> fieldCreateCallback)
+        {
+            int currentIndex;
+            int childDepth;
+            GUILayoutY parentLayout;
+            if (category != null)
+            {
+                currentIndex = categoryIndex;
+                parentLayout = category.ChildLayout;
+                childDepth = depth + 1;
+            }
+            else
+            {
+                currentIndex = rootIndex;
+                parentLayout = layout;
+                childDepth = depth;
+            }
+
             string childPath = string.IsNullOrEmpty(path) ? name : $"{path}/{name}";
 
-            SerializableProperty property = SerializableProperty.Create(getter, setter);
-            InspectableField inspectableField = InspectableField.CreateField(context, name, childPath,
-                rootIndex, depth, new InspectableFieldLayout(layout), property);
+            InspectableField inspectableField = null;
 
-            Fields.Add(inspectableField);
+            if (fieldCreateCallback != null)
+                inspectableField = fieldCreateCallback(path, new InspectableFieldLayout(parentLayout), currentIndex, depth);
 
-            rootIndex += inspectableField.GetNumLayoutElements();
+            if (inspectableField == null)
+            {
+                inspectableField = InspectableField.CreateField(context, title, childPath,
+                currentIndex, childDepth, new InspectableFieldLayout(parentLayout), property, style);
+            }
+
+            if (category != null)
+                category.AddChild(inspectableField);
+            else
+                Fields.Add(inspectableField);
+
+            currentIndex += inspectableField.GetNumLayoutElements();
+
+            if (category != null)
+                categoryIndex = currentIndex;
+            else
+                rootIndex = currentIndex;
         }
 
         /// <summary>
@@ -450,6 +452,40 @@ namespace bs.Editor
                 conditionals = new List<ConditionalInfo>();
 
             conditionals.Add(new ConditionalInfo(field, callback));
+        }
+
+        /// <summary>
+        /// Opens up a new category. Any new fields will be parented to this category. Category must be closed by calling
+        /// <see cref="EndCategory"/> or by calling this method with a new category.
+        /// </summary>
+        /// <param name="name">Name of the category.</param>
+        public void BeginCategory(string name)
+        {
+            if(category != null)
+                EndCategory();
+
+            string categoryPath = string.IsNullOrEmpty(path) ? $"[{name}]" : $"{path}/[{name}]";
+            category = new InspectableCategory(context, name, categoryPath, depth,
+                new InspectableFieldLayout(layout));
+
+            category.Initialize(rootIndex);
+            category.Refresh(rootIndex);
+            rootIndex += category.GetNumLayoutElements();
+
+            Fields.Add(category);
+
+            categoryName = name;
+            categoryIndex = 0;
+        }
+
+        /// <summary>
+        /// Ends the category started with <see cref="BeginCategory"/>.
+        /// </summary>
+        public void EndCategory()
+        {
+            category = null;
+            categoryName = null;
+            categoryIndex = 0;
         }
 
         /// <summary>
@@ -495,6 +531,10 @@ namespace bs.Editor
             Fields.Clear();
             conditionals?.Clear();
             rootIndex = 0;
+
+            category = null;
+            categoryName = null;
+            categoryIndex = 0;
         }
 
         /// <summary>
