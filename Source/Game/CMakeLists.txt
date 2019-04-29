@@ -36,6 +36,7 @@ if (BS_COPY_FOLDER)
 	set(DST_FOLDER ${PROJECT_SOURCE_DIR}/Data/Binaries/${BS_COPY_FOLDER})
 	add_custom_command(
 		TARGET Game POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E make_directory "${DST_FOLDER}"
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:Game>" "${DST_FOLDER}")
 endif()
 
