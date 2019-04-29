@@ -15,39 +15,28 @@ add_common_flags(Game)
 target_include_directories(Game PRIVATE "./")
 
 # Post-build step
+# TODO: Use CMAKE_SYSTEM_NAME and BS_64BIT?
 if(WIN32)
 	if(BS_64BIT)
 		set(BS_COPY_FOLDER Win64)
 	else()
 		set(BS_COPY_FOLDER Win32)
 	endif()
-
-	if(MSVC)
-		add_custom_command(
-			TARGET Game POST_BUILD
-			COMMAND xcopy /Y /I \"$(TargetDir)$(TargetName).exe\" \"${PROJECT_SOURCE_DIR}\\Data\\Binaries\\${BS_COPY_FOLDER}\\\")
-	else()
-		set(SRC_FILE ${BS_BINARY_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/Game)
-		set(DST_FOLDER ${PROJECT_SOURCE_DIR}/Data/Binaries/${BS_COPY_FOLDER})
-		add_custom_command(TARGET Game POST_BUILD COMMAND xcopy /Y /I ${SRC_FILE} ${DST_FOLDER})
-	endif()
-
 elseif(LINUX)
 	if(BS_64BIT)
 		set(BS_COPY_FOLDER Linux64)
 	else()
 		set(BS_COPY_FOLDER Linux32)
 	endif()
+else()
+	# TODO_OTHER_PLATFORMS_GO_HERE	
+endif()
 
-	set(SRC_FILE ${BS_BINARY_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/Game)
+if (BS_COPY_FOLDER)
 	set(DST_FOLDER ${PROJECT_SOURCE_DIR}/Data/Binaries/${BS_COPY_FOLDER})
 	add_custom_command(
 		TARGET Game POST_BUILD
-		COMMAND rm -rf ${DST_FOLDER}
-		COMMAND mkdir -p ${DST_FOLDER}
-		COMMAND cp ${SRC_FILE} ${DST_FOLDER})
-else()
-# TODO_OTHER_PLATFORMS_GO_HERE
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:Game>" "${DST_FOLDER}")
 endif()
 
 # Libraries
