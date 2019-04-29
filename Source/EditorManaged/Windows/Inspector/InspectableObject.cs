@@ -20,7 +20,7 @@ namespace bs.Editor
         private const int IndentAmount = 5;
 
         private object propertyValue;
-        private List<InspectableField> children = new List<InspectableField>();
+        private InspectorFieldDrawer drawer;
         private InspectableFieldStyleInfo style;
 
         private GUILayoutY guiLayout;
@@ -124,21 +124,31 @@ namespace bs.Editor
                 BuildGUI(layoutIndex);
             }
 
-            InspectableState state = InspectableState.NotModified;
-            int currentIndex = 0;
-            for (int i = 0; i < children.Count; i++)
-            {
-                state |= children[i].Refresh(currentIndex);
-                currentIndex += children[i].GetNumLayoutElements();
-            }
+            if(drawer != null)
+                return drawer.Refresh();
 
-            return state;
+            return InspectableState.NotModified;
         }
 
         /// <inheritdoc />
         public override InspectableField FindPath(string path)
         {
-            return FindPath(path, depth, children);
+            if(drawer != null)
+                return FindPath(path, depth, drawer.Fields);
+
+            return null;
+        }
+
+        /// <inheritdoc />
+        protected override void SetActive(bool active)
+        {
+            if (drawer != null)
+            {
+                foreach (var entry in drawer.Fields)
+                    entry.Active = active;
+            }
+
+            base.SetActive(active);
         }
 
         /// <summary>
@@ -179,7 +189,7 @@ namespace bs.Editor
                     guiFoldout.OnToggled += OnFoldoutToggled;
                     guiInternalTitleLayout.AddElement(guiFoldout);
 
-                    if (!style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NotNull))
+                    if (!property.IsValueType && (style == null || !style.StyleFlags.HasFlag(InspectableFieldStyleFlags.NotNull)))
                     {
                         GUIContent clearIcon = new GUIContent(
                             EditorBuiltin.GetInspectorWindowIcon(InspectorWindowIcon.Clear),
@@ -224,7 +234,14 @@ namespace bs.Editor
                         else
                             guiContentLayout = guiLayout;
 
-                        children = CreateFields(serializableObject, context, path, depth + 1, guiContentLayout);
+                        drawer = new InspectorFieldDrawer(context, guiContentLayout, path, depth + 1);
+                        drawer.AddDefault(serializableObject);
+
+                        if (!active)
+                        {
+                            foreach (var field in drawer.Fields)
+                                field.Active = false;
+                        }
                     }
                 }
                 else
@@ -259,10 +276,7 @@ namespace bs.Editor
             }
             else if (state == State.Filled)
             {
-                foreach (var child in children)
-                    child.Destroy();
-
-                children.Clear();
+                drawer?.Clear();
 
                 guiInternalTitleLayout?.Destroy();
                 guiInternalTitleLayout = null;

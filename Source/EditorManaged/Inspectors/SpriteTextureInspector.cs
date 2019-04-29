@@ -17,8 +17,6 @@ namespace bs.Editor
     [CustomInspector(typeof(SpriteTexture))]
     internal class SpriteTextureInspector : Inspector
     {
-        private GenericInspectorDrawer genericDrawer;
-
         private GUILayoutWithBackground previewTitleLayout;
         private GUILayoutWithBackground previewContentLayout;
 
@@ -33,7 +31,7 @@ namespace bs.Editor
             if (spriteTexture == null)
                 return;
 
-            genericDrawer = new GenericInspectorDrawer(spriteTexture, new InspectableContext(Persistent), Layout);
+            drawer.AddDefault(spriteTexture);
 
             GUILayout previewLayout = PreviewGUI.AddLayoutY();
             previewTitleLayout = GUILayoutWithBackground.Create<GUILayoutX>(previewLayout, Builtin.WhiteTexture,
@@ -60,7 +58,7 @@ namespace bs.Editor
             if (spriteTexture == null)
                 return InspectableState.NotModified;
 
-            InspectableState state = genericDrawer.Refresh();
+            InspectableState state = drawer.Refresh();
             if (state != InspectableState.NotModified)
             {
                 EditorApplication.SetDirty(spriteTexture);

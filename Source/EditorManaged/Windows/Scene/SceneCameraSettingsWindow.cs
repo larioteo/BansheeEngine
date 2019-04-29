@@ -17,9 +17,9 @@ namespace bs.Editor
     {
         private const string ExpandStatesKey = "SceneCamera0_ExpandStates";
 
-        private GenericInspectorDrawer guiViewSettings;
-        private GenericInspectorDrawer guiMovementSettings;
-        private GenericInspectorDrawer guiRenderSettings;
+        private InspectorFieldDrawer guiViewSettings;
+        private InspectorFieldDrawer guiMovementSettings;
+        private InspectorFieldDrawer guiRenderSettings;
 
         private SceneCameraViewSettings viewSettings;
         private SceneCameraMoveSettings moveSettings;
@@ -86,9 +86,13 @@ namespace bs.Editor
             vertLayout.AddElement(new GUILabel(new LocEdString("Render Settings"), EditorStyles.LabelBold));
             GUILayoutY renderSettingsLayout = vertLayout.AddLayoutY();
 
-            guiViewSettings = new GenericInspectorDrawer(viewSettings, inspectableContext, viewSettingsLayout);
-            guiMovementSettings = new GenericInspectorDrawer(moveSettings, inspectableContext, moveSettingsLayout);
-            guiRenderSettings = new GenericInspectorDrawer(renderSettings, inspectableContext, renderSettingsLayout);
+            guiViewSettings = new InspectorFieldDrawer(inspectableContext, viewSettingsLayout);
+            guiMovementSettings = new InspectorFieldDrawer(inspectableContext, moveSettingsLayout);
+            guiRenderSettings = new InspectorFieldDrawer(inspectableContext, renderSettingsLayout);
+
+            guiViewSettings.AddDefault(viewSettings);
+            guiMovementSettings.AddDefault(moveSettings);
+            guiRenderSettings.AddDefault(renderSettings);
 
             mainLayout.AddSpace(5);
             GUILayout buttonCenterLayout = mainLayout.AddLayoutX();

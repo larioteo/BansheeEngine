@@ -1,5 +1,7 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
 //**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+
+using System;
 using System.Collections.Generic;
 using bs;
 
@@ -67,6 +69,8 @@ namespace bs.Editor
             get { return persistent; }
         }
 
+        protected InspectorFieldDrawer drawer;
+
         private GUIPanel rootGUI;
         private GUIPanel mainPanel;
         private GUIPanel previewPanel;
@@ -115,6 +119,7 @@ namespace bs.Editor
         internal virtual void Initialize(GUIPanel gui, object instance, SerializableProperties persistent)
         {
             InitializeBase(gui, null, persistent);
+            drawer = new InspectorFieldDrawer(new InspectableContext(Persistent, instance as Component), Layout);
 
             inspectedObject = instance;
 
@@ -135,6 +140,7 @@ namespace bs.Editor
             SerializableProperties persistent)
         {
             InitializeBase(mainGui, previewGui, persistent);
+            drawer = new InspectorFieldDrawer(new InspectableContext(Persistent), Layout);
 
             inspectedResourcePath = path;
 
@@ -146,7 +152,10 @@ namespace bs.Editor
         /// Changes keyboard focus to the provided field.
         /// </summary>
         /// <param name="path">Path to the field on the object being inspected.</param>
-        internal virtual void FocusOnField(string path) { }
+        internal virtual void FocusOnField(string path)
+        {
+            drawer.FocusOnField(path);
+        }
 
         /// <summary>
         /// Loads the currently inspected resource into the <see cref="InspectedObject"/> field. By default resources
@@ -185,7 +194,318 @@ namespace bs.Editor
         /// Checks if contents of the inspector have been modified, and updates them if needed.
         /// </summary>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        protected internal abstract InspectableState Refresh();
+        protected internal virtual InspectableState Refresh()
+        {
+            return drawer.Refresh();
+        }
+    }
+
+    /// <summary>
+    /// Helper class that draws the inspector field elements for an object, allowing you to draw default set of fields,
+    /// override certain fields with your own, or add new fields manually.
+    /// </summary>
+    public sealed class InspectorFieldDrawer
+    {
+        /// <summary>
+        /// Contains information about a conditional that determines whether a field will be active or not.
+        /// </summary>
+        private struct ConditionalInfo
+        {
+            public Func<bool> callback;
+            public string field;
+
+            public ConditionalInfo(string field, Func<bool> callback)
+            {
+                this.field = field;
+                this.callback = callback;
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to override the default inspector GUI for a specific field in an object. If this method
+        /// returns null the default field will be used instead.
+        /// </summary>
+        /// <param name="field">Field to generate inspector GUI for.</param>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
+        /// <param name="path">Full path to the provided field (includes name of this field and all parent fields).</param>
+        /// <param name="layout">Parent layout that all the field elements will be added to.</param>
+        /// <param name="layoutIndex">Index into the parent layout at which to insert the GUI elements for the field .</param>
+        /// <param name="depth">
+        /// Determines how deep within the inspector nesting hierarchy is this field. Some fields may contain other fields,
+        /// in which case you should increase this value by one.
+        /// </param>
+        /// <returns>
+        /// Inspectable field implementation that can be used for displaying the GUI for the provided field. Or null if
+        /// default field GUI should be used instead.
+        /// </returns>
+        public delegate InspectableField FieldOverrideCallback(SerializableField field, InspectableContext context, string path,
+            InspectableFieldLayout layout, int layoutIndex, int depth);
+
+        /// <summary>
+        /// List of fields created and updated by the drawer.
+        /// </summary>
+        public List<InspectableField> Fields { get; } = new List<InspectableField>();
+
+        private InspectableContext context;
+        private GUILayoutY layout;
+        private string path;
+        private int depth;
+        private int rootIndex;
+        private List<ConditionalInfo> conditionals;
+
+        /// <summary>
+        /// Creates new empty inspector field drawer.
+        /// </summary>
+        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
+        /// <param name="layout">Parent layout that all the field GUI elements will be added to.</param>
+        /// <param name="path">Root path to be used for all created child fields.</param>
+        /// <param name="depth">
+        /// Determines how deep within the inspector nesting hierarchy will the generated fields be. Some fields may
+        /// contain other fields, in which case you should increase this value by one.
+        /// </param>
+        public InspectorFieldDrawer(InspectableContext context, GUILayoutY layout, string path = "", int depth = 0)
+        {
+            this.context = context;
+            this.layout = layout;
+            this.path = path;
+            this.depth = depth;
+        }
+
+        /// <summary>
+        /// Creates the default inspector GUI for the provided object.
+        /// </summary>
+        /// <param name="obj">Object whose fields to create the GUI for.</param>
+        /// <param name="subType">
+        /// If not null, the added fields will be limited to this particular type (not including any base types the actual
+        /// object type might be a part of). If null, then fields for the entire class hierarchy of the provided object's
+        /// type will be created.
+        /// </param>
+        /// <param name="overrideCallback">
+        /// Optional callback that allows you to override the look of individual fields in the object. If non-null the
+        /// callback will be called with information about every field in the provided object. If the callback returns
+        /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
+        /// will be used.
+        /// </param>
+        public void AddDefault(object obj, Type subType = null, FieldOverrideCallback overrideCallback = null)
+        {
+            if (obj == null)
+                return;
+
+            SerializableObject serializableObject = new SerializableObject(obj.GetType(), obj);
+            AddDefault(serializableObject, subType, overrideCallback);
+        }
+
+        /// <summary>
+        /// Creates the default inspector GUI for the provided object.
+        /// </summary>
+        /// <param name="obj">Object whose fields to create the GUI for.</param>
+        /// <param name="subType">
+        /// If not null, the added fields will be limited to this particular type (not including any base types the actual
+        /// object type might be a part of). If null, then fields for the entire class hierarchy of the provided object's
+        /// type will be created.
+        /// </param>
+        /// <param name="overrideCallback">
+        /// Optional callback that allows you to override the look of individual fields in the object. If non-null the
+        /// callback will be called with information about every field in the provided object. If the callback returns
+        /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
+        /// will be used.
+        /// </param>
+        public void AddDefault(SerializableObject obj, Type subType = null, FieldOverrideCallback overrideCallback = null)
+        {
+            if (obj == null)
+                return;
+
+            // Retrieve fields and sort by order
+            List<SerializableField> fields = new List<SerializableField>();
+            while (obj != null)
+            {
+                if (subType == null || subType == obj.Type)
+                {
+                    SerializableField[] subTypeFields = obj.Fields;
+                    Array.Sort(subTypeFields,
+                        (x, y) =>
+                        {
+                            int orderX = x.Flags.HasFlag(SerializableFieldAttributes.Order) ? x.Style.Order : 0;
+                            int orderY = y.Flags.HasFlag(SerializableFieldAttributes.Order) ? y.Style.Order : 0;
+
+                            return orderX.CompareTo(orderY);
+                        });
+
+                    fields.AddRange(subTypeFields);
+                }
+
+                obj = obj.Base;
+            }
+
+            // Generate per-field GUI while grouping by category
+            int categoryIndex = 0;
+            string categoryName = null;
+            InspectableCategory category = null;
+
+            foreach (var field in fields)
+            {
+                if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
+                    continue;
+
+                if (field.Flags.HasFlag(SerializableFieldAttributes.Category))
+                {
+                    string newCategory = field.Style.CategoryName;
+                    if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
+                    {
+                        string categoryPath = string.IsNullOrEmpty(path) ? $"[{newCategory}]" : $"{path}/[{newCategory}]";
+                        category = new InspectableCategory(context, newCategory, categoryPath, depth,
+                            new InspectableFieldLayout(layout));
+
+                        category.Initialize(rootIndex);
+                        category.Refresh(rootIndex);
+                        rootIndex += category.GetNumLayoutElements();
+
+                        Fields.Add(category);
+
+                        categoryName = newCategory;
+                        categoryIndex = 0;
+                    }
+                    else
+                    {
+                        categoryName = null;
+                        category = null;
+                    }
+                }
+
+                int currentIndex;
+                int childDepth;
+                GUILayoutY parentLayout;
+                if (category != null)
+                {
+                    currentIndex = categoryIndex;
+                    parentLayout = category.ChildLayout;
+                    childDepth = depth + 1;
+                }
+                else
+                {
+                    currentIndex = rootIndex;
+                    parentLayout = layout;
+                    childDepth = depth;
+                }
+
+                string fieldName = field.Name;
+                string readableName = InspectableField.GetReadableIdentifierName(fieldName);
+                string childPath = string.IsNullOrEmpty(path) ? fieldName : $"{path}/{fieldName}";
+
+                InspectableField inspectableField = null;
+
+                if (overrideCallback != null)
+                    inspectableField = overrideCallback(field, context, path, new InspectableFieldLayout(parentLayout),
+                        currentIndex, depth);
+
+                if (inspectableField == null)
+                {
+                    inspectableField = InspectableField.CreateField(context, readableName, childPath,
+                        currentIndex, childDepth, new InspectableFieldLayout(parentLayout), field.GetProperty(),
+                        InspectableFieldStyle.Create(field));
+                }
+
+                if (category != null)
+                    category.AddChild(inspectableField);
+                else
+                    Fields.Add(inspectableField);
+
+                currentIndex += inspectableField.GetNumLayoutElements();
+
+                if (category != null)
+                    categoryIndex = currentIndex;
+                else
+                    rootIndex = currentIndex;
+            }
+        }
+
+        /// <summary>
+        /// Adds a custom inspectable field with a custom getter and setter.
+        /// </summary>
+        /// <typeparam name="T">Type the field is inspecting.</typeparam>
+        /// <param name="name">Name of the field.</param>
+        /// <param name="getter">Method that returns the current value of the field.</param>
+        /// <param name="setter">Method that sets a new value of the field.</param>
+        public void AddField<T>(string name, Func<T> getter, Action<T> setter)
+        {
+            string childPath = string.IsNullOrEmpty(path) ? name : $"{path}/{name}";
+
+            SerializableProperty property = SerializableProperty.Create(getter, setter);
+            InspectableField inspectableField = InspectableField.CreateField(context, name, childPath,
+                rootIndex, depth, new InspectableFieldLayout(layout), property);
+
+            Fields.Add(inspectableField);
+
+            rootIndex += inspectableField.GetNumLayoutElements();
+        }
+
+        /// <summary>
+        /// Adds a condition that determines whether a field will be shown or hidde.
+        /// </summary>
+        /// <param name="field">Name of the field the condition applies to.</param>
+        /// <param name="callback">The callback that returns true if the field should be shown, false otherwise.</param>
+        public void AddConditional(string field, Func<bool> callback)
+        {
+            if(conditionals == null)
+                conditionals = new List<ConditionalInfo>();
+
+            conditionals.Add(new ConditionalInfo(field, callback));
+        }
+
+        /// <summary>
+        /// Checks if contents of the inspector fields have been modified, and updates them if needed.
+        /// </summary>
+        /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
+        public InspectableState Refresh()
+        {
+            InspectableState state = InspectableState.NotModified;
+
+            int currentIndex = 0;
+            foreach (var field in Fields)
+            {
+                state |= field.Refresh(currentIndex);
+                currentIndex += field.GetNumLayoutElements();
+
+                if (conditionals != null)
+                {
+                    foreach (var conditional in conditionals)
+                    {
+                        if (conditional.field == field.Name && conditional.callback != null)
+                        {
+                            bool active = conditional.callback();
+
+                            if (active != field.Active)
+                                field.Active = active;
+                        }
+                    }
+                }
+            }
+
+            return state;
+        }
+
+        /// <summary>
+        /// Destroys and removes all the child inspector fields.
+        /// </summary>
+        public void Clear()
+        {
+            foreach(var field in Fields)
+                field.Destroy();
+
+            Fields.Clear();
+            conditionals?.Clear();
+            rootIndex = 0;
+        }
+
+        /// <summary>
+        /// Changes keyboard focus to the provided field.
+        /// </summary>
+        /// <param name="path">Path to the field on the object being inspected.</param>
+        public void FocusOnField(string path)
+        {
+            InspectableField field = InspectableField.FindPath(path, 0, Fields);
+            field?.SetHasFocus();
+        }
     }
 
     /** @} */

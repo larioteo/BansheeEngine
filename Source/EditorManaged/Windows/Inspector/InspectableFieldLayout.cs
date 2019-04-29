@@ -84,6 +84,16 @@ namespace bs.Editor
 
             elements.Clear();
         }
+
+        /// <summary>
+        /// Activates or deactivates the underlying GUI elements.
+        /// </summary>
+        public void SetActive(bool active)
+        {
+            foreach (var element in elements)
+                element.Active = active;
+        }
+
     }
 
     /** @} */

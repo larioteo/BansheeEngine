@@ -17,26 +17,8 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            FixedJoint joint = InspectedObject as FixedJoint;
-
-            if (joint != null)
-                BuildGUI(joint, false);
-        }
-
-        /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
-        {
-            FixedJoint joint = InspectedObject as FixedJoint;
-            if (joint == null)
-                return InspectableState.NotModified;
-
-            Refresh(joint);
-
-            InspectableState oldState = modifyState;
-            if (modifyState.HasFlag(InspectableState.Modified))
-                modifyState = InspectableState.NotModified;
-
-            return oldState;
+            FixedJoint joint = (FixedJoint) InspectedObject;
+            BuildGUI(joint, false);
         }
     }
 

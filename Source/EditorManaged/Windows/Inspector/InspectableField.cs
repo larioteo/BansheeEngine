@@ -24,7 +24,9 @@ namespace bs.Editor
         protected SerializableProperty property;
         protected string title;
         protected string path;
+        protected string name;
         protected int depth;
+        protected bool active = true;
         protected SerializableProperty.FieldType type;
 
         /// <summary>
@@ -51,6 +53,20 @@ namespace bs.Editor
         public string Path => path;
 
         /// <summary>
+        /// Name portion of the field path.
+        /// </summary>
+        public string Name => name;
+
+        /// <summary>
+        /// Activates or deactivates the underlying GUI elements.
+        /// </summary>
+        public bool Active
+        {
+            get => active;
+            set => SetActive(value);
+        }
+
+        /// <summary>
         /// Creates a new inspectable field GUI for the specified property.
         /// </summary>
         /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
@@ -70,6 +86,15 @@ namespace bs.Editor
             this.path = path;
             this.type = type;
             this.depth = depth;
+
+            if (path != null)
+            {
+                int lastSlash = path.LastIndexOf('/');
+                if (lastSlash == -1)
+                    name = path;
+                else
+                    name = path.Substring(lastSlash);
+            }
 
             Property = property;
         }
@@ -249,148 +274,15 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Allows the user to override the default inspector GUI for a specific field in an object. If this method
-        /// returns null the default field will be used instead.
+        /// Activates or deactivates the underlying GUI elements.
         /// </summary>
-        /// <param name="field">Field to generate inspector GUI for.</param>
-        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
-        /// <param name="path">Full path to the provided field (includes name of this field and all parent fields).</param>
-        /// <param name="layout">Parent layout that all the field elements will be added to.</param>
-        /// <param name="layoutIndex">Index into the parent layout at which to insert the GUI elements for the field .</param>
-        /// <param name="depth">
-        /// Determines how deep within the inspector nesting hierarchy is this field. Some fields may contain other fields,
-        /// in which case you should increase this value by one.
-        /// </param>
-        /// <returns>
-        /// Inspectable field implementation that can be used for displaying the GUI for the provided field. Or null if
-        /// default field GUI should be used instead.
-        /// </returns>
-        public delegate InspectableField FieldOverrideCallback(SerializableField field, InspectableContext context, string path,
-            InspectableFieldLayout layout, int layoutIndex, int depth);
-
-        /// <summary>
-        /// Creates inspectable fields all the fields/properties of the specified object.
-        /// </summary>
-        /// <param name="obj">Object whose fields the GUI will be drawn for.</param>
-        /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
-        /// <param name="path">Full path to the field this provided object was retrieved from.</param>
-        /// <param name="depth">
-        /// Determines how deep within the inspector nesting hierarchy is this objects. Some fields may contain other
-        /// fields, in which case you should increase this value by one.
-        /// </param>
-        /// <param name="layout">Parent layout that all the field GUI elements will be added to.</param>
-        /// <param name="overrideCallback">
-        /// Optional callback that allows you to override the look of individual fields in the object. If non-null the
-        /// callback will be called with information about every field in the provided object. If the callback returns
-        /// non-null that inspectable field will be used for drawing the GUI, otherwise the default inspector field type
-        /// will be used.
-        /// </param>
-        public static List<InspectableField> CreateFields(SerializableObject obj, InspectableContext context, string path, 
-            int depth, GUILayoutY layout, FieldOverrideCallback overrideCallback = null)
+        protected virtual void SetActive(bool active)
         {
-            // Retrieve fields and sort by order
-            List<SerializableField> fields = new List<SerializableField>();
-
-            while (obj != null)
+            if (this.active != active)
             {
-                SerializableField[] subTypeFields = obj.Fields;
-                Array.Sort(subTypeFields,
-                    (x, y) =>
-                    {
-                        int orderX = x.Flags.HasFlag(SerializableFieldAttributes.Order) ? x.Style.Order : 0;
-                        int orderY = y.Flags.HasFlag(SerializableFieldAttributes.Order) ? y.Style.Order : 0;
-
-                        return orderX.CompareTo(orderY);
-                    });
-
-                fields.AddRange(subTypeFields);
-                obj = obj.Base;
+                layout.SetActive(active);
+                this.active = active;
             }
-
-            // Generate per-field GUI while grouping by category
-            int rootIndex = 0;
-            int categoryIndex = 0;
-            string categoryName = null;
-            InspectableCategory category = null;
-
-            List<InspectableField> inspectableFields = new List<InspectableField>();
-            foreach (var field in fields)
-            {
-                if (!field.Flags.HasFlag(SerializableFieldAttributes.Inspectable))
-                    continue;
-
-                if (field.Flags.HasFlag(SerializableFieldAttributes.Category))
-                {
-                    string newCategory = field.Style.CategoryName;
-                    if (!string.IsNullOrEmpty(newCategory) && categoryName != newCategory)
-                    {
-                        string categoryPath = string.IsNullOrEmpty(path) ? $"[{newCategory}]" : $"{path}/[{newCategory}]";
-                        category = new InspectableCategory(context, newCategory, categoryPath, depth, 
-                            new InspectableFieldLayout(layout));
-
-                        category.Initialize(rootIndex);
-                        category.Refresh(rootIndex);
-                        rootIndex += category.GetNumLayoutElements();
-
-                        inspectableFields.Add(category);
-
-                        categoryName = newCategory;
-                        categoryIndex = 0;
-                    }
-                    else
-                    {
-                        categoryName = null;
-                        category = null;
-                    }
-                }
-
-                int currentIndex;
-                int childDepth;
-                GUILayoutY parentLayout;
-                if (category != null)
-                {
-                    currentIndex = categoryIndex;
-                    parentLayout = category.ChildLayout;
-                    childDepth = depth + 1;
-                }
-                else
-                {
-                    currentIndex = rootIndex;
-                    parentLayout = layout;
-                    childDepth = depth;
-                }
-
-                string fieldName = field.Name;
-                string readableName = GetReadableIdentifierName(fieldName);
-                string childPath = string.IsNullOrEmpty(path) ? fieldName : $"{path}/{fieldName}";
-
-                InspectableField inspectableField = null;
-
-                if(overrideCallback != null)
-                    inspectableField = overrideCallback(field, context, path, new InspectableFieldLayout(parentLayout), 
-                        currentIndex, depth);
-
-                if (inspectableField == null)
-                {
-                    inspectableField = CreateField(context, readableName, childPath,
-                        currentIndex, childDepth, new InspectableFieldLayout(parentLayout), field.GetProperty(), 
-                        InspectableFieldStyle.Create(field));
-                }
-
-                if (category != null)
-                    category.AddChild(inspectableField);
-                else
-                    inspectableFields.Add(inspectableField);
-
-                currentIndex += inspectableField.GetNumLayoutElements();
-
-                if (category != null)
-                    categoryIndex = currentIndex;
-                else
-                    rootIndex = currentIndex;
-            }
-
-            return inspectableFields;
         }
 
         /// <summary>
