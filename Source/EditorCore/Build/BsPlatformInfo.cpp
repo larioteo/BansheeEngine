@@ -6,7 +6,12 @@
 namespace bs
 {
 	PlatformInfo::PlatformInfo()
-		:type(PlatformType::Windows), fullscreen(true), windowedWidth(1280), windowedHeight(720)
+		:type(PlatformType::Windows), fullscreen(true), windowedWidth(1280), windowedHeight(720),
+#ifdef DEBUG
+        debug(true)
+#else
+        debug(false)
+#endif
 	{ }
 
 	PlatformInfo::~PlatformInfo()
