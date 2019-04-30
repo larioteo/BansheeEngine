@@ -32,9 +32,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
-            return drawer.Refresh();
+            return drawer.Refresh(force);
         }
 
         /// <inheritdoc/>

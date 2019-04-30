@@ -47,7 +47,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             Camera camera = InspectedObject as Camera;
             if (camera == null)

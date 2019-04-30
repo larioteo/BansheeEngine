@@ -53,13 +53,13 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
             InspectableState state = InspectableState.NotModified;
             int currentIndex = 0;
             for (int i = 0; i < children.Count; i++)
             {
-                state |= children[i].Refresh(currentIndex);
+                state |= children[i].Refresh(currentIndex, force);
                 currentIndex += children[i].GetNumLayoutElements();
             }
 

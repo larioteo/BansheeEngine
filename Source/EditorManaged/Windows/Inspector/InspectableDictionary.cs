@@ -45,9 +45,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            return dictionaryGUIField.Refresh();
+            return dictionaryGUIField.Refresh(force);
         }
 
         /// <inheritdoc/>
@@ -219,7 +219,7 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            public override InspectableState Refresh()
+            public override InspectableState Refresh(bool force)
             {
                 // Check if any modifications to the array were made outside the inspector
                 IDictionary newDict = property.GetValue<IDictionary>();
@@ -247,7 +247,7 @@ namespace bs.Editor
                     }
                 }
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
 
             /// <summary>
@@ -517,12 +517,12 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            protected internal override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 FieldKey.Property = GetKey<SerializableProperty>();
                 FieldValue.Property = GetValue<SerializableProperty>();
 
-                return FieldValue.Refresh(0);
+                return FieldValue.Refresh(0, force);
             }
         }
     }

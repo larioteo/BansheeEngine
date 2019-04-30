@@ -39,7 +39,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             LightProbeVolume lpv = InspectedObject as LightProbeVolume;
             if (lpv == null)

@@ -101,7 +101,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
             // Check if modified internally and rebuild if needed
             object newPropertyValue = property.GetValue<object>();
@@ -125,7 +125,7 @@ namespace bs.Editor
             }
 
             if(drawer != null)
-                return drawer.Refresh();
+                return drawer.Refresh(force);
 
             return InspectableState.NotModified;
         }

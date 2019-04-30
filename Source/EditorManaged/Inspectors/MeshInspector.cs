@@ -39,7 +39,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             importOptions = GetImportOptions();
 
@@ -110,7 +110,7 @@ namespace bs.Editor
         /// </summary>
         private void UpdateGUIValues()
         {
-            animSplitInfoField.Refresh();
+            animSplitInfoField.Refresh(false);
 
             normalsField.Value = importOptions.ImportNormals;
             tangentsField.Value = importOptions.ImportTangents;
@@ -238,7 +238,7 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            protected internal override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 AnimationSplitInfo splitInfo = GetValue<AnimationSplitInfo>();
 
@@ -250,7 +250,7 @@ namespace bs.Editor
                     isAdditiveField.Value = splitInfo.IsAdditive;
                 }
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
         }
     }

@@ -27,7 +27,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             PhysicsMaterial material = InspectedObject as PhysicsMaterial;
             if (material == null)

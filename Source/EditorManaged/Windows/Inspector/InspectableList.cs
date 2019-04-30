@@ -44,9 +44,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            return listGUIField.Refresh();
+            return listGUIField.Refresh(force);
         }
 
         /// <inheritdoc/>
@@ -194,7 +194,7 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            public override InspectableState Refresh()
+            public override InspectableState Refresh(bool force)
             {
                 // Check if any modifications to the array were made outside the inspector
                 IList newList = property.GetValue<IList>();
@@ -222,7 +222,7 @@ namespace bs.Editor
                     }
                 }
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
 
             /// <inheritdoc/>
@@ -409,10 +409,10 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            protected internal override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 Field.Property = GetValue<SerializableProperty>();
-                return Field.Refresh(0);
+                return Field.Refresh(0, force);
             }
         }
     }

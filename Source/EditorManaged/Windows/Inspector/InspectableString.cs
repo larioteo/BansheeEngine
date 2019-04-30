@@ -53,9 +53,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            if (guiField != null && !guiField.HasInputFocus)
+            if (guiField != null && (!guiField.HasInputFocus || force))
                 guiField.Value = property.GetValue<string>();
 
             InspectableState oldState = state;

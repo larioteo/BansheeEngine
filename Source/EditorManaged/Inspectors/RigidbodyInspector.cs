@@ -33,7 +33,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             Rigidbody body = InspectedObject as Rigidbody;
             if (body == null)

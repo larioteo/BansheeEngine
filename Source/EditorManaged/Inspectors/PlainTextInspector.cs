@@ -45,7 +45,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             PlainText plainText = InspectedObject as PlainText;
             if (plainText == null)

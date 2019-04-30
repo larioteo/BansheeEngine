@@ -104,8 +104,9 @@ namespace bs.Editor
         /// </summary>
         /// <param name="layoutIndex">Index in the parent's layout at which to insert the GUI elements for this field.
         ///                           </param>
+        /// <param name="force">Forces the GUI fields to display the latest values assigned on the object.</param>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        public virtual InspectableState Refresh(int layoutIndex)
+        public virtual InspectableState Refresh(int layoutIndex, bool force = false)
         {
             return InspectableState.NotModified;
         }

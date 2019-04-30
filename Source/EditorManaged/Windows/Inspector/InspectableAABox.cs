@@ -95,10 +95,10 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            if ((centerField != null && !centerField.HasInputFocus) &&
-                (sizeField != null && !sizeField.HasInputFocus))
+            if ((centerField != null && (!centerField.HasInputFocus || force)) &&
+                (sizeField != null && (!sizeField.HasInputFocus || force)))
             {
                 AABox box = property.GetValue<AABox>();
                 centerField.Value = box.Center;

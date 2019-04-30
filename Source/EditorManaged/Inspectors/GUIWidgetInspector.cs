@@ -26,7 +26,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             GUIWidget guiWidget = InspectedObject as GUIWidget;
             if (guiWidget == null)

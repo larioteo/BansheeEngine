@@ -34,7 +34,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             Renderable renderable = InspectedObject as Renderable;
             if (renderable == null)
@@ -82,7 +82,7 @@ namespace bs.Editor
                 layersValue = renderable.Layers;
             }
 
-            InspectableState materialsModified = materialsField.Refresh();
+            InspectableState materialsModified = materialsField.Refresh(force);
             if (materialsModified == InspectableState.Modified)
                 renderable.Materials = materials;
 
@@ -228,11 +228,11 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            internal protected override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force = false)
             {
                 materialField.ValueRef = GetValue<RRef<Material>>();
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
         }
     }

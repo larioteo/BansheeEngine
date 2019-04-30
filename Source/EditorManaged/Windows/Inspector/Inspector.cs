@@ -193,10 +193,11 @@ namespace bs.Editor
         /// <summary>
         /// Checks if contents of the inspector have been modified, and updates them if needed.
         /// </summary>
+        /// <param name="force">Forces the GUI fields to display the latest values assigned on the object.</param>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        protected internal virtual InspectableState Refresh()
+        protected internal virtual InspectableState Refresh(bool force = false)
         {
-            return drawer.Refresh();
+            return drawer.Refresh(force);
         }
     }
 
@@ -491,15 +492,16 @@ namespace bs.Editor
         /// <summary>
         /// Checks if contents of the inspector fields have been modified, and updates them if needed.
         /// </summary>
+        /// <param name="force">Forces the GUI fields to display the latest values assigned on the object.</param>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        public InspectableState Refresh()
+        public InspectableState Refresh(bool force = false)
         {
             InspectableState state = InspectableState.NotModified;
 
             int currentIndex = 0;
             foreach (var field in Fields)
             {
-                state |= field.Refresh(currentIndex);
+                state |= field.Refresh(currentIndex, force);
                 currentIndex += field.GetNumLayoutElements();
 
                 if (conditionals != null)

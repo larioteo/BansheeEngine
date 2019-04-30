@@ -28,9 +28,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
-            valuesField.Refresh();
+            valuesField.Refresh(force);
 
             return InspectableState.NotModified;
         }
@@ -143,7 +143,7 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            internal protected override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 keyField.Value = GetKey<string>();
                 return valueField.Refresh(GetValue<GUIElementStyle>());

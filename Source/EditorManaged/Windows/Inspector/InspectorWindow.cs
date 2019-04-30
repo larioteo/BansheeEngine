@@ -428,6 +428,22 @@ namespace bs.Editor
                 soScale.Value = scale;
         }
 
+        /// <summary>
+        /// Forces all the GUI fields for the specified component to update their values from the current component state.
+        /// </summary>
+        /// <param name="component">Component for whose GUI elements to perform the refresh on.</param>
+        internal void RefreshComponentFields(Component component)
+        {
+            if (component == null)
+                return;
+
+            foreach (var entry in inspectorComponents)
+            {
+                if (entry.uuid == component.UUID)
+                    entry.inspector.Refresh(true);
+            }
+        }
+
         private void OnInitialize()
         {
             Selection.OnSelectionChanged += OnSelectionChanged;

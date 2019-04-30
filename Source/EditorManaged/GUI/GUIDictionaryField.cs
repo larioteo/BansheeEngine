@@ -242,15 +242,16 @@ namespace bs.Editor
         /// <summary>
         /// Refreshes contents of all dictionary rows and checks if anything was modified.
         /// </summary>
+        /// <param name="force">Forces the GUI fields to display the latest values assigned on the object.</param>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        public virtual InspectableState Refresh()
+        public virtual InspectableState Refresh(bool force)
         {
             InspectableState state = InspectableState.NotModified;
             for (int i = 0; i < rows.Count; i++)
-                state |= rows[i].Refresh();
+                state |= rows[i].Refresh(force);
 
             if (editRow != null && editRow.Enabled)
-                state |= editRow.Refresh();
+                state |= editRow.Refresh(force);
 
             if (isModified)
             {
@@ -1205,8 +1206,9 @@ namespace bs.Editor
         /// <summary>
         /// Refreshes the GUI for the dictionary row and checks if anything was modified.
         /// </summary>
+        /// <param name="force">Forces the GUI fields to display the latest values assigned on the object.</param>
         /// <returns>State representing was anything modified between two last calls to <see cref="Refresh"/>.</returns>
-        internal protected virtual InspectableState Refresh()
+        internal protected virtual InspectableState Refresh(bool force)
         {
             InspectableState oldState = modifiedState;
             if (modifiedState.HasFlag(InspectableState.Modified))

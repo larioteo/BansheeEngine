@@ -52,7 +52,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             SpriteTexture spriteTexture = InspectedObject as SpriteTexture;
             if (spriteTexture == null)

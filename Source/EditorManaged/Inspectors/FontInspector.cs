@@ -79,7 +79,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             reimportButton.Update();
 
@@ -118,8 +118,8 @@ namespace bs.Editor
             if (rebuildGUI)
                 BuildGUI();
 
-            fontSizes.Refresh();
-            charRanges.Refresh();
+            fontSizes.Refresh(false);
+            charRanges.Refresh(false);
 
             renderModeField.Value = (ulong)importOptions.RenderMode;
             boldField.Value = importOptions.Bold;
@@ -175,11 +175,11 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            protected internal override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 sizeField.Value = GetValue<int>();
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
         }
 
@@ -230,13 +230,13 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            protected internal override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force)
             {
                 CharRange newValue = GetValue<CharRange>();
                 rangeStartField.Value = newValue.start;
                 rangeEndField.Value = newValue.end;
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
         }
     }

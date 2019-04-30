@@ -29,7 +29,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             // Note: We're ignoring changes to the string table made externally here in order to avoid a lot of checks.
             if ((Language) languageField.Value != StringTables.ActiveLanguage)
@@ -38,7 +38,7 @@ namespace bs.Editor
                 BuildGUI();
             }
 
-            valuesField.Refresh();
+            valuesField.Refresh(force);
 
             return InspectableState.NotModified;
         }
@@ -165,12 +165,12 @@ namespace bs.Editor
             }
 
             /// <inheritdoc/>
-            internal protected override InspectableState Refresh()
+            protected internal override InspectableState Refresh(bool force = false)
             {
                 keyField.Value = GetKey<string>();
                 valueField.Value = GetValue<string>();
 
-                return base.Refresh();
+                return base.Refresh(force);
             }
         }
     }

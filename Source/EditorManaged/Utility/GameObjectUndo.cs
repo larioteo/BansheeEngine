@@ -636,6 +636,7 @@ namespace bs.Editor
 
             oldToNew.Apply(obj);
             FocusOnField();
+            RefreshInspector();
         }
 
         /// <inheritdoc/>
@@ -652,6 +653,7 @@ namespace bs.Editor
 
             newToOld.Apply(obj);
             FocusOnField();
+            RefreshInspector();
         }
 
         /// <summary>
@@ -672,6 +674,15 @@ namespace bs.Editor
                     inspectorWindow?.FocusOnField(obj.UUID, fieldPath);
                 }
             }
+        }
+
+        /// <summary>
+        /// Updates the values of the fields displayed in the inspector window.
+        /// </summary>
+        private void RefreshInspector()
+        {
+            InspectorWindow inspectorWindow = EditorWindow.GetWindow<InspectorWindow>();
+            inspectorWindow?.RefreshComponentFields(obj);
         }
     }
 

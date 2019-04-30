@@ -46,7 +46,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
             if (guiField != null)
                 guiField.Value = property.GetValue<GameObject>();

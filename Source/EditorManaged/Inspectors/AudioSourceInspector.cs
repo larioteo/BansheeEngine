@@ -32,7 +32,7 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        protected internal override InspectableState Refresh()
+        protected internal override InspectableState Refresh(bool force = false)
         {
             AudioSource source = InspectedObject as AudioSource;
             if (source == null)

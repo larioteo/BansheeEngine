@@ -49,9 +49,9 @@ namespace bs.Editor
         }
 
         /// <inheritdoc/>
-        public override InspectableState Refresh(int layoutIndex)
+        public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            if (guiField != null && !guiField.HasInputFocus)
+            if (guiField != null && (!guiField.HasInputFocus || force))
             {
                 Quaternion quaternion = property.GetValue<Quaternion>();
                 guiField.Value = new Vector4(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
