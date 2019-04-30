@@ -73,5 +73,5 @@ endif()
 	
 install(
 	TARGETS Game
-	RUNTIME DESTINATION bin/EditorData/Binaries/${PLATFORM_PATH_PREFIX}
+	RUNTIME DESTINATION EditorData/Binaries/${PLATFORM_PATH_PREFIX}
 )

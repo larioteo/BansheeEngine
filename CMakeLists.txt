@@ -76,7 +76,7 @@ endif()
 ## Install
 install(
 	DIRECTORY Data/
-	DESTINATION bin/EditorData
+	DESTINATION EditorData
 	PATTERN "Data/Raw" EXCLUDE
 	PATTERN ".version" EXCLUDE
 	PATTERN ".reqversion" EXCLUDE
