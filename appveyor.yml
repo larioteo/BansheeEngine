@@ -19,21 +19,14 @@ build_script:
 
 after_build:
  - ps: cd ..
- - ps: mkdir packaged
- - ps: cd packaged
- - ps: Move-Item -Path ../install/bin/* -Destination ./
- - ps: mkdir bin
- - ps: Move-Item -Path ./Mono -Destination ./bin
- - ps: Move-Item -Path ./Assemblies -Destination ./bin
- - ps: cd ..
  - ps: >-
       if($env:APPVEYOR_REPO_TAG -eq "true") 
       { $buildName = $env:APPVEYOR_REPO_TAG_NAME } 
       else 
       { $buildName = "$(Get-Date -format yyyy.MM.dd)" }
  - ps: Set-AppveyorBuildVariable "B3D_BUILD_NAME" "$buildName"
- - cmd: 7z a b3d_%B3D_BUILD_NAME%_win64.zip ./packaged/* -xr!*pdb
- - cmd: 7z a b3d_%B3D_BUILD_NAME%_win64_symbols.zip ./packaged/*pdb -r
+ - cmd: 7z a b3d_%B3D_BUILD_NAME%_win64.zip ./install/* -xr!*pdb
+ - cmd: 7z a b3d_%B3D_BUILD_NAME%_win64_symbols.zip ./install/*pdb -r
 
 artifacts:
   - path: b3d_%B3D_BUILD_NAME%_win64.zip
