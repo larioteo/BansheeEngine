@@ -33,3 +33,4 @@ Source/Experimental
 Source/EditorManaged/MBansheeEditor.csproj
 bsfImportToolBuild
 CMakeSettings.json
+.vscode/*
