@@ -599,8 +599,7 @@ namespace bs
 							// Any access to queuedImport->resources must be locked
 							Lock lock(mutex);
 
-							queuedImport->resources.push_back(QueuedImportResource("primary", resource.getInternalPtr(),
-								resource.getUUID()));
+							queuedImport->resources.push_back(QueuedImportResource("primary", resource));
 						}
 
 						const String uuidStr = resource.getUUID().toString();
@@ -730,10 +729,7 @@ namespace bs
 				// Native resources are always expected to have a handle since Resources::load was called during
 				// the 'import' step
 				if (import.native)
-				{
-					importedResource = gResources()._getResourceHandle(entry.uuid);
-					gResources().update(importedResource, entry.resource);
-				}
+					importedResource = entry.handle;
 				else
 					importedResource = gResources()._createResourceHandle(entry.resource, entry.uuid);
 

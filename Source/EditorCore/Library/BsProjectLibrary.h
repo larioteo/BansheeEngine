@@ -305,8 +305,13 @@ namespace bs
 				:name(std::move(name)), resource(std::move(resource)), uuid(uuid)
 			{ }
 
+			QueuedImportResource(String name, const HResource& handle)
+				:name(std::move(name)), resource(handle.getInternalPtr()), handle(handle), uuid(handle.getUUID())
+			{ }
+
 			String name;
 			SPtr<Resource> resource;
+			HResource handle;
 			UUID uuid;
 		};
 
