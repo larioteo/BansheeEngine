@@ -34,7 +34,7 @@ namespace bs.Editor
         private GUIToggleField mainField = new GUIToggleField(new LocEdString("Main"));
 
         private GUIToggle renderSettingsFoldout = new GUIToggle(new LocEdString("Render settings"), EditorStyles.Foldout);
-        private RenderSettingsGUI renderSettingsGUI;
+        private InspectorFieldDrawer renderSettingsGUI;
         private GUILayout renderSettingsLayout;
 
         private ulong layersValue = 0;
@@ -75,7 +75,6 @@ namespace bs.Editor
             clearColorField.Value = camera.Viewport.ClearColor;
             priorityField.Value = camera.Priority;
             mainField.Value = camera.Main;
-            renderSettingsGUI.Settings = camera.RenderSettings;
 
             if (layersValue != camera.Layers)
             {
@@ -85,6 +84,13 @@ namespace bs.Editor
 
                 layersField.States = states;
                 layersValue = camera.Layers;
+            }
+
+            InspectableState renderSettingsState = renderSettingsGUI.Refresh(force);
+            if (renderSettingsState != InspectableState.NotModified)
+            {
+                camera.RenderSettings = camera.RenderSettings;
+                modifyState |= renderSettingsState;
             }
 
             InspectableState oldState = modifyState;
@@ -260,9 +266,8 @@ namespace bs.Editor
                     renderSettingsLayout.AddSpace(10);
 
                     GUILayoutY contentsLayout = renderSettingsLayout.AddLayoutY();
-                    renderSettingsGUI = new RenderSettingsGUI(camera.RenderSettings, contentsLayout, Persistent);
-                    renderSettingsGUI.OnChanged += x => { camera.RenderSettings = x; MarkAsModified(); };
-                    renderSettingsGUI.OnConfirmed += ConfirmModify;
+                    renderSettingsGUI = new InspectorFieldDrawer(new InspectableContext(Persistent, camera), contentsLayout);
+                    renderSettingsGUI.AddDefault(camera.RenderSettings);
                 }
 
                 ToggleTypeSpecificFields(camera.ProjectionType);
