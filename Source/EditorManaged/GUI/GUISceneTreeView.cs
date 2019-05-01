@@ -138,11 +138,14 @@ namespace bs.Editor
                         if (mesh == null)
                             continue;
 
-                        SceneObject so = UndoRedo.CreateSO(meshName, "Created a new Renderable \"" + meshName + "\"");
+                        SceneObject so = new SceneObject(meshName);
+
+                        GameObjectUndo.RecordNewSceneObject(so);
                         so.Parent = parent;
 
                         Renderable renderable = so.AddComponent<Renderable>();
                         renderable.Mesh = mesh;
+                        GameObjectUndo.ResolveDiffs();
 
                         addedObjects.Add(so);
                     }

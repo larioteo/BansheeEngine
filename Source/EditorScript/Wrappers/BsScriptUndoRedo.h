@@ -53,6 +53,7 @@ namespace bs
 		static MonoArray* internal_CloneSOMulti(MonoArray* soPtrs, MonoString* description);
 		static MonoObject* internal_Instantiate(ScriptPrefab* prefabPtr, MonoString* description);
 		static MonoObject* internal_CreateSO(MonoString* name, MonoString* description);
+		static MonoObject* internal_CreateSO2(MonoString* name, MonoArray* types, MonoString* description);
 		static void internal_DeleteSO(ScriptSceneObject* soPtr, MonoString* description);
 		static void internal_ReparentSO(ScriptSceneObject* soPtr, ScriptSceneObject* parentSOPtr, MonoString* description);
 		static void internal_ReparentSOMulti(MonoArray* soPtrs, ScriptSceneObject* parentSOPtr, MonoString* description);

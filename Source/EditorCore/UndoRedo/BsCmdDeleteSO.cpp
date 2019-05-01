@@ -5,6 +5,7 @@
 #include "Scene/BsSceneObject.h"
 #include "Scene/BsSerializedSceneObject.h"
 #include "Serialization/BsMemorySerializer.h"
+#include "Scene/BsSelection.h"
 
 namespace bs
 {
@@ -34,5 +35,8 @@ namespace bs
 	void CmdDeleteSO::revert()
 	{
 		mSerialized->restore();
+
+		if(!mSceneObject.isDestroyed(true))
+			Selection::instance().setSceneObjects({ mSceneObject });
 	}
 }

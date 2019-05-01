@@ -180,6 +180,18 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Creates a new scene object with a set of initial components. Undo operation recorded in global undo/redo stack.
+        /// </summary>
+        /// <param name="name">Name of the scene object.</param>
+        /// <param name="description">Optional description of what exactly the command does.</param>
+        /// <param name="componentTypes">Optional set of components that will be added to the scene object.</param>
+        /// <returns>Newly created scene object.</returns>
+        public static SceneObject CreateSO(string name, string description = "", params Type[] componentTypes)
+        {
+            return Internal_CreateSO2(name, componentTypes, description);
+        }
+
+        /// <summary>
         /// Deletes a scene object. Undo operation recorded in global undo/redo stack.
         /// </summary>
         /// <param name="so">Scene object to delete.</param>
@@ -297,6 +309,9 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern SceneObject Internal_CreateSO(string name, string description);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SceneObject Internal_CreateSO2(string name, Type[] componentTypes, string description);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DeleteSO(IntPtr soPtr, string description);

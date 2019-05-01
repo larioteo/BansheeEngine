@@ -43,6 +43,7 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_CloneSOMulti", (void*)&ScriptUndoRedo::internal_CloneSOMulti);
 		metaData.scriptClass->addInternalCall("Internal_Instantiate", (void*)&ScriptUndoRedo::internal_Instantiate);
 		metaData.scriptClass->addInternalCall("Internal_CreateSO", (void*)&ScriptUndoRedo::internal_CreateSO);
+		metaData.scriptClass->addInternalCall("Internal_CreateSO2", (void*)&ScriptUndoRedo::internal_CreateSO2);
 		metaData.scriptClass->addInternalCall("Internal_DeleteSO", (void*)&ScriptUndoRedo::internal_DeleteSO);
 		metaData.scriptClass->addInternalCall("Internal_ReparentSO", (void*)&ScriptUndoRedo::internal_ReparentSO);
 		metaData.scriptClass->addInternalCall("Internal_ReparentSOMulti", (void*)&ScriptUndoRedo::internal_ReparentSOMulti);
@@ -193,6 +194,46 @@ namespace bs
 		String nativeName = MonoUtil::monoToString(name);
 		String nativeDescription = MonoUtil::monoToString(description);
 		HSceneObject newObj = CmdCreateSO::execute(nativeName, 0, nativeDescription);
+
+		return ScriptGameObjectManager::instance().createScriptSceneObject(newObj)->getManagedInstance();
+	}
+
+	MonoObject* ScriptUndoRedo::internal_CreateSO2(MonoString* name, MonoArray* types, MonoString* description)
+	{
+		String nativeName = MonoUtil::monoToString(name);
+		String nativeDescription = MonoUtil::monoToString(description);
+
+		ScriptAssemblyManager& sam = ScriptAssemblyManager::instance();
+		MonoClass* managedComponent = sam.getBuiltinClasses().managedComponentClass;
+
+		ScriptArray scriptArray(types);
+		Vector<UINT32> typeIds;
+		for (UINT32 i = 0; i < scriptArray.size(); i++)
+		{
+			MonoReflectionType* paramType = scriptArray.get<MonoReflectionType*>(i);
+			if(!paramType)
+				continue;
+
+			::MonoClass* requestedClass = MonoUtil::getClass(paramType);
+
+			bool isManagedComponent = MonoUtil::isSubClassOf(requestedClass, managedComponent->_getInternalClass());
+			if (isManagedComponent)
+			{
+				LOGWRN("Only built-in components can be added though this method.");
+				continue;
+			}
+
+			BuiltinComponentInfo* info = sam.getBuiltinComponentInfo(paramType);
+			if (info == nullptr)
+			{
+				LOGWRN("Provided type is not a valid component")
+				continue;
+			}
+
+			typeIds.push_back(info->typeId);
+		}
+
+		HSceneObject newObj = CmdCreateSO::execute(nativeName, 0, typeIds, nativeDescription);
 
 		return ScriptGameObjectManager::instance().createScriptSceneObject(newObj)->getManagedInstance();
 	}

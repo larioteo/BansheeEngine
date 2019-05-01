@@ -600,12 +600,16 @@ namespace bs.Editor
                                 {
                                     if (!string.IsNullOrEmpty(draggedPaths[i]))
                                     {
-                                        string meshName = Path.GetFileNameWithoutExtension(draggedPaths[i]);
-                                        draggedSO = UndoRedo.CreateSO(meshName, "Created a new Renderable \"" + meshName + "\"");
                                         Mesh mesh = ProjectLibrary.Load<Mesh>(draggedPaths[i]);
 
+                                        string meshName = Path.GetFileNameWithoutExtension(draggedPaths[i]);
+                                        draggedSO = new SceneObject(meshName);
+
+                                        GameObjectUndo.RecordNewSceneObject(draggedSO);
                                         Renderable renderable = draggedSO.AddComponent<Renderable>();
                                         renderable.Mesh = mesh;
+                                        GameObjectUndo.ResolveDiffs();
+
                                         if (mesh != null)
                                             draggedSOOffset = mesh.Bounds.Box.Center;
                                         else
