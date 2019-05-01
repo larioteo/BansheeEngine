@@ -235,7 +235,7 @@ namespace bs
 		bool anyDestroyed = false;
 		for (auto& SO : sceneObjects)
 		{
-			if (!SO.isDestroyed(true))
+			if (SO.isDestroyed(true))
 			{
 				anyDestroyed = true;
 				break;
