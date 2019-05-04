@@ -57,21 +57,29 @@ namespace bs
 		ProjectResourceMetaRTTI()
 		{
 			addReflectablePtrField("mPreviewIcon16", 5, 
-				&ProjectResourceMetaRTTI::geticon16, &ProjectResourceMetaRTTI::seticon16, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon16, &ProjectResourceMetaRTTI::seticon16, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon32", 6, 
-				&ProjectResourceMetaRTTI::geticon32, &ProjectResourceMetaRTTI::seticon32, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon32, &ProjectResourceMetaRTTI::seticon32, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon48", 7, 
-				&ProjectResourceMetaRTTI::geticon48, &ProjectResourceMetaRTTI::seticon48, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon48, &ProjectResourceMetaRTTI::seticon48, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon64", 8, 
-				&ProjectResourceMetaRTTI::geticon64, &ProjectResourceMetaRTTI::seticon64, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon64, &ProjectResourceMetaRTTI::seticon64, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon96", 9, 
-				&ProjectResourceMetaRTTI::geticon96, &ProjectResourceMetaRTTI::seticon96, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon96, &ProjectResourceMetaRTTI::seticon96, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon128", 10, 
-				&ProjectResourceMetaRTTI::geticon128, &ProjectResourceMetaRTTI::seticon128, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon128, &ProjectResourceMetaRTTI::seticon128, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon192", 11, 
-				&ProjectResourceMetaRTTI::geticon192, &ProjectResourceMetaRTTI::seticon192, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon192, &ProjectResourceMetaRTTI::seticon192, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 			addReflectablePtrField("mPreviewIcon256", 12, 
-				&ProjectResourceMetaRTTI::geticon256, &ProjectResourceMetaRTTI::seticon256, RTTI_Flag_SkipInReferenceSearch);
+				&ProjectResourceMetaRTTI::geticon256, &ProjectResourceMetaRTTI::seticon256, 
+				RTTIFieldInfo(RTTIFieldFlag::SkipInReferenceSearch));
 		}
 
 		const String& getRTTIName() override
