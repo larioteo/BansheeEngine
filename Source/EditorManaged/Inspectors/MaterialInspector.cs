@@ -20,13 +20,14 @@ namespace bs.Editor
         private MaterialParamGUI[] guiParams;
         private GUIResourceField shaderField;
         private GUIEnumField builtinShaderField;
+        private Material material;
 
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
             LoadResource();
 
-            Material material = InspectedObject as Material;
+            material = InspectedObject as Material;
             if (material == null)
                 return;
 
@@ -35,17 +36,7 @@ namespace bs.Editor
 
             builtinShaderField = new GUIEnumField(typeof(BuiltinShader), new LocEdString("Shader"));
             builtinShaderField.Value = (ulong) builtinType;
-            builtinShaderField.OnSelectionChanged += x =>
-            {
-                BuiltinShader newBuiltinType = (BuiltinShader) x;
-
-                material.Shader = Builtin.GetShader(newBuiltinType);
-                EditorApplication.SetDirty(material);
-                RebuildParamGUI(material);
-
-                bool newIsCustom = newBuiltinType == BuiltinShader.Custom;
-                shaderField.Active = newIsCustom;
-            };
+            builtinShaderField.OnSelectionChanged += OnBuiltinShaderFieldChanged;
 
             shaderField = new GUIResourceField(typeof(Shader), new LocEdString("Shader file"));
             shaderField.ValueRef = material.Shader;
@@ -67,7 +58,6 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected internal override InspectableState Refresh(bool force = false)
         {
-            Material material = InspectedObject as Material;
             if (material == null)
                 return InspectableState.NotModified;
 
@@ -84,6 +74,23 @@ namespace bs.Editor
             }
 
             return InspectableState.NotModified;
+        }
+
+        private void OnBuiltinShaderFieldChanged(UInt64 value)
+        {
+            Shader activeShader = material.Shader.Value;
+            BuiltinShader builtinType = ShaderToBuiltin(activeShader);
+            BuiltinShader newBuiltinType = (BuiltinShader)value;
+
+            if (builtinType == newBuiltinType)
+                return;
+
+            material.Shader = Builtin.GetShader(newBuiltinType);
+            EditorApplication.SetDirty(material);
+            RebuildParamGUI(material);
+
+            bool newIsCustom = newBuiltinType == BuiltinShader.Custom;
+            shaderField.Active = newIsCustom;
         }
 
         /// <summary>
