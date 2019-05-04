@@ -15,6 +15,7 @@ namespace bs.Editor
     public class InspectableRadian : InspectableField
     {
         private GUIFloatField guiFloatField;
+        private GUISliderField guiSliderField;
         private InspectableState state;
         private InspectableFieldStyleInfo style;
 
@@ -41,32 +42,58 @@ namespace bs.Editor
         {
             if (property != null)
             {
-                guiFloatField = new GUIFloatField(new GUIContent(title));
-                if (style != null)
+                bool isSlider = style?.RangeStyle != null && style.RangeStyle.Slider;
+                if (isSlider)
                 {
-                    if (style.StepStyle != null && style.StepStyle.Step != 0)
-                        guiFloatField.Step = style.StepStyle.Step;
-                    if (style.RangeStyle != null)
-                        guiFloatField.SetRange(style.RangeStyle.Min, style.RangeStyle.Max);
-                }
-                guiFloatField.OnChanged += OnFieldValueChanged;
-                guiFloatField.OnConfirmed += () =>
-                {
-                    OnFieldValueConfirm();
-                    StartUndo();
-                };
-                guiFloatField.OnFocusLost += OnFieldValueConfirm;
-                guiFloatField.OnFocusGained += StartUndo;
+                    guiSliderField = new GUISliderField(style.RangeStyle.Min, style.RangeStyle.Max, new GUIContent(title));
 
-                layout.AddElement(layoutIndex, guiFloatField);
+                    if (style.StepStyle != null && style.StepStyle.Step != 0)
+                        guiSliderField.Step = style.StepStyle.Step;
+
+                    guiSliderField.OnChanged += OnFieldValueChanged;
+                    guiSliderField.OnFocusLost += OnFieldValueConfirm;
+                    guiSliderField.OnFocusGained += StartUndo;
+
+                    layout.AddElement(layoutIndex, guiSliderField);
+                }
+                else
+                {
+                    guiFloatField = new GUIFloatField(new GUIContent(title));
+                    if (style != null)
+                    {
+                        if (style.StepStyle != null && style.StepStyle.Step != 0)
+                            guiFloatField.Step = style.StepStyle.Step;
+                        if (style.RangeStyle != null)
+                            guiFloatField.SetRange(style.RangeStyle.Min, style.RangeStyle.Max);
+                    }
+
+                    guiFloatField.OnChanged += OnFieldValueChanged;
+                    guiFloatField.OnConfirmed += () =>
+                    {
+                        OnFieldValueConfirm();
+                        StartUndo();
+                    };
+                    guiFloatField.OnFocusLost += OnFieldValueConfirm;
+                    guiFloatField.OnFocusGained += StartUndo;
+
+                    layout.AddElement(layoutIndex, guiFloatField);
+                }
             }
         }
 
         /// <inheritdoc/>
         public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
-            if (guiFloatField != null && (!guiFloatField.HasInputFocus || force))
-                guiFloatField.Value = property.GetValue<Radian>().Radians;
+            if (guiFloatField != null)
+            {
+                if ((!guiFloatField.HasInputFocus || force))
+                    guiFloatField.Value = property.GetValue<Radian>().Degrees;
+            }
+            else if (guiSliderField != null)
+            {
+                if ((!guiSliderField.HasInputFocus || force))
+                    guiSliderField.Value = property.GetValue<Radian>().Degrees;
+            }
 
             InspectableState oldState = state;
             if (state.HasFlag(InspectableState.Modified))
@@ -78,7 +105,10 @@ namespace bs.Editor
         /// <inheritdoc />
         public override void SetHasFocus(string subFieldName = null)
         {
-            guiFloatField.Focus = true;
+            if(guiFloatField != null)
+                guiFloatField.Focus = true;
+            else if (guiSliderField != null)
+                guiSliderField.Focus = true;
         }
 
         /// <summary>
@@ -87,7 +117,7 @@ namespace bs.Editor
         /// <param name="newValue">New value of the float field.</param>
         private void OnFieldValueChanged(float newValue)
         {
-            property.SetValue(new Radian(newValue));
+            property.SetValue((Radian)new Degree(newValue));
             state |= InspectableState.ModifyInProgress;
         }
 
