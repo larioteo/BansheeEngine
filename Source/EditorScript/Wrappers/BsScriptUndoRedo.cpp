@@ -195,7 +195,7 @@ namespace bs
 		String nativeDescription = MonoUtil::monoToString(description);
 		HSceneObject newObj = CmdCreateSO::execute(nativeName, 0, nativeDescription);
 
-		return ScriptGameObjectManager::instance().createScriptSceneObject(newObj)->getManagedInstance();
+		return ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(newObj)->getManagedInstance();
 	}
 
 	MonoObject* ScriptUndoRedo::internal_CreateSO2(MonoString* name, MonoArray* types, MonoString* description)
@@ -235,7 +235,7 @@ namespace bs
 
 		HSceneObject newObj = CmdCreateSO::execute(nativeName, 0, typeIds, nativeDescription);
 
-		return ScriptGameObjectManager::instance().createScriptSceneObject(newObj)->getManagedInstance();
+		return ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(newObj)->getManagedInstance();
 	}
 
 	void ScriptUndoRedo::internal_DeleteSO(ScriptSceneObject* soPtr, MonoString* description)
