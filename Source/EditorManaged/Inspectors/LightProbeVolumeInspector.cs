@@ -35,42 +35,6 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            BuildGUI();
-        }
-
-        /// <inheritdoc/>
-        protected internal override InspectableState Refresh(bool force = false)
-        {
-            LightProbeVolume lpv = InspectedObject as LightProbeVolume;
-            if (lpv == null)
-                return InspectableState.NotModified;
-
-            InspectableState oldState = modifyState;
-            if (modifyState.HasFlag(InspectableState.Modified))
-                modifyState = InspectableState.NotModified;
-
-            // Don't update fields while modification in progress
-            if (modifyState == InspectableState.NotModified)
-            {
-                AABox gridVolume = lpv.GridVolume;
-                Vector3 size = gridVolume.Maximum - gridVolume.Minimum;
-                Vector3 position = gridVolume.Minimum + size * 0.5f;
-
-                positionField.Value = position;
-                sizeField.Value = size;
-
-                Vector3I cellCount = lpv.CellCount;
-                densityField.Value = new Vector3(cellCount.x, cellCount.y, cellCount.z);
-            }
-
-            return oldState;
-        }
-
-        /// <summary>
-        /// Recreates all the GUI elements used by this inspector.
-        /// </summary>
-        private void BuildGUI()
-        {
             Layout.Clear();
 
             LightProbeVolume lpv = InspectedObject as LightProbeVolume;
@@ -80,7 +44,9 @@ namespace bs.Editor
             // Set up callbacks
             addProbeButton.OnClick += () =>
             {
+                StartUndo();
                 lpv.AddProbe(Vector3.Zero);
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -89,10 +55,14 @@ namespace bs.Editor
             removeProbeButton.OnClick += () =>
             {
                 if (LightProbeVolumeNodeHandles.SelectedNode != uint.MaxValue)
-                    lpv.RemoveProbe((int)LightProbeVolumeNodeHandles.SelectedNode);
+                {
+                    StartUndo();
+                    lpv.RemoveProbe((int) LightProbeVolumeNodeHandles.SelectedNode);
+                    EndUndo();
 
-                MarkAsModified();
-                ConfirmModify();
+                    MarkAsModified();
+                    ConfirmModify();
+                }
             };
 
             positionField.OnConfirm += x =>
@@ -106,7 +76,10 @@ namespace bs.Editor
                 Vector3I cellCount = lpv.CellCount;
 
                 gridVolume = new AABox(min, max);
+
+                StartUndo();
                 lpv.Resize(gridVolume, cellCount);
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -122,7 +95,10 @@ namespace bs.Editor
                 Vector3I cellCount = lpv.CellCount;
 
                 gridVolume = new AABox(min, max);
+
+                StartUndo();
                 lpv.Resize(gridVolume, cellCount);
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -135,7 +111,9 @@ namespace bs.Editor
                 Vector3 density = densityField.Value;
                 Vector3I cellCount = new Vector3I((int)density.x, (int)density.y, (int)density.y);
 
+                StartUndo();
                 lpv.Resize(gridVolume, cellCount);
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -143,7 +121,9 @@ namespace bs.Editor
 
             resetToGridButton.OnClick += () =>
             {
+                StartUndo();
                 lpv.Reset();
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -151,7 +131,9 @@ namespace bs.Editor
 
             clipOuterButton.OnClick += () =>
             {
+                StartUndo();
                 lpv.Clip();
+                EndUndo();
 
                 MarkAsModified();
                 ConfirmModify();
@@ -187,6 +169,36 @@ namespace bs.Editor
             Layout.AddSpace(10);
 
             Layout.AddElement(renderButton);
+        }
+
+        /// <inheritdoc/>
+        protected internal override InspectableState Refresh(bool force = false)
+        {
+            LightProbeVolume lpv = InspectedObject as LightProbeVolume;
+            if (lpv == null)
+                return InspectableState.NotModified;
+
+            InspectableState oldState = modifyState;
+            if (modifyState.HasFlag(InspectableState.Modified))
+                modifyState = InspectableState.NotModified;
+
+            AABox gridVolume = lpv.GridVolume;
+            Vector3 size = gridVolume.Maximum - gridVolume.Minimum;
+            Vector3 position = gridVolume.Minimum + size * 0.5f;
+
+            if (!positionField.HasInputFocus || force)
+                positionField.Value = position;
+
+            if (!sizeField.HasInputFocus || force)
+                sizeField.Value = size;
+
+            if (!densityField.HasInputFocus || force)
+            {
+                Vector3I cellCount = lpv.CellCount;
+                densityField.Value = new Vector3(cellCount.x, cellCount.y, cellCount.z);
+            }
+
+            return oldState;
         }
 
         /// <summary>

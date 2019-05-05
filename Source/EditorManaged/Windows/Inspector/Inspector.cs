@@ -158,6 +158,34 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Zero parameter wrapper for <see cref="StartUndo(string)"/>
+        /// </summary>
+        protected void StartUndo()
+        {
+            StartUndo(null);
+        }
+
+        /// <summary>
+        /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+        /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
+        /// </summary>
+        /// <param name="field">Name of the field being modified.</param>
+        protected void StartUndo(string field)
+        {
+            if (inspectedObject is Component component)
+                GameObjectUndo.RecordComponent(component, field);
+        }
+
+        /// <summary>
+        /// Finishes recording an undo command started via <see cref="StartUndo(string)"/>. If any changes are detected on
+        /// the object an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
+        /// </summary>
+        protected void EndUndo()
+        {
+            GameObjectUndo.ResolveDiffs();
+        }
+
+        /// <summary>
         /// Loads the currently inspected resource into the <see cref="InspectedObject"/> field. By default resources
         /// are not loaded and you can only retrieve their path through <see cref="InspectedResourcePath"/>.
         /// </summary>
