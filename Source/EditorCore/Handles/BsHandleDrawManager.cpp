@@ -177,8 +177,7 @@ namespace bs
 			mLastFrameIdx = frameIdx;
 		}
 
-		const Transform& tfrm = camera->getTransform();
-		const Vector<DrawHelper::ShapeMeshData>& meshes = 
+		const Vector<DrawHelper::ShapeMeshData>& meshes =
 			mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get(), camera->getLayers());
 
 		mActiveMeshes.push_back(meshes);

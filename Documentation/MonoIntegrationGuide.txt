@@ -32,7 +32,8 @@
    - Compile mono project with desired configuration (debug/release, 32/64 bit, SGen builds were not tested). You will receive mono-2.0.dll and mono-2.0.lib as output.
     - Repeat the "genmdesc" step above for each configuration. Doing it once might be enough but be on the safe side.
   - If on Linux/Mac:
-   - "./autogen.sh --prefix="(OutputDir)" --with-preview=yes"" (Replace (OutputDir) with a folder where you want to output the binaries, e.g. "C:\MonoInstall")
+   - "./autogen.sh --prefix="(OutputDir)" --disable-boehm --with-sgen-default-concurrent=no" (Replace (OutputDir) with a folder where you want to output the binaries, e.g. "C:\MonoInstall")
+     - On Mac also add: "--disable-nls"	
    - "./configure"
    - "make"
    - "make install"

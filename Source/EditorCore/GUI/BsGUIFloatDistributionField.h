@@ -43,6 +43,7 @@ namespace bs
 	template<class T, class SELF>
 	class BS_ED_EXPORT TGUIDistributionField : public TGUIField<SELF>
 	{
+		using PrivatelyConstruct = typename TGUIField<SELF>::PrivatelyConstruct;
 		using GUIConstantType = typename impl::TGUIDistributionMeta<T>::ConstantField;
 		enum { NumComponents = TCurveProperties<T>::NumComponents };
 
@@ -155,7 +156,7 @@ namespace bs
 	GUIFloatDistributionField final : public TGUIDistributionField<float, GUIFloatDistributionField>
 	{
 	public:
-		using TGUIDistributionField::TGUIDistributionField;
+		using TGUIDistributionField<float, GUIFloatDistributionField>::TGUIDistributionField;
 
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
@@ -169,7 +170,7 @@ namespace bs
 	GUIVector2DistributionField final : public TGUIDistributionField<Vector2, GUIVector2DistributionField>
 	{
 	public:
-		using TGUIDistributionField::TGUIDistributionField;
+		using TGUIDistributionField<Vector2, GUIVector2DistributionField>::TGUIDistributionField;
 
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
@@ -183,7 +184,7 @@ namespace bs
 	GUIVector3DistributionField final : public TGUIDistributionField<Vector3, GUIVector3DistributionField>
 	{
 	public:
-		using TGUIDistributionField::TGUIDistributionField;
+		using TGUIDistributionField<Vector3, GUIVector3DistributionField>::TGUIDistributionField;
 
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();

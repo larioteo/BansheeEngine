@@ -33,6 +33,6 @@ else()
 	endif()
 
 	add_custom_target(MBansheeEditor
-			COMMAND xbuild /p:Configuration=${CS_PROJ_CONFIG} ${BS_CS_PROJ}
+			COMMAND msbuild /p:Configuration=${CS_PROJ_CONFIG} ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ}
 			COMMENT "Building managed assembly \"MBansheeEditor\"")
 endif()

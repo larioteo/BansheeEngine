@@ -108,7 +108,7 @@ namespace bs
 	template<class T, class SELF>
 	TGUIDistributionField<T, SELF>::TGUIDistributionField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
 		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
-		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
+		: TGUIField<SELF>(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
 		mContextMenu = bs_shared_ptr_new<GUIContextMenu>();
 
@@ -273,8 +273,8 @@ namespace bs
 	{
 		mDropDownButton->setTint(color);
 
-		if (mLabel)
-			mLabel->setTint(color);
+		if (this->mLabel)
+			this->mLabel->setTint(color);
 
 		if(mMinInput)
 			mMinInput->setTint(color);
@@ -347,9 +347,9 @@ namespace bs
 		optimalsize.x += dropDownSize.x;
 		optimalsize.y = std::max(optimalsize.y, dropDownSize.y);
 
-		if (mLabel)
+		if (this->mLabel)
 		{
-			Vector2I elemOptimal = mLabel->_calculateLayoutSizeRange().optimal;
+			Vector2I elemOptimal = this->mLabel->_calculateLayoutSizeRange().optimal;
 
 			optimalsize.x += elemOptimal.x;
 			optimalsize.y = std::max(optimalsize.y, elemOptimal.y);
@@ -361,21 +361,21 @@ namespace bs
 	template<class T, class SELF>
 	void TGUIDistributionField<T, SELF>::styleUpdated()
 	{
-		mDropDownButton->setStyle(getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
+		mDropDownButton->setStyle(this->getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
 
-		if (mLabel)
-			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
+		if (this->mLabel)
+			this->mLabel->setStyle(this->getSubStyleName(this->getLabelStyleType()));
 
 		if (mMinInput)
-			mMinInput->setStyle(getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput->setStyle(this->getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
 		if (mMaxInput)
-			mMaxInput->setStyle(getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMaxInput->setStyle(this->getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
 		for (int i = 0; i < NumComponents; i++)
 		{
 			if (mCurveDisplay[i])
-				mCurveDisplay[i]->setStyle(getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+				mCurveDisplay[i]->setStyle(this->getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 		}
 	}
 
@@ -385,18 +385,18 @@ namespace bs
 		constexpr const char* COMP_NAMES[] = { "X", "Y", "Z", "W" };
 		constexpr UINT32 ELEMENT_LABEL_WIDTH = 15;
 
-		if(mLabel)
-			mLayout->removeElement(mLabel);
+		if(this->mLabel)
+			this->mLayout->removeElement(this->mLabel);
 
-		mLayout->clear();
-		mLayout->addElement(mLabel);
+		this->mLayout->clear();
+		this->mLayout->addElement(this->mLabel);
 
-		GUILayout* valueLayout = mLayout->addNewElement<GUILayoutY>();
+		GUILayout* valueLayout = this->mLayout->template addNewElement<GUILayoutY>();
 		switch (mValue.getType())
 		{
 		default:
 		case PDT_Constant:
-			mMinInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput = GUIConstantType::create(GUIOptions(), this->getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 			mMaxInput = nullptr;
 			mLabels = { nullptr, nullptr };
 
@@ -424,8 +424,8 @@ namespace bs
 			valueLayout->addElement(mMinInput);
 			break;
 		case PDT_RandomRange: 
-			mMinInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
-			mMaxInput = GUIConstantType::create(GUIOptions(), getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMinInput = GUIConstantType::create(GUIOptions(), this->getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
+			mMaxInput = GUIConstantType::create(GUIOptions(), this->getSubStyleName(FLOAT_FIELD_STYLE_TYPE));
 
 			for(int i = 0; i < NumComponents; i++)
 				mCurveDisplay[i] = nullptr;
@@ -482,12 +482,12 @@ namespace bs
 				if(NumComponents > 1)
 				{
 					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, HString(COMP_NAMES[i]),
-						ELEMENT_LABEL_WIDTH, getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+						ELEMENT_LABEL_WIDTH, this->getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 				}
 				else
 				{
 					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, 
-						getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+						this->getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 				}
 
 				mCurveDisplay[i]->setCurve(mMinCurve[i]);
@@ -513,12 +513,12 @@ namespace bs
 				if(NumComponents > 1)
 				{
 					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, HString(COMP_NAMES[i]),
-						ELEMENT_LABEL_WIDTH, getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+						ELEMENT_LABEL_WIDTH, this->getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 				}
 				else
 				{
 					mCurveDisplay[i] = GUICurvesField::create(CurveDrawOption::DrawMarkers, 
-						getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
+						this->getSubStyleName(CURVES_FIELD_STYLE_TYPES[i]));
 				}
 
 				mCurveDisplay[i]->setCurveRange(mMinCurve[i], mMaxCurve[i]);
@@ -535,17 +535,17 @@ namespace bs
 			break;
 		}
 
-		mDropDownButton = GUIButton::create(HString::dummy(), getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
+		mDropDownButton = GUIButton::create(HString::dummy(), this->getSubStyleName(DROP_DOWN_FIELD_STYLE_TYPE));
 		mDropDownButton->onClick.connect([this]()
 		{
-			const Rect2I bounds = mDropDownButton->getBounds(mParentWidget->getPanel());
+			const Rect2I bounds = mDropDownButton->getBounds(this->mParentWidget->getPanel());
 			const Vector2I center(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-			mContextMenu->open(center, *mParentWidget);
+			mContextMenu->open(center, *(this->mParentWidget));
 		});
 
-		mLayout->addNewElement<GUIFixedSpace>(10);
-		mLayout->addElement(mDropDownButton);
+		this->mLayout->template addNewElement<GUIFixedSpace>(10);
+		this->mLayout->addElement(mDropDownButton);
 	}
 
 	template class BS_ED_EXPORT TGUIDistributionField<float, GUIFloatDistributionField>;
