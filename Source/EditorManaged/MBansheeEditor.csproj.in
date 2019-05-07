@@ -50,15 +50,13 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+${BS_SHARP_REFS}
   </ItemGroup>
   <ItemGroup>
 ${BS_SHARP_FILE_LIST}
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\bsf\Source\Scripting\bsfSharp\MBansheeEngine.csproj">
-      <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>
-      <Name>MBansheeEngine</Name>
-    </ProjectReference>
+${BS_SHARP_PROJECT_REFS}
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,8 +1,27 @@
 # Generate the assembly info file
 configure_file("${PROJECT_SOURCE_DIR}/Source/EditorManaged/Properties/AssemblyInfo.cs.in" "${PROJECT_SOURCE_DIR}/Source/EditorManaged/Properties/AssemblyInfo.cs")
 
+# Project refs
+if(MSVC)
+	set(BS_CS_PROJECT_REFS " \
+  <ProjectReference Include=\"..\\bsf\\Source\\Scripting\\bsfSharp\\MBansheeEngine.csproj\">\n \
+    <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>\n \
+    <Name>MBansheeEngine</Name>\n \
+  </ProjectReference>\n")
+	set(BS_CS_REFS " ")
+else()
+	set(BS_CS_PROJECT_REFS " ")
+	set(BS_CS_REFS "  <Reference Include=\"MBansheeEngine.dll\"/>")
+endif()
+
 # Generate the CS project file
-generate_csharp_project(${PROJECT_SOURCE_DIR}/Source/EditorManaged MBansheeEditor bs.Editor MBansheeEditor)
+generate_csharp_project(
+	${PROJECT_SOURCE_DIR}/Source/EditorManaged
+	MBansheeEditor
+	bs.Editor
+	MBansheeEditor
+	${BS_CS_REFS}
+	${BS_CS_PROJECT_REFS})
 
 # Include the CS project in the build
 set(BS_CS_PROJ "MBansheeEditor.csproj")
@@ -10,8 +29,6 @@ set(BS_CS_PROJ "MBansheeEditor.csproj")
 if(MSVC)
 	if(CMAKE_GENERATOR MATCHES "Visual Studio")
 		include_external_msproject(MBansheeEditor ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ})
-	
-		add_dependencies(MBansheeEditor MBansheeEngine)
 		set_property(TARGET MBansheeEditor PROPERTY FOLDER Script)
 	else()
 		# Generator expressions don't support 'A' else 'B', otherwise
@@ -36,3 +53,5 @@ else()
 			COMMAND msbuild /p:Configuration=${CS_PROJ_CONFIG} ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ}
 			COMMENT "Building managed assembly \"MBansheeEditor\"")
 endif()
+
+add_dependencies(MBansheeEditor MBansheeEngine)
