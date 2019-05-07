@@ -44,7 +44,8 @@ namespace bs
 
 		SPtr<RenderWindow> parentWindow = mParentWidget->getParentWindow()->getRenderWindow();
 
-		Vector2I windowPos = parentWindow->screenToWindowPos(Cursor::instance().getScreenPosition());
+		Vector2I screenPos = Cursor::instance().getScreenPosition();
+		Vector2I windowPos = parentWindow->screenToWindowPos(screenPos);
 		const RenderWindowProperties& rwProps = parentWindow->getProperties();
 
 		INT32 maxWidth = std::max(0, (INT32)rwProps.width - 1);
@@ -64,7 +65,10 @@ namespace bs
 		windowPos += offset;
 
 		Vector2I wrappedScreenPos = parentWindow->windowToScreenPos(windowPos);
-		Cursor::instance().setScreenPosition(wrappedScreenPos);
+
+		// This check is important for macOS, where continuously setting the position will freeze the cursor in place
+		if(wrappedScreenPos != screenPos)
+			Cursor::instance().setScreenPosition(wrappedScreenPos);
 
 		return offset;
 	}
