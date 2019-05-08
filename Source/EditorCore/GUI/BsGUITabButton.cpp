@@ -151,7 +151,7 @@ namespace bs
 						onClick();
 
 					if (!mIsToggled)
-						toggleOn();
+						_toggleOn(true);
 				}
 			}
 
