@@ -406,6 +406,11 @@ namespace bs
 
 	void GUISceneTreeView::setSelection(const Vector<HSceneObject>& objects)
 	{
+		setSelection(objects, false);
+	}
+
+	void GUISceneTreeView::setSelection(const Vector<HSceneObject>& objects, bool triggerEvents)
+	{
 		unselectAll(false);
 
 		// Note: I could queue the selection update until after the next frame in order to avoid the hierarchy update here
@@ -424,7 +429,7 @@ namespace bs
 			if (iterFind != objects.end())
 			{
 				expandToElement(currentElem);
-				selectElement(currentElem);
+				selectElement(currentElem, triggerEvents);
 			}
 
 			for (auto& child : currentElem->mChildren)
@@ -667,7 +672,7 @@ namespace bs
 
 		TreeElement* newTreeElement = findTreeElement(newSO);
 		expandToElement(newTreeElement);
-		setSelection({ newSO });
+		setSelection({ newSO }, true);
 		renameSelected();
 
 		onModified();

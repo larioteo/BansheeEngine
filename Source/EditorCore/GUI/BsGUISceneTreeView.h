@@ -202,6 +202,12 @@ namespace bs
 		/**	Removes all elements from the list used for copy/cut operations. */
 		void clearCopyList();
 
+		/**	
+		 * Changes the active selection to the provided SceneObject%s and optionally triggers the necessary event 
+		 * callbacks. 
+		 */
+		void setSelection(const Vector<HSceneObject>& objects, bool triggerEvents);
+
 		/** Iterates over the tree element hierarchy, starting with the provided element and calls @p predicate. */
 		template<class T>
 		void recurse(SceneTreeElement* element, T predicate) const

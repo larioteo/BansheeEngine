@@ -213,10 +213,10 @@ namespace bs
 		bool isSelectionActive() const;
 
 		/**	Expands the selection to the provided TreeElement. Doesn't clear previous selection. */
-		void selectElement(TreeElement* element);
+		void selectElement(TreeElement* element, bool triggerEvents = true);
 
 		/**	Unselects the provided TreeElement. */
-		void unselectElement(TreeElement* element);
+		void unselectElement(TreeElement* element, bool triggerEvents = true);
 
 		/**
 		 * Unselects all selected TreeElement%s.

@@ -498,7 +498,7 @@ namespace bs
 		return mIsElementSelected && mSelectedElements.size() > 0;
 	}
 
-	void GUITreeView::selectElement(TreeElement* element)
+	void GUITreeView::selectElement(TreeElement* element, bool triggerEvents)
 	{
 		clearPing();
 
@@ -516,11 +516,12 @@ namespace bs
 			mSelectedElements.push_back(SelectedElement(element, background));
 			mIsElementSelected = true;
 
-			selectionChanged();
+			if(triggerEvents)
+				selectionChanged();
 		}
 	}
 
-	void GUITreeView::unselectElement(TreeElement* element)
+	void GUITreeView::unselectElement(TreeElement* element, bool triggerEvents)
 	{
 		clearPing();
 
@@ -535,7 +536,8 @@ namespace bs
 			mSelectedElements.erase(iterFind);
 			_markLayoutAsDirty();
 
-			selectionChanged();
+			if(triggerEvents)
+				selectionChanged();
 		}
 
 		mIsElementSelected = mSelectedElements.size() > 0;
