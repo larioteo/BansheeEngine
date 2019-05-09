@@ -237,11 +237,11 @@ namespace bs.Editor
                 }
                 else
                 {
-                    if (dictionary != null)
+                    if (newDict != null)
                     {
-                        if (numElements != dictionary.Count)
+                        if (numElements != newDict.Count || force)
                         {
-                            numElements = dictionary.Count;
+                            numElements = newDict.Count;
                             BuildGUI();
                         }
                     }

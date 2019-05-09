@@ -202,22 +202,23 @@ namespace bs.Editor
                 {
                     list = newList;
                     numElements = list.Count;
-                    BuildGUI();
+                    BuildGUI(true);
                 }
                 else if (newList == null && list != null)
                 {
                     list = null;
                     numElements = 0;
-                    BuildGUI();
+                    BuildGUI(true);
                 }
                 else
                 {
-                    if (list != null)
+                    if (newList != null)
                     {
-                        if (numElements != list.Count)
+                        if (numElements != newList.Count || force)
                         {
+                            list = newList;
                             numElements = list.Count;
-                            BuildGUI();
+                            BuildGUI(true);
                         }
                     }
                 }

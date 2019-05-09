@@ -222,22 +222,23 @@ namespace bs.Editor
                 {
                     array = newArray;
                     numElements = array.Length;
-                    BuildGUI();
+                    BuildGUI(true);
                 }
                 else if (newArray == null && array != null)
                 {
                     array = null;
                     numElements = 0;
-                    BuildGUI();
+                    BuildGUI(true);
                 }
                 else
                 {
-                    if (array != null)
+                    if (newArray != null)
                     {
-                        if (numElements != array.Length)
+                        if (numElements != newArray.Length || force)
                         {
+                            array = newArray;
                             numElements = array.Length;
-                            BuildGUI();
+                            BuildGUI(true);
                         }
                     }
                 }

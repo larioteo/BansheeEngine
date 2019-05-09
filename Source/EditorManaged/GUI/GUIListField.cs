@@ -71,7 +71,7 @@ namespace bs.Editor
         /// <summary>
         /// (Re)builds the list GUI elements. Must be called at least once in order for the contents to be populated.
         /// </summary>
-        public void BuildGUI()
+        public void BuildGUI(bool force = false)
         {
             UpdateHeaderGUI();
 
@@ -99,6 +99,9 @@ namespace bs.Editor
 
                 for (int i = 0; i < rows.Count; i++)
                     rows[i].SetIndex(i);
+
+                if(force)
+                    guiSizeField.Value = numRows;
             }
             else
             {
