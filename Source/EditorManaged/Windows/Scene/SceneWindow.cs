@@ -100,6 +100,11 @@ namespace bs.Editor
         private Vector2I mouseDownPosition;
         private GUIPanel selectionPanel;
 
+        // Camera previews
+        private const int MaxCameraPreviews = 0; // Disabled until we resolve issues with adding temporary camera copies
+        private List<CameraPreview> cameraPreviews = new List<CameraPreview>();
+        private GUIPanel cameraPreviewsPanel;
+
         /// <summary>
         /// Returns the scene camera.
         /// </summary>
@@ -248,7 +253,7 @@ namespace bs.Editor
 
             rotateSnapButton.OnToggled += (bool active) => OnRotateSnapToggled(active);
             rotateSnapInput.OnChanged += (float value) => OnRotateSnapValueChanged(value);
-            
+
             cameraOptionsButton.OnClick += () => OnCameraOptionsClicked();
 
             GUILayout handlesLayout = mainLayout.AddLayoutX();
@@ -307,6 +312,8 @@ namespace bs.Editor
             GUIPanel focusPanel = GUI.AddPanel(-2);
             focusPanel.AddElement(focusCatcher);
 
+            cameraPreviewsPanel = GUI.AddPanel(-3);
+
             viewToolKey = new VirtualButton(ViewToolBinding);
             moveToolKey = new VirtualButton(MoveToolBinding);
             rotateToolKey = new VirtualButton(RotateToolBinding);
@@ -315,6 +322,9 @@ namespace bs.Editor
 
             UpdateRenderTexture(Width, Height - HeaderHeight);
             UpdateLoadingProgress();
+            UpdateCameraPreviews();
+
+            Selection.OnSelectionChanged += OnSelectionChanged;
         }
 
         private void OnCameraOptionsClicked()
@@ -338,6 +348,8 @@ namespace bs.Editor
 
             sceneAxesGUI.Destroy();
             sceneAxesGUI = null;
+
+            Selection.OnSelectionChanged -= OnSelectionChanged;
         }
 
         /// <summary>
@@ -388,6 +400,16 @@ namespace bs.Editor
 
                 EditorApplication.SetSceneDirty();
             }
+        }
+
+        /// <summary>
+        /// Callback that triggers when a new set of scene objects or resources has been selected.
+        /// </summary>
+        /// <param name="objects">Selected scene objects.</param>
+        /// <param name="resources">Selected resources.</param>
+        private void OnSelectionChanged(SceneObject[] objects, string[] resources)
+        {
+            UpdateCameraPreviews();
         }
 
         /// <inheritdoc/>
@@ -950,6 +972,117 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Set up preview boxes for the currently selected cameras.
+        /// </summary>
+        private void UpdateCameraPreviews()
+        {
+            SceneObject[] selectedObjects = Selection.SceneObjects;
+
+            // Hide unpinned camera previews which are not selected
+            for (int i = 0; i < cameraPreviews.Count; i++)
+            {
+                var cameraPreview = cameraPreviews[i];
+
+                // Remove preview for destroyed cameras
+                if (cameraPreview.Camera == null || cameraPreview.Camera.SceneObject == null
+                    || /*Temporary hack until we can render preview non-main cameras properly*/ !cameraPreview.Camera.Main)
+                {
+                    HideCameraPreview(cameraPreview.Camera);
+                    continue;
+                }
+
+                if (cameraPreview.IsPinned)
+                    continue;
+
+                bool cameraExists = Array.Exists(selectedObjects, x => x == cameraPreview.Camera.SceneObject);
+                if (!cameraExists)
+                    HideCameraPreview(cameraPreview.Camera);
+            }
+
+            // Create preview for selected cameras
+            for (int i = 0; i < selectedObjects.Length; i++)
+            {
+                if (cameraPreviews.Count >= MaxCameraPreviews)
+                    break;
+
+                var selectedCamera = selectedObjects[i].GetComponent<Camera>();
+                if (selectedCamera != null && /*Temporary hack until we can render preview non-main cameras properly*/ selectedCamera.Main)
+                {
+                    var cameraPreview = cameraPreviews.Find(x => x.Camera == selectedCamera);
+                    if (cameraPreview == null)
+                        cameraPreviews.Add(new CameraPreview(selectedCamera, cameraPreviewsPanel));
+                }
+            }
+
+            // Update preview box placement
+            int previewsCount = cameraPreviews.Count;
+            if (previewsCount > 0)
+            {
+                const float PreviewBoxAspect = 16.0f / 9.0f;
+                const float PreviewBoxMinHeight = 80;
+                const float PreviewBoxMinWidth = PreviewBoxMinHeight * PreviewBoxAspect;
+                const float PreviewBoxMaxHeight = 150;
+                const float PreviewBoxMaxWidth = PreviewBoxMaxHeight * PreviewBoxAspect;
+                const float PreviewBoxViewSpaceMaxPercentage = 0.9f;
+                const float PreviewBoxMarigin = 10;
+
+                Rect2I rtBounds = renderTextureGUI.VisibleBounds;
+                Vector2 rtSize = new Vector2(rtBounds.width, rtBounds.height);
+                Vector2 usableSize = rtSize * PreviewBoxViewSpaceMaxPercentage - PreviewBoxMarigin;
+                Vector2 previewSize = usableSize / previewsCount - previewsCount * PreviewBoxMarigin;
+                float previewWidth = MathEx.Clamp(previewSize.x, PreviewBoxMinWidth, PreviewBoxMaxWidth);
+                float previewHeight = previewWidth / PreviewBoxAspect;
+                previewSize = new Vector2(previewWidth, previewHeight);
+
+                int countPerRow = MathEx.FloorToInt(usableSize.x / previewSize.x);
+                int countPerColumn = MathEx.FloorToInt(usableSize.y / previewSize.y);
+                int index = 0;
+
+                for (int y = 1; y <= countPerColumn; y++)
+                {
+                    for (int x = 1; x <= countPerRow; x++)
+                    {
+                        if (index == previewsCount)
+                            break;
+
+                        var pos = rtSize - (previewSize + PreviewBoxMarigin) * new Vector2(x, y);
+                        var cameraPreview = cameraPreviews[index++];
+                        cameraPreview.ShowPreview(cameraPreview.Camera, 
+                            new Rect2I((int)pos.x, (int)pos.y, (int)previewSize.x, (int)previewSize.y));
+                    }
+
+                    if (index == previewsCount)
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Hides the preview box for the provided camera, if one exists.
+        /// </summary>
+        /// <param name="camera">Camera whose preview box to hide.</param>
+        private void HideCameraPreview(Camera camera)
+        {
+            var cameraPreview = cameraPreviews.Find(x => x.Camera == camera);
+            if (cameraPreview != null)
+            {
+                cameraPreviews.Remove(cameraPreview);
+                cameraPreview.Destroy();
+            }
+        }
+
+        /// <summary>
+        /// Hides all the camera preview boxes.
+        /// </summary>
+        private void HideAllCameraPreviews()
+        {
+            foreach(var entry in cameraPreviews)
+                entry.Destroy();
+
+            cameraPreviews.Clear();
+        }
+
+        /// <summary>
         /// Parses an array of scene objects and removes elements that are children of elements that are also in the array.
         /// </summary>
         /// <param name="objects">Array containing duplicate objects as input, and array without duplicate objects as
@@ -998,7 +1131,7 @@ namespace bs.Editor
 
                 loadingProgressShown = true;
             }
-            else if(!needsProgress && loadingProgressShown)
+            else if (!needsProgress && loadingProgressShown)
             {
                 progressLayout.Active = false;
                 rtPanel.Active = true;
