@@ -11,6 +11,8 @@
 #include "Importer/BsImporter.h"
 #include "Importer/BsImportOptions.h"
 #include "Serialization/BsFileSerializer.h"
+#include "Serialization/BsSerializedObject.h"
+#include "Serialization/BsBinaryDiff.h"
 #include "Debug/BsDebug.h"
 #include "Library/BsProjectLibraryEntries.h"
 #include "Resources/BsResource.h"
@@ -651,11 +653,14 @@ namespace bs
 		Path metaPath = fileEntry->path;
 		metaPath.setFilename(metaPath.getFilename() + ".meta");
 
+		SPtr<SerializedObject> orgMetaData;
 		Vector<SPtr<ProjectResourceMeta>> existingMetas;
 		if (fileEntry->meta == nullptr) // Build a brand new meta-file
 			fileEntry->meta = ProjectFileMeta::create(import.importOptions);
 		else // Existing meta-file, which needs to be updated
 		{
+			orgMetaData = SerializedObject::create(*fileEntry->meta);
+
 			// Remove existing dependencies (they will be re-added later)
 			removeDependencies(fileEntry);
 
@@ -762,9 +767,23 @@ namespace bs
 			mResourceManifest->registerResource(entry.uuid, internalResourcesPath);
 		}
 
-		// Save the meta file
-		FileEncoder fs(metaPath);
-		fs.encode(fileEntry->meta.get());
+		// Note: Ideally we replace this with a specialized BinaryCompare method
+		bool metaModified = true;
+		if(orgMetaData != nullptr)
+		{
+			SPtr<SerializedObject> newMetaData = SerializedObject::create(*fileEntry->meta);
+			BinaryDiff diffHandler;
+			SPtr<SerializedObject> diff = diffHandler.generateDiff(orgMetaData, newMetaData);
+
+			metaModified = diff != nullptr;
+		}
+
+		if(metaModified)
+		{
+			// Save the meta file
+			FileEncoder fs(metaPath);
+			fs.encode(fileEntry->meta.get());
+		}
 
 		// Register any dependencies this resource depends on
 		addDependencies(fileEntry);
