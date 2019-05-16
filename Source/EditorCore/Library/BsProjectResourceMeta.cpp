@@ -83,6 +83,12 @@ namespace bs
 		return output;
 	}
 
+	void ProjectFileMeta::clearResourceMetaData()
+	{
+		mResourceMetaData.clear();
+		mInactiveResourceMetaData.clear();
+	}
+
 	bool ProjectFileMeta::hasTypeId(UINT32 typeId) const
 	{
 		for(auto& entry : mResourceMetaData)

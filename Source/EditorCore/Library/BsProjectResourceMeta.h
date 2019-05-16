@@ -135,7 +135,7 @@ namespace bs
 		 * Removes all resource meta-data stored by this object. This includes meta-data for both active and inactive
 		 * resources. 
 		 */
-		void clearResourceMetaData() { mResourceMetaData.clear(); }
+		void clearResourceMetaData();
 
 		/**	Returns the import options used for importing the resource this object is referencing. */
 		const SPtr<ImportOptions>& getImportOptions() const { return mImportOptions; }

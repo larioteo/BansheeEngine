@@ -704,27 +704,31 @@ namespace bs
 			const ProjectResourceIcons icons = generatePreviewIcons(*entry.resource);
 
 			bool foundMeta = false;
-			for (auto iterMeta = existingMetas.begin(); iterMeta != existingMetas.end(); ++iterMeta)
+			for (auto iterMeta = existingMetas.begin(); iterMeta != existingMetas.end();)
 			{
 				const SPtr<ProjectResourceMeta>& metaEntry = *iterMeta;
 
 				if (name == metaEntry->getUniqueName())
 				{
-					// Make sure the UUID we used for saving the resource matches the current one (should always
-					// be true unless the meta-data somehow changes while the async import is happening)
-					assert(entry.uuid == metaEntry->getUUID());
+					if(!foundMeta)
+					{
+						// Make sure the UUID we used for saving the resource matches the current one (should always
+						// be true unless the meta-data somehow changes while the async import is happening)
+						assert(entry.uuid == metaEntry->getUUID());
 
-					HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
+						HResource importedResource = gResources()._getResourceHandle(metaEntry->getUUID());
 
-					gResources().update(importedResource, entry.resource);
+						gResources().update(importedResource, entry.resource);
 
-					metaEntry->setPreviewIcons(icons);
-					fileEntry->meta->add(metaEntry);
+						metaEntry->setPreviewIcons(icons);
+						fileEntry->meta->add(metaEntry);
+					}
 
-					iterMeta = existingMetas.erase(iterMeta);
 					foundMeta = true;
-					break;
+					iterMeta = existingMetas.erase(iterMeta);
 				}
+				else
+					++iterMeta;
 			}
 
 			if (!foundMeta)
@@ -747,14 +751,6 @@ namespace bs
 				fileEntry->meta->add(resMeta);
 			}
 
-			// Keep resource metas that we are not currently using, in case they get restored so their references
-			// don't get broken
-			if (!import.pruneMetas)
-			{
-				for (auto& metaEntry : existingMetas)
-					fileEntry->meta->addInactive(metaEntry);
-			}
-
 			// Update UUID to path mapping
 			if (isFirst)
 				mUUIDToPath[entry.uuid] = fileEntry->path;
@@ -765,6 +761,14 @@ namespace bs
 
 			// Register path in manifest
 			mResourceManifest->registerResource(entry.uuid, internalResourcesPath);
+		}
+
+		// Keep resource metas that we are not currently using, in case they get restored so their references
+		// don't get broken
+		if (!import.pruneMetas)
+		{
+			for (auto& metaEntry : existingMetas)
+				fileEntry->meta->addInactive(metaEntry);
 		}
 
 		// Note: Ideally we replace this with a specialized BinaryCompare method
