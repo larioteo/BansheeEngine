@@ -42,6 +42,7 @@ namespace bs.Editor
         protected internal override InspectableState Refresh(bool force = false)
         {
             importOptions = GetImportOptions();
+            reimportButton.Update();
 
             return InspectableState.NotModified;
         }
