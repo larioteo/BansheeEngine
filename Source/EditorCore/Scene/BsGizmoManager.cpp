@@ -789,7 +789,6 @@ namespace bs
 		}
 
 		iconRenderData = bs_shared_ptr_new<IconRenderDataVec>();
-		UINT32 lastTextureIdx = std::numeric_limits<UINT32>::max();
 		HTexture curTexture;
 
 		// Note: This assumes the meshes will be rendered using the same camera
@@ -803,18 +802,15 @@ namespace bs
 
 			if (curTexture != atlasTexture)
 			{
-				UINT32 numIconsPerTexture = i - lastTextureIdx;
-				if (numIconsPerTexture > 0)
-				{
-					iconRenderData->push_back(IconRenderData());
-					IconRenderData& renderData = iconRenderData->back();
-					renderData.count = numIconsPerTexture;
-					renderData.texture = atlasTexture->getCore();
-				}
+				iconRenderData->push_back(IconRenderData());
+				IconRenderData& renderData = iconRenderData->back();
+				renderData.count = 1;
+				renderData.texture = atlasTexture->getCore();
 
-				lastTextureIdx = i;
 				curTexture = atlasTexture;
 			}
+			else
+				iconRenderData->back().count++;
 
 			UINT32 iconWidth = curIconData.texture->getWidth();
 			UINT32 iconHeight = curIconData.texture->getHeight();
