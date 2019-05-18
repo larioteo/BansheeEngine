@@ -237,6 +237,9 @@ namespace bs.Editor
                 gotFirstChar = true;
             }
 
+            if (foundSections == 0)
+                sb.Append(path);
+
             return sb.ToString();
         }
 

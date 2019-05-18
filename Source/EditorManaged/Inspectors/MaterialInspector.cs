@@ -112,7 +112,7 @@ namespace bs.Editor
             Layout.AddElement(shaderField);
 
             if (material != null && material.Shader != null)
-                guiParams = CreateMaterialGUI(material, Layout);
+                guiParams = CreateMaterialGUI(material, "", null, Layout);
         }
 
         /// <summary>
@@ -139,9 +139,12 @@ namespace bs.Editor
         /// Creates a set of objects in which each object represents a GUI for a material parameter.
         /// </summary>
         /// <param name="mat">Material for whose parameters to create GUI for.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="layout">Layout to add the parameter GUI elements to.</param>
         /// <returns>A material parameter GUI object for each supported material parameter.</returns>
-        static internal MaterialParamGUI[] CreateMaterialGUI(Material mat, GUILayout layout)
+        internal static MaterialParamGUI[] CreateMaterialGUI(Material mat, string path, Component component, 
+            GUILayout layout)
         {
             Shader shader = mat.Shader.Value;
             if (shader == null)
@@ -159,37 +162,37 @@ namespace bs.Editor
                 {
                     case ShaderParameterType.Float:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamFloatGUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamFloatGUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Vector2:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamVec2GUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamVec2GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Vector3:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamVec3GUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamVec3GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Vector4:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamVec4GUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamVec4GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Matrix3:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamMat3GUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamMat3GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Matrix4:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamMat4GUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamMat4GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Color:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamColorGUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamColorGUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Texture2D:
                     case ShaderParameterType.Texture3D:
                     case ShaderParameterType.TextureCube:
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamTextureGUI(param, mat, layout));
+                        guiParams.Add(new MaterialParamTextureGUI(param, path, component, mat, layout));
                         break;
                 }
             }
@@ -204,14 +207,25 @@ namespace bs.Editor
     internal abstract class MaterialParamGUI
     {
         protected ShaderParameter shaderParam;
+        protected string path;
+        protected Component component;
+
+        /// <summary>
+        /// Underlying shader parameter the field is representing.
+        /// </summary>
+        internal ShaderParameter Param { get => shaderParam; }
 
         /// <summary>
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for.</param>
-        protected MaterialParamGUI(ShaderParameter shaderParam)
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
+        protected MaterialParamGUI(ShaderParameter shaderParam, string path, Component component)
         {
             this.shaderParam = shaderParam;
+            this.path = path;
+            this.component = component;
         }
 
         /// <summary>
@@ -224,6 +238,50 @@ namespace bs.Editor
         /// Destroys the internal GUI elements.
         /// </summary>
         internal abstract void Destroy();
+
+        /// <summary>
+        /// Moves keyboard focus to this field.
+        /// </summary>
+        /// <param name="subFieldName">
+        /// Name of the sub-field to focus on. Only relevant if the field represents multiple GUI input elements.
+        /// </param>
+        public virtual void SetHasFocus(string subFieldName = null) { }
+
+        /// <summary>
+        /// Zero parameter wrapper for <see cref="StartUndo(string)"/>
+        /// </summary>
+        protected void StartUndo()
+        {
+            StartUndo(null);
+        }
+
+        /// <summary>
+        /// Notifies the system to start recording a new undo command. Any changes to the field after this is called
+        /// will be recorded in the command. User must call <see cref="EndUndo"/> after field is done being changed.
+        /// </summary>
+        /// <param name="subPath">Additional path to append to the end of the current field path.</param>
+        protected void StartUndo(string subPath)
+        {
+            if (component != null)
+            {
+                string fullPath = path.TrimEnd('/');
+                fullPath += "/" + shaderParam.name;
+
+                if (!string.IsNullOrEmpty(subPath))
+                    fullPath += '/' + subPath.TrimStart('/');
+
+                GameObjectUndo.RecordComponent(component, fullPath);
+            }
+        }
+
+        /// <summary>
+        /// Finishes recording an undo command started via <see cref="StartUndo(string)"/>. If any changes are detected on
+        /// the field an undo command is recorded onto the undo-redo stack, otherwise nothing is done.
+        /// </summary>
+        protected void EndUndo()
+        {
+            GameObjectUndo.ResolveDiffs();
+        }
     }
 
     /// <summary>
@@ -239,10 +297,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of floating point type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamFloatGUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamFloatGUI(ShaderParameter shaderParam, string path, Component component, 
+            Material material, GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
 
@@ -267,10 +328,22 @@ namespace bs.Editor
                 EditorApplication.SetDirty(material);
             };
 
+            guiConstant.OnFocusGained += () => StartUndo("constant");
+            guiConstant.OnFocusLost += EndUndo;
+            guiConstant.OnConfirmed += () =>
+            {
+                EndUndo();
+                StartUndo("constant");
+            };
+
             guiCurves.OnChanged += x =>
             {
+                StartUndo("curve");
+
                 material.SetFloatCurve(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+
+                EndUndo();
             };
 
             guiToggle.OnToggled += x =>
@@ -295,6 +368,13 @@ namespace bs.Editor
         {
             fieldLayout.Destroy();
         }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName == "constant")
+                guiConstant.Focus = true;
+        }
     }
 
     /// <summary>
@@ -308,10 +388,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of 2D vector type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamVec2GUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamVec2GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector2Field(title);
@@ -319,6 +402,20 @@ namespace bs.Editor
             {
                 material.SetVector2(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+            };
+
+            guiElem.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if(focus)
+                    StartUndo(comp.ToString());
+                else
+                    EndUndo();
+            };
+
+            guiElem.OnConfirm += comp =>
+            {
+                EndUndo();
+                StartUndo(comp.ToString());
             };
 
             layout.AddElement(guiElem);
@@ -335,6 +432,15 @@ namespace bs.Editor
         {
             guiElem.Destroy();
         }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName == "x")
+                guiElem.SetInputFocus(VectorComponent.X, true);
+            else if(subFieldName == "y")
+                guiElem.SetInputFocus(VectorComponent.Y, true);
+        }
     }
 
     /// <summary>
@@ -348,10 +454,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of 3D vector type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamVec3GUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamVec3GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector3Field(title);
@@ -359,6 +468,20 @@ namespace bs.Editor
             {
                 material.SetVector3(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+            };
+
+            guiElem.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if(focus)
+                    StartUndo(comp.ToString());
+                else
+                    EndUndo();
+            };
+
+            guiElem.OnConfirm += comp =>
+            {
+                EndUndo();
+                StartUndo(comp.ToString());
             };
 
             layout.AddElement(guiElem);
@@ -375,6 +498,17 @@ namespace bs.Editor
         {
             guiElem.Destroy();
         }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName == "x")
+                guiElem.SetInputFocus(VectorComponent.X, true);
+            else if(subFieldName == "y")
+                guiElem.SetInputFocus(VectorComponent.Y, true);
+            else if(subFieldName == "z")
+                guiElem.SetInputFocus(VectorComponent.Z, true);
+        }
     }
 
     /// <summary>
@@ -388,10 +522,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of 4D vector type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamVec4GUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamVec4GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
             guiElem = new GUIVector4Field(title);
@@ -399,6 +536,20 @@ namespace bs.Editor
             {
                 material.SetVector4(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+            };
+
+            guiElem.OnComponentFocusChanged += (focus, comp) =>
+            {
+                if(focus)
+                    StartUndo(comp.ToString());
+                else
+                    EndUndo();
+            };
+
+            guiElem.OnConfirm += comp =>
+            {
+                EndUndo();
+                StartUndo(comp.ToString());
             };
 
             layout.AddElement(guiElem);
@@ -414,6 +565,19 @@ namespace bs.Editor
         internal override void Destroy()
         {
             guiElem.Destroy();
+        }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (subFieldName == "x")
+                guiElem.SetInputFocus(VectorComponent.X, true);
+            else if(subFieldName == "y")
+                guiElem.SetInputFocus(VectorComponent.Y, true);
+            else if(subFieldName == "z")
+                guiElem.SetInputFocus(VectorComponent.Z, true);
+            else if(subFieldName == "w")
+                guiElem.SetInputFocus(VectorComponent.W, true);
         }
     }
 
@@ -431,10 +595,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of 3x3 matrix type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamMat3GUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamMat3GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
             GUILabel guiTitle = new GUILabel(title, GUIOption.FixedWidth(100));
@@ -470,6 +637,14 @@ namespace bs.Editor
                         material.SetMatrix3(shaderParam.name, value);
                         EditorApplication.SetDirty(material);
                     };
+
+                    field.OnFocusGained += () => StartUndo(hoistedRow + "x" + hoistedCol);
+                    field.OnFocusLost += EndUndo;
+                    field.OnConfirmed += () =>
+                    {
+                        EndUndo();
+                        StartUndo(hoistedRow + "x" + hoistedCol);
+                    };
                 }
             }
         }
@@ -494,6 +669,27 @@ namespace bs.Editor
         {
             mainLayout.Destroy();
         }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (string.IsNullOrEmpty(subFieldName))
+                return;
+
+            string[] parts = subFieldName.Split('x');
+            if (parts.Length != 2)
+                return;
+
+            if (!int.TryParse(parts[0], out int row) || !int.TryParse(parts[1], out int col))
+                return;
+
+            if (row >= MAT_SIZE && col >= MAT_SIZE)
+                return;
+
+            int index = row * MAT_SIZE + col;
+            guiMatFields[index].Focus = true;
+
+        }
     }
 
     /// <summary>
@@ -510,10 +706,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of 4x4 matrix type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamMat4GUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamMat4GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
             GUILabel guiTitle = new GUILabel(title, GUIOption.FixedWidth(100));
@@ -549,6 +748,14 @@ namespace bs.Editor
                         material.SetMatrix4(shaderParam.name, value);
                         EditorApplication.SetDirty(material);
                     };
+
+                    field.OnFocusGained += () => StartUndo(hoistedRow + "x" + hoistedCol);
+                    field.OnFocusLost += EndUndo;
+                    field.OnConfirmed += () =>
+                    {
+                        EndUndo();
+                        StartUndo(hoistedRow + "x" + hoistedCol);
+                    };
                 }
             }
         }
@@ -573,6 +780,27 @@ namespace bs.Editor
         {
             mainLayout.Destroy();
         }
+
+        /// <inheritdoc />
+        public override void SetHasFocus(string subFieldName = null)
+        {
+            if (string.IsNullOrEmpty(subFieldName))
+                return;
+
+            string[] parts = subFieldName.Split('x');
+            if (parts.Length != 2)
+                return;
+
+            if (!int.TryParse(parts[0], out int row) || !int.TryParse(parts[1], out int col))
+                return;
+
+            if (row >= MAT_SIZE && col >= MAT_SIZE)
+                return;
+
+            int index = row * MAT_SIZE + col;
+            guiMatFields[index].Focus = true;
+
+        }
     }
 
     /// <summary>
@@ -588,10 +816,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of color type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamColorGUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamColorGUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
 
@@ -612,14 +843,22 @@ namespace bs.Editor
 
             guiColor.OnChanged += (x) =>
             {
+                StartUndo();
+
                 material.SetColor(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+
+                EndUndo();
             };
 
             guiColorGradient.OnChanged += x =>
             {
+                StartUndo();
+
                 material.SetColorGradient(shaderParam.name, x);
                 EditorApplication.SetDirty(material);
+
+                EndUndo();
             };
 
             guiToggle.OnToggled += x =>
@@ -664,10 +903,13 @@ namespace bs.Editor
         /// Creates a new material parameter GUI.
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of texture type.</param>
+        /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamTextureGUI(ShaderParameter shaderParam, Material material, GUILayout layout)
-            : base(shaderParam)
+        internal MaterialParamTextureGUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+            GUILayout layout)
+            : base(shaderParam, path, component)
         {
             LocString title = new LocEdString(shaderParam.name);
 
@@ -684,23 +926,31 @@ namespace bs.Editor
                 case ShaderParameterType.TextureCube:
                     guiElem.OnChanged += (x) =>
                     {
-                        string path = ProjectLibrary.GetPath(x.UUID);
-                        if (!string.IsNullOrEmpty(path))
+                        string texPath = ProjectLibrary.GetPath(x.UUID);
+                        if (!string.IsNullOrEmpty(texPath))
                         {
-                            if (ProjectLibrary.GetEntry(path) is FileEntry fileEntry)
+                            if (ProjectLibrary.GetEntry(texPath) is FileEntry fileEntry)
                             {
                                 if (fileEntry.ResourceMetas.Length > 0)
                                 {
+                                    StartUndo();
+
                                     ResourceMeta meta = fileEntry.ResourceMetas[0];
                                     if (meta.ResType == ResourceType.SpriteTexture)
                                         material.SetSpriteTexture(shaderParam.name, x.As<SpriteTexture>());
                                     else if(meta.ResType == ResourceType.Texture)
                                         material.SetTexture(shaderParam.name, x.As<Texture>());
+
+                                    EndUndo();
                                 }
                             }
                         }
                         else
+                        {
+                            StartUndo();
                             material.SetTexture(shaderParam.name, null);
+                            EndUndo();
+                        }
 
                         EditorApplication.SetDirty(material);
                     };

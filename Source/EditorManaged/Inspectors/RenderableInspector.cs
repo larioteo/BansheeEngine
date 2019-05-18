@@ -16,13 +16,7 @@ namespace bs.Editor
     [CustomInspector(typeof (Renderable))]
     internal class RenderableInspector : Inspector
     {
-        private GUIResourceField meshField;
-        private GUIListBoxField layersField;
-        private GUIArrayField<RRef<Material>, MaterialArrayRow> materialsField;
         private List<MaterialParamGUI[]> materialParams = new List<MaterialParamGUI[]>();
-
-        private ulong layersValue = 0;
-        private InspectableState modifyState;
 
         private RRef<Material>[] materials;
         private GUILayout materialsLayout;
@@ -30,7 +24,14 @@ namespace bs.Editor
         /// <inheritdoc/>
         protected internal override void Initialize()
         {
-            BuildGUI();
+            Renderable renderable = (Renderable)InspectedObject;
+
+            drawer.AddDefault(renderable);
+
+            materials = renderable.Materials;
+
+            materialsLayout = Layout.AddLayoutY();
+            BuildMaterialsGUI();
         }
 
         /// <inheritdoc/>
@@ -70,24 +71,6 @@ namespace bs.Editor
             if (rebuildMaterialsGUI)
                 BuildMaterialsGUI();
 
-            meshField.ValueRef = renderable.Mesh;
-
-            if (layersValue != renderable.Layers)
-            {
-                bool[] states = new bool[64];
-                for (int i = 0; i < states.Length; i++)
-                    states[i] = (renderable.Layers & Layers.Values[i]) == Layers.Values[i];
-
-                layersField.States = states;
-                layersValue = renderable.Layers;
-            }
-
-            InspectableState materialsModified = materialsField.Refresh(force);
-            if (materialsModified == InspectableState.Modified)
-                renderable.Materials = materials;
-
-            modifyState |= materialsModified;
-
             if (materials != null)
             {
                 for (int i = 0; i < materialParams.Count; i++)
@@ -101,62 +84,52 @@ namespace bs.Editor
                 }
             }
 
-            InspectableState oldState = modifyState;
-            if (modifyState.HasFlag(InspectableState.Modified))
-                modifyState = InspectableState.NotModified;
-
-            return oldState;
+            return base.Refresh(force);
         }
 
-        /// <summary>
-        /// Recreates all the GUI elements used by this inspector.
-        /// </summary>
-        private void BuildGUI()
+        /// <inheritdoc />
+        internal override void FocusOnField(string path)
         {
-            Layout.Clear();
-
-            Renderable renderable = InspectedObject as Renderable;
-            if (renderable == null)
-                return;
-
-            meshField = new GUIResourceField(typeof(Mesh), new LocEdString("Mesh"));
-            layersField = new GUIListBoxField(Layers.Names, false, new LocEdString("Layer"));
-
-            Layout.AddElement(meshField);
-            Layout.AddElement(layersField);
-
-            layersValue = 0;
-            materials = renderable.Materials;
-            materialsField = GUIArrayField<RRef<Material>, MaterialArrayRow>.Create(new LocEdString("Materials"), materials, Layout);
-            materialsField.OnChanged += x => { materials = x; };
-            materialsField.IsExpanded = Persistent.GetBool("materialsField_Expanded");
-            materialsField.OnExpand += x => Persistent.SetBool("materialsField_Expanded", x);
-
-            meshField.OnChanged += x =>
+            if (path.StartsWith("materialParams"))
             {
-                Mesh mesh = Resources.Load<Mesh>(x.UUID);
-                renderable.Mesh = mesh;
+                string subPath = InspectableField.GetSubPath(path, 2);
+                string[] subPathParts = subPath.Split('/');
 
-                MarkAsModified();
-                ConfirmModify();
-            };
+                if (subPathParts.Length < 2)
+                    return;
 
-            layersField.OnSelectionChanged += x =>
-            {
-                ulong layers = 0;
-                bool[] states = layersField.States;
-                for (int i = 0; i < states.Length; i++)
-                    layers |= states[i] ? Layers.Values[i] : 0;
+                int lastLeftIdx = subPathParts[0].LastIndexOf('[');
+                int lastRightIdx = subPathParts[0].LastIndexOf(']', lastLeftIdx);
 
-                layersValue = layers;
-                renderable.Layers = layers;
+                if (lastLeftIdx == -1 || lastRightIdx == -1)
+                    return;
 
-                MarkAsModified();
-                ConfirmModify();
-            };
+                int count = lastRightIdx - 1 - lastLeftIdx;
+                if (count <= 0)
+                    return;
 
-            materialsLayout = Layout.AddLayoutY();
-            BuildMaterialsGUI();
+                string arrayIdxStr = subPath.Substring(lastLeftIdx, count);
+
+                if (!int.TryParse(arrayIdxStr, out int idx))
+                    return;
+
+                if (idx >= materialParams.Count)
+                    return;
+
+                MaterialParamGUI[] entries = materialParams[idx];
+                foreach (var entry in entries)
+                {
+                    string fieldSubPath = subPathParts.Length > 2 ? subPathParts[2] : null;
+
+                    if (entry.Param.name == subPathParts[1])
+                    {
+                        entry.SetHasFocus(fieldSubPath);
+                        break;
+                    }
+                }
+            }
+
+            base.FocusOnField(path);
         }
 
         /// <summary>
@@ -167,10 +140,29 @@ namespace bs.Editor
             materialsLayout.Clear();
 
             materialParams.Clear();
-            if (materials != null)
+            if (materials != null && materials.Length > 0)
             {
                 for (int i = 0; i < materials.Length; i++)
                 {
+                    string suffix = "";
+                    if (materials.Length > 1)
+                        suffix = " (" + i + ")";
+
+                    materialsLayout.AddSpace(10);
+                    GUIToggle foldout = new GUIToggle(new LocEdString("Material parameters" + suffix), EditorStyles.Foldout);
+
+                    materialsLayout.AddElement(foldout);
+                    GUILayoutY materialLayout = materialsLayout.AddLayoutY();
+
+                    string tag = "Material" + i + "_Expanded";
+                    foldout.OnToggled += x =>
+                    {
+                        materialLayout.Active = x;
+                        Persistent.SetBool(tag, x);
+                    };
+
+                    materialLayout.Active = Persistent.GetBool(tag);
+
                     Material material = materials[i].Value;
                     if (material == null)
                     {
@@ -178,61 +170,10 @@ namespace bs.Editor
                         continue;
                     }
 
-                    materialsLayout.AddSpace(10);
-
-                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material, materialsLayout);
+                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material, 
+                        "materialParams[" + i + "]", null, materialLayout);
                     materialParams.Add(matParams);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Marks the contents of the inspector as modified.
-        /// </summary>
-        protected void MarkAsModified()
-        {
-            modifyState |= InspectableState.ModifyInProgress;
-        }
-
-        /// <summary>
-        /// Confirms any queued modifications.
-        /// </summary>
-        protected void ConfirmModify()
-        {
-            if (modifyState.HasFlag(InspectableState.ModifyInProgress))
-                modifyState |= InspectableState.Modified;
-        }
-
-        /// <summary>
-        /// Row element used for displaying GUI for material array elements.
-        /// </summary>
-        private class MaterialArrayRow : GUIListFieldRow
-        {
-            private GUIResourceField materialField;
-
-            /// <inheritdoc/>
-            protected override GUILayoutX CreateGUI(GUILayoutY layout)
-            {
-                GUILayoutX titleLayout = layout.AddLayoutX();
-                materialField = new GUIResourceField(typeof(Material), new LocEdString(SeqIndex + ". "), 20);
-                titleLayout.AddElement(materialField);
-
-                materialField.OnChanged += x =>
-                {
-                    SetValue(x.As<Material>());
-                    MarkAsModified();
-                    ConfirmModify();
-                };
-
-                return titleLayout;
-            }
-
-            /// <inheritdoc/>
-            protected internal override InspectableState Refresh(bool force = false)
-            {
-                materialField.ValueRef = GetValue<RRef<Material>>();
-
-                return base.Refresh(force);
             }
         }
     }
