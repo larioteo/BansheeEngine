@@ -82,6 +82,7 @@ namespace bs.Editor
 
         private InspectorType currentType = InspectorType.None;
         private string activeResourcePath;
+        private bool resourceInspectorInitialized;
 
         /// <summary>
         /// Opens the inspector window from the menu bar.
@@ -108,6 +109,8 @@ namespace bs.Editor
         private void SetObjectToInspect(string resourcePath)
         {
             activeResourcePath = resourcePath;
+            resourceInspectorInitialized = false;
+
             if (!ProjectLibrary.Exists(resourcePath))
                 return;
 
@@ -118,6 +121,7 @@ namespace bs.Editor
             Type resourceType = meta.Type;
 
             currentType = InspectorType.Resource;
+            resourceInspectorInitialized = true;
 
             inspectorScrollArea = new GUIScrollArea(ScrollBarType.ShowIfDoesntFit, ScrollBarType.NeverShow);
             GUI.AddElement(inspectorScrollArea);
@@ -447,6 +451,7 @@ namespace bs.Editor
         private void OnInitialize()
         {
             Selection.OnSelectionChanged += OnSelectionChanged;
+            ProjectLibrary.OnEntryImported += OnResourceImported;
 
             const string soName = "InspectorPersistentData";
             SceneObject so = Scene.Root.FindChild(soName);
@@ -463,6 +468,7 @@ namespace bs.Editor
         private void OnDestroy()
         {
             Selection.OnSelectionChanged -= OnSelectionChanged;
+            ProjectLibrary.OnEntryImported -= OnResourceImported;
         }
 
         private void OnEditorUpdate()
@@ -638,6 +644,19 @@ namespace bs.Editor
             {
                 SetObjectToInspect(paths[0]);
             }
+        }
+
+        /// <summary>
+        /// Updates the inspector if the inspected resource just got reimported.
+        /// </summary>
+        /// <param name="path">Path to the resource that got imported.</param>
+        private void OnResourceImported(string path)
+        {
+            if (resourceInspectorInitialized || string.IsNullOrEmpty(activeResourcePath))
+                return;
+
+            if(path == activeResourcePath)
+                SetObjectToInspect(path);
         }
 
         /// <summary>
