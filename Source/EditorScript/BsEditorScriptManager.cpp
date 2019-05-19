@@ -27,6 +27,7 @@
 #include "Wrappers/BsScriptEditorVirtualInput.h"
 #include "Wrappers/BsScriptUndoRedo.h"
 #include "BsEditorScriptLibrary.h"
+#include "Generated/BsScriptPlayInEditor.generated.h"
 
 namespace bs
 {
@@ -54,6 +55,7 @@ namespace bs
 		ScriptFolderMonitorManager::startUp();
 		ScriptSelection::startUp();
 		ScriptInspectorUtility::startUp();
+		ScriptPlayInEditor::startUp();
 
 		mOnDomainLoadConn = ScriptObjectManager::instance().onRefreshDomainLoaded.connect(std::bind(&EditorScriptManager::loadMonoTypes, this));
 		mOnAssemblyRefreshDoneConn = ScriptObjectManager::instance().onRefreshComplete.connect(std::bind(&EditorScriptManager::onAssemblyRefreshDone, this));
@@ -73,6 +75,7 @@ namespace bs
 		mOnDomainLoadConn.disconnect();
 		mOnAssemblyRefreshDoneConn.disconnect();
 
+		ScriptPlayInEditor::shutDown();
 		ScriptInspectorUtility::shutDown();
 		ScriptSelection::shutDown();
 		ScriptFolderMonitorManager::shutDown();

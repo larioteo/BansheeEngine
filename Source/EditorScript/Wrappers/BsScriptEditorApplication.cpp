@@ -17,7 +17,7 @@
 #include "Testing/BsTestOutput.h"
 #include "Script/BsScriptManager.h"
 #include "GUI/BsGUIMenuBar.h"
-#include "BsPlayInEditorManager.h"
+#include "BsPlayInEditor.h"
 #include "Platform/BsPlatform.h"
 #include "BsScriptResourceManager.h"
 #include "FileSystem/BsFileSystem.h"
@@ -70,11 +70,6 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_RunUnitTests", (void*)&ScriptEditorApplication::internal_RunUnitTests);
 		metaData.scriptClass->addInternalCall("Internal_Quit", (void*)&ScriptEditorApplication::internal_Quit);
 		metaData.scriptClass->addInternalCall("Internal_ToggleToolbarItem", (void*)&ScriptEditorApplication::internal_ToggleToolbarItem);
-		metaData.scriptClass->addInternalCall("Internal_GetIsPlaying", (void*)&ScriptEditorApplication::internal_GetIsPlaying);
-		metaData.scriptClass->addInternalCall("Internal_SetIsPlaying", (void*)&ScriptEditorApplication::internal_SetIsPlaying);
-		metaData.scriptClass->addInternalCall("Internal_GetIsPaused", (void*)&ScriptEditorApplication::internal_GetIsPaused);
-		metaData.scriptClass->addInternalCall("Internal_SetIsPaused", (void*)&ScriptEditorApplication::internal_SetIsPaused);
-		metaData.scriptClass->addInternalCall("Internal_FrameStep", (void*)&ScriptEditorApplication::internal_FrameStep);
 		metaData.scriptClass->addInternalCall("Internal_SetMainRenderTarget", (void*)&ScriptEditorApplication::internal_SetMainRenderTarget);
 		metaData.scriptClass->addInternalCall("Internal_HasFocus", (void*)&ScriptEditorApplication::internal_HasFocus);
 
@@ -321,37 +316,7 @@ namespace bs
 
 	bool ScriptEditorApplication::internal_GetIsPlaying()
 	{
-		return PlayInEditorManager::instance().getState() == PlayInEditorState::Playing;
-	}
-
-	void ScriptEditorApplication::internal_SetIsPlaying(bool value)
-	{
-		if (value)
-			PlayInEditorManager::instance().setState(PlayInEditorState::Playing);
-		else
-			PlayInEditorManager::instance().setState(PlayInEditorState::Stopped);
-	}
-
-	bool ScriptEditorApplication::internal_GetIsPaused()
-	{
-		return PlayInEditorManager::instance().getState() == PlayInEditorState::Paused;
-	}
-
-	void ScriptEditorApplication::internal_SetIsPaused(bool value)
-	{
-		if (value)
-			PlayInEditorManager::instance().setState(PlayInEditorState::Paused);
-		else
-		{
-			bool isPaused = PlayInEditorManager::instance().getState() == PlayInEditorState::Paused;
-			if (isPaused)
-				PlayInEditorManager::instance().setState(PlayInEditorState::Playing);
-		}
-	}
-
-	void ScriptEditorApplication::internal_FrameStep()
-	{
-		PlayInEditorManager::instance().frameStep();
+		return PlayInEditor::instance().getState() == PlayInEditorState::Playing;
 	}
 
 	void ScriptEditorApplication::internal_SetMainRenderTarget(ScriptRenderTarget* renderTarget)

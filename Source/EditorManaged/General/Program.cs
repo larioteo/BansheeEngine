@@ -10,7 +10,7 @@ namespace bs.Editor
      *  @{
      */
 
-    /** @defgroup General General 
+    /** @defgroup Editor-General General 
      *  Various functionality that doesn't fit into any other category.
      */
 

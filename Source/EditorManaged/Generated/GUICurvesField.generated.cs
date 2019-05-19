@@ -159,7 +159,7 @@ namespace bs.Editor
 		}
 
 		/// <summary>Triggered when the user clicks on the GUI element.</summary>
-		partial void OnClicked();
+		partial void Callback_OnClicked();
 
 		/// <summary>Sets an animation curve to display on the field.</summary>
 		public void SetCurve(AnimationCurve curve)
@@ -230,7 +230,7 @@ namespace bs.Editor
 		private static extern void Internal_create6(GUICurvesField managedInstance, string style);
 		private void Internal_onClicked()
 		{
-			OnClicked();
+			Callback_OnClicked();
 		}
 	}
 

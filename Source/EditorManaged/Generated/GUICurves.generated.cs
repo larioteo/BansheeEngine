@@ -49,7 +49,7 @@ namespace bs.Editor
 		}
 
 		/// <summary>Triggered when the user clicks on the GUI element.</summary>
-		partial void OnClicked();
+		partial void Callback_OnClicked();
 
 		/// <summary>Changes the visible range that the GUI element displays.</summary>
 		/// <param name="xRange">Range of the horizontal area. Displayed area will range from [0, xRange].</param>
@@ -171,7 +171,7 @@ namespace bs.Editor
 		private static extern void Internal_create0(GUICurves managedInstance, CurveDrawOptions drawOptions, string styleName);
 		private void Internal_onClicked()
 		{
-			OnClicked();
+			Callback_OnClicked();
 		}
 	}
 

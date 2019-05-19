@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace bs.Editor
 {
-    /** @addtogroup General
+    /** @addtogroup Editor-General
      *  @{
      */
 

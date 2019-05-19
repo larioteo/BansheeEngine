@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace bs.Editor
 {
+    /** @addtogroup Editor-General 
+     *  @{
+     */
+
     /// <summary>
     /// Contains per-scene data relevant to the editor.
     /// </summary>
@@ -121,4 +125,6 @@ namespace bs.Editor
             IsExpanded = other.IsExpanded;
         }
     }
+
+    /** @} */
 }

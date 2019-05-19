@@ -11,7 +11,7 @@ namespace bs.Editor
      */
 
     /// <summary>
-    /// Handles scene object and resource selection. Triggeres events when selection changes and allows the user to query
+    /// Handles scene object and resource selection. Triggers events when selection changes and allows the user to query
     /// current selection state.
     /// </summary>
     public sealed class Selection

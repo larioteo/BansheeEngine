@@ -8,7 +8,7 @@ using bs;
 
 namespace bs.Editor
 {
-    /** @addtogroup General 
+    /** @addtogroup Editor-General 
      *  @{
      */
 
@@ -108,61 +108,6 @@ namespace bs.Editor
         /// Checks is any project currently loaded.
         /// </summary>
         public static bool IsProjectLoaded { get { return Internal_GetProjectLoaded(); } }
-
-        /// <summary>
-        /// Determines is the game currently running in the editor, or is it stopped or paused. Setting this value to false
-        /// will stop the game, but if you just want to pause it use <see cref="IsPaused"/> property.
-        /// </summary>
-        public static bool IsPlaying
-        {
-            get { return Internal_GetIsPlaying(); }
-            set
-            {
-                ToggleToolbarItem("Play", value);
-                ToggleToolbarItem("Pause", false);
-
-                if (!value)
-                    Selection.SceneObject = null;
-                else
-                {
-                    if (EditorSettings.GetBool(LogWindow.CLEAR_ON_PLAY_KEY, true))
-                    {
-                        Debug.Clear();
-
-                        LogWindow log = EditorWindow.GetWindow<LogWindow>();
-                        if (log != null)
-                            log.Refresh();
-                    }
-                }
-
-                Internal_SetIsPlaying(value);
-            }
-        }
-
-        /// <summary>
-        /// Determines if the game is currently running in the editor, but paused. If the game is stopped and not running
-        /// this will return false. If the game is not running and this is enabled, the game will start running but be 
-        /// immediately paused.
-        /// </summary>
-        public static bool IsPaused
-        {
-            get { return Internal_GetIsPaused(); }
-            set
-            {
-                ToggleToolbarItem("Play", !value);
-                ToggleToolbarItem("Pause", value);
-                Internal_SetIsPaused(value);
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the game is currently neither running nor paused. Use <see cref="IsPlaying"/> or 
-        /// <see cref="IsPaused"/> to actually change these states.
-        /// </summary>
-        public static bool IsStopped
-        {
-            get { return !IsPlaying && !IsPaused; }
-        }
 
         /// <summary>
         /// Checks whether the editor currently has focus.
@@ -327,6 +272,24 @@ namespace bs.Editor
 
             Scene.OnSceneLoad += OnSceneLoad;
             Scene.OnSceneUnload += OnSceneUnload;
+
+            PlayInEditor.OnPlay += () =>
+            {
+                if (EditorSettings.GetBool(LogWindow.CLEAR_ON_PLAY_KEY, true))
+                {
+                    Debug.Clear();
+
+                    LogWindow log = EditorWindow.GetWindow<LogWindow>();
+                    if (log != null)
+                        log.Refresh();
+                }
+
+                ToggleToolbarItem("Play", true);
+            };
+
+            PlayInEditor.OnStopped += () => ToggleToolbarItem("Play", false);
+            PlayInEditor.OnPaused += () => ToggleToolbarItem("Pause", true);
+            PlayInEditor.OnUnpaused += () => ToggleToolbarItem("Pause", false);
 
             // Register controls
             InputConfiguration inputConfig = VirtualInput.KeyConfig;
@@ -1030,28 +993,6 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Runs a single frame of the game and pauses it. If the game is not currently running it will be started.
-        /// </summary>
-        public static void FrameStep()
-        {
-            if (IsStopped)
-            {
-                if (EditorSettings.GetBool(LogWindow.CLEAR_ON_PLAY_KEY, true))
-                {
-                    Debug.Clear();
-
-                    LogWindow log = EditorWindow.GetWindow<LogWindow>();
-                    if (log != null)
-                        log.Refresh();
-                }
-            }
-
-            ToggleToolbarItem("Play", false);
-            ToggleToolbarItem("Pause", true);
-            Internal_FrameStep();
-        }
-
-        /// <summary>
         /// Executes any editor-specific unit tests. This should be called after a project is loaded if possible.
         /// </summary>
         private static void RunUnitTests()
@@ -1222,17 +1163,6 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_ToggleToolbarItem(string name, bool on);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Internal_GetIsPlaying();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetIsPlaying(bool value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool Internal_GetIsPaused();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetIsPaused(bool value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_FrameStep();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetMainRenderTarget(IntPtr rendertarget);

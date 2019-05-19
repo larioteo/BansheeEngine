@@ -3,6 +3,15 @@
 	<class native="AudioClipImportOptions" script="AudioClipImportOptions">
 		<doc>Contains import options you may use to control how an audio clip is imported.</doc>
 	</class>
+	<enum native="PlayInEditorState" script="PlayInEditorState">
+		<doc>States the game in editor can be in.</doc>
+		<enumentry native="Stopped" script="Stopped">
+		</enumentry>
+		<enumentry native="Playing" script="Playing">
+		</enumentry>
+		<enumentry native="Paused" script="Paused">
+		</enumentry>
+	</enum>
 	<enum native="CubemapSourceType" script="CubemapSourceType">
 		<doc>Determines the type of the source image for generating cubemaps.</doc>
 		<enumentry native="Single" script="Single">
@@ -253,6 +262,65 @@
 	<class native="ScriptCodeImportOptions" script="ScriptCodeImportOptions">
 		<doc>Contains import options you may use to control how is a file containing script source code importer.</doc>
 	</class>
+	<enum native="ToolbarIcon" script="ToolbarIcon">
+		<doc>Types of icons that may be displayed on the tool bar.</doc>
+		<enumentry native="NewCone" script="NewCone">
+		</enumentry>
+		<enumentry native="NewCamera" script="NewCamera">
+		</enumentry>
+		<enumentry native="NewRenderable" script="NewRenderable">
+		</enumentry>
+		<enumentry native="NewPointLight" script="NewPointLight">
+		</enumentry>
+		<enumentry native="NewDirLight" script="NewDirLight">
+		</enumentry>
+		<enumentry native="NewSpotLight" script="NewSpotLight">
+		</enumentry>
+		<enumentry native="NewSceneObject" script="NewSceneObject">
+		</enumentry>
+		<enumentry native="NewCube" script="NewCube">
+		</enumentry>
+		<enumentry native="NewSphere" script="NewSphere">
+		</enumentry>
+		<enumentry native="NewQuad" script="NewQuad">
+		</enumentry>
+		<enumentry native="NewMat" script="NewMat">
+		</enumentry>
+		<enumentry native="NewCSScript" script="NewCSScript">
+		</enumentry>
+		<enumentry native="NewShader" script="NewShader">
+		</enumentry>
+		<enumentry native="NewSpriteTex" script="NewSpriteTex">
+		</enumentry>
+		<enumentry native="Pause" script="Pause">
+		</enumentry>
+		<enumentry native="Play" script="Play">
+		</enumentry>
+		<enumentry native="Step" script="Step">
+		</enumentry>
+		<enumentry native="Undo" script="Undo">
+		</enumentry>
+		<enumentry native="Redo" script="Redo">
+		</enumentry>
+		<enumentry native="OpenProject" script="OpenProject">
+		</enumentry>
+		<enumentry native="SaveProject" script="SaveProject">
+		</enumentry>
+		<enumentry native="SaveScene" script="SaveScene">
+		</enumentry>
+	</enum>
+	<class native="PlayInEditor" script="PlayInEditor">
+		<doc>Handles functionality specific to running the game in editor.</doc>
+		<event native="onPlay" script="OnPlay" static="false">
+			<doc>Triggered right after the play mode is entered.</doc>
+		</event>
+		<event native="onPaused" script="OnPaused" static="false">
+			<doc>Triggered right after the user pauses play mode.</doc>
+		</event>
+		<event native="onUnpaused" script="OnUnpaused" static="false">
+			<doc>Triggered right after the user unpauses play mode.</doc>
+		</event>
+	</class>
 	<class native="GUIColorDistributionField" script="GUIColorDistributionField">
 		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays an input field for a color distribution.</doc>
 	</class>
@@ -447,53 +515,6 @@
 		<enumentry native="AnimationClip" script="AnimationClip">
 		</enumentry>
 		<enumentry native="VectorField" script="VectorField">
-		</enumentry>
-	</enum>
-	<enum native="ToolbarIcon" script="ToolbarIcon">
-		<doc>Types of icons that may be displayed on the tool bar.</doc>
-		<enumentry native="NewCone" script="NewCone">
-		</enumentry>
-		<enumentry native="NewCamera" script="NewCamera">
-		</enumentry>
-		<enumentry native="NewRenderable" script="NewRenderable">
-		</enumentry>
-		<enumentry native="NewPointLight" script="NewPointLight">
-		</enumentry>
-		<enumentry native="NewDirLight" script="NewDirLight">
-		</enumentry>
-		<enumentry native="NewSpotLight" script="NewSpotLight">
-		</enumentry>
-		<enumentry native="NewSceneObject" script="NewSceneObject">
-		</enumentry>
-		<enumentry native="NewCube" script="NewCube">
-		</enumentry>
-		<enumentry native="NewSphere" script="NewSphere">
-		</enumentry>
-		<enumentry native="NewQuad" script="NewQuad">
-		</enumentry>
-		<enumentry native="NewMat" script="NewMat">
-		</enumentry>
-		<enumentry native="NewCSScript" script="NewCSScript">
-		</enumentry>
-		<enumentry native="NewShader" script="NewShader">
-		</enumentry>
-		<enumentry native="NewSpriteTex" script="NewSpriteTex">
-		</enumentry>
-		<enumentry native="Pause" script="Pause">
-		</enumentry>
-		<enumentry native="Play" script="Play">
-		</enumentry>
-		<enumentry native="Step" script="Step">
-		</enumentry>
-		<enumentry native="Undo" script="Undo">
-		</enumentry>
-		<enumentry native="Redo" script="Redo">
-		</enumentry>
-		<enumentry native="OpenProject" script="OpenProject">
-		</enumentry>
-		<enumentry native="SaveProject" script="SaveProject">
-		</enumentry>
-		<enumentry native="SaveScene" script="SaveScene">
 		</enumentry>
 	</enum>
 	<enum native="SceneViewIcon" script="SceneViewIcon">

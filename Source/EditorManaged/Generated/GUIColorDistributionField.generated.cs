@@ -96,10 +96,10 @@ namespace bs.Editor
 		}
 
 		/// <summary>Triggered when the user clicks on the minimum value display for the distribution.</summary>
-		partial void OnMinClicked();
+		partial void Callback_OnMinClicked();
 
 		/// <summary>Triggered when the user clicks on the maximum value display for the distribution.</summary>
-		partial void OnMaxClicked();
+		partial void Callback_OnMaxClicked();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ColorDistribution Internal_getValue(IntPtr thisPtr);
@@ -119,11 +119,11 @@ namespace bs.Editor
 		private static extern void Internal_create3(GUIColorDistributionField managedInstance, string style);
 		private void Internal_onMinClicked()
 		{
-			OnMinClicked();
+			Callback_OnMinClicked();
 		}
 		private void Internal_onMaxClicked()
 		{
-			OnMaxClicked();
+			Callback_OnMaxClicked();
 		}
 	}
 

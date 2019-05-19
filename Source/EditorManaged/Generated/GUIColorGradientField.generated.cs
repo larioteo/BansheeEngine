@@ -89,7 +89,7 @@ namespace bs.Editor
 		}
 
 		/// <summary>Triggered when the user clicks on the gradient field.</summary>
-		partial void OnClicked();
+		partial void Callback_OnClicked();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern ColorGradient Internal_getValue(IntPtr thisPtr);
@@ -107,7 +107,7 @@ namespace bs.Editor
 		private static extern void Internal_create3(GUIColorGradientField managedInstance, string style);
 		private void Internal_onClicked()
 		{
-			OnClicked();
+			Callback_OnClicked();
 		}
 	}
 

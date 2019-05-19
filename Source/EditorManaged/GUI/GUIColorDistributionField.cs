@@ -10,7 +10,7 @@ namespace bs.Editor
         /// </summary>
         public event Action OnChanged;
 
-        partial void OnMinClicked()
+        partial void Callback_OnMinClicked()
         {
             ColorDistribution distribution = Value;
 
@@ -48,7 +48,7 @@ namespace bs.Editor
             }
         }
 
-        partial void OnMaxClicked()
+        partial void Callback_OnMaxClicked()
         {
             ColorDistribution distribution = Value;
 

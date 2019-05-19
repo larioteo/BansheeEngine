@@ -108,7 +108,7 @@ namespace bs.Editor
 		/// Triggered when the user clicks on the curve display. Only relevant if the distribution is a curve distribution.  
 		/// Provides the index of the clicked curve.
 		/// </summary>
-		partial void OnClicked(VectorComponent p0);
+		partial void Callback_OnClicked(VectorComponent p0);
 
 		/// <summary>
 		/// Triggered when the user modifies the value of the non-curve (constant) values of the distribution. Only relevant  if 
@@ -165,7 +165,7 @@ namespace bs.Editor
 		private static extern void Internal_create3(GUIVector3DistributionField managedInstance, string style);
 		private void Internal_onClicked(VectorComponent p0)
 		{
-			OnClicked(p0);
+			Callback_OnClicked(p0);
 		}
 		private void Internal_onConstantModified(RangeComponent p0, VectorComponent p1)
 		{

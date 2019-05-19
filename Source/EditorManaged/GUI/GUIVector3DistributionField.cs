@@ -10,7 +10,7 @@ namespace bs.Editor
         /// </summary>
         public event Action OnCurveChanged;
 
-        partial void OnClicked(VectorComponent component)
+        partial void Callback_OnClicked(VectorComponent component)
         {
             int componentIdx = (int) component;
             Vector3Distribution distribution = Value;

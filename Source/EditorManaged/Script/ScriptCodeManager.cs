@@ -81,7 +81,7 @@ namespace bs.Editor
             if (EditorApplication.HasFocus && CodeEditor.IsSolutionDirty)
                 CodeEditor.SyncSolution();
 
-            if (EditorApplication.IsStopped && !ProjectLibrary.ImportInProgress)
+            if (PlayInEditor.State == PlayInEditorState.Stopped && !ProjectLibrary.ImportInProgress)
             {
                 if (compilerInstance == null)
                 {
