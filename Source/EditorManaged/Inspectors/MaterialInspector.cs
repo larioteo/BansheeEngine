@@ -458,6 +458,10 @@ namespace bs.Editor
         /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
+        /// <param name="loadResources">
+        /// If true, any assigned texture resources will be loaded in memory. If false the resources will be just referenced
+        /// without loading.
+        /// </param>
         internal MaterialParamVec3GUI(ShaderParameter shaderParam, string path, Component component, Material material, 
             GUILayout layout)
             : base(shaderParam, path, component)
@@ -935,11 +939,17 @@ namespace bs.Editor
                                 {
                                     StartUndo();
 
+                                    // Note: Ideally we can avoid loading texture resources if the material is not
+                                    // referenced anywhere in the scene. But we don't have a good way to check that at
+                                    // the moment.
+                                    //    Resources.LoadAsync<Resource>(x.UUID);
+
                                     ResourceMeta meta = fileEntry.ResourceMetas[0];
                                     if (meta.ResType == ResourceType.SpriteTexture)
-                                        material.SetSpriteTexture(shaderParam.name, x.As<SpriteTexture>());
-                                    else if(meta.ResType == ResourceType.Texture)
-                                        material.SetTexture(shaderParam.name, x.As<Texture>());
+                                        material.SetSpriteTexture(shaderParam.name,
+                                            bs.Resources.LoadAsync<SpriteTexture>(x.UUID));//(SpriteTexture)x.Value);//x.As<SpriteTexture>());
+                                    else if (meta.ResType == ResourceType.Texture)
+                                        material.SetTexture(shaderParam.name, bs.Resources.LoadAsync<Texture>(x.UUID));//(Texture)x.Value); //x.As<Texture>());
 
                                     EndUndo();
                                 }

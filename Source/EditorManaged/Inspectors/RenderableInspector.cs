@@ -170,7 +170,7 @@ namespace bs.Editor
                         continue;
                     }
 
-                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material, 
+                    MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material,
                         "materialParams[" + i + "]", null, materialLayout);
                     materialParams.Add(matParams);
                 }
