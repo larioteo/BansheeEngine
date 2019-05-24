@@ -33,7 +33,7 @@ namespace bs
 		mDomainLoadConn.disconnect();
 	}
 
-	void ScriptHandleManager::triggerPreInput()
+	void ScriptHandleManager::updateHandles()
 	{
 		// Activate global handles
 		for(auto& handle : mGlobalHandlesToCreate)
@@ -108,8 +108,14 @@ namespace bs
 			mDefaultHandleManagerGCHandle = MonoUtil::newGCHandle(defaultHandleManager);
 			mDefaultHandleManager = MonoUtil::getObjectFromGCHandle(mDefaultHandleManagerGCHandle);
 		}
+	}
 
-		callPreInput(mDefaultHandleManager);
+	void ScriptHandleManager::triggerPreInput()
+	{
+		updateHandles();
+
+		if(mDefaultHandleManager)
+			callPreInput(mDefaultHandleManager);
 
 		for (auto& handle : mActiveGlobalHandles)
 			callPreInput(handle.object);
@@ -120,7 +126,8 @@ namespace bs
 
 	void ScriptHandleManager::triggerPostInput()
 	{
-		callPostInput(mDefaultHandleManager);
+		if(mDefaultHandleManager)
+			callPostInput(mDefaultHandleManager);
 
 		for (auto& handle : mActiveGlobalHandles)
 			callPostInput(handle.object);
@@ -131,7 +138,10 @@ namespace bs
 
 	void ScriptHandleManager::queueDrawCommands()
 	{
-		callDraw(mDefaultHandleManager);
+		updateHandles();
+
+		if(mDefaultHandleManager)
+			callDraw(mDefaultHandleManager);
 
 		for (auto& handle : mActiveGlobalHandles)
 			callDraw(handle.object);

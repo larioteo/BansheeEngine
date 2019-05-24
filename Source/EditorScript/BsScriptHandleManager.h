@@ -59,6 +59,9 @@ namespace bs
 		/** @copydoc HandleManager::queueDrawCommands */
 		void queueDrawCommands() override;
 
+		/** Creates or destroys handle objects depending on the current selection. */
+		void updateHandles();
+
 		/**   
 		 * Clears references to all managed types and objects. Must be called before loadAssemblyData() if 
 		 * loadAssemblyData() was called previously.
