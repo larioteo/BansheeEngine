@@ -208,6 +208,9 @@
 		<enumentry native="VKSL" script="VKSL">
 			<doc>Variant of GLSL used for Vulkan.</doc>
 		</enumentry>
+		<enumentry native="MSL" script="MSL">
+			<doc>Metal shading language.</doc>
+		</enumentry>
 		<enumentry native="All" script="All">
 			<doc>Helper entry that includes all languages.</doc>
 		</enumentry>
