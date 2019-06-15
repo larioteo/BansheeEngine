@@ -17,6 +17,7 @@ namespace bs.Editor
     internal class RenderableInspector : Inspector
     {
         private List<MaterialParamGUI[]> materialParams = new List<MaterialParamGUI[]>();
+        private List<MaterialVariationGUI> materialVariations = new List<MaterialVariationGUI>();
 
         private RRef<Material>[] materials;
         private GUILayout materialsLayout;
@@ -140,6 +141,7 @@ namespace bs.Editor
             materialsLayout.Clear();
 
             materialParams.Clear();
+            materialVariations.Clear();
             if (materials != null && materials.Length > 0)
             {
                 for (int i = 0; i < materials.Length; i++)
@@ -169,6 +171,9 @@ namespace bs.Editor
                         materialParams.Add(new MaterialParamGUI[0]);
                         continue;
                     }
+
+                    MaterialVariationGUI variationGUI = new MaterialVariationGUI(material, materialLayout);
+                    materialVariations.Add(variationGUI);
 
                     MaterialParamGUI[] matParams = MaterialInspector.CreateMaterialGUI(material,
                         "materialParams[" + i + "]", null, materialLayout);

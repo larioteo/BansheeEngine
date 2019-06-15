@@ -18,6 +18,7 @@ namespace bs.Editor
     internal class MaterialInspector : Inspector
     {
         private MaterialParamGUI[] guiParams;
+        private MaterialVariationGUI guiVariations;
         private GUIResourceField shaderField;
         private GUIEnumField builtinShaderField;
         private Material material;
@@ -107,12 +108,17 @@ namespace bs.Editor
                 guiParams = null;
             }
 
+            guiVariations = null;
+
             Layout.Clear();
             Layout.AddElement(builtinShaderField);
             Layout.AddElement(shaderField);
 
             if (material != null && material.Shader != null)
+            {
+                guiVariations = new MaterialVariationGUI(material, Layout);
                 guiParams = CreateMaterialGUI(material, "", null, Layout);
+            }
         }
 
         /// <summary>
@@ -198,6 +204,56 @@ namespace bs.Editor
             }
 
             return guiParams.ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Draws GUI that allows the user to change the active shader variation for a material.
+    /// </summary>
+    internal class MaterialVariationGUI
+    {
+        private Material material;
+        private ShaderVariation variation;
+
+        /// <summary>
+        /// Creates necessary GUI elements for selecting a material variation.
+        /// </summary>
+        /// <param name="material">Material for which to provide variation selection.</param>
+        /// <param name="layout">GUI layout to which to append GUI elements.</param>
+        internal MaterialVariationGUI(Material material, GUILayout layout)
+        {
+            this.material = material;
+            variation = material.Variation;
+
+            Shader shader = material.Shader.Value;
+            if (shader == null)
+                return;
+
+            ShaderVariationParamInfo[] variationParams = shader.VariationParams;
+            foreach (var param in variationParams)
+            {
+                if (param.isInternal)
+                    continue;
+
+                LocString[] names = new LocString[param.values.Length];
+                int[] values = new int[names.Length];
+                for (int i = 0; i < names.Length; i++)
+                {
+                    names[i] = new LocEdString(param.values[i].name);
+                    values[i] = param.values[i].value;
+                }
+
+                GUIListBoxField listBox = new GUIListBoxField(names, new LocEdString(param.name));
+                listBox.OnSelectionChanged += idx =>
+                {
+                    int value = values[idx];
+                    variation.SetInt(param.identifier, value);
+
+                    material.Variation = variation;
+                };
+
+                layout.AddElement(listBox);
+            }
         }
     }
 
