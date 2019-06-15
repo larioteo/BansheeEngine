@@ -130,7 +130,7 @@ namespace bs
 						SPtr<RasterizerState> rasterizerState = RasterizerState::getDefault();
 
 						HMaterial originalMat = renderable->getMaterial(i);
-						if (originalMat != nullptr && originalMat->getNumPasses() > 0)
+						if (originalMat.isLoaded() && originalMat->getNumPasses() > 0)
 						{
 							SPtr<Pass> firstPass = originalMat->getPass(0); // Note: We only ever check the first pass, problem?
 							const auto& pipelineState = firstPass->getGraphicsPipelineState();
