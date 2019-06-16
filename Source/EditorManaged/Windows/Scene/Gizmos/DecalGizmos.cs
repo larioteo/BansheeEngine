@@ -14,6 +14,20 @@ namespace bs.Editor
     internal class DecalGizmos
     {
         /// <summary>
+        /// Draws decal shape gizmo when a decal is selected.
+        /// </summary>
+        /// <param name="decal">Decal to draw the gizmos for.</param>
+        [DrawGizmo(DrawGizmoFlags.Selected)]
+        private static void Draw(Decal decal)
+        {
+            Gizmos.Color = Color.Yellow;
+            Gizmos.Transform = decal.SceneObject.WorldTransform;
+            Gizmos.DrawWireCube(
+                new Vector3(0.0f, 0.0f, -decal.MaxDistance * 0.5f), 
+                new Vector3(decal.Size.x, decal.Size.y, decal.MaxDistance) * 0.5f);
+        }
+
+        /// <summary>
         /// Draws decal icon in scene view.
         /// </summary>
         /// <param name="decal">Decal to draw the icon for.</param>

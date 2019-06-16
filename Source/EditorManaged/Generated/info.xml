@@ -230,6 +230,25 @@
 			<doc>Draws curves and the area between them. Only relevant if only two curves are provided for drawing.</doc>
 		</enumentry>
 	</enum>
+	<enum native="SceneViewIcon" script="SceneViewIcon">
+		<doc>Types of icons that are used as 3D icons in the scene view.</doc>
+		<enumentry native="Camera" script="Camera">
+		</enumentry>
+		<enumentry native="Light" script="Light">
+		</enumentry>
+		<enumentry native="AudioSource" script="AudioSource">
+		</enumentry>
+		<enumentry native="AudioListener" script="AudioListener">
+		</enumentry>
+		<enumentry native="Decal" script="Decal">
+		</enumentry>
+		<enumentry native="ParticleSystem" script="ParticleSystem">
+		</enumentry>
+		<enumentry native="LightProbes" script="LightProbes">
+		</enumentry>
+		<enumentry native="ReflectionProbe" script="ReflectionProbe">
+		</enumentry>
+	</enum>
 	<enum native="FontRenderMode" script="FontRenderMode">
 		<doc>Determines how is a font rendered into the bitmap texture.</doc>
 		<enumentry native="Smooth" script="Smooth">
@@ -518,25 +537,6 @@
 		<enumentry native="AnimationClip" script="AnimationClip">
 		</enumentry>
 		<enumentry native="VectorField" script="VectorField">
-		</enumentry>
-	</enum>
-	<enum native="SceneViewIcon" script="SceneViewIcon">
-		<doc>Types of icons that are used as 3D icons in the scene view.</doc>
-		<enumentry native="Camera" script="Camera">
-		</enumentry>
-		<enumentry native="Light" script="Light">
-		</enumentry>
-		<enumentry native="AudioSource" script="AudioSource">
-		</enumentry>
-		<enumentry native="AudioListener" script="AudioListener">
-		</enumentry>
-		<enumentry native="Decal" script="Decal">
-		</enumentry>
-		<enumentry native="ParticleSystem" script="ParticleSystem">
-		</enumentry>
-		<enumentry native="LightProbes" script="LightProbes">
-		</enumentry>
-		<enumentry native="ReflectionProbe" script="ReflectionProbe">
 		</enumentry>
 	</enum>
 	<enum native="SceneWindowIcon" script="SceneWindowIcon">

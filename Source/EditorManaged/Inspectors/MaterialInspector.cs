@@ -252,6 +252,16 @@ namespace bs.Editor
                     material.Variation = variation;
                 };
 
+                int curValue = variation.GetInt(param.identifier);
+                for (int j = 0; j < values.Length; j++)
+                {
+                    if (curValue == values[j])
+                    {
+                        listBox.Index = j;
+                        break;
+                    }
+                }
+
                 layout.AddElement(listBox);
             }
         }
