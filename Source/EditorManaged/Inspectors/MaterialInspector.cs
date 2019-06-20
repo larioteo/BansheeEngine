@@ -161,7 +161,7 @@ namespace bs.Editor
 
             foreach (var param in shaderParams)
             {
-                if (param.isInternal)
+                if (param.flags.HasFlag(ShaderParameterFlag.Internal) || param.flags.HasFlag(ShaderParameterFlag.HideInInspector))
                     continue;
 
                 switch (param.type)
