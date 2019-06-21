@@ -229,7 +229,7 @@ namespace bs
 		// problems can occur when user types in "0." and the field
 		// updates back to "0" effectively making "." unusable
 		float curValue = parseFloat(mInputBox->getText());
-		if (value != curValue || mInputBox->getText().empty())
+		if (value != curValue)
 			mInputBox->setText(toString(value));
 	}
 
