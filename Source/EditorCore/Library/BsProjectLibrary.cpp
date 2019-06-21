@@ -41,7 +41,7 @@ namespace bs
 
 			const SPtr<PixelData> srcData = props.allocBuffer(0, 0);
 			AsyncOp readOp = texture.readData(srcData);
-			gCoreThread().submitAll(true);
+			gCoreThread().submit(true);
 
 			// 256
 			const SPtr<PixelData> data256 = PixelData::create(256, 256, 1, props.getFormat());
