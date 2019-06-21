@@ -31,9 +31,6 @@ namespace bs
 		/**	Returns the name of the currently loaded project. */
 		const String& getProjectName() const { return mProjectName; }
 
-		/**	Returns the absolute path where the builtin editor assets are located. */
-		Path getDataPath() const { return mBuiltinDataPath; }
-
 		/** Returns a set of serializable editor settings that contain every globally customizable editor property. */
 		SPtr<EditorSettings> getEditorSettings() const { return mEditorSettings; }
 
@@ -135,8 +132,6 @@ namespace bs
 
 		SPtr<EditorSettings> mEditorSettings;
 		SPtr<ProjectSettings> mProjectSettings;
-
-		Path mBuiltinDataPath;
 
 		bool mIsProjectLoaded;
 		Path mProjectPath;

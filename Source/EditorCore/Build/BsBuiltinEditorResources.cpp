@@ -104,13 +104,13 @@ namespace bs
 	BuiltinEditorResources::BuiltinEditorResources()
 	{
 		// Set up paths
-		BuiltinRawDataFolder = gEditorApplication().getDataPath() + "Raw/";
+		BuiltinRawDataFolder = Paths::getEditorDataPath() + "Raw/";
 		EditorRawSkinFolder = BuiltinRawDataFolder + SkinFolder;
 		EditorRawIconsFolder = BuiltinRawDataFolder + IconFolder;
 		EditorRawShaderFolder = BuiltinRawDataFolder + ShaderFolder;
 		EditorRawShaderIncludeFolder = BuiltinRawDataFolder + ShaderIncludeFolder;
 
-		BuiltinDataFolder = gEditorApplication().getDataPath();
+		BuiltinDataFolder = Paths::getEditorDataPath();
 		EditorSkinFolder = BuiltinDataFolder + SkinFolder;
 		EditorSkinSpritesFolder = EditorSkinFolder + SpriteSubFolder;
 		EditorIconFolder = BuiltinDataFolder + IconFolder;
@@ -692,7 +692,7 @@ namespace bs
 
 	SPtr<PixelData> BuiltinEditorResources::getSplashScreen()
 	{
-		Path splashScreenPath = gEditorApplication().getDataPath() + (String(SplashScreenName) + ".asset");
+		Path splashScreenPath = Paths::getEditorDataPath() + (String(SplashScreenName) + ".asset");
 		FileDecoder fd(splashScreenPath);
 
 		return std::static_pointer_cast<PixelData>(fd.decode());
@@ -722,13 +722,8 @@ namespace bs
 		return StringUtil::BLANK;
 	}
 
-	Path BuiltinEditorResources::getShaderIncludeFolder()
-	{
-		return gEditorApplication().getDataPath() + ShaderIncludeFolder;
-	}
-
 	Path BuiltinEditorResources::getDefaultWidgetLayoutPath()
 	{
-		return gEditorApplication().getDataPath() + "Layout.asset";
+		return Paths::getEditorDataPath() + "Layout.asset";
 	}
 }

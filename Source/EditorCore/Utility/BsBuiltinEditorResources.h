@@ -205,9 +205,6 @@ namespace bs
 		/**	Returns image data the Banshee Engine splash screen. */
 		static SPtr<PixelData> getSplashScreen();
 
-		/**	Returns absolute path to the builtin shader include folder. */
-		static Path getShaderIncludeFolder();
-
 		/**	Returns absolute path to the default widget layout file. */
 		static Path getDefaultWidgetLayoutPath();
 

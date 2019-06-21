@@ -143,7 +143,7 @@ namespace bs
 		{
 		case PlatformType::Windows:
 		{
-			Path output = gEditorApplication().getDataPath() + "Binaries/Win64/Game.exe";
+			Path output = Paths::getEditorDataPath() + "Binaries/Win64/Game.exe";
 			return output;
 		}
 		default:

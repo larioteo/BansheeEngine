@@ -61,7 +61,7 @@ namespace bs
 		{
 			if (name.size() > 8)
 			{
-				Path fullPath = BuiltinEditorResources::getShaderIncludeFolder();
+				Path fullPath = BuiltinResources::getEditorShaderIncludeFolder();
 				Path includePath = name.substr(9, name.size() - 9);
 
 				fullPath.append(includePath);

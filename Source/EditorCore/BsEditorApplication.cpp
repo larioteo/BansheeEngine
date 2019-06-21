@@ -67,7 +67,7 @@ namespace bs
 
 	Path getEditorSettingsPath()
 	{
-		return gEditorApplication().getDataPath() + "Settings.asset";
+		return Paths::getEditorDataPath() + "Settings.asset";
 	}
 
 	EditorApplication::EditorApplication()
@@ -84,22 +84,6 @@ namespace bs
 
 	void EditorApplication::onStartUp()
 	{
-		// Find the path to data files
-		//// First, look for EditorData folder in the direct descendant of the working directory 
-		if (FileSystem::exists("EditorData"))
-		{
-			mBuiltinDataPath = FileSystem::getWorkingDirectoryPath();
-			mBuiltinDataPath.append("EditorData/");
-		}
-		else
-		{
-			// Then check the source distribution itself, in case we're running directly from the build directory
-			mBuiltinDataPath = Path(RAW_APP_ROOT) + Path("Data/");
-
-			if (!FileSystem::exists(mBuiltinDataPath))
-				LOGERR("Cannot find builtin assets for the editor at path '" + mBuiltinDataPath.toString() + "'.");
-		}
-
 		Application::onStartUp();
 
 		// In editor we render game on a separate surface, handled in Game window
