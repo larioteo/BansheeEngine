@@ -180,19 +180,20 @@ namespace bs
 		HSpriteTexture iconTexture;
 		Color textColor = COLOR_INFO;
 
-		UINT32 logChannel = entry.getChannel();
-		switch (logChannel)
+		LogVerbosity verbosity = entry.getVerbosity();
+		switch (verbosity)
 		{
-		case (UINT32)DebugChannel::Debug:
+		case LogVerbosity::VeryVerbose:
+		case LogVerbosity::Verbose:
+		case LogVerbosity::Info:
 			iconTexture = BuiltinEditorResources::instance().getLogMessageIcon(LogMessageIcon::Info, 16, false);
 			break;
-		case (UINT32)DebugChannel::Warning:
-		case (UINT32)DebugChannel::CompilerWarning:
+		case LogVerbosity::Warning:
 			iconTexture = BuiltinEditorResources::instance().getLogMessageIcon(LogMessageIcon::Warning, 16, false);
 			textColor = COLOR_WARNING;
 			break;
-		case (UINT32)DebugChannel::Error:
-		case (UINT32)DebugChannel::CompilerError:
+		case LogVerbosity::Error:
+		case LogVerbosity::Fatal:
 			iconTexture = BuiltinEditorResources::instance().getLogMessageIcon(LogMessageIcon::Error, 16, false);
 			textColor = COLOR_ERROR;
 			break;

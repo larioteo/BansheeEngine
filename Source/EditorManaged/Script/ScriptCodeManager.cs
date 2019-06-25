@@ -18,6 +18,8 @@ namespace bs.Editor
     /// </summary>
     public sealed class ScriptCodeManager
     {
+        private const int CompilerLogCategory = 100;
+
         private bool isGameAssemblyDirty;
         private bool isEditorAssemblyDirty;
         private CompilerInstance compilerInstance;
@@ -113,8 +115,7 @@ namespace bs.Editor
                 {
                     if (compilerInstance.IsDone)
                     {
-                        Debug.Clear(DebugMessageType.CompilerWarning);
-                        Debug.Clear(DebugMessageType.CompilerError);
+                        Debug.Clear(LogVerbosity.Any, CompilerLogCategory);
 
                         LogWindow window = EditorWindow.GetWindow<LogWindow>();
                         if (window != null)
@@ -123,10 +124,10 @@ namespace bs.Editor
                         if (compilerInstance.HasErrors)
                         {
                             foreach (var msg in compilerInstance.WarningMessages)
-                                Debug.LogMessage(FormMessage(msg), DebugMessageType.CompilerWarning);
+                                Debug.LogMessage(FormMessage(msg), LogVerbosity.Warning, CompilerLogCategory);
 
                             foreach (var msg in compilerInstance.ErrorMessages)
-                                Debug.LogMessage(FormMessage(msg), DebugMessageType.CompilerError);
+                                Debug.LogMessage(FormMessage(msg), LogVerbosity.Error, CompilerLogCategory);
                         }
 
                         compilerInstance.Dispose();

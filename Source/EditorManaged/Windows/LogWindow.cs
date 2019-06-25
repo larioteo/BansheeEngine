@@ -57,7 +57,7 @@ namespace bs.Editor
 
             LogEntry[] existingEntries = Debug.Messages;
             for (int i = 0; i < existingEntries.Length; i++)
-                OnEntryAdded(existingEntries[i].type, existingEntries[i].message);
+                OnEntryAdded(existingEntries[i].message, existingEntries[i].verbosity, existingEntries[i].category);
         }
 
         #endregion
@@ -189,9 +189,10 @@ namespace bs.Editor
         /// <summary>
         /// Triggered when a new entry is added in the debug log.
         /// </summary>
-        /// <param name="type">Type of the message.</param>
         /// <param name="message">Message string.</param>
-        private void OnEntryAdded(DebugMessageType type, string message)
+        /// <param name="verbosity">Verbosity level defining message importance.</param>
+        /// <param name="category">Category of the sub-system reporting the message.</param>
+        private void OnEntryAdded(string message, LogVerbosity verbosity, int category)
         {
             // Check if compiler message or reported exception, otherwise parse it as a normal log message
             ParsedLogEntry logEntry = ScriptCodeManager.ParseCompilerMessage(message);
@@ -202,13 +203,14 @@ namespace bs.Editor
                 logEntry = Debug.ParseLogMessage(message);
 
             ConsoleEntryData newEntry = new ConsoleEntryData();
-            newEntry.type = type;
+            newEntry.verbosity = verbosity;
+            newEntry.category = category;
             newEntry.callstack = logEntry.callstack;
             newEntry.message = logEntry.message;
 
             entries.Add(newEntry);
             
-            if (DoesFilterMatch(type))
+            if (DoesFilterMatch(verbosity))
             {
                 listView.AddEntry(newEntry);
                 filteredEntries.Add(newEntry);
@@ -230,7 +232,7 @@ namespace bs.Editor
             filteredEntries.Clear();
             foreach (var entry in entries)
             {
-                if (DoesFilterMatch(entry.type))
+                if (DoesFilterMatch(entry.verbosity))
                 {
                     listView.AddEntry(entry);
                     filteredEntries.Add(entry);
@@ -244,19 +246,20 @@ namespace bs.Editor
         /// Checks if the currently active entry filter matches the provided type (the entry with the type that should be
         /// displayed).
         /// </summary>
-        /// <param name="type">Type of the entry to check.</param>
+        /// <param name="verbosity">Message verbosity defining its importance.</param>
         /// <returns>True if the entry with the specified type should be displayed in the console.</returns>
-        private bool DoesFilterMatch(DebugMessageType type)
+        private bool DoesFilterMatch(LogVerbosity verbosity)
         {
-            switch (type)
+            switch (verbosity)
             {
-                case DebugMessageType.Info:
+                case LogVerbosity.VeryVerbose:
+                case LogVerbosity.Verbose:
+                case LogVerbosity.Info:
                     return filter.HasFlag(EntryFilter.Info);
-                case DebugMessageType.Warning:
-                case DebugMessageType.CompilerWarning:
+                case LogVerbosity.Warning:
                     return filter.HasFlag(EntryFilter.Warning);
-                case DebugMessageType.Error:
-                case DebugMessageType.CompilerError:
+                case LogVerbosity.Error:
+                case LogVerbosity.Fatal:
                     return filter.HasFlag(EntryFilter.Error);
             }
 
@@ -395,7 +398,8 @@ namespace bs.Editor
         /// </summary>
         private class ConsoleEntryData : GUIListViewData
         {
-            public DebugMessageType type;
+            public LogVerbosity verbosity;
+            public int category;
             public string message;
             public CallStackEntry[] callstack;
         }
@@ -485,17 +489,18 @@ namespace bs.Editor
                     background.SetTint(SELECTION_COLOR);
                 }
 
-                switch (data.type)
+                switch (data.verbosity)
                 {
-                    case DebugMessageType.Info:
+                    case LogVerbosity.VeryVerbose:
+                    case LogVerbosity.Verbose:
+                    case LogVerbosity.Info:
                         icon.SetTexture(EditorBuiltin.GetLogMessageIcon(LogMessageIcon.Info, 32, false));
                         break;
-                    case DebugMessageType.Warning:
-                    case DebugMessageType.CompilerWarning:
+                    case LogVerbosity.Warning:
                         icon.SetTexture(EditorBuiltin.GetLogMessageIcon(LogMessageIcon.Warning, 32, false));
                         break;
-                    case DebugMessageType.Error:
-                    case DebugMessageType.CompilerError:
+                    case LogVerbosity.Error:
+                    case LogVerbosity.Fatal:
                         icon.SetTexture(EditorBuiltin.GetLogMessageIcon(LogMessageIcon.Error, 32, false));
                         break;
                 }
