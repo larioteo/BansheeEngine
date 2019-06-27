@@ -21,13 +21,37 @@
 #include "Image/BsTexture.h"
 #include "String/BsUnicode.h"
 #include "CoreThread/BsCoreThread.h"
-#include <regex>
 #include "Threading/BsTaskScheduler.h"
+#include "RenderAPI/BsRenderTexture.h"
+#include "Renderer/BsRendererUtility.h"
+#include <regex>
 
 using namespace std::placeholders;
 
 namespace bs
 {
+	void coreGeneratePreviewPyramid(const SPtr<ct::Texture>& input, const SPtr<ct::RenderTexture>* outputs, 
+		UINT32 numOutputs)
+	{
+		if(numOutputs == 0)
+			return;
+
+		gProfilerGPU().beginFrame();
+		ct::RenderAPI& rapi = ct::RenderAPI::instance();
+
+		rapi.setRenderTarget(outputs[0]);
+		ct::gRendererUtility().blit(input);
+
+		for(UINT32 i = 1; i < numOutputs; i++)
+		{
+			rapi.setRenderTarget(outputs[i]);
+			ct::gRendererUtility().blit(outputs[i - 1]->getColorTexture(0), Rect2I::EMPTY, false, false, true);
+		}
+
+		rapi.submitCommandBuffer(nullptr);
+		gProfilerGPU().endFrame(true);
+	}
+
 	ProjectResourceIcons generatePreviewIcons(Resource& resource)
 	{
 		ProjectResourceIcons icons;
@@ -36,53 +60,38 @@ namespace bs
 		if(typeId == TID_Texture)
 		{
 			Texture& texture = static_cast<Texture&>(resource);
+			SPtr<Texture> texturePtr = static_pointer_cast<Texture>(texture.getThisPtr());
 
-			const TextureProperties& props = texture.getProperties();
+			UINT32 sizes[] = { 256, 192, 128, 96, 64, 48, 32, 16 };
 
-			const SPtr<PixelData> srcData = props.allocBuffer(0, 0);
-			AsyncOp readOp = texture.readData(srcData);
-			gCoreThread().submit(true);
+			constexpr UINT32 numSizes = (UINT32)bs_size(sizes);
+			SPtr<RenderTexture> rts[numSizes];
+			SPtr<ct::RenderTexture> coreRts[numSizes];
+			for(UINT32 i = 0; i < numSizes; i++)
+			{
+				TEXTURE_DESC rtDesc;
+				rtDesc.usage |= TU_CPUREADABLE; 
+				rtDesc.width = sizes[i];
+				rtDesc.height = sizes[i];
 
-			// 256
-			const SPtr<PixelData> data256 = PixelData::create(256, 256, 1, props.getFormat());
-			PixelUtil::scale(*srcData, *data256);
+				rts[i] = RenderTexture::create(rtDesc, false);
+				coreRts[i] = rts[i]->getCore();
+			}
 
-			// 192
-			const SPtr<PixelData> data192 = PixelData::create(192, 192, 1, props.getFormat());
-			PixelUtil::scale(*data256, *data192);
+			gCoreThread().queueCommand(
+				[coreTex = texturePtr->getCore(), coreRts, numSizes]()
+			{
+				coreGeneratePreviewPyramid(coreTex, coreRts, numSizes);
+			}, CTQF_BlockUntilComplete);
 
-			// 128
-			const SPtr<PixelData> data128 = PixelData::create(128, 128, 1, props.getFormat());
-			PixelUtil::scale(*data192, *data128);
-
-			// 96
-			const SPtr<PixelData> data96 = PixelData::create(96, 96, 1, props.getFormat());
-			PixelUtil::scale(*data128, *data96);
-
-			// 64
-			const SPtr<PixelData> data64 = PixelData::create(64, 64, 1, props.getFormat());
-			PixelUtil::scale(*data96, *data64);
-
-			// 48
-			const SPtr<PixelData> data48 = PixelData::create(48, 48, 1, props.getFormat());
-			PixelUtil::scale(*data64, *data48);
-
-			// 32
-			const SPtr<PixelData> data32 = PixelData::create(32, 32, 1, props.getFormat());
-			PixelUtil::scale(*data48, *data32);
-
-			// 16
-			const SPtr<PixelData> data16 = PixelData::create(16, 16, 1, props.getFormat());
-			PixelUtil::scale(*data32, *data16);
-
-			icons.icon16 = Texture::create(data16);
-			icons.icon32 = Texture::create(data32);
-			icons.icon48 = Texture::create(data48);
-			icons.icon64 = Texture::create(data64);
-			icons.icon96 = Texture::create(data96);
-			icons.icon128 = Texture::create(data128);
-			icons.icon192 = Texture::create(data192);
-			icons.icon256 = Texture::create(data256);
+			icons.icon256 = rts[0]->getColorTexture(0);
+			icons.icon192 = rts[1]->getColorTexture(0);
+			icons.icon128 = rts[2]->getColorTexture(0);
+			icons.icon96 = rts[3]->getColorTexture(0);
+			icons.icon64 = rts[4]->getColorTexture(0);
+			icons.icon48 = rts[5]->getColorTexture(0);
+			icons.icon32 = rts[6]->getColorTexture(0);
+			icons.icon16 = rts[7]->getColorTexture(0);
 		}
 
 		return icons;
