@@ -23,8 +23,8 @@ namespace bs
 
 		if(!ScriptAssemblyManager::instance().hasSerializableObjectInfo(mNamespace, mType))
 		{
-			LOGWRN("UndoableCommand created without [SerializeObject] attribute. The command will not be able to \
-				persist assembly refresh.");
+			BS_LOG(Warning, Editor, "UndoableCommand created without [SerializeObject] attribute. The command will not be "
+				"able to persist assembly refresh.");
 		}
 
 		mManagedCommand = bs_shared_ptr(new (bs_alloc<CmdManaged>()) CmdManaged(this));
@@ -208,7 +208,8 @@ namespace bs
 	{
 		if(mScriptObj == nullptr)
 		{
-			LOGWRN("Trying to execute a managed undo/redo command whose managed object has been destroyed, ignoring.");
+			BS_LOG(Warning, Editor, "Trying to execute a managed undo/redo command whose managed object has been "
+				"destroyed, ignoring.");
 			// Note: This can most likely happen if managed undo commands are queued on a global undo/redo stack. When
 			// assembly refresh happens those commands will be rebuilt, but this can fail if the user removed the command
 			// type from the assembly, or the command isn't serializable.
@@ -223,7 +224,8 @@ namespace bs
 	{
 		if (mScriptObj == nullptr)
 		{
-			LOGWRN("Trying to execute a managed undo/redo command whose managed object has been destroyed, ignoring.");
+			BS_LOG(Warning, Editor, "Trying to execute a managed undo/redo command whose managed object has been "
+				"destroyed, ignoring.");
 			// Note: This can most likely happen if managed undo commands are queued on a global undo/redo stack. When
 			// assembly refresh happens those commands will be rebuilt, but this can fail if the user removed the command
 			// type from the assembly, or the command isn't serializable.

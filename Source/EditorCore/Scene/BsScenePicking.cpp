@@ -215,7 +215,7 @@ namespace bs
 		encoded.a = 1.0f;
 
 		if (((index >> 24) & 0xFF))
-			LOGERR("Index when picking out of valid range.");
+			BS_LOG(Error, Editor, "Index when picking out of valid range.");
 
 		return encoded;
 	}

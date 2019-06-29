@@ -39,7 +39,7 @@ namespace bs
 	{
 		if(!mInputStarted)
 		{
-			LOGWRN("Updating handle input without calling beginInput() first. Input won't be processed.");
+			BS_LOG(Warning, Editor, "Updating handle input without calling beginInput() first. Input won't be processed.");
 			return;
 		}
 

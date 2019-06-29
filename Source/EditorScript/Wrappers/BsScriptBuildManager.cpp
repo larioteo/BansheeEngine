@@ -234,7 +234,7 @@ namespace bs
 		{
 			if (entry->meta == nullptr)
 			{
-				LOGWRN("Cannot include resource in build, missing meta file for: " + entry->path.toString());
+				BS_LOG(Warning, Editor, "Cannot include resource in build, missing meta file for: {0}", entry->path);
 				continue;
 			}
 
@@ -245,7 +245,7 @@ namespace bs
 				if (gResources().getFilePathFromUUID(resMeta->getUUID(), resourcePath))
 					usedResources.insert(resourcePath);
 				else
-					LOGWRN("Cannot include resource in build, missing imported asset for: " + entry->path.toString());
+					BS_LOG(Warning, Editor, "Cannot include resource in build, missing imported asset for: {0}", entry->path);
 			}
 		}
 
@@ -261,7 +261,7 @@ namespace bs
 			if (gResources().getFilePathFromUUID(platformInfo->mainScene.getUUID(), resourcePath))
 				usedResources.insert(resourcePath);
 			else
-				LOGWRN("Cannot include main scene in build, missing imported asset.");
+				BS_LOG(Warning, Editor, "Cannot include main scene in build, missing imported asset.");
 		}
 
 		// Find dependencies of all resources

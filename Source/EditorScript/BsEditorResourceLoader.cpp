@@ -18,7 +18,7 @@ namespace bs
 		ProjectLibrary::FileEntry* resEntry = static_cast<ProjectLibrary::FileEntry*>(entry);
 		if (resEntry->meta == nullptr)
 		{
-			LOGWRN("Missing .meta file for resource at path: \"" + path.toString() + "\".");
+			BS_LOG(Warning, Editor, "Missing .meta file for resource at path: \"{0}\".", path);
 			return HResource();
 		}
 
@@ -26,14 +26,14 @@ namespace bs
 		// this could be optimized so only one of them is called.
 		SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(path);
 		if (meta == nullptr)
-			LOGWRN("Unable to load resource at path: \"" + path.toString() + "\". File not found. ");
+			BS_LOG(Warning, Editor, "Unable to load resource at path: \"{0}\". File not found. ", path);
 
 		UUID resUUID = meta->getUUID();
 
 		if (resEntry->meta->getIncludeInBuild())
 		{
-			LOGWRN("Dynamically loading a resource at path: \"" + path.toString() + "\" but the resource \
-					isn't flagged to be included in the build. It may not be available outside of the editor.");
+			BS_LOG(Warning, Editor, "Dynamically loading a resource at path: \"{0}\" but the resource isn't flagged to "
+				"be included in the build. It may not be available outside of the editor.", path);
 		}
 
 		return gResources().loadFromUUID(resUUID, async, flags);

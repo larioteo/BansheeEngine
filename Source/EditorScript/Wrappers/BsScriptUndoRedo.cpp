@@ -219,14 +219,14 @@ namespace bs
 			bool isManagedComponent = MonoUtil::isSubClassOf(requestedClass, managedComponent->_getInternalClass());
 			if (isManagedComponent)
 			{
-				LOGWRN("Only built-in components can be added though this method.");
+				BS_LOG(Warning, Editor, "Only built-in components can be added though this method.");
 				continue;
 			}
 
 			BuiltinComponentInfo* info = sam.getBuiltinComponentInfo(paramType);
 			if (info == nullptr)
 			{
-				LOGWRN("Provided type is not a valid component")
+				BS_LOG(Warning, Editor, "Provided type is not a valid component")
 				continue;
 			}
 

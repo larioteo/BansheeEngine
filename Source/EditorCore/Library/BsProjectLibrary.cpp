@@ -157,7 +157,7 @@ namespace bs
 
 					if (!FileSystem::isFile(sourceFilePath))
 					{
-						LOGWRN("Found a .meta file without a corresponding resource. Deleting.");
+						BS_LOG(Warning, Editor, "Found a .meta file without a corresponding resource. Deleting.");
 
 						FileSystem::remove(pathToSearch);
 					}
@@ -236,7 +236,7 @@ namespace bs
 
 							if(!FileSystem::isFile(sourceFilePath))
 							{
-								LOGWRN("Found a .meta file without a corresponding resource. Deleting.");
+								BS_LOG(Warning, Editor, "Found a .meta file without a corresponding resource. Deleting.");
 
 								FileSystem::remove(filePath);
 							}
@@ -1136,7 +1136,8 @@ namespace bs
 		Path filePath = uuidToPath(resource.getUUID());
 		if(filePath.isEmpty())
 		{
-			LOGWRN("Trying to save a resource that hasn't been registered with the project library. Call ProjectLibrary::create first.");
+			BS_LOG(Warning, Editor, "Trying to save a resource that hasn't been registered with the project library. "
+				"Call ProjectLibrary::create first.");
 			return;
 		}
 
@@ -1194,7 +1195,7 @@ namespace bs
 		Path parentPath = newFullPath.getParent();
 		if (!FileSystem::isDirectory(parentPath))
 		{
-			LOGWRN("Move operation failed. Destination directory \"" + parentPath.toString() + "\" doesn't exist.");
+			BS_LOG(Warning, Editor, "Move operation failed. Destination directory \"{0}\" doesn't exist.", parentPath);
 			return;
 		}
 

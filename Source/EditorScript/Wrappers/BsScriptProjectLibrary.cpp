@@ -473,8 +473,8 @@ namespace bs
 			const ReflectableTypeInfo* reflTypeInfo = ScriptAssemblyManager::instance().getReflectableTypeInfo(rttiId);
 			if(reflTypeInfo == nullptr)
 			{
-				LOGERR(StringUtil::format("Mapping between a reflectable object and a managed type is missing "
-					"for type \"{0}\"", rttiId))
+				BS_LOG(Error, Script,"Mapping between a reflectable object and a managed type is missing "
+					"for type \"{0}\"", rttiId);
 				return nullptr;
 			}
 

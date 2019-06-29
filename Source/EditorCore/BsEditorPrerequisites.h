@@ -250,4 +250,6 @@ namespace bs
 		TID_SettingsValue = 40023,
 		TID_SettingsObjectValue = 40024
 	};
+
+	BS_LOG_CATEGORY(Editor, 60)
 }
