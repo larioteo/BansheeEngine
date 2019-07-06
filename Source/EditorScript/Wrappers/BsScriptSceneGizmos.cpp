@@ -9,11 +9,9 @@
 
 namespace bs
 {
-	ScriptSceneGizmos::ScriptSceneGizmos(MonoObject* object, const HCamera& camera)
-		:ScriptObject(object), mCamera(camera)
-	{
-
-	}
+	ScriptSceneGizmos::ScriptSceneGizmos(MonoObject* object, const HCamera& camera, const GizmoDrawSettings& drawSettings)
+		:ScriptObject(object), mCamera(camera), mDrawSettings(drawSettings)
+	{ }
 
 	ScriptSceneGizmos::~ScriptSceneGizmos()
 	{
@@ -25,11 +23,14 @@ namespace bs
 	{
 		metaData.scriptClass->addInternalCall("Internal_Create", (void*)&ScriptSceneGizmos::internal_Create);
 		metaData.scriptClass->addInternalCall("Internal_Draw", (void*)&ScriptSceneGizmos::internal_Draw);
+		metaData.scriptClass->addInternalCall("Internal_SetDrawSettings", (void*)&ScriptSceneGizmos::internal_SetDrawSettings);
+		metaData.scriptClass->addInternalCall("Internal_GetDrawSettings", (void*)&ScriptSceneGizmos::internal_GetDrawSettings);
 	}
 
-	void ScriptSceneGizmos::internal_Create(MonoObject* managedInstance, ScriptCCamera* camera)
+	void ScriptSceneGizmos::internal_Create(MonoObject* managedInstance, ScriptCCamera* camera, 
+		GizmoDrawSettings* drawSettings)
 	{
-		new (bs_alloc<ScriptSceneGizmos>()) ScriptSceneGizmos(managedInstance, camera->getHandle());
+		new (bs_alloc<ScriptSceneGizmos>()) ScriptSceneGizmos(managedInstance, camera->getHandle(), *drawSettings);
 	}
 
 	void ScriptSceneGizmos::internal_Draw(ScriptSceneGizmos* thisPtr)
@@ -40,6 +41,16 @@ namespace bs
 		const SPtr<Camera>& cameraPtr = thisPtr->mCamera->_getCamera();
 		cameraPtr->_updateState(*thisPtr->mCamera->SO());
 
-		GizmoManager::instance().update(cameraPtr);
+		GizmoManager::instance().update(cameraPtr, thisPtr->mDrawSettings);
+	}
+
+	void ScriptSceneGizmos::internal_GetDrawSettings(ScriptSceneGizmos* thisPtr, GizmoDrawSettings* settings)
+	{
+		*settings = thisPtr->mDrawSettings;
+	}
+
+	void ScriptSceneGizmos::internal_SetDrawSettings(ScriptSceneGizmos* thisPtr, GizmoDrawSettings* settings)
+	{
+		thisPtr->mDrawSettings = *settings;;
 	}
 }

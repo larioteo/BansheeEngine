@@ -16,6 +16,7 @@ namespace bs.Editor
     /// </summary>
     internal sealed class SceneWindow : EditorWindow, IGlobalShortcuts
     {
+        internal const string GizmoDrawSettingsKey = "SceneCamera0_GizmoDrawSettings";
         internal const string ToggleProfilerOverlayBinding = "ToggleProfilerOverlay";
         internal const string ViewToolBinding = "ViewTool";
         internal const string MoveToolBinding = "MoveTool";
@@ -80,6 +81,7 @@ namespace bs.Editor
         private bool AllowViewportInput { get { return !loadingProgressShown; } }
 
         private int editorSettingsHash = int.MaxValue;
+        private GizmoDrawSettings gizmoDrawSettings = GizmoDrawSettings.Default();
 
         private VirtualButton frameKey;
 
@@ -109,6 +111,24 @@ namespace bs.Editor
         /// Returns the scene camera.
         /// </summary>
         public SceneCamera Camera => sceneCamera;
+
+        /// <summary>
+        /// Settings that control gizmo drawing.
+        /// </summary>
+        public GizmoDrawSettings GizmoDrawSettings
+        {
+            get => gizmoDrawSettings;
+            set
+            {
+                gizmoDrawSettings = value;
+
+                if(sceneGizmos != null)
+                    sceneGizmos.DrawSettings = gizmoDrawSettings;
+
+                if(sceneSelection != null)
+                    sceneSelection.GizmoDrawSettings = gizmoDrawSettings;
+            }
+        }
 
         /// <summary>
         /// Constructs a new scene window.
@@ -188,6 +208,11 @@ namespace bs.Editor
 
         private void OnInitialize()
         {
+            if (ProjectSettings.HasKey(GizmoDrawSettingsKey))
+                gizmoDrawSettings = ProjectSettings.GetObject<GizmoDrawSettings>(SceneWindow.GizmoDrawSettingsKey);
+            else
+                gizmoDrawSettings = GizmoDrawSettings.Default();
+
             mainLayout = GUI.AddLayoutY();
 
             GUIContent viewIcon = new GUIContent(EditorBuiltin.GetSceneWindowIcon(SceneWindowIcon.View),
@@ -949,8 +974,8 @@ namespace bs.Editor
                 rtPanel.AddElement(renderTextureGUI);
 
                 sceneGrid = new SceneGrid(camera);
-                sceneSelection = new SceneSelection(camera);
-                sceneGizmos = new SceneGizmos(camera);
+                sceneSelection = new SceneSelection(camera, gizmoDrawSettings);
+                sceneGizmos = new SceneGizmos(camera, gizmoDrawSettings);
                 sceneHandles = new SceneHandles(this, camera);
             }
             else

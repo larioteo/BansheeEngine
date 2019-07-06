@@ -499,6 +499,26 @@
 		<field name="icon256" type="RRef&lt;Texture&gt;">
 		</field>
 	</struct>
+	<struct native="GizmoDrawSettings" script="GizmoDrawSettings">
+		<doc>Settings that control gizmo drawing.</doc>
+		<ctor>
+		</ctor>
+		<field name="iconScale" type="float">
+			<doc>Scale to apply to gizmo icons, controlling their size.</doc>
+		</field>
+		<field name="iconRange" type="float">
+			<doc>Maximum range at which gizmo icons will be rendered, in world units.</doc>
+		</field>
+		<field name="iconSizeMin" type="float">
+			<doc>Icons smaller than this size will be faded out. The value represents the size of the icon relative to viewport  size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be smaller than maximum size value.</doc>
+		</field>
+		<field name="iconSizeMax" type="float">
+			<doc>Icons larger than this size will be faded out. The value represents the size of the icon relative to viewport  size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be larger than minimum size value.</doc>
+		</field>
+		<field name="iconSizeCull" type="float">
+			<doc>Icons larger than this size will not be shown. The value represents the size of the icon relative to viewport  size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be larger than maximum size value.</doc>
+		</field>
+	</struct>
 	<class native="SerializedSceneObject" script="SerializedSceneObject">
 		<doc>Serializes the current state of a scene object and allows that state to be restored. The advantage of using this  class versus normal serialization is that the deserialization happens into the original scene object, instead of creating a new scene object.</doc>
 	</class>

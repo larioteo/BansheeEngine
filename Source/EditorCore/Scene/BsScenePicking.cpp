@@ -51,11 +51,11 @@ namespace bs
 		gCoreThread().queueCommand(std::bind(&ct::ScenePicking::destroy, mCore));
 	}
 
-	HSceneObject ScenePicking::pickClosestObject(const SPtr<Camera>& cam, const Vector2I& position, const Vector2I& area, 
-		Vector<HSceneObject>& ignoreRenderables, SnapData* data)
+	HSceneObject ScenePicking::pickClosestObject(const SPtr<Camera>& cam, const GizmoDrawSettings& gizmoDrawSettings,
+		const Vector2I& position, const Vector2I& area, Vector<HSceneObject>& ignoreRenderables, SnapData* data)
 	{
-		Vector<HSceneObject> selectedObjects = pickObjects(cam, position, area, ignoreRenderables, data);
-		if (selectedObjects.size() == 0)
+		Vector<HSceneObject> selectedObjects = pickObjects(cam, gizmoDrawSettings, position, area, ignoreRenderables, data);
+		if (selectedObjects.empty())
 			return HSceneObject();
 			
 		if (data != nullptr)
@@ -68,8 +68,8 @@ namespace bs
 		return selectedObjects[0];
 	}
 
-	Vector<HSceneObject> ScenePicking::pickObjects(const SPtr<Camera>& cam, const Vector2I& position, const Vector2I& area, 
-		Vector<HSceneObject>& ignoreRenderables, SnapData* data)
+	Vector<HSceneObject> ScenePicking::pickObjects(const SPtr<Camera>& cam, const GizmoDrawSettings& gizmoDrawSettings,
+		const Vector2I& position, const Vector2I& area, Vector<HSceneObject>& ignoreRenderables, SnapData* data)
 	{
 		auto comparePickElement = [&] (const ScenePicking::RenderablePickData& a, const ScenePicking::RenderablePickData& b)
 		{
@@ -166,7 +166,8 @@ namespace bs
 		gCoreThread().queueCommand(std::bind(&ct::ScenePicking::corePickingBegin, mCore, target,
 			cam->getViewport()->getArea(), std::cref(pickData), position, area));
 
-		GizmoManager::instance().renderForPicking(cam, [&](UINT32 inputIdx) { return encodeIndex(firstGizmoIdx + inputIdx); });
+		GizmoManager::instance().renderForPicking(cam, gizmoDrawSettings, 
+			[&](UINT32 inputIdx) { return encodeIndex(firstGizmoIdx + inputIdx); });
 
 		AsyncOp op = gCoreThread().queueReturnCommand(std::bind(&ct::ScenePicking::corePickingEnd, mCore, target,
 			cam->getViewport()->getArea(), position, area, data != nullptr, _1));

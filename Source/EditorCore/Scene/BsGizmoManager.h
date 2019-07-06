@@ -26,6 +26,38 @@ namespace bs
 		Solid, Line, Wire, Text, Count
 	};
 
+	/** Settings that control gizmo drawing. */
+	struct BS_SCRIPT_EXPORT(api:bed,pl:true) GizmoDrawSettings
+	{
+		/** Scale to apply to gizmo icons, controlling their size. */
+		float iconScale = 1.0f;
+
+		/** Maximum range at which gizmo icons will be rendered, in world units. */
+		float iconRange = 500.0f;
+
+		/** 
+		 * Icons smaller than this size will be faded out. The value represents the size of the icon relative to viewport 
+		 * size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be smaller than maximum size
+		 * value.
+		 */
+		float iconSizeMin = 0.05f;
+
+		/** 
+		 * Icons larger than this size will be faded out. The value represents the size of the icon relative to viewport 
+		 * size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be larger than minimum size
+		 * value.
+		 */
+		float iconSizeMax = 0.15f;
+
+		/**
+		 * Icons larger than this size will not be shown.  The value represents the size of the icon relative to viewport 
+		 * size (e.g. 1 means the icons fully covers the viewport). In range [0, 1], should be larger than maximum size
+		 * value.
+
+		 */
+		float iconSizeCull = 0.25f;
+	};
+
 	/**
 	 * Handles the rendering and picking of gizmo elements. Gizmos are icons and 3D objects usually rendered in scene view
 	 * for various visualization purposes (for example a Camera component will have a gizmo that draws a Camera icon since
@@ -256,18 +288,20 @@ namespace bs
 		 *
 		 * @note	Internal method.
 		 */
-		void update(const SPtr<Camera>& camera);
+		void update(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings);
 
 		/**
 		 * Queues all gizmos to be rendered for picking. Each gizmo is draw with a separate color so we can identify them
 		 * later.
 		 *
 		 * @param[in]	camera				Camera to draw the gizmos on.
+		 * @param[in]	drawSettings		Settings used to control icon drawing.
 		 * @param[in]	idxToColorCallback	Callback that assigns a unique color to each gizmo index.
 		 *
 		 * @note	Internal method.
 		 */
-		void renderForPicking(const SPtr<Camera>& camera, std::function<Color(UINT32)> idxToColorCallback);
+		void renderForPicking(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings, 
+			std::function<Color(UINT32)> idxToColorCallback);
 
 		/** @} */
 
@@ -419,16 +453,17 @@ namespace bs
 		/**
 		 * Builds a brand new mesh that can be used for rendering all icon gizmos.
 		 *
-		 * @param[in]	camera		Camera the mesh will be rendered to.
-		 * @param[in]	iconData	A list of all icons and their properties.
-		 * @param[in]	forPicking	Whether the icons will be rendered normally, or with a special material for picking.
-		 * @param[in]	renderData	Output data that outlines the structure of the returned mesh. It tells us which portions
-		 *							of the mesh use which icon texture.
+		 * @param[in]	camera			Camera the mesh will be rendered to.
+		 * @param[in]	drawSettings	Settings used to control icon drawing.
+		 * @param[in]	iconData		A list of all icons and their properties.
+		 * @param[in]	forPicking		Whether the icons will be rendered normally, or with a special material for picking.
+		 * @param[in]	renderData		Output data that outlines the structure of the returned mesh. It tells us which 
+		 *								portions of the mesh use which icon texture.
 		 *
-		 * @return					A mesh containing all of the visible icons.	
+		 * @return						A mesh containing all of the visible icons.	
 		 */
-		SPtr<Mesh> buildIconMesh(const SPtr<Camera>& camera, const Vector<IconData>& iconData, bool forPicking, 
-			IconRenderDataVecPtr& renderData);
+		SPtr<Mesh> buildIconMesh(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings,
+			const Vector<IconData>& iconData, bool forPicking, IconRenderDataVecPtr& renderData);
 
 		/**	Resizes the icon width/height so it is always scaled to optimal size (with preserved aspect). */
 		void limitIconSize(UINT32& width, UINT32& height);
@@ -440,15 +475,16 @@ namespace bs
 		 * Calculates colors for an icon based on its position in the camera. For example icons too close to too far might
 		 * be faded.
 		 *
-		 * @param[in]	tint		Primary tint for the icon.
-		 * @param[in]	camera		Camera in which the icon will be rendered in.
-		 * @param[in]	iconHeight	Height of the icon in pixels.
-		 * @param[in]	fixedScale	Whether the icon size changes depending on distance from the camera.
-		 * @param[in]	normalColor	Normal color of the icon.
-		 * @param[in]	fadedColor	Faded color to be used when icon is occluded by geometry.
+		 * @param[in]	tint			Primary tint for the icon.
+		 * @param[in]	camera			Camera in which the icon will be rendered in.
+		 * @param[in]	drawSettings	Settings used to control icon drawing.
+		 * @param[in]	iconHeight		Height of the icon in pixels.
+		 * @param[in]	fixedScale		Whether the icon size changes depending on distance from the camera.
+		 * @param[in]	normalColor		Normal color of the icon.
+		 * @param[in]	fadedColor		Faded color to be used when icon is occluded by geometry.
 		 */
-		void calculateIconColors(const Color& tint, const SPtr<Camera>& camera, UINT32 iconHeight, bool fixedScale,
-			Color& normalColor, Color& fadedColor);
+		void calculateIconColors(const Color& tint, const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings, 
+			UINT32 iconHeight, bool fixedScale, Color& normalColor, Color& fadedColor);
 
 		static const UINT32 VERTEX_BUFFER_GROWTH;
 		static const UINT32 INDEX_BUFFER_GROWTH;
@@ -463,13 +499,13 @@ namespace bs
 		Color mColor;
 		Matrix4 mTransform;
 		HSceneObject mActiveSO;
-		bool mPickable;
-		UINT32 mCurrentIdx;
-		bool mTransformDirty;
-		bool mColorDirty;
+		bool mPickable = false;
+		UINT32 mCurrentIdx = 0;
+		bool mTransformDirty = false;
+		bool mColorDirty = false;
 
-		DrawHelper* mDrawHelper;
-		DrawHelper* mPickingDrawHelper;
+		DrawHelper* mDrawHelper = nullptr;
+		DrawHelper* mPickingDrawHelper = nullptr;
 
 		Vector<CubeData> mSolidCubeData;
 		Vector<CubeData> mWireCubeData;

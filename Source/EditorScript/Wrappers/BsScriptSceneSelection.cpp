@@ -14,8 +14,9 @@
 
 namespace bs
 {
-	ScriptSceneSelection::ScriptSceneSelection(MonoObject* object, const SPtr<Camera>& camera)
-		:ScriptObject(object), mCamera(camera), mSelectionRenderer(nullptr)
+	ScriptSceneSelection::ScriptSceneSelection(MonoObject* object, const SPtr<Camera>& camera, 
+		const GizmoDrawSettings& gizmoDrawSettings)
+		:ScriptObject(object), mCamera(camera), mGizmoDrawSettings(gizmoDrawSettings)
 	{
 		mSelectionRenderer = bs_new<SelectionRenderer>();
 	}
@@ -32,11 +33,14 @@ namespace bs
 		metaData.scriptClass->addInternalCall("Internal_PickObject", (void*)&ScriptSceneSelection::internal_PickObject);
 		metaData.scriptClass->addInternalCall("Internal_PickObjects", (void*)&ScriptSceneSelection::internal_PickObjects);
 		metaData.scriptClass->addInternalCall("Internal_Snap", (void*)&ScriptSceneSelection::internal_Snap);
+		metaData.scriptClass->addInternalCall("Internal_SetGizmoDrawSettings", (void*)&ScriptSceneSelection::internal_SetGizmoDrawSettings);
+		metaData.scriptClass->addInternalCall("Internal_GetGizmoDrawSettings", (void*)&ScriptSceneSelection::internal_GetGizmoDrawSettings);
 	}
 
-	void ScriptSceneSelection::internal_Create(MonoObject* managedInstance, ScriptCCamera* camera)
+	void ScriptSceneSelection::internal_Create(MonoObject* managedInstance, ScriptCCamera* camera, GizmoDrawSettings* gizmoDrawSettings)
 	{
-		new (bs_alloc<ScriptSceneSelection>()) ScriptSceneSelection(managedInstance, camera->getHandle()->_getCamera());
+		new (bs_alloc<ScriptSceneSelection>()) ScriptSceneSelection(managedInstance, camera->getHandle()->_getCamera(), 
+			*gizmoDrawSettings);
 	}
 
 	void ScriptSceneSelection::internal_Draw(ScriptSceneSelection* thisPtr)
@@ -66,7 +70,8 @@ namespace bs
 			}
 		}
 
-		HSceneObject pickedObject = ScenePicking::instance().pickClosestObject(thisPtr->mCamera, *inputPos, Vector2I(1, 1), ignoredSceneObjects);
+		HSceneObject pickedObject = ScenePicking::instance().pickClosestObject(thisPtr->mCamera, 
+			thisPtr->mGizmoDrawSettings, *inputPos, Vector2I(1, 1), ignoredSceneObjects);
 		if (pickedObject)
 		{
 			if (additive) // Append to existing selection
@@ -117,10 +122,10 @@ namespace bs
 			}
 		}
 
-		Vector<HSceneObject> pickedObjects = ScenePicking::instance().pickObjects(thisPtr->mCamera, *inputPos, 
-			*area, ignoredSceneObjects);
+		Vector<HSceneObject> pickedObjects = ScenePicking::instance().pickObjects(thisPtr->mCamera, 
+			thisPtr->mGizmoDrawSettings, *inputPos, *area, ignoredSceneObjects);
 
-		if (pickedObjects.size() != 0)
+		if (!pickedObjects.empty())
 		{
 			if (additive) // Append to existing selection
 			{
@@ -176,13 +181,23 @@ namespace bs
 			}
 		}
 
-		HSceneObject instance = ScenePicking::instance().pickClosestObject(thisPtr->mCamera, *inputPos, Vector2I(1, 1), 
-			ignoredSceneObjects, data);
+		HSceneObject instance = ScenePicking::instance().pickClosestObject(thisPtr->mCamera, thisPtr->mGizmoDrawSettings,
+			*inputPos, Vector2I(1, 1), ignoredSceneObjects, data);
 
 		if (instance == nullptr)
 			return nullptr;
 
 		ScriptSceneObject* scriptSO = ScriptGameObjectManager::instance().getOrCreateScriptSceneObject(instance);
 		return scriptSO->getManagedInstance();
+	}
+
+	void ScriptSceneSelection::internal_GetGizmoDrawSettings(ScriptSceneSelection* thisPtr, GizmoDrawSettings* settings)
+	{
+		*settings = thisPtr->mGizmoDrawSettings;
+	}
+
+	void ScriptSceneSelection::internal_SetGizmoDrawSettings(ScriptSceneSelection* thisPtr, GizmoDrawSettings* settings)
+	{
+		thisPtr->mGizmoDrawSettings = *settings;;
 	}
 }

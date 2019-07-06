@@ -123,7 +123,7 @@ namespace bs.Editor
         /// Triggers a reimport of a resource using the provided import options, if needed.
         /// </summary>
         /// <param name="path">Path to the resource to reimport, absolute or relative to resources folder.</param>
-        /// <param name="options">ptional import options to use when importing the resource. Caller must ensure the import
+        /// <param name="options">Optional import options to use when importing the resource. Caller must ensure the import
         ///                       options are of the correct type for the resource in question. If null is provided default 
         ///                       import options are used.</param>
         /// <param name="force">Should the resource be reimported even if no changes are detected.</param>

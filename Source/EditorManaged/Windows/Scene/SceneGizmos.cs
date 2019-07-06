@@ -16,12 +16,31 @@ namespace bs.Editor
     internal sealed class SceneGizmos : ScriptObject
     {
         /// <summary>
+        /// Settings that control how are gizmos drawn.
+        /// </summary>
+        internal GizmoDrawSettings DrawSettings
+        {
+            get
+            {
+                GizmoDrawSettings value;
+                Internal_GetDrawSettings(mCachedPtr, out value);
+                return value;
+            }
+
+            set
+            {
+                Internal_SetDrawSettings(mCachedPtr, ref value);
+            }
+        }
+
+        /// <summary>
         /// Creates a new scene gizmo renderer.
         /// </summary>
         /// <param name="sceneCamera">Camera into which the gizmos will be rendered.</param>
-        internal SceneGizmos(Camera sceneCamera)
+        /// <param name="drawSettings">Settings that control how are gizmos drawn.</param>
+        internal SceneGizmos(Camera sceneCamera, GizmoDrawSettings drawSettings)
         {
-            Internal_Create(this, sceneCamera.GetCachedPtr());
+            Internal_Create(this, sceneCamera.GetCachedPtr(), ref drawSettings);
         }
 
         /// <summary>
@@ -33,10 +52,17 @@ namespace bs.Editor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_Create(SceneGizmos managedInstance, IntPtr camera);
+        private static extern void Internal_Create(SceneGizmos managedInstance, IntPtr camera, 
+            ref GizmoDrawSettings drawSettings);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Draw(IntPtr thisPtr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetDrawSettings(IntPtr thisPtr, ref GizmoDrawSettings settings);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_GetDrawSettings(IntPtr thisPtr, out GizmoDrawSettings settings);
     }
 
     /** @} */

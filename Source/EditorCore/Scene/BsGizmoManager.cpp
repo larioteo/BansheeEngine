@@ -25,14 +25,10 @@ namespace bs
 {
 	const UINT32 GizmoManager::SPHERE_QUALITY = 1;
 	const UINT32 GizmoManager::WIRE_SPHERE_QUALITY = 10;
-	const float GizmoManager::MAX_ICON_RANGE = 500.0f;
 	const UINT32 GizmoManager::OPTIMAL_ICON_SIZE = 64;
 	const float GizmoManager::ICON_TEXEL_WORLD_SIZE = 0.015f;
 
 	GizmoManager::GizmoManager()
-		: mPickable(false), mCurrentIdx(0), mTransformDirty(false), mColorDirty(false), mDrawHelper(nullptr)
-		, mPickingDrawHelper(nullptr)
-		
 	{
 		mTransform = Matrix4::IDENTITY;
 		mDrawHelper = bs_new<DrawHelper>();
@@ -457,14 +453,14 @@ namespace bs
 		return proxyData;
 	}
 
-	void GizmoManager::update(const SPtr<Camera>& camera)
+	void GizmoManager::update(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings)
 	{
 		mActiveMeshes.clear();
 		mActiveMeshes = mDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get());
 
 		Vector<MeshRenderData> proxyData = createMeshProxyData(mActiveMeshes);
 		IconRenderDataVecPtr iconRenderData;
-		mIconMesh = buildIconMesh(camera, mIconData, false, iconRenderData);
+		mIconMesh = buildIconMesh(camera, drawSettings, mIconData, false, iconRenderData);
 
 		SPtr<ct::MeshBase> iconMesh;
 		if(mIconMesh != nullptr)
@@ -476,7 +472,8 @@ namespace bs
 			proxyData, iconMesh, iconRenderData));
 	}
 
-	void GizmoManager::renderForPicking(const SPtr<Camera>& camera, std::function<Color(UINT32)> idxToColorCallback)
+	void GizmoManager::renderForPicking(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings, 
+		std::function<Color(UINT32)> idxToColorCallback)
 	{
 		Vector<IconData> iconData;
 		IconRenderDataVecPtr iconRenderData;
@@ -665,7 +662,7 @@ namespace bs
 		const Vector<DrawHelper::ShapeMeshData>& meshes = 
 			mPickingDrawHelper->buildMeshes(DrawHelper::SortType::BackToFront, camera.get());
 
-		SPtr<Mesh> iconMesh = buildIconMesh(camera, iconData, true, iconRenderData);
+		SPtr<Mesh> iconMesh = buildIconMesh(camera, drawSettings, iconData, true, iconRenderData);
 		
 		SPtr<ct::Mesh> iconMeshCore;
 		if (iconMesh != nullptr)
@@ -716,8 +713,8 @@ namespace bs
 			nullptr, Vector<MeshRenderData>(), nullptr, iconRenderData));
 	}
 
-	SPtr<Mesh> GizmoManager::buildIconMesh(const SPtr<Camera>& camera, const Vector<IconData>& iconData,
-		bool forPicking, GizmoManager::IconRenderDataVecPtr& iconRenderData)
+	SPtr<Mesh> GizmoManager::buildIconMesh(const SPtr<Camera>& camera, const GizmoDrawSettings& drawSettings, 
+		const Vector<IconData>& iconData, bool forPicking, IconRenderDataVecPtr& iconRenderData)
 	{
 		mSortedIconData.clear();
 		
@@ -733,7 +730,7 @@ namespace bs
 			if (distance < camera->getNearClipDistance()) // Ignore behind clip plane
 				continue;
 
-			if (distance > MAX_ICON_RANGE) // Ignore too far away
+			if (distance > drawSettings.iconRange) // Ignore too far away
 				continue;
 
 			if (!iconEntry.texture.isLoaded()) // Ignore missing texture
@@ -832,12 +829,14 @@ namespace bs
 				else
 					iconScale = (cameraScale * ICON_TEXEL_WORLD_SIZE) / sortedIconData.distance;
 
+				iconScale *= std::max(drawSettings.iconScale, 0.0f);
 				halfWidth *= iconScale;
 				halfHeight *= iconScale;
 			}
 
 			Color normalColor, fadedColor;
-			calculateIconColors(curIconData.color, camera, (UINT32)(halfHeight * 2.0f), curIconData.fixedScale, normalColor, fadedColor);
+			calculateIconColors(curIconData.color, camera, drawSettings, (UINT32)(halfHeight * 2.0f), 
+				curIconData.fixedScale, normalColor, fadedColor);
 
 			if (forPicking)
 			{
@@ -897,24 +896,34 @@ namespace bs
 		height = Math::roundToInt(height * scale);
 	}
 
-	void GizmoManager::calculateIconColors(const Color& tint, const SPtr<Camera>& camera,
-		UINT32 iconHeight, bool fixedScale, Color& normalColor, Color& fadedColor)
+	void GizmoManager::calculateIconColors(const Color& tint, const SPtr<Camera>& camera, 
+		const GizmoDrawSettings& drawSettings, UINT32 iconHeight, bool fixedScale, Color& normalColor, Color& fadedColor)
 	{
 		normalColor = tint;
+
+		float iconSizeMin = drawSettings.iconSizeMin;
+		float iconSizeMax = drawSettings.iconSizeMax;
+		float iconSizeCull = drawSettings.iconSizeCull;
+
+		if(iconSizeMax < iconSizeMin)
+			iconSizeMax = iconSizeMin;
+
+		if(iconSizeCull < iconSizeMax)
+			iconSizeCull = iconSizeMax;
 
 		if (!fixedScale)
 		{
 			float iconToScreenRatio = iconHeight / (float)camera->getViewport()->getPixelArea().height;
 
-			if (iconToScreenRatio > 0.3f)
+			if (iconToScreenRatio > iconSizeMax)
 			{
-				float alpha = 1.0f - Math::invLerp(iconToScreenRatio, 0.3f, 1.0f);
-				normalColor.a *= alpha;
+				float alpha = 1.0f - Math::invLerp(iconToScreenRatio, iconSizeMax, iconSizeCull);
+				normalColor.a *= alpha * alpha;
 			}
-			else if (iconToScreenRatio < 0.1f)
+			else if (iconToScreenRatio < 0.05f)
 			{
-				float alpha = Math::invLerp(iconToScreenRatio, 0.0f, 0.1f);
-				normalColor.a *= alpha;
+				float alpha = Math::invLerp(iconToScreenRatio, 0.0f, iconSizeMin);
+				normalColor.a *= alpha * alpha;
 			}
 		}
 

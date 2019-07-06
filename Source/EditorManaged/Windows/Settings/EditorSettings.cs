@@ -279,13 +279,13 @@ namespace bs.Editor
         /// Value of the property if it exists, otherwise an empty instance of the object. Returns null if the tyoe of
         /// the stored object doesn't match the requested type.
         /// </returns>
-        public static T GetObject<T>(string name) where T : class, new()
+        public static T GetObject<T>(string name) where T : new()
         {
             object obj = Internal_GetObject(name);
             if (obj == null)
                 return new T();
 
-            return obj as T;
+            return (T)obj;
         }
 
         /// <summary>

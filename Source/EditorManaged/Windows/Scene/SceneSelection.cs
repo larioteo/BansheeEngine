@@ -34,12 +34,31 @@ namespace bs.Editor
     internal sealed class SceneSelection : ScriptObject
     {
         /// <summary>
+        /// Settings that control how are pickable gizmos drawn.
+        /// </summary>
+        internal GizmoDrawSettings GizmoDrawSettings
+        {
+            get
+            {
+                GizmoDrawSettings value;
+                Internal_GetGizmoDrawSettings(mCachedPtr, out value);
+                return value;
+            }
+
+            set
+            {
+                Internal_SetGizmoDrawSettings(mCachedPtr, ref value);
+            }
+        }
+
+        /// <summary>
         /// Creates a new scene selection manager.
         /// </summary>
         /// <param name="sceneCamera">Camera into which to render the selection overlay, and perform picking from.</param>
-        internal SceneSelection(Camera sceneCamera)
+        /// <param name="drawSettings">Settings that control how are pickable gizmos drawn.</param>
+        internal SceneSelection(Camera sceneCamera, GizmoDrawSettings gizmoDrawSettings)
         {
-            Internal_Create(this, sceneCamera.GetCachedPtr());
+            Internal_Create(this, sceneCamera.GetCachedPtr(), ref gizmoDrawSettings);
         }
 
         /// <summary>
@@ -89,7 +108,7 @@ namespace bs.Editor
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_Create(SceneSelection managedInstance, IntPtr camera);
+        private static extern void Internal_Create(SceneSelection managedInstance, IntPtr camera, ref GizmoDrawSettings gizmoDrawSettings);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Draw(IntPtr thisPtr);
@@ -102,6 +121,12 @@ namespace bs.Editor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern SceneObject Internal_Snap(IntPtr thisPtr, ref Vector2I pointerPos, out SnapData data, SceneObject[] ignoreRenderables);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetGizmoDrawSettings(IntPtr thisPtr, ref GizmoDrawSettings settings);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_GetGizmoDrawSettings(IntPtr thisPtr, out GizmoDrawSettings settings);
     }
 
     /** @} */

@@ -19,13 +19,17 @@ namespace bs.Editor
 
         private InspectorFieldDrawer guiViewSettings;
         private InspectorFieldDrawer guiMovementSettings;
+        private InspectorFieldDrawer guiGizmoSettings;
         private InspectorFieldDrawer guiRenderSettings;
 
         private SceneCameraViewSettings viewSettings;
+        private GizmoDrawSettings gizmoSettings;
         private SceneCameraMoveSettings moveSettings;
         private RenderSettings renderSettings;
 
         private SerializableProperties expandStates;
+
+        private object objGizmoSettings;
 
         /// <summary>
         /// Opens the options window.
@@ -51,12 +55,18 @@ namespace bs.Editor
                 viewSettings = sceneWindow.Camera.ViewSettings;
                 moveSettings = sceneWindow.Camera.MoveSettings;
                 renderSettings = sceneWindow.Camera.RenderSettings;
+                gizmoSettings = sceneWindow.GizmoDrawSettings;
             }
             else
             {
                 viewSettings = ProjectSettings.GetObject<SceneCameraViewSettings>(SceneCamera.ViewSettingsKey);
                 moveSettings = ProjectSettings.GetObject<SceneCameraMoveSettings>(SceneCamera.MoveSettingsKey);
                 renderSettings = ProjectSettings.GetObject<RenderSettings>(SceneCamera.RenderSettingsKey);
+
+                if(ProjectSettings.HasKey(SceneWindow.GizmoDrawSettingsKey))
+                    gizmoSettings = ProjectSettings.GetObject<GizmoDrawSettings>(SceneWindow.GizmoDrawSettingsKey);
+                else
+                    gizmoSettings = GizmoDrawSettings.Default();
             }
 
             expandStates = ProjectSettings.GetObject<SerializableProperties>(ExpandStatesKey);
@@ -79,6 +89,10 @@ namespace bs.Editor
             GUILayoutY viewSettingsLayout = vertLayout.AddLayoutY();
             vertLayout.AddSpace(10);
 
+            vertLayout.AddElement(new GUILabel(new LocEdString("Gizmo Settings"), EditorStyles.LabelBold));
+            GUILayoutY gizmoSettingsLayout = vertLayout.AddLayoutY();
+            vertLayout.AddSpace(10);
+
             vertLayout.AddElement(new GUILabel(new LocEdString("Move Settings"), EditorStyles.LabelBold));
             GUILayoutY moveSettingsLayout = vertLayout.AddLayoutY();
             vertLayout.AddSpace(10);
@@ -87,10 +101,14 @@ namespace bs.Editor
             GUILayoutY renderSettingsLayout = vertLayout.AddLayoutY();
 
             guiViewSettings = new InspectorFieldDrawer(inspectableContext, viewSettingsLayout);
+            guiGizmoSettings = new InspectorFieldDrawer(inspectableContext, gizmoSettingsLayout);
             guiMovementSettings = new InspectorFieldDrawer(inspectableContext, moveSettingsLayout);
             guiRenderSettings = new InspectorFieldDrawer(inspectableContext, renderSettingsLayout);
 
+            objGizmoSettings = gizmoSettings;
+
             guiViewSettings.AddDefault(viewSettings);
+            guiGizmoSettings.AddDefault(objGizmoSettings);
             guiMovementSettings.AddDefault(moveSettings);
             guiRenderSettings.AddDefault(renderSettings);
 
@@ -137,6 +155,18 @@ namespace bs.Editor
 
                 ProjectSettings.SetObject(SceneCamera.RenderSettingsKey, renderSettings);
             }
+
+            InspectableState gizmoOptionsState = guiGizmoSettings.Refresh();
+            if (gizmoOptionsState != InspectableState.NotModified)
+            {
+                gizmoSettings = (GizmoDrawSettings) objGizmoSettings;
+
+                SceneWindow sceneWindow = SceneWindow.GetWindow<SceneWindow>();
+                if (sceneWindow != null)
+                    sceneWindow.GizmoDrawSettings = gizmoSettings;
+
+                ProjectSettings.SetObject(SceneWindow.GizmoDrawSettingsKey, gizmoSettings);
+            }
         }
 
         private void OnDestroy()
@@ -157,6 +187,7 @@ namespace bs.Editor
             viewSettings = new SceneCameraViewSettings();
             moveSettings = new SceneCameraMoveSettings();
             renderSettings = new RenderSettings();
+            gizmoSettings = GizmoDrawSettings.Default();
 
             SceneWindow sceneWindow = SceneWindow.GetWindow<SceneWindow>();
             if (sceneWindow != null)
@@ -164,11 +195,13 @@ namespace bs.Editor
                 sceneWindow.Camera.ViewSettings = viewSettings;
                 sceneWindow.Camera.MoveSettings = moveSettings;
                 sceneWindow.Camera.RenderSettings = renderSettings;
+                sceneWindow.GizmoDrawSettings = gizmoSettings;
             }
 
             ProjectSettings.SetObject(SceneCamera.ViewSettingsKey, viewSettings);
             ProjectSettings.SetObject(SceneCamera.MoveSettingsKey, moveSettings);
             ProjectSettings.SetObject(SceneCamera.RenderSettingsKey, renderSettings);
+            ProjectSettings.SetObject(SceneWindow.GizmoDrawSettingsKey, gizmoSettings);
         }
 
         /// <summary>
