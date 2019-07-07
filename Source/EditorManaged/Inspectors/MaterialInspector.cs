@@ -1008,14 +1008,11 @@ namespace bs.Editor
                                     // Note: Ideally we can avoid loading texture resources if the material is not
                                     // referenced anywhere in the scene. But we don't have a good way to check that at
                                     // the moment.
-                                    //    Resources.LoadAsync<Resource>(x.UUID);
-
                                     ResourceMeta meta = fileEntry.ResourceMetas[0];
                                     if (meta.ResType == ResourceType.SpriteTexture)
-                                        material.SetSpriteTexture(shaderParam.name,
-                                            bs.Resources.LoadAsync<SpriteTexture>(x.UUID));//(SpriteTexture)x.Value);//x.As<SpriteTexture>());
+                                        material.SetSpriteTexture(shaderParam.name, Resources.LoadAsync<SpriteTexture>(x.UUID));
                                     else if (meta.ResType == ResourceType.Texture)
-                                        material.SetTexture(shaderParam.name, bs.Resources.LoadAsync<Texture>(x.UUID));//(Texture)x.Value); //x.As<Texture>());
+                                        material.SetTexture(shaderParam.name, Resources.LoadAsync<Texture>(x.UUID));
 
                                     EndUndo();
                                 }
