@@ -1686,6 +1686,7 @@ namespace bs.Editor
     /// <summary>
     /// Raw data representing a single animation curve.
     /// </summary>
+    [SerializeObject]
     class AnimationCurveState
     {
         public KeyFrame[] keyFrames;
@@ -1695,6 +1696,7 @@ namespace bs.Editor
     /// <summary>
     /// Raw data representing a single animation clip state.
     /// </summary>
+    [SerializeObject]
     class AnimationClipState
     {
         public Dictionary<string, AnimationCurveState[]> curves = new Dictionary<string, AnimationCurveState[]>();
@@ -1704,6 +1706,7 @@ namespace bs.Editor
     /// <summary>
     /// Undo command used in the AnimationWindow.
     /// </summary>
+    [SerializeObject]
     internal class AnimationUndo : UndoableCommand
     {
         private AnimationClipState prevClipState;
