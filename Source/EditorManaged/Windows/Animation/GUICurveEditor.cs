@@ -1347,7 +1347,6 @@ namespace bs.Editor
             if (scroll != 0.0f)
             {
                 Rect2I elementBounds = mainPanel.ScreenBounds;
-                Debug.Log(elementBounds + " " + Input.PointerPosition);
                 Vector2I pointerPos = Input.PointerPosition - new Vector2I(elementBounds.x, elementBounds.y);
 
                 Vector2 curvePos;
@@ -1618,7 +1617,6 @@ namespace bs.Editor
             Rect2I drawingBounds = drawingPanel.Bounds;
             Vector2I drawingPos = pointerPos - new Vector2I(drawingBounds.x, drawingBounds.y);
 
-            Debug.Log(pointerPos + " " + drawingPos);
             return guiCurveDrawing.PixelToCurveSpace(drawingPos, out curveCoord);
         }
 

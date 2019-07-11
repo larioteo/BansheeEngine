@@ -166,7 +166,7 @@ namespace bs
 
 	HTexture GUIColorGradient::generateGradientTexture(const ColorGradient& gradient, UINT32 width, bool alpha)
 	{
-		SPtr<PixelData> pixelData = PixelData::create(width, 1, 1, PF_RGBA8);
+		SPtr<PixelData> pixelData = PixelData::create(std::max(width, 1U), 1, 1, PF_RGBA8);
 
 		const float halfPixel = 0.5f / width;
 		for (UINT32 i = 0; i < width; i++)
