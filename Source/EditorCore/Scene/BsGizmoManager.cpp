@@ -1183,12 +1183,14 @@ namespace bs
 		float near = caps.minDepth;
 		float far = caps.maxDepth;
 
+		if(caps.conventions.ndcYAxis == Conventions::Axis::Down)
+			std::swap(top, bottom);
+
 		// Top/bottom have been swapped because we're moving from window coordinates (origin top left)
 		// to normalized device coordinates (origin bottom left)
 		// Negative near/far because Z is flipped for normalized device coordinates 
 		// (positive Z goes into screen as opposed to view space here we're looking along negative Z)
 		projMat.makeProjectionOrtho(left, right, top, bottom, -near, -far);
-		rapi.convertProjectionMatrix(projMat, projMat);
 
 		if (!usePickingMaterial)
 		{
