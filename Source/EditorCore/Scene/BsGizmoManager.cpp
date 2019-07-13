@@ -721,9 +721,10 @@ namespace bs
 		if (iconData.size() > mSortedIconData.size())
 			mSortedIconData.resize(iconData.size());
 
-		UINT32 i = 0;
-		for (auto& iconEntry : iconData)
+		UINT32 dstIdx = 0;
+		for(UINT32 i = 0; i < (UINT32)iconData.size(); i++)
 		{
+			const IconData& iconEntry = iconData[i];
 			Vector3 viewPoint = camera->worldToViewPoint(iconEntry.position);
 
 			float distance = -viewPoint.z;
@@ -739,15 +740,15 @@ namespace bs
 			if (forPicking && !iconEntry.pickable)
 				continue;
 
-			SortedIconData& sortedIconData = mSortedIconData[i];
+			SortedIconData& sortedIconData = mSortedIconData[dstIdx];
 			sortedIconData.iconIdx = i;
 			sortedIconData.distance = distance;
 			sortedIconData.screenPosition = camera->viewToScreenPoint(viewPoint);
 
-			i++;
+			dstIdx++;
 		}
 
-		UINT32 actualNumIcons = i;
+		UINT32 actualNumIcons = dstIdx;
 
 		// Sort back to front first, then by texture
 		std::sort(mSortedIconData.begin(), mSortedIconData.begin() + actualNumIcons, 
@@ -790,7 +791,7 @@ namespace bs
 
 		// Note: This assumes the meshes will be rendered using the same camera
 		// properties as when they are created
-		for (i = 0; i < actualNumIcons; i++)
+		for (UINT32 i = 0; i < actualNumIcons; i++)
 		{
 			SortedIconData& sortedIconData = mSortedIconData[i];
 			const IconData& curIconData = iconData[sortedIconData.iconIdx];
