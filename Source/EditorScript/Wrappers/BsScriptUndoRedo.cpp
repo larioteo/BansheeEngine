@@ -226,7 +226,7 @@ namespace bs
 			BuiltinComponentInfo* info = sam.getBuiltinComponentInfo(paramType);
 			if (info == nullptr)
 			{
-				BS_LOG(Warning, Editor, "Provided type is not a valid component")
+				BS_LOG(Warning, Editor, "Provided type is not a valid component");
 				continue;
 			}
 
