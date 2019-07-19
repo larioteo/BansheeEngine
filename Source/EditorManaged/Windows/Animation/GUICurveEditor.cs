@@ -1483,18 +1483,13 @@ namespace bs.Editor
 
             Vector2 currentRange = Range;
             Vector2 newRange = currentRange + zoomedDiff;
+            newRange.x = Math.Max(0, newRange.x);
             Range = newRange;
 
             // When zooming, make sure to focus on the point provided, so adjust the offset
             Vector2 rangeScale = newRange;
             rangeScale.x /= currentRange.x;
             rangeScale.y /= currentRange.y;
-
-            Vector2 relativeCurvePos = curvePos - Offset;
-            Vector2 newCurvePos = relativeCurvePos * rangeScale;
-            Vector2 diff = newCurvePos - relativeCurvePos;
-
-            Offset -= diff;
 
             UpdateScrollBarSize();
             UpdateScrollBarPosition();
