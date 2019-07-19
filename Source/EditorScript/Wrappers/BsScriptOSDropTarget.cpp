@@ -112,6 +112,7 @@ namespace bs
 
 		mWidgetParentChangedConn.disconnect();
 		mWidgetResizedConn.disconnect();
+		mWidgetMovedConn.disconnect();
 
 		setDropTarget(nullptr, 0, 0, 0, 0);
 	}
