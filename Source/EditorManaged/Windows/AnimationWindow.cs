@@ -506,7 +506,7 @@ namespace bs.Editor
             guiCurveEditor.DisableCurveEdit = clipInfo.isImported;
 
             SetCurrentFrame(0);
-            FPS = clipInfo.sampleRate;
+            fps = clipInfo.sampleRate;
         }
 
         /// <summary>
@@ -517,8 +517,7 @@ namespace bs.Editor
             if (clipInfo == null)
                 return;
 
-            EditorAnimClipTangents unused;
-            clipInfo.Apply(out unused);
+            clipInfo.Apply(out _);
         }
 
         /// <summary>
@@ -830,8 +829,7 @@ namespace bs.Editor
         /// </summary>
         private void StartPlayback()
         {
-            EditorAnimClipTangents unused;
-            clipInfo.Apply(out unused);
+            clipInfo.Apply(out _);
 
             Animation animation = selectedSO.GetComponent<Animation>();
             if (animation != null && clipInfo.clip != null)
@@ -994,7 +992,14 @@ namespace bs.Editor
         internal int FPS
         {
             get { return fps; }
-            set { guiCurveEditor.SetFPS(value); fps = MathEx.Max(value, 1); }
+            set
+            {
+                fps = MathEx.Max(value, 1);
+                guiCurveEditor.SetFPS(fps);
+
+                if (clipInfo != null)
+                    clipInfo.sampleRate = fps;
+            }
         }
 
         /// <summary>

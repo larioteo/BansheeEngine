@@ -57,6 +57,16 @@ namespace bs.Editor
     }
 
     /// <summary>
+    /// Contains editor-only data for a specific <see cref="AnimationClip"/>.
+    /// </summary>
+    [SerializeObject]
+    internal class EditorAnimClipData
+    {
+        public NamedVector3Curve[] eulerCurves;
+        public EditorAnimClipTangents tangents;
+    }
+
+    /// <summary>
     /// Stores animation clip data for clips that are currently being edited.
     /// </summary>
     internal class EditorAnimClipInfo
@@ -81,7 +91,25 @@ namespace bs.Editor
             clipInfo.sampleRate = (int)clip.SampleRate;
 
             AnimationCurves clipCurves = clip.Curves;
-            EditorAnimClipTangents editorCurveData = null;
+            EditorAnimClipData editorClipData = null;
+
+            EditorAnimClipData lGetAnimClipData(ResourceMeta meta)
+            {
+                object editorData = meta.EditorData;
+                EditorAnimClipData output = editorData as EditorAnimClipData;
+
+                if (output == null)
+                {
+                    // Old editor data stores tangents only
+                    if (editorData is EditorAnimClipTangents tangents)
+                    {
+                        output = new EditorAnimClipData();
+                        output.tangents = tangents;
+                    }
+                }
+
+                return output;
+            }
 
             string resourcePath = ProjectLibrary.GetPath(clip);
             if (!string.IsNullOrEmpty(resourcePath))
@@ -100,85 +128,90 @@ namespace bs.Editor
                         {
                             if (clipName == metas[i].SubresourceName)
                             {
-                                editorCurveData = metas[i].EditorData as EditorAnimClipTangents;
+                                editorClipData = lGetAnimClipData(metas[i]);
                                 break;
                             }
                         }
                     }
                     else
                     {
-                        if(metas.Length > 0)
-                            editorCurveData = metas[0].EditorData as EditorAnimClipTangents;
+                        if (metas.Length > 0)
+                            editorClipData = lGetAnimClipData(metas[0]);
                     }
                 }
             }
 
-            if (editorCurveData == null)
-                editorCurveData = new EditorAnimClipTangents();
-
-            int globalCurveIdx = 0;
-            Action<NamedVector3Curve[], EditorVector3CurveTangents[], string> loadVector3Curve =
-                (curves, tangents, subPath) =>
-                {
-                    foreach (var curveEntry in curves)
-                    {
-                        TangentMode[] tangentsX = null;
-                        TangentMode[] tangentsY = null;
-                        TangentMode[] tangentsZ = null;
-
-                        if (tangents != null)
-                        {
-                            foreach (var tangentEntry in tangents)
-                            {
-                                if (tangentEntry.name == curveEntry.name)
-                                {
-                                    tangentsX = tangentEntry.tangentsX;
-                                    tangentsY = tangentEntry.tangentsY;
-                                    tangentsZ = tangentEntry.tangentsZ;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // Convert compound curve to three per-component curves
-                        AnimationCurve[] componentCurves = AnimationUtility.SplitCurve3D(curveEntry.curve);
-
-                        FieldAnimCurves fieldCurves = new FieldAnimCurves();
-                        fieldCurves.type = SerializableProperty.FieldType.Vector3;
-                        fieldCurves.curveInfos = new EdCurveDrawInfo[3];
-                        fieldCurves.isPropertyCurve = !clipInfo.isImported;
-
-                        fieldCurves.curveInfos[0] = new EdCurveDrawInfo();
-                        fieldCurves.curveInfos[0].curve = new EdAnimationCurve(componentCurves[0], tangentsX);
-                        fieldCurves.curveInfos[0].color = GetUniqueColor(globalCurveIdx++);
-
-                        fieldCurves.curveInfos[1] = new EdCurveDrawInfo();
-                        fieldCurves.curveInfos[1].curve = new EdAnimationCurve(componentCurves[1], tangentsY);
-                        fieldCurves.curveInfos[1].color = GetUniqueColor(globalCurveIdx++);
-
-                        fieldCurves.curveInfos[2] = new EdCurveDrawInfo();
-                        fieldCurves.curveInfos[2].curve = new EdAnimationCurve(componentCurves[2], tangentsZ);
-                        fieldCurves.curveInfos[2].color = GetUniqueColor(globalCurveIdx++);
-
-                        string curvePath = curveEntry.name.TrimEnd('/') + subPath;
-                        clipInfo.curves[curvePath] = fieldCurves;
-                    }
-                };
-
-            // Convert rotation from quaternion to euler
-            NamedQuaternionCurve[] rotationCurves = clipCurves.Rotation;
-            NamedVector3Curve[] eulerRotationCurves = new NamedVector3Curve[rotationCurves.Length];
-            for(int i = 0; i < rotationCurves.Length; i++)
+            if (editorClipData == null)
             {
-                eulerRotationCurves[i] = new NamedVector3Curve();
-                eulerRotationCurves[i].name = rotationCurves[i].name;
-                eulerRotationCurves[i].flags = rotationCurves[i].flags;
-                eulerRotationCurves[i].curve = AnimationUtility.QuaternionToEulerCurve(rotationCurves[i].curve);
+                editorClipData = new EditorAnimClipData();
+                editorClipData.tangents = new EditorAnimClipTangents();
             }
 
-            loadVector3Curve(clipCurves.Position, editorCurveData.positionCurves, "/Position");
-            loadVector3Curve(eulerRotationCurves, editorCurveData.rotationCurves, "/Rotation");
-            loadVector3Curve(clipCurves.Scale, editorCurveData.scaleCurves, "/Scale");
+            int globalCurveIdx = 0;
+            void lLoadVector3Curve(NamedVector3Curve[] curves, EditorVector3CurveTangents[] tangents, string subPath)
+            {
+                foreach (var curveEntry in curves)
+                {
+                    TangentMode[] tangentsX = null;
+                    TangentMode[] tangentsY = null;
+                    TangentMode[] tangentsZ = null;
+
+                    if (tangents != null)
+                    {
+                        foreach (var tangentEntry in tangents)
+                        {
+                            if (tangentEntry.name == curveEntry.name)
+                            {
+                                tangentsX = tangentEntry.tangentsX;
+                                tangentsY = tangentEntry.tangentsY;
+                                tangentsZ = tangentEntry.tangentsZ;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Convert compound curve to three per-component curves
+                    AnimationCurve[] componentCurves = AnimationUtility.SplitCurve3D(curveEntry.curve);
+
+                    FieldAnimCurves fieldCurves = new FieldAnimCurves();
+                    fieldCurves.type = SerializableProperty.FieldType.Vector3;
+                    fieldCurves.curveInfos = new EdCurveDrawInfo[3];
+                    fieldCurves.isPropertyCurve = !clipInfo.isImported;
+
+                    fieldCurves.curveInfos[0] = new EdCurveDrawInfo();
+                    fieldCurves.curveInfos[0].curve = new EdAnimationCurve(componentCurves[0], tangentsX);
+                    fieldCurves.curveInfos[0].color = GetUniqueColor(globalCurveIdx++);
+
+                    fieldCurves.curveInfos[1] = new EdCurveDrawInfo();
+                    fieldCurves.curveInfos[1].curve = new EdAnimationCurve(componentCurves[1], tangentsY);
+                    fieldCurves.curveInfos[1].color = GetUniqueColor(globalCurveIdx++);
+
+                    fieldCurves.curveInfos[2] = new EdCurveDrawInfo();
+                    fieldCurves.curveInfos[2].curve = new EdAnimationCurve(componentCurves[2], tangentsZ);
+                    fieldCurves.curveInfos[2].color = GetUniqueColor(globalCurveIdx++);
+
+                    string curvePath = curveEntry.name.TrimEnd('/') + subPath;
+                    clipInfo.curves[curvePath] = fieldCurves;
+                }
+            };
+
+            NamedQuaternionCurve[] rotationCurves = clipCurves.Rotation;
+            if (editorClipData.eulerCurves == null || editorClipData.eulerCurves.Length != rotationCurves.Length)
+            {
+                // Convert rotation from quaternion to euler if we don't have original euler animation data stored. 
+                editorClipData.eulerCurves = new NamedVector3Curve[rotationCurves.Length];
+                for (int i = 0; i < rotationCurves.Length; i++)
+                {
+                    editorClipData.eulerCurves[i] = new NamedVector3Curve();
+                    editorClipData.eulerCurves[i].name = rotationCurves[i].name;
+                    editorClipData.eulerCurves[i].flags = rotationCurves[i].flags;
+                    editorClipData.eulerCurves[i].curve = AnimationUtility.QuaternionToEulerCurve(rotationCurves[i].curve);
+                }
+            }
+
+            lLoadVector3Curve(clipCurves.Position, editorClipData.tangents.positionCurves, "/Position");
+            lLoadVector3Curve(editorClipData.eulerCurves, editorClipData.tangents.rotationCurves, "/Rotation");
+            lLoadVector3Curve(clipCurves.Scale, editorClipData.tangents.scaleCurves, "/Scale");
 
             // Find which individual float curves belong to the same field
             Dictionary<string, Tuple<int, int, bool>[]> floatCurveMapping = new Dictionary<string, Tuple<int, int, bool>[]>();
@@ -200,7 +233,7 @@ namespace bs.Editor
 
                     int tangentIdx = -1;
                     int currentTangentIdx = 0;
-                    foreach (var tangentEntry in editorCurveData.floatCurves)
+                    foreach (var tangentEntry in editorClipData.tangents.floatCurves)
                     {
                         if (tangentEntry.name == curveEntry.name)
                         {
@@ -276,7 +309,7 @@ namespace bs.Editor
 
                     TangentMode[] tangents = null;
                     if (tangentIdx != -1)
-                        tangents = editorCurveData.floatCurves[tangentIdx].tangents;
+                        tangents = editorClipData.tangents.floatCurves[tangentIdx].tangents;
 
                     fieldCurves.curveInfos[i] = new EdCurveDrawInfo();
                     fieldCurves.curveInfos[i].curve = new EdAnimationCurve(clipCurves.Generic[curveIdx].curve, tangents);
@@ -342,12 +375,12 @@ namespace bs.Editor
         /// Applies any changes made to the animation curves or events to the actual animation clip. Only works for
         /// non-imported animation clips.
         /// </summary>
-        /// <param name="tangents">Tangent modes for all the saved animation curves.</param>
-        public void Apply(out EditorAnimClipTangents tangents)
+        /// <param name="editorData">Additional animation clip data for use in editor.</param>
+        public void Apply(out EditorAnimClipData editorData)
         {
             if (isImported || clip == null)
             {
-                tangents = null;
+                editorData = null;
                 return;
             }
 
@@ -360,6 +393,7 @@ namespace bs.Editor
             List<EditorVector3CurveTangents> rotationTangents = new List<EditorVector3CurveTangents>();
             List<EditorVector3CurveTangents> scaleTangents = new List<EditorVector3CurveTangents>();
             List<EditorFloatCurveTangents> floatTangents = new List<EditorFloatCurveTangents>();
+            List<NamedVector3Curve> eulerRotationCurves = new List<NamedVector3Curve>();
 
             foreach (var kvp in curves)
             {
@@ -407,6 +441,7 @@ namespace bs.Editor
                         quatCurve.curve = AnimationUtility.EulerToQuaternionCurve(curve.curve);
 
                         rotationCurves.Add(quatCurve);
+                        eulerRotationCurves.Add(curve);
                         rotationTangents.Add(curveTangents);
                     }
                     else if (lastEntry == "Scale")
@@ -495,11 +530,13 @@ namespace bs.Editor
             clip.Events = events;
             clip.SampleRate = sampleRate;
 
-            tangents = new EditorAnimClipTangents();
-            tangents.positionCurves = positionTangents.ToArray();
-            tangents.rotationCurves = rotationTangents.ToArray();
-            tangents.scaleCurves = scaleTangents.ToArray();
-            tangents.floatCurves = floatTangents.ToArray();
+            editorData = new EditorAnimClipData();
+            editorData.tangents = new EditorAnimClipTangents();
+            editorData.tangents.positionCurves = positionTangents.ToArray();
+            editorData.tangents.rotationCurves = rotationTangents.ToArray();
+            editorData.tangents.scaleCurves = scaleTangents.ToArray();
+            editorData.tangents.floatCurves = floatTangents.ToArray();
+            editorData.eulerCurves = eulerRotationCurves.ToArray();
         }
 
         /// <summary>
@@ -510,13 +547,13 @@ namespace bs.Editor
         {
             if (!isImported)
             {
-                EditorAnimClipTangents tangents;
-                Apply(out tangents);
+                EditorAnimClipData editorAnimClipData;
+                Apply(out editorAnimClipData);
 
                 string resourcePath = ProjectLibrary.GetPath(clip);
                 ProjectLibrary.Save(clip);
 
-                ProjectLibrary.SetEditorData(resourcePath, tangents);
+                ProjectLibrary.SetEditorData(resourcePath, editorAnimClipData);
             }
             else
             {
