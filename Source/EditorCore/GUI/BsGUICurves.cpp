@@ -394,7 +394,8 @@ namespace bs
 	void GUICurves::drawCurve(const TAnimationCurve<float>& curve, const Color& color)
 	{
 		const float range = getRangeWithPadding();
-		const float lengthPerPixel = range / getDrawableWidth();
+		const float widthPerPixel = range / getDrawableWidth();
+		const float heightPerPixel = mYRange / mLayoutData.area.height;
 
 		const Vector<TKeyframe<float>>& keyframes = curve.getKeyFrames();
 		if (keyframes.empty())
@@ -440,28 +441,22 @@ namespace bs
 			}
 			else // Draw normally
 			{
-				float splitIncrement = LINE_SPLIT_WIDTH * lengthPerPixel;
-
 				const float startValue = keyframes[i].value;
 				const float endValue = keyframes[i + 1].value;
 
-				Vector2I startPixel;
-				startPixel.x = (int)(start / lengthPerPixel);
-				startPixel.y = (int)(startValue / lengthPerPixel);
-
-				Vector2I endPixel;
-				endPixel.x = (int)(end / lengthPerPixel);
-				endPixel.y = (int)(endValue / lengthPerPixel);
+				Vector2I startPixel = curveToPixelSpace(Vector2(start, startValue));
+				Vector2I endPixel = curveToPixelSpace(Vector2(end, endValue));
 
 				const UINT32 distance = startPixel.manhattanDist(endPixel);
 
 				INT32 numSplits;
+				float splitIncrement;
 				if (distance > 0)
 				{
-					const float fNumSplits = distance / splitIncrement;
+					const float fNumSplits = distance / (float)LINE_SPLIT_WIDTH;
 
-					numSplits = Math::ceilToInt(fNumSplits);
-					splitIncrement = distance / (float)numSplits;
+					numSplits = Math::ceilToInt(fNumSplits) + 1;
+					splitIncrement = (end - start) / (float)numSplits;
 				}
 				else
 				{
