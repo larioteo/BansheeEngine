@@ -76,9 +76,9 @@ namespace bs.Editor
         {
             delta = Vector3.Zero;
 
-            delta += xAxis.Delta * GetXDir() * 0.1f;
-            delta += yAxis.Delta * GetYDir() * 0.1f;
-            delta += zAxis.Delta * GetZDir() * 0.1f;
+            delta += xAxis.Delta * Vector3.XAxis * 0.1f;
+            delta += yAxis.Delta * Vector3.YAxis * 0.1f;
+            delta += zAxis.Delta * Vector3.ZAxis * 0.1f;
             delta += (freeAxis.Delta.x + freeAxis.Delta.y) * Vector3.One * 0.1f;
         }
 
@@ -153,6 +153,7 @@ namespace bs.Editor
             topRight = cameraRot.Rotate(topRight + offset);
             bottomRight = cameraRot.Rotate(bottomRight + offset);
 
+            HandleDrawing.Transform = Matrix4.TRS(Position, Quaternion.Identity, Vector3.One);
             HandleDrawing.DrawLine(bottomLeft, bottomRight, handleSize);
             HandleDrawing.DrawLine(bottomLeft, topLeft, handleSize);
             HandleDrawing.DrawLine(topLeft, topRight, handleSize);

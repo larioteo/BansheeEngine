@@ -180,26 +180,21 @@ namespace bs.Editor
                         {
                             ScaleHandle scaleHandle = (ScaleHandle) activeHandle;
 
-                            // Make sure we transform relative to the handle position
-                            SceneObject temporarySO = new SceneObject("Temp");
-                            temporarySO.Position = activeHandle.Position;
-
-                            SceneObject[] originalParents = new SceneObject[activeSelection.Length];
+                            Vector3 origin = activeHandle.Position;
                             for (int i = 0; i < activeSelection.Length; i++)
                             {
-                                originalParents[i] = activeSelection[i].so.Parent;
-                                activeSelection[i].so.LocalPosition = activeSelection[i].initialPosition;
-                                activeSelection[i].so.LocalRotation = activeSelection[i].initialRotation;
-                                activeSelection[i].so.LocalScale = activeSelection[i].initialScale;
-                                activeSelection[i].so.Parent = temporarySO;
+                                Vector3 posDiff = activeSelection[i].initialPosition - origin;
+                                Vector3 scale = activeSelection[i].initialScale;
+                                Vector3 newScale = scale + scaleHandle.Delta;
+
+                                Vector3 pctScale = new Vector3(
+                                    newScale.x / scale.x,
+                                    newScale.y / scale.y,
+                                    newScale.z / scale.z);
+
+                                activeSelection[i].so.LocalScale = newScale;
+                                activeSelection[i].so.Position = origin + posDiff * pctScale;
                             }
-
-                            temporarySO.LocalScale += scaleHandle.Delta;
-
-                            for (int i = 0; i < activeSelection.Length; i++)
-                                activeSelection[i].so.Parent = originalParents[i];
-
-                            temporarySO.Destroy();
                         }
                             break;
                     }
