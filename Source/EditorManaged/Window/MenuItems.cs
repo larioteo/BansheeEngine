@@ -794,6 +794,7 @@ namespace bs.Editor
             GameObjectUndo.RecordNewSceneObject(so);
             Renderable renderable = so.AddComponent<Renderable>();
             renderable.Mesh = Builtin.Box;
+            so.AddComponent<BoxCollider>();
             GameObjectUndo.ResolveDiffs();
 
             FocusOnHierarchyOrScene();
@@ -812,6 +813,7 @@ namespace bs.Editor
             GameObjectUndo.RecordNewSceneObject(so);
             Renderable renderable = so.AddComponent<Renderable>();
             renderable.Mesh = Builtin.Sphere;
+            so.AddComponent<SphereCollider>();
             GameObjectUndo.ResolveDiffs();
 
             FocusOnHierarchyOrScene();
