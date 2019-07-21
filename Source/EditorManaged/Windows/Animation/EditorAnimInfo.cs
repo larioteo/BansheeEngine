@@ -57,12 +57,28 @@ namespace bs.Editor
     }
 
     /// <summary>
+    /// Contains a version of <see cref="NamedVector3Curve"/> that can be serialized from the editor.
+    /// </summary>
+    [SerializeObject]
+    internal struct EditorNamedVector3Curve
+    {
+        /// <summary>Name of the curve.</summary>
+        public string name;
+
+        /// <summary>Flags that describe the animation curve.</summary>
+        public AnimationCurveFlags flags;
+
+        /// <summary> Curve keyframes. </summary>
+        public KeyFrameVec3[] keyFrames;
+    }
+
+    /// <summary>
     /// Contains editor-only data for a specific <see cref="AnimationClip"/>.
     /// </summary>
     [SerializeObject]
     internal class EditorAnimClipData
     {
-        public NamedVector3Curve[] eulerCurves;
+        public EditorNamedVector3Curve[] eulerCurves;
         public EditorAnimClipTangents tangents;
     }
 
@@ -196,21 +212,31 @@ namespace bs.Editor
             };
 
             NamedQuaternionCurve[] rotationCurves = clipCurves.Rotation;
+            NamedVector3Curve[] eulerRotationCurves = new NamedVector3Curve[rotationCurves.Length];
             if (editorClipData.eulerCurves == null || editorClipData.eulerCurves.Length != rotationCurves.Length)
             {
                 // Convert rotation from quaternion to euler if we don't have original euler animation data stored. 
-                editorClipData.eulerCurves = new NamedVector3Curve[rotationCurves.Length];
                 for (int i = 0; i < rotationCurves.Length; i++)
                 {
-                    editorClipData.eulerCurves[i] = new NamedVector3Curve();
-                    editorClipData.eulerCurves[i].name = rotationCurves[i].name;
-                    editorClipData.eulerCurves[i].flags = rotationCurves[i].flags;
-                    editorClipData.eulerCurves[i].curve = AnimationUtility.QuaternionToEulerCurve(rotationCurves[i].curve);
+                    NamedQuaternionCurve quatCurve = rotationCurves[i];
+                    Vector3Curve eulerCurve = AnimationUtility.QuaternionToEulerCurve(quatCurve.curve);
+
+                    eulerRotationCurves[i] = new NamedVector3Curve(quatCurve.name, quatCurve.flags, eulerCurve);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < editorClipData.eulerCurves.Length; i++)
+                {
+                    EditorNamedVector3Curve edCurve = editorClipData.eulerCurves[i];
+
+                    eulerRotationCurves[i] = new NamedVector3Curve(
+                        edCurve.name, edCurve.flags, new Vector3Curve(edCurve.keyFrames));
                 }
             }
 
             lLoadVector3Curve(clipCurves.Position, editorClipData.tangents.positionCurves, "/Position");
-            lLoadVector3Curve(editorClipData.eulerCurves, editorClipData.tangents.rotationCurves, "/Rotation");
+            lLoadVector3Curve(eulerRotationCurves, editorClipData.tangents.rotationCurves, "/Rotation");
             lLoadVector3Curve(clipCurves.Scale, editorClipData.tangents.scaleCurves, "/Scale");
 
             // Find which individual float curves belong to the same field
@@ -393,7 +419,7 @@ namespace bs.Editor
             List<EditorVector3CurveTangents> rotationTangents = new List<EditorVector3CurveTangents>();
             List<EditorVector3CurveTangents> scaleTangents = new List<EditorVector3CurveTangents>();
             List<EditorFloatCurveTangents> floatTangents = new List<EditorFloatCurveTangents>();
-            List<NamedVector3Curve> eulerRotationCurves = new List<NamedVector3Curve>();
+            List<EditorNamedVector3Curve> eulerRotationCurves = new List<EditorNamedVector3Curve>();
 
             foreach (var kvp in curves)
             {
@@ -440,8 +466,12 @@ namespace bs.Editor
                         quatCurve.name = curve.name;
                         quatCurve.curve = AnimationUtility.EulerToQuaternionCurve(curve.curve);
 
+                        EditorNamedVector3Curve edEulerCurve = new EditorNamedVector3Curve();
+                        edEulerCurve.name = curve.name;
+                        edEulerCurve.keyFrames = curve.curve.KeyFrames;
+
                         rotationCurves.Add(quatCurve);
-                        eulerRotationCurves.Add(curve);
+                        eulerRotationCurves.Add(edEulerCurve);
                         rotationTangents.Add(curveTangents);
                     }
                     else if (lastEntry == "Scale")
