@@ -340,7 +340,7 @@ namespace bs.Editor
 
             guiCurveDrawing = new GUICurves(drawOptions);
             guiCurveDrawing.SetWidth(this.width);
-            guiCurveDrawing.SetHeight(this.height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2);
+            guiCurveDrawing.SetHeight(Math.Max(0, this.height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2));
             guiCurveDrawing.SetRange(60.0f, 20.0f);
             guiCurveDrawing.Curves = GetPlainCurveDrawInfos();
             drawingPanel.AddElement(guiCurveDrawing);
@@ -348,8 +348,8 @@ namespace bs.Editor
             GUIPanel sidebarPanel = mainPanel.AddPanel(-10);
             sidebarPanel.SetPosition(0, TIMELINE_HEIGHT + eventsHeaderHeight + VERT_PADDING);
 
-            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, this.height - TIMELINE_HEIGHT - 
-                eventsHeaderHeight - VERT_PADDING * 2);
+            guiSidebar = new GUIGraphValues(sidebarPanel, SIDEBAR_WIDTH, 
+                Math.Max(0, this.height - TIMELINE_HEIGHT - eventsHeaderHeight - VERT_PADDING * 2));
             guiSidebar.SetRange(-10.0f, 10.0f);
 
             horzScrollBar.SetWidth(this.width);
@@ -390,8 +390,8 @@ namespace bs.Editor
 
             guiTimeline.SetSize(this.width, TIMELINE_HEIGHT);
             guiCurveDrawing.SetWidth(this.width);
-            guiCurveDrawing.SetHeight(this.height - TIMELINE_HEIGHT - eventsHeaderHeight);
-            guiSidebar.SetSize(SIDEBAR_WIDTH, this.height - TIMELINE_HEIGHT - eventsHeaderHeight);
+            guiCurveDrawing.SetHeight(Math.Max(0, this.height - TIMELINE_HEIGHT - eventsHeaderHeight));
+            guiSidebar.SetSize(SIDEBAR_WIDTH, Math.Max(0, this.height - TIMELINE_HEIGHT - eventsHeaderHeight));
 
             timelineBackground.Bounds = new Rect2I(0, 0, this.width, TIMELINE_HEIGHT + VERT_PADDING);
 
