@@ -28,7 +28,7 @@ set(BS_CS_PROJ "MBansheeEditor.csproj")
 
 if(MSVC)
 	if(CMAKE_GENERATOR MATCHES "Visual Studio")
-		include_external_msproject(MBansheeEditor ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ})
+		include_external_msproject(MBansheeEditor ${PROJECT_BINARY_DIR}/${BS_CS_PROJ})
 		set_property(TARGET MBansheeEditor PROPERTY FOLDER Script)
 	else()
 		# Generator expressions don't support 'A' else 'B', otherwise
@@ -37,7 +37,7 @@ if(MSVC)
 		# all configuration types (e.g. RelWithDebInfo, etc) in MBansheeEditor
 		# then we could use $<CONFIG>
 		add_custom_target(MBansheeEditor
-				COMMAND msbuild /p:Configuration=$<$<CONFIG:Debug>:Debug>$<$<NOT:$<CONFIG:Debug>>:Release> ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ}
+				COMMAND msbuild /p:Configuration=$<$<CONFIG:Debug>:Debug>$<$<NOT:$<CONFIG:Debug>>:Release> ${PROJECT_BINARY_DIR}/${BS_CS_PROJ}
 				COMMENT "Building managed assembly \"MBansheeEditor\"")
 	endif()
 else()
@@ -50,7 +50,7 @@ else()
 	endif()
 
 	add_custom_target(MBansheeEditor
-			COMMAND ${msbuild_EXECUTABLE} /p:Configuration=${CS_PROJ_CONFIG} ${CMAKE_CURRENT_SOURCE_DIR}/${BS_CS_PROJ}
+			COMMAND ${msbuild_EXECUTABLE} /p:Configuration=${CS_PROJ_CONFIG} ${PROJECT_BINARY_DIR}/${BS_CS_PROJ}
 			COMMENT "Building managed assembly \"MBansheeEditor\"")
 endif()
 
