@@ -4,7 +4,7 @@ configure_file("${PROJECT_SOURCE_DIR}/Source/EditorManaged/Properties/AssemblyIn
 # Project refs
 if(MSVC)
 	set(BS_CS_PROJECT_REFS " \
-  <ProjectReference Include=\"..\\bsf\\Source\\Scripting\\bsfSharp\\MBansheeEngine.csproj\">\n \
+  <ProjectReference Include=\"${PROJECT_BINARY_DIR}\\MBansheeEngine.csproj\">\n \
     <Project>{876EB338-489E-4727-84DA-8CBBF0DA5B5E}</Project>\n \
     <Name>MBansheeEngine</Name>\n \
   </ProjectReference>\n")
