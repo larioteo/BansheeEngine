@@ -1252,6 +1252,9 @@ namespace bs.Editor
         private Rect2I GetScrollAreaBounds()
         {
             Rect2I bounds = GUI.Bounds;
+            bounds.x = 0;
+            bounds.y = 0;
+
             Rect2I folderListBounds = folderListLayout.Bounds;
             Rect2I searchBarBounds = searchBarLayout.Bounds;
 
