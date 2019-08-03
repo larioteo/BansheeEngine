@@ -24,9 +24,16 @@ namespace bs.Editor
         private const int SliderSideWidth = 40;
         private const int SliderSideHeight = 200;
 
+        // Value used by Photoshop
+        private const float MaxOverexposedValue = 191 / 255.0f;
+        private const float MaxExposureRange = 10.0f;
+
         private float colRed, colGreen, colBlue;
+        private float colRedHDR, colGreenHDR, colBlueHDR;
         private float colHue, colSaturation, colValue;
         private float colAlpha = 1.0f;
+        private float exposure = 0.0f;
+        private bool hdr = false;
 
         private ColorSlider1DHorz sliderR, sliderG, sliderB, sliderA;
         private ColorSlider2D colorBox;
@@ -63,6 +70,10 @@ namespace bs.Editor
         private GUIIntField guiInputB;
         private GUIIntField guiInputA;
 
+        private GUILabel guiLabelExposure;
+        private GUISliderH guiSliderExposure;
+        private GUIFloatField guiInputExposure;
+
         private GUIButton guiOK;
         private GUIButton guiCancel;
 
@@ -97,7 +108,26 @@ namespace bs.Editor
         {
             get
             {
+                if(hdr)
+                    return new Color(colRedHDR, colGreenHDR, colBlueHDR, colAlpha);
+                
                 return new Color(colRed, colGreen, colBlue, colAlpha);
+            }
+        }
+
+        /// <summary>
+        /// Currently selected color, suitable for GUI display;
+        /// </summary>
+        private Color GUIColor
+        {
+            get
+            {
+                Color color = new Color(colRed, colGreen, colBlue, colAlpha);
+
+                if (hdr)
+                    return color.Gamma;
+
+                return color;
             }
         }
 
@@ -106,10 +136,11 @@ namespace bs.Editor
         /// </summary>
         /// <param name="closedCallback">Optional callback to trigger when the user selects a color or cancels out
         ///                              of the dialog.</param>
+        /// <param name="hdr">If true, the color intensity can be selected along with the color itself.</param>
         /// <returns>A. instance of the color picker window.</returns>
-        public static ColorPicker Show(Action<bool, Color> closedCallback = null)
+        public static ColorPicker Show(bool hdr = false, Action<bool, Color> closedCallback = null)
         {
-            ColorPicker picker = new ColorPicker(Color.Black, closedCallback);
+            ColorPicker picker = new ColorPicker(Color.Black, hdr, closedCallback);
             return picker;
         }
 
@@ -117,12 +148,13 @@ namespace bs.Editor
         /// Shows the color picker window and sets the initial color to show.
         /// </summary>
         /// <param name="color">Initial color to display.</param>
+        /// <param name="hdr">If true, the color intensity can be selected along with the color itself.</param>
         /// <param name="closedCallback">Optional callback to trigger when the user selects a color or cancels out
         ///                              of the dialog.</param>
         /// <returns>A. instance of the color picker window.</returns>
-        public static ColorPicker Show(Color color, Action<bool, Color> closedCallback = null)
+        public static ColorPicker Show(Color color, bool hdr = false, Action<bool, Color> closedCallback = null)
         {
-            ColorPicker picker = new ColorPicker(color, closedCallback);
+            ColorPicker picker = new ColorPicker(color, hdr, closedCallback);
             return picker;
         }
 
@@ -130,18 +162,21 @@ namespace bs.Editor
         /// Constructs a new color picker window.
         /// </summary>
         /// <param name="color">Initial color to display.</param>
+        /// <param name="hdr">If true, the color intensity can be selected along with the color itself.</param>
         /// <param name="closedCallback">Optional callback to trigger when the user selects a color or cancels out
         ///                              of the dialog.</param>
-        protected ColorPicker(Color color, Action<bool, Color> closedCallback = null)
+        protected ColorPicker(Color color, bool hdr, Action<bool, Color> closedCallback = null)
             : base(false)
         {
             Title = new LocEdString("Color Picker");
 
-            colRed = color.r;
-            colGreen = color.g;
-            colBlue = color.b;
+            colRedHDR = color.r;
+            colGreenHDR = color.g;
+            colBlueHDR = color.b;
             colAlpha = color.a;
+            this.hdr = hdr;
 
+            HDRToLDR();
             RGBToHSV();
 
             this.closedCallback = closedCallback;
@@ -195,9 +230,21 @@ namespace bs.Editor
             guiInputG.OnChanged += OnInputGChanged;
             guiInputB.OnChanged += OnInputBChanged;
             guiInputA.OnChanged += OnInputAChanged;
-
+            
             guiOK.OnClick += OnOK;
             guiCancel.OnClick += OnCancel;
+
+            if (hdr)
+            {
+                guiSliderExposure = new GUISliderH();
+                guiSliderExposure.SetRange(-MaxExposureRange, MaxExposureRange);
+                guiSliderExposure.OnChanged += OnSliderExposureChanged;
+                
+                guiLabelExposure = new GUILabel(new LocEdString("Exposure"));
+                guiInputExposure = new GUIFloatField();
+                guiInputExposure.SetRange(-MaxExposureRange, MaxExposureRange);
+                guiInputExposure.OnChanged += OnInputExposureChanged;
+            }
 
             GUIPanel mainPanel = GUI.AddPanel(0);
             mainPanel.SetWidth(ContentWidth);
@@ -267,6 +314,20 @@ namespace bs.Editor
             h5.AddElement(guiInputA);
             h5.AddSpace(10);
 
+            if (hdr)
+            {
+                v0.AddSpace(5);
+                
+                GUILayout hExposure = v0.AddLayoutX();
+                hExposure.AddSpace(10);
+                hExposure.AddElement(guiLabelExposure);
+                hExposure.AddFlexibleSpace();
+                hExposure.AddElement(guiSliderExposure);
+                hExposure.AddFlexibleSpace();
+                hExposure.AddElement(guiInputExposure);
+                hExposure.AddSpace(10);
+            }
+            
             v0.AddSpace(10);
 
             GUILayout h6 = v0.AddLayoutX();
@@ -301,12 +362,12 @@ namespace bs.Editor
 
             Color startA = new Color(0, 0, 0, 1);
             Color stepA = new Color(1, 1, 1, 0);
-            sliderA.UpdateTexture(startA, stepA, false);
+            sliderA.UpdateTexture(startA, stepA, false, false);
             guiInputA.SetRange(0, 255);
             guiInputA.Value = 255;
             guiSliderAHorz.Percent = 1.0f;
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update2DSliderValues();
             Update1DSliderValues();
@@ -354,6 +415,80 @@ namespace bs.Editor
                     currentColor += rightDelta;
                 }
                 verticalColor += downDelta;
+            }
+        }
+        
+        /// <summary>
+        /// Decomposes a HDR RGB color into a normalized RGB color and an exposure value.
+        /// </summary>
+        /// <param name="hdrColor">Input HDR color to decompose.</param>
+        /// <param name="exposure">Output exposure value of the color.</param>
+        /// <returns>Output normalized RGB color.</returns>
+        private static Color DecomposeHDR(Color hdrColor, out float exposure)
+        {
+            // Note: Replicating Photoshop's behaviour
+
+            float maxColorComponent = MathEx.Max(hdrColor.r, hdrColor.g, hdrColor.b);
+            if (maxColorComponent == 0.0f || (maxColorComponent >= 1.0f / 255.0f && maxColorComponent < 1.0f))
+            {
+                exposure = 0.0f;
+                return hdrColor;
+            }
+            else
+            {
+                float scaleFactor = MaxOverexposedValue / maxColorComponent;
+                exposure = MathEx.Log(1.0f / scaleFactor) / MathEx.Log(2);
+                
+                Color output = new Color();
+                output.r = MathEx.Min(MaxOverexposedValue, scaleFactor * hdrColor.r);
+                output.g = MathEx.Min(MaxOverexposedValue, scaleFactor * hdrColor.g);
+                output.b = MathEx.Min(MaxOverexposedValue, scaleFactor * hdrColor.b);
+                output.a = hdrColor.a;
+
+                return output;
+            }
+        }
+
+        /// <summary>
+        /// Converts the currently selected HDR RGB color into normalized [0-1] range. This is a no-op if HDR is not
+        /// enabled on the slider.
+        /// </summary>
+        void HDRToLDR()
+        {
+            if (hdr)
+            {
+                Color ldrColor = DecomposeHDR(
+                    new Color(colRedHDR, colGreenHDR, colBlueHDR, colAlpha), 
+                    out exposure);
+
+                colRed = ldrColor.r;
+                colGreen = ldrColor.g;
+                colBlue = ldrColor.b;
+            }
+            else
+            {
+                colRed = colRedHDR;
+                colGreen = colGreenHDR;
+                colBlue = colBlueHDR;
+            }
+        }
+
+        /// <summary>
+        /// Converts the currently selected RGB color to an HDR color using the current exposure value.
+        /// </summary>
+        void LDRToHDR()
+        {
+            if (hdr)
+            {
+                colRedHDR = colRed * MathEx.Pow(2.0f, exposure);
+                colGreenHDR = colGreen * MathEx.Pow(2.0f, exposure);
+                colBlueHDR = colBlue * MathEx.Pow(2.0f, exposure);
+            }
+            else
+            {
+                colRedHDR = colRed;
+                colGreenHDR = colGreen;
+                colBlueHDR = colBlue;
             }
         }
 
@@ -452,8 +587,10 @@ namespace bs.Editor
                     HSVToRGB();
                     break;
             }
-
-            guiColor.Value = SelectedColor;
+            
+            LDRToHDR();
+            
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update1DSliderTextures();
             Update1DSliderValues();
@@ -501,8 +638,10 @@ namespace bs.Editor
                     HSVToRGB();
                     break;
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update1DSliderTextures();
             Update1DSliderValues();
@@ -525,8 +664,10 @@ namespace bs.Editor
                 colRed = percent;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -549,8 +690,10 @@ namespace bs.Editor
                 colGreen = percent;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -573,8 +716,10 @@ namespace bs.Editor
                 colBlue = percent;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             UpdateInputBoxValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -588,7 +733,7 @@ namespace bs.Editor
         {
             colAlpha = percent;
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             guiInputA.Value = MathEx.RoundToInt(colAlpha * 255.0f);
         }
 
@@ -609,8 +754,10 @@ namespace bs.Editor
                 colRed = value/255.0f;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             Update1DSliderValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -633,8 +780,10 @@ namespace bs.Editor
                 colGreen = value / 255.0f;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             Update1DSliderValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -657,8 +806,10 @@ namespace bs.Editor
                 colBlue = value / 255.0f;
                 RGBToHSV();
             }
+            
+            LDRToHDR();
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             Update1DSliderValues();
             Update2DSliderTextures();
             Update2DSliderValues();
@@ -672,8 +823,32 @@ namespace bs.Editor
         {
             colAlpha = value/255.0f;
 
-            guiColor.Value = SelectedColor;
+            guiColor.Value = GUIColor;
             guiSliderAHorz.Percent = colAlpha;
+        }
+
+        /// <summary>
+        /// Triggered when the exposure slider changes.
+        /// </summary>
+        /// <param name="value">New exposure value.</param>
+        void OnSliderExposureChanged(float value)
+        {
+            exposure = value;
+            LDRToHDR();
+
+            guiSliderExposure.Value = value;
+        }
+
+        /// <summary>
+        /// Triggered when user inputs new value in the exposure input box.
+        /// </summary>
+        /// <param name="value">New exposure value.</param>
+        void OnInputExposureChanged(float value)
+        {
+            exposure = value;
+            LDRToHDR();
+
+            guiInputExposure.Value = value;
         }
 
         /// <summary>
@@ -743,6 +918,9 @@ namespace bs.Editor
                 guiInputG.Value = MathEx.RoundToInt(colGreen * 255.0f);
                 guiInputB.Value = MathEx.RoundToInt(colBlue * 255.0f);
             }
+
+            if (hdr)
+                guiInputExposure.Value = exposure;
         }
 
         /// <summary>
@@ -763,6 +941,9 @@ namespace bs.Editor
                 guiSliderGHorz.Percent = colGreen;
                 guiSliderBHorz.Percent = colBlue;
             }
+
+            if (hdr)
+                guiSliderExposure.Value = exposure;
         }
 
         /// <summary>
@@ -836,34 +1017,34 @@ namespace bs.Editor
                 Color startH = new Color(0, 1, 1);
                 Color stepH = new Color(1, 0, 0, 0);
 
-                sliderR.UpdateTexture(startH, stepH, true);
+                sliderR.UpdateTexture(startH, stepH, true, false);
 
                 Color startS = new Color(colHue, 0, MathEx.Max(colValue, 0.2f));
                 Color stepS = new Color(0, 1, 0, 0);
 
-                sliderG.UpdateTexture(startS, stepS, true);
+                sliderG.UpdateTexture(startS, stepS, true, false);
 
                 Color startV = new Color(colHue, colSaturation, 0);
                 Color stepV = new Color(0, 0, 1, 0);
 
-                sliderB.UpdateTexture(startV, stepV, true);
+                sliderB.UpdateTexture(startV, stepV, true, false);
             }
             else
             {
                 Color startR = new Color(0, colGreen, colBlue);
                 Color stepR = new Color(1, 0, 0, 0);
 
-                sliderR.UpdateTexture(startR, stepR, false);
+                sliderR.UpdateTexture(startR, stepR, false, hdr);
 
                 Color startG = new Color(colRed, 0, colBlue);
                 Color stepG = new Color(0, 1, 0, 0);
 
-                sliderG.UpdateTexture(startG, stepG, false);
+                sliderG.UpdateTexture(startG, stepG, false, hdr);
 
                 Color startB = new Color(colRed, colGreen, 0);
                 Color stepB = new Color(0, 0, 1, 0);
 
-                sliderB.UpdateTexture(startB, stepB, false);
+                sliderB.UpdateTexture(startB, stepB, false, hdr);
             }
         }
 
@@ -875,22 +1056,22 @@ namespace bs.Editor
             switch (colorBoxMode)
             {
                 case ColorBoxMode.BG_R:
-                    sideSlider.UpdateTexture(new Color(0, colGreen, colBlue, 1), new Color(1, 0, 0, 0), false);
+                    sideSlider.UpdateTexture(new Color(0, colGreen, colBlue, 1), new Color(1, 0, 0, 0), false, hdr);
                     break;
                 case ColorBoxMode.BR_G:
-                    sideSlider.UpdateTexture(new Color(colRed, 0, colBlue, 1), new Color(0, 1, 0, 0), false);
+                    sideSlider.UpdateTexture(new Color(colRed, 0, colBlue, 1), new Color(0, 1, 0, 0), false, hdr);
                     break;
                 case ColorBoxMode.RG_B:
-                    sideSlider.UpdateTexture(new Color(colRed, colGreen, 0, 1), new Color(0, 0, 1, 0), false);
+                    sideSlider.UpdateTexture(new Color(colRed, colGreen, 0, 1), new Color(0, 0, 1, 0), false, hdr);
                     break;
                 case ColorBoxMode.SV_H:
-                    sideSlider.UpdateTexture(new Color(0, 1, 1, 1), new Color(1, 0, 0, 0), true);
+                    sideSlider.UpdateTexture(new Color(0, 1, 1, 1), new Color(1, 0, 0, 0), true, false);
                     break;
                 case ColorBoxMode.HV_S:
-                    sideSlider.UpdateTexture(new Color(colHue, 0, MathEx.Max(colValue, 0.2f), 1), new Color(0, 1, 0, 0), true);
+                    sideSlider.UpdateTexture(new Color(colHue, 0, MathEx.Max(colValue, 0.2f), 1), new Color(0, 1, 0, 0), true, false);
                     break;
                 case ColorBoxMode.HS_V:
-                    sideSlider.UpdateTexture(new Color(colHue, colSaturation, 0, 1), new Color(0, 0, 1, 0), true);
+                    sideSlider.UpdateTexture(new Color(colHue, colSaturation, 0, 1), new Color(0, 0, 1, 0), true, false);
                     break;
             }
         }
@@ -946,7 +1127,8 @@ namespace bs.Editor
             /// <param name="start">Initial color on the left of the slider.</param>
             /// <param name="step">Final color to the right of the slider.</param>
             /// <param name="isHSV">Determines are the provided colors in RGB or HSV space.</param>
-            public void UpdateTexture(Color start, Color step, bool isHSV)
+            /// <param name="isLinear">True if the provided colors are in linear color space.</param>
+            public void UpdateTexture(Color start, Color step, bool isHSV, bool isLinear)
             {
                 Color[] colors = new Color[width * height];
                 FillArea(width, height, colors, start, step, new Color(0, 0, 0, 0));
@@ -955,6 +1137,15 @@ namespace bs.Editor
                 {
                     for (int i = 0; i < colors.Length; i++)
                         colors[i] = Color.HSV2RGB(colors[i]);
+                }
+                else 
+                {
+                    // If RGB, convert to gamma space if needed
+                    if (isLinear)
+                    {
+                        for (int i = 0; i < colors.Length; i++)
+                            colors[i] = colors[i].Gamma;
+                    }
                 }
 
                 texture.SetPixels(colors);
@@ -1010,7 +1201,8 @@ namespace bs.Editor
             /// <param name="start">Initial color on the top of the slider.</param>
             /// <param name="step">Final color to the bottom of the slider.</param>
             /// <param name="isHSV">Determines are the provided colors in RGB or HSV space.</param>
-            public void UpdateTexture(Color start, Color step, bool isHSV)
+            /// <param name="isLinear">True if the provided colors are in linear color space.</param>
+            public void UpdateTexture(Color start, Color step, bool isHSV, bool isLinear)
             {
                 Color[] colors = new Color[width * height];
                 FillArea(width, height, colors, start, new Color(0, 0, 0, 0), step);
@@ -1019,6 +1211,15 @@ namespace bs.Editor
                 {
                     for (int i = 0; i < colors.Length; i++)
                         colors[i] = Color.HSV2RGB(colors[i]);
+                }
+                else 
+                {
+                    // If RGB, convert to gamma space if needed
+                    if (isLinear)
+                    {
+                        for (int i = 0; i < colors.Length; i++)
+                            colors[i] = colors[i].Gamma;
+                    }
                 }
 
                 texture.SetPixels(colors);

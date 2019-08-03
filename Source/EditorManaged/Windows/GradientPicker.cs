@@ -487,7 +487,7 @@ namespace bs.Editor
                 int keyIdx;
                 if (FindKey(canvasPos, out keyIdx))
                 {
-                    ColorPicker.Show(keys[keyIdx].color,
+                    ColorPicker.Show(keys[keyIdx].color, false,
                         (b, color) =>
                         {
                             if (b)

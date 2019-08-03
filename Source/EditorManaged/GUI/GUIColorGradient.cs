@@ -17,7 +17,6 @@ namespace bs.Editor
 
                 Gradient = colorGradient;
             });
-
         }
     }
 
@@ -28,14 +27,15 @@ namespace bs.Editor
         /// </summary>
         partial void Callback_OnClicked()
         {
-            // TODO - Show HDR color gradient
-            //GradientPicker.Show(Gradient, (success, colorGradient) =>
-            //{
-            //    if (!success)
-            //        return;
+            // Note: Should allow HDR color gradient
+            ColorGradient gradient = new ColorGradient(Gradient.GetKeys());
+            GradientPicker.Show(gradient, (success, colorGradient) =>
+            {
+                if (!success)
+                    return;
 
-            //    Gradient = colorGradient;
-            //});
+                Gradient = new ColorGradientHDR(colorGradient.GetKeys());
+            });
         }
     }
 }

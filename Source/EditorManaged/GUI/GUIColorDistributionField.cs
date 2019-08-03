@@ -17,7 +17,7 @@ namespace bs.Editor
             if (DistributionType == PropertyDistributionType.Constant ||
                 DistributionType == PropertyDistributionType.RandomRange)
             {
-                ColorPicker.Show(distribution.GetMinConstant(), (success, value) =>
+                ColorPicker.Show(distribution.GetMinConstant(), true, (success, value) =>
                 {
                     if (!success)
                         return;
@@ -54,7 +54,7 @@ namespace bs.Editor
 
             if (DistributionType == PropertyDistributionType.RandomRange)
             {
-                ColorPicker.Show(distribution.GetMaxConstant(), (success, value) =>
+                ColorPicker.Show(distribution.GetMaxConstant(), true, (success, value) =>
                 {
                     if (!success)
                         return;

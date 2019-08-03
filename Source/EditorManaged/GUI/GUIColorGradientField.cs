@@ -39,15 +39,16 @@ namespace bs.Editor
         /// </summary>
         partial void Callback_OnClicked()
         {
-            // TODO
-            //GradientPicker.Show(Value, (success, colorGradient) =>
-            //{
-            //    if (!success)
-            //        return;
+            // Note: Should allow HDR color gradient
+            ColorGradient gradient = new ColorGradient(Value.GetKeys());
+            GradientPicker.Show(gradient, (success, colorGradient) =>
+            {
+                if (!success)
+                    return;
 
-            //    Value = colorGradient;
-            //    OnChanged?.Invoke(colorGradient);
-            //});
+                Value = new ColorGradientHDR(colorGradient.GetKeys());
+                OnChanged?.Invoke(Value);
+            });
         }
     }
 }

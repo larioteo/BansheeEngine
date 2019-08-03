@@ -32,7 +32,7 @@ namespace bs.Editor
 
         partial void Callback_OnClicked()
         {
-            ColorPicker.Show(Value, ColorPickerClosed);
+            ColorPicker.Show(Value, AllowHDR, ColorPickerClosed);
         }
     }
 }
