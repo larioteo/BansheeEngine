@@ -5,10 +5,10 @@
 #include "BsMonoClass.h"
 #include "BsMonoUtil.h"
 #include "../../EditorCore/GUI/BsGUIColorDistributionField.h"
-#include "BsScriptHString.generated.h"
-#include "BsScriptColorDistribution.generated.h"
-#include "BsScriptGUIContent.generated.h"
 #include "../../EditorCore/GUI/BsGUIColorDistributionField.h"
+#include "BsScriptTColorDistribution.generated.h"
+#include "BsScriptHString.generated.h"
+#include "BsScriptGUIContent.generated.h"
 
 namespace bs
 {
@@ -48,20 +48,20 @@ namespace bs
 	}
 	MonoObject* ScriptGUIColorDistributionField::Internal_getValue(ScriptGUIColorDistributionField* thisPtr)
 	{
-		SPtr<ColorDistribution> tmp__output = bs_shared_ptr_new<ColorDistribution>();
+		SPtr<TColorDistribution<ColorGradient>> tmp__output = bs_shared_ptr_new<TColorDistribution<ColorGradient>>();
 		*tmp__output = static_cast<GUIColorDistributionField*>(thisPtr->getGUIElement())->getValue();
 
 		MonoObject* __output;
-		__output = ScriptColorDistribution::create(tmp__output);
+		__output = ScriptTColorDistributionColorGradient::create(tmp__output);
 
 		return __output;
 	}
 
 	void ScriptGUIColorDistributionField::Internal_setValue(ScriptGUIColorDistributionField* thisPtr, MonoObject* value)
 	{
-		SPtr<ColorDistribution> tmpvalue;
-		ScriptColorDistribution* scriptvalue;
-		scriptvalue = ScriptColorDistribution::toNative(value);
+		SPtr<TColorDistribution<ColorGradient>> tmpvalue;
+		ScriptTColorDistributionColorGradient* scriptvalue;
+		scriptvalue = ScriptTColorDistributionColorGradient::toNative(value);
 		if(scriptvalue != nullptr)
 			tmpvalue = scriptvalue->getInternal();
 		static_cast<GUIColorDistributionField*>(thisPtr->getGUIElement())->setValue(*tmpvalue);

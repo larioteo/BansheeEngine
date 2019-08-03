@@ -11,10 +11,12 @@
 
 namespace bs
 {
-	const float GUIColorGradient::ALPHA_SPLIT_POSITION = 0.75f;
+	template<class T, class SELF>
+	const float TGUIColorGradient<T, SELF>::ALPHA_SPLIT_POSITION = 0.75f;
 
-	GUIColorGradient::GUIColorGradient(const String& styleName, const GUIDimensions& dimensions)
-		:GUIElement(styleName, dimensions), mColorSprite(nullptr), mAlphaSprite(nullptr)
+	template<class T, class SELF>
+	TGUIColorGradient<T, SELF>::TGUIColorGradient(const String& styleName, const GUIDimensions& dimensions)
+		:GUIElement(styleName, dimensions)
 	{
 		mColorSprite = bs_new<ImageSprite>();
 		mAlphaSprite = bs_new<ImageSprite>();
@@ -23,31 +25,34 @@ namespace bs
 		mAlphaImageDesc.texture = BuiltinResources::instance().getWhiteSpriteTexture();
 	}
 
-	GUIColorGradient::~GUIColorGradient()
+	template<class T, class SELF>
+	TGUIColorGradient<T, SELF>::~TGUIColorGradient()
 	{
 		bs_delete(mColorSprite);
 		bs_delete(mAlphaSprite);
 	}
 
-	const String& GUIColorGradient::getGUITypeName()
+	template<class T, class SELF>
+	const String& TGUIColorGradient<T, SELF>::getGUITypeName()
 	{
 		static String name = "ColorGradient";
 		return name;
 	}
 
-	GUIColorGradient* GUIColorGradient::create(const String& styleName)
+	template<class T, class SELF>
+	SELF* TGUIColorGradient<T, SELF>::create(const String& styleName)
 	{
-		return new (bs_alloc<GUIColorGradient>()) GUIColorGradient(getStyleName<GUIColorGradient>(styleName), 
-			GUIDimensions::create());
+		return new (bs_alloc<SELF>()) SELF(getStyleName<SELF>(styleName), GUIDimensions::create());
 	}
 
-	GUIColorGradient* GUIColorGradient::create(const GUIOptions& options, const String& styleName)
+	template<class T, class SELF>
+	SELF* TGUIColorGradient<T, SELF>::create(const GUIOptions& options, const String& styleName)
 	{
-		return new (bs_alloc<GUIColorGradient>()) GUIColorGradient(getStyleName<GUIColorGradient>(styleName), 
-			GUIDimensions::create(options));
+		return new (bs_alloc<SELF>()) SELF(getStyleName<SELF>(styleName), GUIDimensions::create(options));
 	}
 
-	void GUIColorGradient::setGradient(const ColorGradient& color)
+	template<class T, class SELF>
+	void TGUIColorGradient<T, SELF>::setGradient(const T& color)
 	{
 		if(mValue == color)
 			return;
@@ -56,7 +61,8 @@ namespace bs
 		_markContentAsDirty();
 	}
 
-	UINT32 GUIColorGradient::_getNumRenderElements() const
+	template<class T, class SELF>
+	UINT32 TGUIColorGradient<T, SELF>::_getNumRenderElements() const
 	{
 		UINT32 numElements = mColorSprite->getNumRenderElements();
 		numElements += mAlphaSprite->getNumRenderElements();
@@ -64,7 +70,8 @@ namespace bs
 		return numElements;
 	}
 
-	const SpriteMaterialInfo& GUIColorGradient::_getMaterial(UINT32 renderElementIdx, SpriteMaterial** material) const
+	template<class T, class SELF>
+	const SpriteMaterialInfo& TGUIColorGradient<T, SELF>::_getMaterial(UINT32 renderElementIdx, SpriteMaterial** material) const
 	{
 		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
 
@@ -79,8 +86,8 @@ namespace bs
 			return mColorSprite->getMaterialInfo(renderElementIdx);
 		}
 	}
-
-	void GUIColorGradient::_getMeshInfo(UINT32 renderElementIdx, UINT32& numVertices, UINT32& numIndices, GUIMeshType& type) const
+	template<class T, class SELF>
+	void TGUIColorGradient<T, SELF>::_getMeshInfo(UINT32 renderElementIdx, UINT32& numVertices, UINT32& numIndices, GUIMeshType& type) const
 	{
 		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
 
@@ -95,7 +102,8 @@ namespace bs
 		type = GUIMeshType::Triangle;
 	}
 
-	void GUIColorGradient::updateRenderElementsInternal()
+	template<class T, class SELF>
+	void TGUIColorGradient<T, SELF>::updateRenderElementsInternal()
 	{
 		const Color color = getTint();
 
@@ -117,12 +125,14 @@ namespace bs
 		GUIElement::updateRenderElementsInternal();
 	}
 
-	Vector2I GUIColorGradient::_getOptimalSize() const
+	template<class T, class SELF>
+	Vector2I TGUIColorGradient<T, SELF>::_getOptimalSize() const
 	{
 		return GUIHelper::calcOptimalContentsSize(Vector2I(80, 10), *_getStyle(), _getDimensions()); // Arbitrary size
 	}
 
-	void GUIColorGradient::_fillBuffer(UINT8* vertices, UINT32* indices, UINT32 vertexOffset, UINT32 indexOffset,
+	template<class T, class SELF>
+	void TGUIColorGradient<T, SELF>::_fillBuffer(UINT8* vertices, UINT32* indices, UINT32 vertexOffset, UINT32 indexOffset,
 		UINT32 maxNumVerts, UINT32 maxNumIndices, UINT32 renderElementIdx) const
 	{
 		UINT8* uvs = vertices + sizeof(Vector2);
@@ -151,7 +161,8 @@ namespace bs
 		}
 	}
 
-	bool GUIColorGradient::_mouseEvent(const GUIMouseEvent& ev)
+	template<class T, class SELF>
+	bool TGUIColorGradient<T, SELF>::_mouseEvent(const GUIMouseEvent& ev)
 	{
 		if(ev.getType() == GUIMouseEventType::MouseUp)
 		{
@@ -164,7 +175,8 @@ namespace bs
 		return false;
 	}
 
-	HTexture GUIColorGradient::generateGradientTexture(const ColorGradient& gradient, UINT32 width, bool alpha)
+	template<class T, class SELF>
+	HTexture TGUIColorGradient<T, SELF>::generateGradientTexture(const T& gradient, UINT32 width, bool alpha)
 	{
 		SPtr<PixelData> pixelData = PixelData::create(std::max(width, 1U), 1, 1, PF_RGBA8);
 
@@ -173,7 +185,7 @@ namespace bs
 		{
 			const float t = i / (float)width + halfPixel;
 
-			Color value = Color::fromRGBA(gradient.evaluate(t));
+			Color value = impl::TGradientHelper<typename T::ColorType>::fromInternalColor(gradient.evaluate(t));
 
 			if (alpha)
 				value = Color::lerp(value.a, Color::Black, Color::White);
@@ -184,4 +196,7 @@ namespace bs
 		
 		return Texture::create(pixelData);
 	}
+
+	template class BS_ED_EXPORT TGUIColorGradient<ColorGradient, GUIColorGradient>;
+	template class BS_ED_EXPORT TGUIColorGradient<ColorGradientHDR, GUIColorGradientHDR>;
 }

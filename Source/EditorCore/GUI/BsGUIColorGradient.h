@@ -10,14 +10,18 @@
 
 namespace bs
 {
-	/** @addtogroup GUI-Editor
-	 *  @{
+	/** 
+	 * @addtogroup Implementation
+	 * @{
 	 */
 
-	/** GUI element that displays a color gradient. */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUIColorGradient : public GUIElement
+	/** Templated class used for representing both normal and HDR variations of the color gradient GUI element. */
+	template<class T, class SELF>
+	class BS_ED_EXPORT TGUIColorGradient : public GUIElement
 	{
 	public:
+		TGUIColorGradient(const String& styleName, const GUIDimensions& dimensions);
+
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
 
@@ -27,8 +31,8 @@ namespace bs
 		 * @param[in]	styleName		Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
-		BS_SCRIPT_EXPORT(ec:GUIColorGradient)
-		static GUIColorGradient* create(const String& styleName = StringUtil::BLANK);
+		BS_SCRIPT_EXPORT(ec:T)
+		static SELF* create(const String& styleName = StringUtil::BLANK);
 
 		/**
 		 * Creates a new GUI color gradient element.
@@ -38,15 +42,15 @@ namespace bs
 		 * @param[in]	styleName		Optional style to use for the element. Style will be retrieved from GUISkin of the
 		 *								GUIWidget the element is used on. If not specified default style is used.
 		 */
-		static GUIColorGradient* create(const GUIOptions& options, const String& styleName = StringUtil::BLANK);
+		static SELF* create(const GUIOptions& options, const String& styleName = StringUtil::BLANK);
 
 		/**	Color gradient to display. */
 		BS_SCRIPT_EXPORT(pr:setter,n:Gradient)
-		void setGradient(const ColorGradient& colorGradient);
+		void setGradient(const T& colorGradient);
 
 		/** @copydoc setGradient */
 		BS_SCRIPT_EXPORT(pr:getter,n:Gradient)
-		ColorGradient getGradient() const { return mValue; }
+		T getGradient() const { return mValue; }
 
 		BS_SCRIPT_EXPORT(in:true)
 		Event<void()> onClicked; /**< Triggered when the user clicks on the GUI element. */
@@ -60,8 +64,7 @@ namespace bs
 
 		/** @} */
 	protected:
-		GUIColorGradient(const String& styleName, const GUIDimensions& dimensions);
-		virtual ~GUIColorGradient();
+		virtual ~TGUIColorGradient();
 
 		/** @copydoc GUIElement::_getNumRenderElements() */
 		UINT32 _getNumRenderElements() const override;
@@ -91,18 +94,36 @@ namespace bs
 		 *							otherwise generate a color texture.
 		 * @return					Generated texture.
 		 */
-		static HTexture generateGradientTexture(const ColorGradient& gradient, UINT32 width, bool alpha = false);
+		static HTexture generateGradientTexture(const T& gradient, UINT32 width, bool alpha = false);
 
 	private:
 		static const float ALPHA_SPLIT_POSITION;
 
-		ImageSprite* mColorSprite;
-		ImageSprite* mAlphaSprite;
+		ImageSprite* mColorSprite = nullptr;
+		ImageSprite* mAlphaSprite = nullptr;
 
 		IMAGE_SPRITE_DESC mColorImageDesc;
 		IMAGE_SPRITE_DESC mAlphaImageDesc;
 
-		ColorGradient mValue;
+		T mValue;
+	};
+
+	/** @} */
+
+	/** @addtogroup GUI-Editor
+	 *  @{
+	 */
+
+	/** GUI element that displays a color gradient. */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUIColorGradient : public TGUIColorGradient<ColorGradient, GUIColorGradient>
+	{
+		using TGUIColorGradient::TGUIColorGradient;
+	};
+
+	/** GUI element that displays a color gradient with HDR color support. */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) GUIColorGradientHDR : public TGUIColorGradient<ColorGradientHDR, GUIColorGradientHDR>
+	{
+		using TGUIColorGradient::TGUIColorGradient;
 	};
 
 	/** @} */

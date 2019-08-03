@@ -18,7 +18,7 @@
 			<doc>Source is a single image that will be replicated on all cubemap faces.</doc>
 		</enumentry>
 		<enumentry native="Faces" script="Faces">
-			<doc>Source is a list of 6 images, either sequentially next to each other or in a cross format. The system will  automatically guess the layout and orientation based on the aspect ratio.</doc>
+			<doc>Source is a list of 6 images, either sequentially next to each other or in a cross format. The system will automatically guess the layout and orientation based on the aspect ratio.</doc>
 		</enumentry>
 		<enumentry native="Spherical" script="Spherical">
 			<doc>Source is a single spherical panoramic image.</doc>
@@ -27,6 +27,9 @@
 			<doc>Source is a single cylindrical panoramic image.</doc>
 		</enumentry>
 	</enum>
+	<class native="GUIColorGradientHDRField" script="GUIColorGradientHDRField">
+		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays a color gradient input field with support for HDR colors.</doc>
+	</class>
 	<class native="ImportedAnimationEvents" script="ImportedAnimationEvents">
 		<doc>A set of animation events that will be added to an animation clip during animation import.</doc>
 	</class>
@@ -40,7 +43,7 @@
 		</enumentry>
 	</enum>
 	<class native="ImportOptions" script="ImportOptions">
-		<doc>Base class for creating import options from. Import options are specific for each importer and control how is data  imported.</doc>
+		<doc>Base class for creating import options from. Import options are specific for each importer and control how is data imported.</doc>
 	</class>
 	<enum native="AnimationWindowIcon" script="AnimationWindowIcon">
 		<doc>Types of icons that may be displayed in the animation editor window.</doc>
@@ -345,6 +348,12 @@
 	</class>
 	<class native="GUIColorDistributionField" script="GUIColorDistributionField">
 		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays an input field for a color distribution.</doc>
+	</class>
+	<class native="GUIColorField" script="GUIColorField">
+		<doc>A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field. Label is optional. This specific implementation displays a color input field.</doc>
+	</class>
+	<class native="GUIColorGradientHDR" script="GUIColorGradientHDR">
+		<doc>GUI element that displays a color gradient with HDR color support.</doc>
 	</class>
 	<class native="GUITimeline" script="GUITimeline">
 		<doc>Base class that can be implemented by GUI elements needing to elements along draw a horizontal timeline.</doc>

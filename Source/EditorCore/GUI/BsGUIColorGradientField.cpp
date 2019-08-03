@@ -9,17 +9,19 @@ using namespace std::placeholders;
 
 namespace bs
 {
-	GUIColorGradientField::GUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, 
-		UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
+	template<class T, class TGUI, class TSELF>
+	TGUIColorGradientField<T, TGUI, TSELF>::TGUIColorGradientField(const PrivatelyConstruct& dummy, 
+		const GUIContent& labelContent, UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
 		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
-		mGradient = GUIColorGradient::create(getSubStyleName(GRADIENT_FIELD_STYLE_TYPE));
-		mGradient->onClicked.connect(std::bind(&GUIColorGradientField::clicked, this));
+		mGradient = TGUI::create(this->getSubStyleName(GRADIENT_FIELD_STYLE_TYPE));
+		mGradient->onClicked.connect(std::bind(&TGUIColorGradientField::clicked, this));
 
-		mLayout->addElement(mGradient);
+		this->mLayout->addElement(mGradient);
 	}
 
-	void GUIColorGradientField::setValue(const ColorGradient& gradient)
+	template<class T, class TGUI, class TSELF>
+	void TGUIColorGradientField<T, TGUI, TSELF>::setValue(const T& gradient)
 	{
 		if(mValue == gradient)
 			return;
@@ -28,7 +30,8 @@ namespace bs
 		mGradient->setGradient(gradient);
 	}
 
-	void GUIColorGradientField::setTint(const Color& color)
+	template<class T, class TGUI, class TSELF>
+	void TGUIColorGradientField<T, TGUI, TSELF>::setTint(const Color& color)
 	{
 		if (mLabel != nullptr)
 			mLabel->setTint(color);
@@ -36,7 +39,8 @@ namespace bs
 		mGradient->setTint(color);
 	}
 
-	Vector2I GUIColorGradientField::_getOptimalSize() const
+	template<class T, class TGUI, class TSELF>
+	Vector2I TGUIColorGradientField<T, TGUI, TSELF>::_getOptimalSize() const
 	{
 		Vector2I optimalsize = mGradient->_getOptimalSize();
 
@@ -49,22 +53,28 @@ namespace bs
 		return optimalsize;
 	}
 
-	void GUIColorGradientField::styleUpdated()
+	template<class T, class TGUI, class TSELF>
+	void TGUIColorGradientField<T, TGUI, TSELF>::styleUpdated()
 	{
 		if (mLabel != nullptr)
-			mLabel->setStyle(getSubStyleName(getLabelStyleType()));
+			mLabel->setStyle(this->getSubStyleName(this->getLabelStyleType()));
 
-		mGradient->setStyle(getSubStyleName(GRADIENT_FIELD_STYLE_TYPE));
+		mGradient->setStyle(this->getSubStyleName(GRADIENT_FIELD_STYLE_TYPE));
 	}
 
-	void GUIColorGradientField::clicked()
+	template<class T, class TGUI, class TSELF>
+	void TGUIColorGradientField<T, TGUI, TSELF>::clicked()
 	{
 		onClicked();
 	}
 
-	const String& GUIColorGradientField::getGUITypeName()
+	template<class T, class TGUI, class TSELF>
+	const String& TGUIColorGradientField<T, TGUI, TSELF>::getGUITypeName()
 	{
 		static String typeName = "GUIColorGradientField";
 		return typeName;
 	}
+
+	template class BS_ED_EXPORT TGUIColorGradientField<ColorGradient, GUIColorGradient, GUIColorGradientField>;
+	template class BS_ED_EXPORT TGUIColorGradientField<ColorGradientHDR, GUIColorGradientHDR, GUIColorGradientHDRField>;
 }

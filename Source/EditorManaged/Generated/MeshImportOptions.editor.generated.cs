@@ -94,10 +94,10 @@ namespace bs.Editor
 		}
 
 		/// <summary>
-		/// Enables or disables import of root motion curves. When enabled, any animation curves in imported animations  
-		/// affecting the root bone will be available through a set of separate curves in AnimationClip, and they won&apos;t be 
-		/// evaluated through normal animation process. Instead it is expected that the user evaluates the curves manually and 
-		/// applies them as required.
+		/// Enables or disables import of root motion curves. When enabled, any animation curves in imported animations affecting 
+		/// the root bone will be available through a set of separate curves in AnimationClip, and they won&apos;t be evaluated 
+		/// through normal animation process. Instead it is expected that the user evaluates the curves manually and applies them 
+		/// as required.
 		/// </summary>
 		[ShowInInspector]
 		[NativeWrapper]
@@ -129,7 +129,7 @@ namespace bs.Editor
 		}
 
 		/// <summary>
-		/// Animation split infos that determine how will the source animation clip be split. If no splits are present the  data 
+		/// Animation split infos that determine how will the source animation clip be split. If no splits are present the data 
 		/// will be imported as one clip, but if splits are present the data will be split according to the split infos. Split 
 		/// infos only affect the primary animation clip, other clips will not be split.
 		/// </summary>

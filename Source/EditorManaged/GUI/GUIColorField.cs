@@ -6,75 +6,12 @@ using bs;
 
 namespace bs.Editor
 {
-    /** @addtogroup GUI-Editor 
-     *  @{
-     */
-
-    /// <summary>
-    /// Editor GUI element that displays a color and an optional label. Allows the user to select a color using the color 
-    /// picker.
-    /// </summary>
-    public sealed class GUIColorField : GUIElement
+    public partial class GUIColorField
     {
-        public delegate void OnChangedDelegate(Color newValue);
-
         /// <summary>
         /// Triggered when the color in the field changes.
         /// </summary>
-        public event OnChangedDelegate OnChanged;
-
-        /// <summary>
-        /// Color displayed by the field.
-        /// </summary>
-        public Color Value
-        {
-            get
-            {
-                Color value;
-                Internal_GetValue(mCachedPtr, out value);
-                return value;
-            }
-
-            set { Internal_SetValue(mCachedPtr, ref value); }
-        }
-
-        /// <summary>
-        /// Creates a new color field element with a label.
-        /// </summary>
-        /// <param name="title">Content to display on the label.</param>
-        /// <param name="titleWidth">Width of the title label in pixels.</param>
-        /// <param name="style">Optional style to use for the element. Style controls the look of the element, as well as 
-        ///                     default layout options. Style will be retrieved from the active GUISkin. If not specified 
-        ///                     default element style is used.</param>
-        /// <param name="options">Options that allow you to control how is the element  positioned and sized. This will 
-        ///                       override any similar options set by style.</param>
-        public GUIColorField(GUIContent title, int titleWidth = 100, string style = "", params GUIOption[] options)
-        {
-            Internal_CreateInstance(this, ref title, titleWidth, style, options, true);
-        }
-
-        /// <summary>
-        /// Creates a new color field element without a label.
-        /// </summary>
-        /// <param name="style">Optional style to use for the element. Style controls the look of the element, as well as 
-        ///                     default layout options. Style will be retrieved from the active GUISkin. If not specified 
-        ///                     default element style is used.</param>
-        /// <param name="options">Options that allow you to control how is the element  positioned and sized. This will 
-        ///                       override any similar options set by style.</param>
-        public GUIColorField(string style = "", params GUIOption[] options)
-        {
-            GUIContent emptyContent = new GUIContent();
-            Internal_CreateInstance(this, ref emptyContent, 0, style, options, false);
-        }
-
-        /// <summary>
-        /// Colors the element with a specific tint.
-        /// </summary>
-        /// <param name="color">Tint to apply to the element.</param>
-        public void SetTint(Color color)
-        {
-            Internal_SetTint(mCachedPtr, ref color);
-        }
+        public event Action<Color> OnChanged;
 
         /// <summary>
         /// Triggered when the user closes the color picker window.
@@ -93,27 +30,9 @@ namespace bs.Editor
             }
         }
 
-        /// <summary>
-        /// Triggered by the runtime when the user clicks on the color field.
-        /// </summary>
-        private void Internal_DoOnClicked()
+        partial void Callback_OnClicked()
         {
             ColorPicker.Show(Value, ColorPickerClosed);
         }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_CreateInstance(GUIColorField instance, ref GUIContent title, int titleWidth,
-            string style, GUIOption[] options, bool withTitle);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_GetValue(IntPtr nativeInstance, out Color value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetValue(IntPtr nativeInstance, ref Color value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetTint(IntPtr nativeInstance, ref Color color);
     }
-
-    /** @} */
 }

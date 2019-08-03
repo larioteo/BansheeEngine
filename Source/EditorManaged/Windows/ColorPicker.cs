@@ -149,7 +149,9 @@ namespace bs.Editor
 
         private void OnInitialize()
         {
-            guiColor = new GUIColorField("", GUIOption.FixedWidth(100));
+            guiColor = new GUIColorField();
+            guiColor.SetWidth(100);
+
             guiSlider2DTex = new GUITexture(null, GUIOption.FixedHeight(ColorBoxHeight), GUIOption.FixedWidth(ColorBoxWidth));
             guiSliderVertTex = new GUITexture(null, GUIOption.FixedHeight(SliderSideHeight), GUIOption.FixedWidth(SliderSideWidth));
             guiSliderRHorzTex = new GUITexture(null, GUIOption.FixedHeight(SliderIndividualHeight));

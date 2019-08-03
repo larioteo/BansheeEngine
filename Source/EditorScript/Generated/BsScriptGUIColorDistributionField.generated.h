@@ -4,8 +4,8 @@
 
 #include "BsScriptEditorPrerequisites.h"
 #include "Wrappers/GUI/BsScriptGUIElement.h"
-#include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
+#include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 
 namespace bs

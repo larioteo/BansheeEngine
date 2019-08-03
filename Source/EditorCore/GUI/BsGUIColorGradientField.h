@@ -8,16 +8,17 @@
 
 namespace bs
 {
-	/** @addtogroup GUI-Editor
-	 *  @{
-	 */
+	class GUIColorGradient;
+	class GUIColorGradientHDR;
 
 	/**
-	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
-	 * Label is optional. This specific implementation displays a color gradient input field.
+	 * @addtogroup Implementation
+	 * @{
 	 */
-	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
-	GUIColorGradientField final : public TGUIField<GUIColorGradientField>
+
+	/** Templated class for creating GUI fields for both normal and HDR color gradients. */
+	template<class T, class TGUI, class TSELF>
+	class BS_ED_EXPORT TGUIColorGradientField : public TGUIField<TSELF>
 	{
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */
@@ -26,16 +27,16 @@ namespace bs
 		/** Style type name for the internal color gradient field. */
 		static constexpr const char* GRADIENT_FIELD_STYLE_TYPE = "GradientField";
 
-		GUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
+		TGUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value of the field. */
 		BS_SCRIPT_EXPORT(pr:getter,n:Value)
-		ColorGradient getValue() const { return mValue; }
+		T getValue() const { return mValue; }
 
 		/**	Changes the value of the field. */
 		BS_SCRIPT_EXPORT(pr:setter,n:Value)
-		void setValue(const ColorGradient& value);
+		void setValue(const T& value);
 
 		/** @copydoc GUIElement::setTint */
 		void setTint(const Color& color) override;
@@ -43,7 +44,7 @@ namespace bs
 		BS_SCRIPT_EXPORT(in:true)
 		Event<void()> onClicked; /**< Triggered when the user clicks on the gradient field. */
 
-		/** @name Internal 
+		/** @name Internal
 		 *  @{
 		 */
 
@@ -60,9 +61,37 @@ namespace bs
 		void clicked();
 
 		UINT32 mLabelWidth = 100;
-		ColorGradient mValue;
+		T mValue;
 		GUILabel* mLabel = nullptr;
-		GUIColorGradient* mGradient = nullptr;
+		TGUI* mGradient = nullptr;
+	};
+
+	/** @} */
+
+	/** @addtogroup GUI-Editor
+	 *  @{
+	 */
+
+	/**
+	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
+	 * Label is optional. This specific implementation displays a color gradient input field.
+	 */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
+	GUIColorGradientField final : public TGUIColorGradientField<ColorGradient, GUIColorGradient, GUIColorGradientField>
+	{
+	public:
+		using TGUIColorGradientField::TGUIColorGradientField;
+	};
+
+	/**
+	 * A composite GUI object representing an editor field. Editor fields are a combination of a label and an input field.
+	 * Label is optional. This specific implementation displays a color gradient input field with support for HDR colors.
+	 */
+	class BS_ED_EXPORT BS_SCRIPT_EXPORT(m:GUIEditor,api:bed) 
+	GUIColorGradientHDRField final : public TGUIColorGradientField<ColorGradientHDR, GUIColorGradientHDR, GUIColorGradientHDRField>
+	{
+	public:
+		using TGUIColorGradientField::TGUIColorGradientField;
 	};
 
 	/** @} */

@@ -880,7 +880,7 @@ namespace bs.Editor
     {
         private GUILayout fieldLayout;
         private GUIColorField guiColor;
-        private GUIColorGradientField guiColorGradient;
+        private GUIColorGradientHDRField guiColorGradient;
 
         /// <summary>
         /// Creates a new material parameter GUI.
@@ -899,7 +899,7 @@ namespace bs.Editor
             var guiToggle = new GUIToggle(new GUIContent( 
                 EditorBuiltin.GetEditorToggleIcon(EditorToggleIcon.AnimateProperty), new LocString("Animate")));
             guiColor = new GUIColorField(title);
-            guiColorGradient = new GUIColorGradientField(title);
+            guiColorGradient = new GUIColorGradientHDRField(title);
 
             bool isAnimated = material.IsAnimated(shaderParam.name);
             guiColor.Active = !isAnimated;
@@ -938,9 +938,9 @@ namespace bs.Editor
 
                 if (x)
                 {
-                    ColorGradient gradient = material.GetColorGradient(shaderParam.name);
+                    ColorGradientHDR gradient = material.GetColorGradient(shaderParam.name);
                     if (gradient.NumKeys == 0)
-                        material.SetColorGradient(shaderParam.name, new ColorGradient(material.GetColor(shaderParam.name)));
+                        material.SetColorGradient(shaderParam.name, new ColorGradientHDR(material.GetColor(shaderParam.name)));
                 }
             };
         }

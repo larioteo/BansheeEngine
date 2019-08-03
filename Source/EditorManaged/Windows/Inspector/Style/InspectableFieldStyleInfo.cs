@@ -63,7 +63,12 @@ namespace bs.Editor
         /// <summary>
         /// Signifies that a <see cref="RRef{T}"/> should be loaded when assigned to field through the inspector.
         /// </summary>
-        LoadOnAssign = 1 << 8
+        LoadOnAssign = 1 << 8,
+
+        /// <summary>
+        /// Specifies that a <see cref="Color"/> is allowed to have a value outside of the [0, 1] range.
+        /// </summary>
+        HDR = 1 << 9
     }
 
     /// <summary>

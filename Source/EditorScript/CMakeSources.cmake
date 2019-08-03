@@ -15,7 +15,6 @@ set(BS_EDITORSCRIPT_INC_NOFILTER
 )
 
 set(BS_EDITORSCRIPT_SRC_WRAPPERS_GUI
-	"Wrappers/GUI/BsScriptGUIColorField.cpp"
 	"Wrappers/GUI/BsScriptGUIEnumField.cpp"
 	"Wrappers/GUI/BsScriptGUIFloatField.cpp"
 	"Wrappers/GUI/BsScriptGUIGameObjectField.cpp"
@@ -125,7 +124,6 @@ set(BS_EDITORSCRIPT_INC_WRAPPERS
 )
 
 set(BS_EDITORSCRIPT_INC_WRAPPERS_GUI
-	"Wrappers/GUI/BsScriptGUIColorField.h"
 	"Wrappers/GUI/BsScriptGUIEnumField.h"
 	"Wrappers/GUI/BsScriptGUIFloatField.h"
 	"Wrappers/GUI/BsScriptGUIGameObjectField.h"

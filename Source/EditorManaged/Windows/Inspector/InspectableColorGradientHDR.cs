@@ -1,5 +1,5 @@
 ﻿//********************************** Banshee Engine (www.banshee3d.com) **************************************************//
-//**************** Copyright (c) 2016 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
+//**************** Copyright (c) 2018 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 using bs;
 
 namespace bs.Editor
@@ -9,17 +9,16 @@ namespace bs.Editor
      */
 
     /// <summary>
-    /// Displays GUI for a serializable property containing a color. Color is displayed as a GUI color field that allows
-    /// the user to manipulate the color using a color picker.
+    /// Displays GUI for a serializable property containing a HDR color gradient. Color is displayed as a GUI field that
+    /// allows the user to manipulate the gradient using a HDR color gradient picker.
     /// </summary>
-    public class InspectableColor : InspectableField
+    public class InspectableColorGradientHDR : InspectableField
     {
-        private GUIColorField guiField;
+        private GUIColorGradientHDRField guiField;
         private InspectableState state;
-        private bool hdr;
 
         /// <summary>
-        /// Creates a new inspectable color GUI for the specified property.
+        /// Creates a new inspectable color gradient GUI for the specified property.
         /// </summary>
         /// <param name="context">Context shared by all inspectable fields created by the same parent.</param>
         /// <param name="title">Name of the property, or some other value to set as the title.</param>
@@ -28,24 +27,18 @@ namespace bs.Editor
         ///                     contain other fields, in which case you should increase this value by one.</param>
         /// <param name="layout">Parent layout that all the field elements will be added to.</param>
         /// <param name="property">Serializable property referencing the field whose contents to display.</param>
-        /// <param name="style">Contains information about the field style.</param>
-        public InspectableColor(InspectableContext context, string title, string path, int depth, InspectableFieldLayout layout, 
-            SerializableProperty property, InspectableFieldStyleInfo style)
-            : base(context, title, path, SerializableProperty.FieldType.Color, depth, layout, property)
-        {
-            hdr = style?.StyleFlags.HasFlag(SerializableFieldAttributes.HDR) ?? false;
-        }
+        public InspectableColorGradientHDR(InspectableContext context, string title, string path, int depth, 
+            InspectableFieldLayout layout, SerializableProperty property)
+            : base(context, title, path, SerializableProperty.FieldType.ColorGradientHDR, depth, layout, property)
+        { }
 
         /// <inheritoc/>
         protected internal override void Initialize(int layoutIndex)
         {
             if (property != null)
             {
-                guiField = new GUIColorField(new GUIContent(title));
+                guiField = new GUIColorGradientHDRField(new GUIContent(title));
                 guiField.OnChanged += OnFieldValueChanged;
-
-                if (hdr)
-                    guiField.AllowHDR = true;
 
                 layout.AddElement(layoutIndex, guiField);
             }
@@ -55,7 +48,7 @@ namespace bs.Editor
         public override InspectableState Refresh(int layoutIndex, bool force = false)
         {
             if (guiField != null)
-                guiField.Value = property.GetValue<Color>();
+                guiField.Value = property.GetValue<ColorGradientHDR>();
 
             InspectableState oldState = state;
             if (state.HasFlag(InspectableState.Modified))
@@ -65,10 +58,10 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Triggered when the user selects a new color.
+        /// Triggered when the user updates the color gradient.
         /// </summary>
-        /// <param name="newValue">New value of the color field.</param>
-        private void OnFieldValueChanged(Color newValue)
+        /// <param name="newValue">New value of the gradient field.</param>
+        private void OnFieldValueChanged(ColorGradientHDR newValue)
         {
             StartUndo();
 

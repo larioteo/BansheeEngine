@@ -776,7 +776,7 @@ namespace bs
 
 			for(auto& entry : uniqueTicks)
 			{
-				Color color = PixelUtil::linearToSRGB(COLOR_DARK_GRAY);
+				Color color = COLOR_DARK_GRAY.getGamma();
 				color *= entry.strength;
 
 				drawFrameMarker(entry.t, color, false);

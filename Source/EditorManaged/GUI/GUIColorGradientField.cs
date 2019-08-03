@@ -26,4 +26,28 @@ namespace bs.Editor
 
         }
     }
+
+    partial class GUIColorGradientHDRField
+    {
+        /// <summary>
+        /// Triggered when the gradient in the field changes.
+        /// </summary>
+        public event Action<ColorGradientHDR> OnChanged;
+
+        /// <summary>
+        /// Callback triggered when the user clicks on the GUI element.
+        /// </summary>
+        partial void Callback_OnClicked()
+        {
+            // TODO
+            //GradientPicker.Show(Value, (success, colorGradient) =>
+            //{
+            //    if (!success)
+            //        return;
+
+            //    Value = colorGradient;
+            //    OnChanged?.Invoke(colorGradient);
+            //});
+        }
+    }
 }

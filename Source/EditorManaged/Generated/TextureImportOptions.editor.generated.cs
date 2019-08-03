@@ -62,8 +62,8 @@ namespace bs.Editor
 		}
 
 		/// <summary>
-		/// Determines whether the texture data should be treated as if its in sRGB (gamma) space. Such texture will be  
-		/// converted by hardware to linear space before use on the GPU.
+		/// Determines whether the texture data should be treated as if its in sRGB (gamma) space. Such texture will be converted 
+		/// by hardware to linear space before use on the GPU.
 		/// </summary>
 		[ShowInInspector]
 		[NativeWrapper]

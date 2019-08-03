@@ -59,6 +59,10 @@ namespace bs.Editor
                 ? InspectableFieldStyleFlags.LoadOnAssign
                 : 0;
 
+            styleInfo.StyleFlags |= flags.HasFlag(SerializableFieldAttributes.HDR)
+                ? InspectableFieldStyleFlags.HDR
+                : 0;
+
             return styleInfo;
         }
     }

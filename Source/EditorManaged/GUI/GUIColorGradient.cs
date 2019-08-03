@@ -20,4 +20,22 @@ namespace bs.Editor
 
         }
     }
+
+    partial class GUIColorGradientHDR
+    {
+        /// <summary>
+        /// Callback triggered when the user clicks on the GUI element.
+        /// </summary>
+        partial void Callback_OnClicked()
+        {
+            // TODO - Show HDR color gradient
+            //GradientPicker.Show(Gradient, (success, colorGradient) =>
+            //{
+            //    if (!success)
+            //        return;
+
+            //    Gradient = colorGradient;
+            //});
+        }
+    }
 }

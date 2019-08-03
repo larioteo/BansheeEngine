@@ -347,10 +347,13 @@ namespace bs.Editor
                         field = new InspectableBool(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Color:
-                        field = new InspectableColor(context, title, path, depth, layout, property);
+                        field = new InspectableColor(context, title, path, depth, layout, property, style);
                         break;
                     case SerializableProperty.FieldType.ColorGradient:
                         field = new InspectableColorGradient(context, title, path, depth, layout, property);
+                        break;
+                    case SerializableProperty.FieldType.ColorGradientHDR:
+                        field = new InspectableColorGradientHDR(context, title, path, depth, layout, property);
                         break;
                     case SerializableProperty.FieldType.Curve:
                         field = new InspectableCurve(context, title, path, depth, layout, property);
