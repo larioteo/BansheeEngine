@@ -33,7 +33,7 @@ namespace bs.Editor
             SerializableProperty property, InspectableFieldStyleInfo style)
             : base(context, title, path, SerializableProperty.FieldType.Color, depth, layout, property)
         {
-            hdr = style?.StyleFlags.HasFlag(SerializableFieldAttributes.HDR) ?? false;
+            hdr = style?.StyleFlags.HasFlag(InspectableFieldStyleFlags.HDR) ?? false;
         }
 
         /// <inheritoc/>
