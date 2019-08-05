@@ -12,7 +12,7 @@ namespace bs
 	template<class T, class TGUI, class TSELF>
 	TGUIColorGradientField<T, TGUI, TSELF>::TGUIColorGradientField(const PrivatelyConstruct& dummy, 
 		const GUIContent& labelContent, UINT32 labelWidth, const String& style, const GUIDimensions& dimensions, bool withLabel)
-		: TGUIField(dummy, labelContent, labelWidth, style, dimensions, withLabel)
+		: TGUIField<TSELF>(dummy, labelContent, labelWidth, style, dimensions, withLabel)
 	{
 		mGradient = TGUI::create(this->getSubStyleName(GRADIENT_FIELD_STYLE_TYPE));
 		mGradient->onClicked.connect(std::bind(&TGUIColorGradientField::clicked, this));

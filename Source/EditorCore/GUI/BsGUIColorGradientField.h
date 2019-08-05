@@ -20,6 +20,8 @@ namespace bs
 	template<class T, class TGUI, class TSELF>
 	class BS_ED_EXPORT TGUIColorGradientField : public TGUIField<TSELF>
 	{
+   protected:
+      using PrivatelyConstruct = typename TGUIField<TSELF>::PrivatelyConstruct;
 	public:
 		/** Returns type name of the GUI element used for finding GUI element styles. */
 		static const String& getGUITypeName();
@@ -27,7 +29,7 @@ namespace bs
 		/** Style type name for the internal color gradient field. */
 		static constexpr const char* GRADIENT_FIELD_STYLE_TYPE = "GradientField";
 
-		TGUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
+      TGUIColorGradientField(const PrivatelyConstruct& dummy, const GUIContent& labelContent, UINT32 labelWidth,
 			const String& style, const GUIDimensions& dimensions, bool withLabel);
 
 		/**	Returns the value of the field. */
@@ -80,7 +82,7 @@ namespace bs
 	GUIColorGradientField final : public TGUIColorGradientField<ColorGradient, GUIColorGradient, GUIColorGradientField>
 	{
 	public:
-		using TGUIColorGradientField::TGUIColorGradientField;
+		using TGUIColorGradientField<ColorGradient, GUIColorGradient, GUIColorGradientField>::TGUIColorGradientField;
 	};
 
 	/**
@@ -91,7 +93,7 @@ namespace bs
 	GUIColorGradientHDRField final : public TGUIColorGradientField<ColorGradientHDR, GUIColorGradientHDR, GUIColorGradientHDRField>
 	{
 	public:
-		using TGUIColorGradientField::TGUIColorGradientField;
+      using TGUIColorGradientField<ColorGradientHDR, GUIColorGradientHDR, GUIColorGradientHDRField>::TGUIColorGradientField;
 	};
 
 	/** @} */
