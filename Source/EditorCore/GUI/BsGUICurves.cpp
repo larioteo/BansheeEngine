@@ -753,7 +753,7 @@ namespace bs
 
 			struct TickComparator
 			{
-				bool operator()(const TickLevel& a, const TickLevel& b)
+				bool operator()(const TickLevel& a, const TickLevel& b) const
 				{
 					if (fabs(a.t - b.t) > 0.001f)
 						return a.t < b.t;
