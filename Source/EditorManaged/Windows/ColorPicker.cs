@@ -12,7 +12,7 @@ namespace bs.Editor
     /// <summary>
     /// A color picker window that allows the user to select from a gamut of colors.
     /// </summary>
-    [DefaultSize(270, 400)]
+    [DefaultSize(270, 450)]
     public class ColorPicker : ModalWindow
     {
         private const int SliderIndividualWidth = 150;
@@ -236,11 +236,12 @@ namespace bs.Editor
 
             if (hdr)
             {
-                guiSliderExposure = new GUISliderH();
+                guiSliderExposure = new GUISliderH("", GUIOption.FixedWidth(100));
                 guiSliderExposure.SetRange(-MaxExposureRange, MaxExposureRange);
                 guiSliderExposure.OnChanged += OnSliderExposureChanged;
                 
                 guiLabelExposure = new GUILabel(new LocEdString("Exposure"));
+
                 guiInputExposure = new GUIFloatField();
                 guiInputExposure.SetRange(-MaxExposureRange, MaxExposureRange);
                 guiInputExposure.OnChanged += OnInputExposureChanged;
@@ -836,7 +837,7 @@ namespace bs.Editor
             exposure = value;
             LDRToHDR();
 
-            guiSliderExposure.Value = value;
+            guiInputExposure.Value = value;
         }
 
         /// <summary>
@@ -848,7 +849,7 @@ namespace bs.Editor
             exposure = value;
             LDRToHDR();
 
-            guiInputExposure.Value = value;
+            guiSliderExposure.Value = value;
         }
 
         /// <summary>

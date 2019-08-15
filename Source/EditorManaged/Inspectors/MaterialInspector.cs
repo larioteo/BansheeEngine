@@ -191,8 +191,9 @@ namespace bs.Editor
                         guiParams.Add(new MaterialParamMat4GUI(param, path, component, mat, layout));
                         break;
                     case ShaderParameterType.Color:
+                        bool hdr = param.flags.HasFlag(ShaderParameterFlag.HDR);
                         layout.AddSpace(5);
-                        guiParams.Add(new MaterialParamColorGUI(param, path, component, mat, layout));
+                        guiParams.Add(new MaterialParamColorGUI(param, path, hdr, component, mat, layout));
                         break;
                     case ShaderParameterType.Texture2D:
                     case ShaderParameterType.Texture3D:
@@ -887,10 +888,11 @@ namespace bs.Editor
         /// </summary>
         /// <param name="shaderParam">Shader parameter to create the GUI for. Must be of color type.</param>
         /// <param name="path">Path to the material field in the parent object.</param>
+        /// <param name="hdr">If true the color supports range outside of [0, 1].</param>
         /// <param name="component">Optional component the material is part of (if any).</param>
         /// <param name="material">Material the parameter is a part of.</param>
         /// <param name="layout">Layout to append the GUI elements to.</param>
-        internal MaterialParamColorGUI(ShaderParameter shaderParam, string path, Component component, Material material, 
+        internal MaterialParamColorGUI(ShaderParameter shaderParam, string path, bool hdr, Component component, Material material, 
             GUILayout layout)
             : base(shaderParam, path, component)
         {
@@ -899,6 +901,7 @@ namespace bs.Editor
             var guiToggle = new GUIToggle(new GUIContent( 
                 EditorBuiltin.GetEditorToggleIcon(EditorToggleIcon.AnimateProperty), new LocString("Animate")));
             guiColor = new GUIColorField(title);
+            guiColor.AllowHDR = hdr;
             guiColorGradient = new GUIColorGradientHDRField(title);
 
             bool isAnimated = material.IsAnimated(shaderParam.name);
