@@ -4,6 +4,9 @@
 
 #include "BsPrerequisites.h"
 #include "Reflection/BsRTTIType.h"
+#include "Reflection/BsRTTIPlain.h"
+#include "RTTI/BsUUIDRTTI.h"
+#include "RTTI/BsStringRTTI.h"
 #include "Library/BsProjectResourceMeta.h"
 #include "Resources/BsResourceMetaData.h"
 #include "Importer/BsImportOptions.h"

@@ -6,6 +6,9 @@
 #include "EditorWindow/BsEditorWidgetLayout.h"
 #include "EditorWindow/BsDockManagerLayout.h"
 #include "Reflection/BsRTTIType.h"
+#include "Reflection/BsRTTIPlain.h"
+#include "RTTI/BsStringRTTI.h"
+#include "RTTI/BsStdRTTI.h"
 
 namespace bs
 {

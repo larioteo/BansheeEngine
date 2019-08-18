@@ -4,6 +4,8 @@
 
 #include "BsEditorPrerequisites.h"
 #include "Reflection/BsRTTIType.h"
+#include "Reflection/BsRTTIPlain.h"
+#include "RTTI/BsPathRTTI.h"
 #include "Library/BsProjectLibraryEntries.h"
 #include "String/BsUnicode.h"
 

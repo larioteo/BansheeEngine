@@ -4,6 +4,7 @@
 
 #include "BsEditorPrerequisites.h"
 #include "Reflection/BsRTTIType.h"
+#include "RTTI/BsStringRTTI.h"
 #include "Build/BsPlatformInfo.h"
 
 namespace bs
