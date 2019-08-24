@@ -62,52 +62,49 @@ namespace bs
 	{	
 		enum { id = bs::TID_EditorWidgetLayoutEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const bs::EditorWidgetLayout::Entry& data, char* memory)
+		static uint32_t toMemory(const bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			char* memoryStart = memory;
-			memory += sizeof(UINT32);
-			size += sizeof(UINT32);
+			return rtti_write_with_size_header(stream, [&data, &stream]()
+			{
+				uint32_t size = 0;
+				size += rttiWriteElem(data.widgetNames, stream);
+				size += rttiWriteElem(data.isDocked, stream);
+				size += rttiWriteElem(data.x, stream);
+				size += rttiWriteElem(data.y, stream);
+				size += rttiWriteElem(data.width, stream);
+				size += rttiWriteElem(data.height, stream);
 
-			memory = rttiWriteElem(data.widgetNames, memory, size);
-			memory = rttiWriteElem(data.isDocked, memory, size);
-			memory = rttiWriteElem(data.x, memory, size);
-			memory = rttiWriteElem(data.y, memory, size);
-			memory = rttiWriteElem(data.width, memory, size);
-			memory = rttiWriteElem(data.height, memory, size);
-
-			memcpy(memoryStart, &size, sizeof(UINT32));
+				return size;
+			});
 		}
 
-		static UINT32 fromMemory(bs::EditorWidgetLayout::Entry& data, char* memory)
+		static uint32_t fromMemory(bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			memcpy(&size, memory, sizeof(UINT32));
-			memory += sizeof(UINT32);
-
-			memory = rttiReadElem(data.widgetNames, memory);
-			memory = rttiReadElem(data.isDocked, memory);
-			memory = rttiReadElem(data.x, memory);
-			memory = rttiReadElem(data.y, memory);
-			memory = rttiReadElem(data.width, memory);
-			memory = rttiReadElem(data.height, memory);
+			uint32_t size = 0;
+			rttiReadElem(size, stream);
+			rttiReadElem(data.widgetNames, stream);
+			rttiReadElem(data.isDocked, stream);
+			rttiReadElem(data.x, stream);
+			rttiReadElem(data.y, stream);
+			rttiReadElem(data.width, stream);
+			rttiReadElem(data.height, stream);
 
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const bs::EditorWidgetLayout::Entry& data)	
+		static uint32_t getDynamicSize(const bs::EditorWidgetLayout::Entry& data)	
 		{ 
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.widgetNames) + rttiGetElemSize(data.isDocked) + 
+			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.widgetNames) + rttiGetElemSize(data.isDocked) + 
 				rttiGetElemSize(data.x) + rttiGetElemSize(data.y) + rttiGetElemSize(data.width) + rttiGetElemSize(data.height);
 
 #if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<UINT32>::max())
+			if(dataSize > std::numeric_limits<uint32_t>::max())
 			{
 				__string_throwDataOverflowException();
 			}
 #endif
 
-			return (UINT32)dataSize;
+			return (uint32_t)dataSize;
 		}	
 	}; 
 

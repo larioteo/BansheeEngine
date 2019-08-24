@@ -55,62 +55,62 @@ namespace bs
 	{	
 		enum { id = TID_ProjectLibraryResEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const ProjectLibrary::FileEntry& data, char* memory)
+		static uint32_t toMemory(const ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			char* memoryStart = memory;
-			memory += sizeof(UINT32);
-			size += sizeof(UINT32);
+			return rtti_write_with_size_header(stream, [&data, &stream]()
+				{
+				uint32_t size = 0;
 
-			// For compatibility, encoding the name as a wide string
-			WString elemName = UTF8::toWide(data.elementName);
+				// For compatibility, encoding the name as a wide string
+				WString elemName = UTF8::toWide(data.elementName);
 
-			UINT32 type = (UINT32)data.type;
-			memory = rttiWriteElem(type, memory, size);
-			memory = rttiWriteElem(data.path, memory, size);
-			memory = rttiWriteElem(elemName, memory, size);
-			memory = rttiWriteElem(data.lastUpdateTime, memory, size);
+				auto type = (uint32_t)data.type;
+				size += rttiWriteElem(type, stream);
+				size += rttiWriteElem(data.path, stream);
+				size += rttiWriteElem(elemName, stream);
+				size += rttiWriteElem(data.lastUpdateTime, stream);
 
-			memcpy(memoryStart, &size, sizeof(UINT32));
+				return size;
+
+			});
 		}
 
-		static UINT32 fromMemory(ProjectLibrary::FileEntry& data, char* memory)
+		static uint32_t fromMemory(ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			memcpy(&size, memory, sizeof(UINT32));
-			memory += sizeof(UINT32);
+			uint32_t size = 0;
+			rttiReadElem(size, stream);
 
-			UINT32 type;
-			memory = rttiReadElem(type, memory);
+			uint32_t type;
+			rttiReadElem(type, stream);
 			data.type = (ProjectLibrary::LibraryEntryType)type;
 
-			memory = rttiReadElem(data.path, memory);
+			rttiReadElem(data.path, stream);
 
 			WString elemName;
-			memory = rttiReadElem(elemName, memory);
+			rttiReadElem(elemName, stream);
 			data.elementName = UTF8::fromWide(elemName);
 			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
-			memory = rttiReadElem(data.lastUpdateTime, memory);
+			rttiReadElem(data.lastUpdateTime, stream);
 
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const ProjectLibrary::FileEntry& data)	
+		static uint32_t getDynamicSize(const ProjectLibrary::FileEntry& data)	
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
+			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
 				rttiGetElemSize(elemName) + rttiGetElemSize(data.lastUpdateTime);
 
 #if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<UINT32>::max())
+			if(dataSize > std::numeric_limits<uint32_t>::max())
 			{
 				__string_throwDataOverflowException();
 			}
 #endif
 
-			return (UINT32)dataSize;
+			return (uint32_t)dataSize;
 		}	
 	}; 
 
@@ -118,67 +118,70 @@ namespace bs
 	{	
 		enum { id = TID_ProjectLibraryDirEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const ProjectLibrary::DirectoryEntry& data, char* memory)
+		static uint32_t toMemory(const ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			char* memoryStart = memory;
-			memory += sizeof(UINT32);
-			size += sizeof(UINT32);
-
-			// For compatibility, encoding the name as a wide string
-			WString elemName = UTF8::toWide(data.elementName);
-
-			memory = rttiWriteElem(data.type, memory, size);
-			memory = rttiWriteElem(data.path, memory, size);
-			memory = rttiWriteElem(elemName, memory, size);
-
-			UINT32 numChildren = (UINT32)data.mChildren.size();
-			memory = rttiWriteElem(numChildren, memory, size);
-
-			for(auto& child : data.mChildren)
+			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
-				if(child->type == ProjectLibrary::LibraryEntryType::File)
-				{
-					auto* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
-					memory = rttiWriteElem(*childResEntry, memory, size);
-				}
-				else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
-				{
-					auto* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
-					memory = rttiWriteElem(*childDirEntry, memory, size);
-				}
-			}
+				uint32_t size = 0;
 
-			memcpy(memoryStart, &size, sizeof(UINT32));
+				// For compatibility, encoding the name as a wide string
+				WString elemName = UTF8::toWide(data.elementName);
+
+				size += rttiWriteElem(data.type, stream);
+				size += rttiWriteElem(data.path, stream);
+				size += rttiWriteElem(elemName, stream);
+
+				uint32_t numChildren = (UINT32)data.mChildren.size();
+				size += rttiWriteElem(numChildren, stream);
+
+				for(auto& child : data.mChildren)
+				{
+					if(child->type == ProjectLibrary::LibraryEntryType::File)
+					{
+						auto* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
+						size = rttiWriteElem(*childResEntry, stream);
+					}
+					else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
+					{
+						auto* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
+						size += rttiWriteElem(*childDirEntry, stream);
+					}
+				}
+
+				return size;
+			});
 		}
 
-		static UINT32 fromMemory(ProjectLibrary::DirectoryEntry& data, char* memory)
+		static uint32_t fromMemory(ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
-			UINT32 size = 0;
-			memcpy(&size, memory, sizeof(UINT32));
-			memory += sizeof(UINT32);
+			uint32_t size = 0;
+			rttiReadElem(size, stream);
 
-			memory = rttiReadElem(data.type, memory);
-			memory = rttiReadElem(data.path, memory);
+			rttiReadElem(data.type, stream);
+			rttiReadElem(data.path, stream);
 
 			WString elemName;
-			memory = rttiReadElem(elemName, memory);
+			rttiReadElem(elemName, stream);
 			data.elementName = UTF8::fromWide(elemName);
 			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
 			UINT32 numChildren = 0;
-			memory = rttiReadElem(numChildren, memory);
+			rttiReadElem(numChildren, stream);
 
 			for (UINT32 i = 0; i < numChildren; i++)
 			{
 				ProjectLibrary::LibraryEntryType childType = ProjectLibrary::LibraryEntryType::File;
-				rttiReadElem(childType, memory + sizeof(UINT32)); // Skip ahead to get type
+
+				uint32_t prevLoc = stream.tell();
+				stream.skipBytes(sizeof(uint32_t)); // Skip ahead to get the type
+				rttiReadElem(childType, stream);
+				stream.seek(prevLoc);
 
 				if (childType == ProjectLibrary::LibraryEntryType::File)
 				{
 					USPtr<ProjectLibrary::FileEntry> childResEntry = bs_ushared_ptr_new<ProjectLibrary::FileEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
-					memory = rttiReadElem(*childResEntry, memory);
+					rttiReadElem(*childResEntry, stream);
 
 					childResEntry->parent = &data;
 					data.mChildren.push_back(childResEntry);
@@ -187,7 +190,7 @@ namespace bs
 				{
 					USPtr<ProjectLibrary::DirectoryEntry> childDirEntry = bs_ushared_ptr_new<ProjectLibrary::DirectoryEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
-					memory = rttiReadElem(*childDirEntry, memory);
+					rttiReadElem(*childDirEntry, stream);
 
 					childDirEntry->parent = &data;
 					data.mChildren.push_back(childDirEntry);
@@ -197,13 +200,13 @@ namespace bs
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const ProjectLibrary::DirectoryEntry& data)
+		static uint32_t getDynamicSize(const ProjectLibrary::DirectoryEntry& data)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
+			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
 				rttiGetElemSize(elemName);
 
-			dataSize += sizeof(UINT32);
+			dataSize += sizeof(uint32_t);
 
 			for(auto& child : data.mChildren)
 			{
@@ -220,13 +223,13 @@ namespace bs
 			}
 
 #if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<UINT32>::max())
+			if(dataSize > std::numeric_limits<uint32_t>::max())
 			{
 				__string_throwDataOverflowException();
 			}
 #endif
 
-			return (UINT32)dataSize;
+			return (uint32_t)dataSize;
 		}	
 	};
 

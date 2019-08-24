@@ -80,45 +80,43 @@ namespace bs
 	{	
 		enum { id = bs::TID_DockManagerLayoutEntry }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const bs::DockManagerLayout::Entry& data, char* memory)
+		static uint32_t toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			char* memoryStart = memory;
-			memory += sizeof(UINT32);
-			size += sizeof(UINT32);
-
-			memory = rttiWriteElem(data.isLeaf, memory, size);
-			memory = rttiWriteElem(data.horizontalSplit, memory, size);
-			memory = rttiWriteElem(data.splitPosition, memory, size);
-			memory = rttiWriteElem(data.widgetNames, memory, size);
-
-			if(!data.isLeaf)
+			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
-				memory = rttiWriteElem(*data.children[0], memory, size);
-				memory = rttiWriteElem(*data.children[1], memory, size);
-			}
+				uint32_t size = 0;
+				size += rttiWriteElem(data.isLeaf, stream);
+				size += rttiWriteElem(data.horizontalSplit, stream);
+				size += rttiWriteElem(data.splitPosition, stream);
+				size += rttiWriteElem(data.widgetNames, stream);
 
-			memcpy(memoryStart, &size, sizeof(UINT32));
+				if (!data.isLeaf)
+				{
+					size += rttiWriteElem(*data.children[0], stream);
+					size += rttiWriteElem(*data.children[1], stream);
+				}
+
+				return size;
+			});
 		}
 
-		static UINT32 fromMemory(bs::DockManagerLayout::Entry& data, char* memory)
+		static uint32_t fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
-			UINT32 size = 0;
-			memcpy(&size, memory, sizeof(UINT32));
-			memory += sizeof(UINT32);
+			uint32_t size = 0;
+			rttiReadElem(size, stream);
 
-			memory = rttiReadElem(data.isLeaf, memory);
-			memory = rttiReadElem(data.horizontalSplit, memory);
-			memory = rttiReadElem(data.splitPosition, memory);
-			memory = rttiReadElem(data.widgetNames, memory);
+			rttiReadElem(data.isLeaf, stream);
+			rttiReadElem(data.horizontalSplit, stream);
+			rttiReadElem(data.splitPosition, stream);
+			rttiReadElem(data.widgetNames, stream);
 
 			if(!data.isLeaf)
 			{
 				data.children[0] = bs_new<bs::DockManagerLayout::Entry>();
 				data.children[1] = bs_new<bs::DockManagerLayout::Entry>();
 
-				memory = rttiReadElem(*data.children[0], memory);
-				memory = rttiReadElem(*data.children[1], memory);
+				rttiReadElem(*data.children[0], stream);
+				rttiReadElem(*data.children[1], stream);
 				
 				data.children[0]->parent = &data;
 				data.children[1]->parent = &data;
@@ -127,9 +125,9 @@ namespace bs
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const bs::DockManagerLayout::Entry& data)	
+		static uint32_t getDynamicSize(const bs::DockManagerLayout::Entry& data)	
 		{ 
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.isLeaf) + rttiGetElemSize(data.horizontalSplit) + 
+			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.isLeaf) + rttiGetElemSize(data.horizontalSplit) + 
 				rttiGetElemSize(data.splitPosition) + rttiGetElemSize(data.widgetNames);
 
 			if(!data.isLeaf)
@@ -139,13 +137,13 @@ namespace bs
 			}
 
 #if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<UINT32>::max())
+			if(dataSize > std::numeric_limits<uint32_t>::max())
 			{
 				__string_throwDataOverflowException();
 			}
 #endif
 
-			return (UINT32)dataSize;
+			return (uint32_t)dataSize;
 		}	
 	}; 
 

@@ -68,43 +68,40 @@ namespace bs
 	{
 		enum { id = TID_RecentProject }; enum { hasDynamicSize = 1 };
 
-		static void toMemory(const RecentProject& data, char* memory)
+		static uint32_t toMemory(const RecentProject& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
-			UINT32 size = 0;
-			char* memoryStart = memory;
-			memory += sizeof(UINT32);
-			size += sizeof(UINT32);
+			return rtti_write_with_size_header(stream, [&data, &stream]()
+			{
+				uint32_t size = 0;
+				size += rttiWriteElem(data.path, stream);
+				size += rttiWriteElem(data.accessTimestamp, stream);
 
-			memory = rttiWriteElem(data.path, memory, size);
-			memory = rttiWriteElem(data.accessTimestamp, memory, size);
-
-			memcpy(memoryStart, &size, sizeof(UINT32));
+				return size;
+			});
 		}
 
-		static UINT32 fromMemory(RecentProject& data, char* memory)
+		static uint32_t fromMemory(RecentProject& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
-			UINT32 size = 0;
-			memcpy(&size, memory, sizeof(UINT32));
-			memory += sizeof(UINT32);
-
-			memory = rttiReadElem(data.path, memory);
-			memory = rttiReadElem(data.accessTimestamp, memory);
+			uint32_t size = 0;
+			rttiReadElem(size, stream);
+			rttiReadElem(data.path, stream);
+			rttiReadElem(data.accessTimestamp, stream);
 
 			return size;
 		}
 
-		static UINT32 getDynamicSize(const RecentProject& data)
+		static uint32_t getDynamicSize(const RecentProject& data)
 		{
-			UINT64 dataSize = sizeof(UINT32) + rttiGetElemSize(data.path) + rttiGetElemSize(data.accessTimestamp);
+			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.path) + rttiGetElemSize(data.accessTimestamp);
 
 #if BS_DEBUG_MODE
-			if (dataSize > std::numeric_limits<UINT32>::max())
+			if (dataSize > std::numeric_limits<uint32_t>::max())
 			{
 				__string_throwDataOverflowException();
 			}
 #endif
 
-			return (UINT32)dataSize;
+			return (uint32_t)dataSize;
 		}
 	};
 
