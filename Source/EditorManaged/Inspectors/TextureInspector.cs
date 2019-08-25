@@ -37,7 +37,12 @@ namespace bs.Editor
             maximumMipsField.OnChanged += x => importOptions.MaxMip = x;
             srgbField.OnChanged += x => importOptions.SRGB = x;
             cpuCachedField.OnChanged += x => importOptions.CpuCached = x;
-            isCubemapField.OnChanged += x => importOptions.Cubemap = x;
+            isCubemapField.OnChanged += x =>
+            {
+                importOptions.Cubemap = x;
+
+                cubemapSourceTypeField.Active = x;
+            };
             cubemapSourceTypeField.OnSelectionChanged += x => importOptions.CubemapSourceType = (CubemapSourceType)x;
 
             Layout.AddElement(formatField);
