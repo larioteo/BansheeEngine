@@ -504,6 +504,7 @@ namespace bs.Editor
 
             guiCurveEditor.Events = clipInfo.events;
             guiCurveEditor.DisableCurveEdit = clipInfo.isImported;
+            guiCurveEditor.SetFPS(clipInfo.sampleRate);
 
             SetCurrentFrame(0);
             fps = clipInfo.sampleRate;
