@@ -42,6 +42,7 @@ namespace bs.Editor
 
         private bool hasContentFocus = false;
         private bool HasContentFocus { get { return HasFocus && hasContentFocus; } }
+        private bool restoreContentFocus = false;
 
         private string searchQuery;
         private bool IsSearchActive { get { return !string.IsNullOrEmpty(searchQuery); } }
@@ -313,6 +314,7 @@ namespace bs.Editor
                     {
                         DialogBox.Open(new LocEdString("Error"), new LocEdString("The name you specified is not a valid file name. Try another."), DialogBox.Type.OK);
                         renameOK = false;
+                        restoreContentFocus = true;
                     }
 
                     if (renameOK)
@@ -325,6 +327,7 @@ namespace bs.Editor
                         {
                             DialogBox.Open(new LocEdString("Error"), new LocEdString("File/folder with that name already exists in this folder."), DialogBox.Type.OK);
                             renameOK = false;
+                            restoreContentFocus = true;
                         }
                     }
 
@@ -369,6 +372,26 @@ namespace bs.Editor
             Refresh();
 
             dropTarget.Bounds = GetScrollAreaBounds();
+        }
+
+        /// <inheritdoc />
+        protected override void FocusChanged(bool inFocus)
+        {
+            if (!inFocus)
+            {
+                if (hasContentFocus)
+                    restoreContentFocus = true;
+            }
+            else
+            {
+                if (restoreContentFocus)
+                {
+                    hasContentFocus = true;
+                    restoreContentFocus = false;
+                }
+            }
+
+            base.FocusChanged(inFocus);
         }
 
         /// <summary>
