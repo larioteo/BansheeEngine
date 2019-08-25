@@ -40,7 +40,7 @@ namespace bs
 		mOnFocusLostConn.disconnect();
 		mOnFocusGainedConn.disconnect();
 
-		Map<String, EditorWidgetBase*> widgetsCopy = mActiveWidgets;
+		UnorderedMap<String, EditorWidgetBase*> widgetsCopy = mActiveWidgets;
 
 		for (auto& widget : widgetsCopy)
 			widget.second->close();
@@ -133,6 +133,14 @@ namespace bs
 
 		if(findIter != mActiveWidgets.end())
 			mActiveWidgets.erase(findIter);
+
+		for(auto iter = mSavedFocusedWidgets.begin(); iter != mSavedFocusedWidgets.end();)
+		{
+			if (iter->second == widget)
+				iter = mSavedFocusedWidgets.erase(iter);
+			else
+				++iter;
+		}
 
 		if(widget->mParent != nullptr)
 			widget->mParent->_notifyWidgetDestroyed(widget);
@@ -295,7 +303,22 @@ namespace bs
 
 	void EditorWidgetManager::onFocusGained(const RenderWindow& window)
 	{
-		// Do nothing, possibly regain focus on last focused widget?
+		auto iterFind = mSavedFocusedWidgets.find(&window);
+		if(iterFind != mSavedFocusedWidgets.end())
+		{
+			EditorWidgetBase* widget = iterFind->second;
+			EditorWidgetContainer* parentContainer = widget->_getParent();
+			if (parentContainer != nullptr)
+			{
+				EditorWindowBase* parentWindow = parentContainer->getParentWindow();
+				SPtr<RenderWindow> parentRenderWindow = parentWindow->getRenderWindow();
+
+				if (parentRenderWindow.get() == &window)
+					widget->_setHasFocus(true);
+			}
+			
+			mSavedFocusedWidgets.erase(iterFind);;
+		}
 	}
 
 	void EditorWidgetManager::onFocusLost(const RenderWindow& window)
@@ -312,6 +335,9 @@ namespace bs
 
 			if (parentRenderWindow.get() != &window)
 				continue;
+
+			if (widget->hasFocus())
+				mSavedFocusedWidgets[&window] = widget;
 
 			widget->_setHasFocus(false);
 		}

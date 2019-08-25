@@ -84,8 +84,9 @@ namespace bs
 		/**	Triggered whenever a window loses focus. */
 		void onFocusLost(const RenderWindow& window);
 
-		Map<String, EditorWidgetBase*> mActiveWidgets;
-		Map<String, std::function<EditorWidgetBase*(EditorWidgetContainer&)>> mCreateCallbacks;
+		UnorderedMap<String, EditorWidgetBase*> mActiveWidgets;
+		UnorderedMap<const RenderWindow*, EditorWidgetBase*> mSavedFocusedWidgets;
+		UnorderedMap<String, std::function<EditorWidgetBase*(EditorWidgetContainer&)>> mCreateCallbacks;
 
 		HEvent mOnFocusLostConn;
 		HEvent mOnFocusGainedConn;
