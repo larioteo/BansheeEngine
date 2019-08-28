@@ -26,7 +26,10 @@ namespace bs
 		// this could be optimized so only one of them is called.
 		SPtr<ProjectResourceMeta> meta = gProjectLibrary().findResourceMeta(path);
 		if (meta == nullptr)
+		{
 			BS_LOG(Warning, Editor, "Unable to load resource at path: \"{0}\". File not found. ", path);
+			return HResource();
+		}
 
 		UUID resUUID = meta->getUUID();
 

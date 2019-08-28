@@ -588,7 +588,8 @@ namespace bs
 				if (fileEntry->meta != nullptr)
 				{
 					auto& resourceMetas = fileEntry->meta->getResourceMetaData();
-					mResourceManifest->registerResource(resourceMetas[0]->getUUID(), fileEntry->path);
+					if(!resourceMetas.empty())
+						mResourceManifest->registerResource(resourceMetas[0]->getUUID(), fileEntry->path);
 				}
 
 				const auto importAsync = [queuedImportWeak, &projectFolder = mProjectFolder, &mutex = mQueuedImportMutex]()
@@ -598,7 +599,7 @@ namespace bs
 					SPtr<QueuedImport> queuedImport = queuedImportWeak.lock();
 					HResource resource = gResources().load(queuedImport->filePath, ResourceLoadFlag::KeepSourceData);
 
-					if (resource)
+					if (resource.isLoaded(false))
 					{
 						Path outputPath = projectFolder;
 						outputPath.append(INTERNAL_TEMP_DIR);
@@ -1080,7 +1081,12 @@ namespace bs
 			if (fileEntry->meta == nullptr)
 				return nullptr;
 
-			return fileEntry->meta->getResourceMetaData()[0];
+			auto& resourceMetas = fileEntry->meta->getResourceMetaData();
+
+			if(!resourceMetas.empty())
+				return resourceMetas[0];
+
+			return nullptr;
 		}
 	}
 
