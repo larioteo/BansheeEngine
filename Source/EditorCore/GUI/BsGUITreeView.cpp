@@ -713,7 +713,7 @@ namespace bs
 
 	void GUITreeView::collapseElement(TreeElement* element, bool toggleButton)
 	{
-		if(!element->mIsExpanded)
+		if (!element->mIsExpanded || element == &getRootElement())
 			return;
 
 		element->mIsExpanded = false;

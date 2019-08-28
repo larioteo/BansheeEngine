@@ -301,7 +301,7 @@ namespace bs
 			clearPing();
 
 		if(element->mIsSelected)
-			unselectElement(element);
+			unselectElement(element, false);
 
 		bs_delete(element);
 	}
