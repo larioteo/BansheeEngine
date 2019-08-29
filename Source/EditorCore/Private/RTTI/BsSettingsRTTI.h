@@ -36,8 +36,8 @@ namespace bs
 			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
 				uint32_t size = 0;
-				size += rttiWriteElem(data.key, stream);
-				size += rttiWriteElem(data.value, stream);
+				size += rtti_write(data.key, stream);
+				size += rtti_write(data.value, stream);
 
 				return size;
 			});
@@ -47,9 +47,9 @@ namespace bs
 		static uint32_t fromMemory(TSettingsValue<T>& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
-			rttiReadElem(data.key, stream);
-			rttiReadElem(data.value, stream);
+			rtti_read(size, stream);
+			rtti_read(data.key, stream);
+			rtti_read(data.value, stream);
 
 			return size;
 		}
@@ -58,8 +58,8 @@ namespace bs
 		static uint32_t getDynamicSize(const TSettingsValue<T>& data)
 		{
 			uint64_t dataSize = sizeof(uint32_t);
-			dataSize += rttiGetElemSize(data.key);
-			dataSize += rttiGetElemSize(data.value);
+			dataSize += rtti_size(data.key);
+			dataSize += rtti_size(data.value);
 
 			assert(dataSize <= std::numeric_limits<uint32_t>::max());
 

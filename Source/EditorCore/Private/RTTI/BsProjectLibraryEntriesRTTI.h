@@ -65,10 +65,10 @@ namespace bs
 				WString elemName = UTF8::toWide(data.elementName);
 
 				auto type = (uint32_t)data.type;
-				size += rttiWriteElem(type, stream);
-				size += rttiWriteElem(data.path, stream);
-				size += rttiWriteElem(elemName, stream);
-				size += rttiWriteElem(data.lastUpdateTime, stream);
+				size += rtti_write(type, stream);
+				size += rtti_write(data.path, stream);
+				size += rtti_write(elemName, stream);
+				size += rtti_write(data.lastUpdateTime, stream);
 
 				return size;
 
@@ -78,20 +78,20 @@ namespace bs
 		static uint32_t fromMemory(ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
+			rtti_read(size, stream);
 
 			uint32_t type;
-			rttiReadElem(type, stream);
+			rtti_read(type, stream);
 			data.type = (ProjectLibrary::LibraryEntryType)type;
 
-			rttiReadElem(data.path, stream);
+			rtti_read(data.path, stream);
 
 			WString elemName;
-			rttiReadElem(elemName, stream);
+			rtti_read(elemName, stream);
 			data.elementName = UTF8::fromWide(elemName);
 			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
-			rttiReadElem(data.lastUpdateTime, stream);
+			rtti_read(data.lastUpdateTime, stream);
 
 			return size;
 		}
@@ -100,8 +100,8 @@ namespace bs
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
-			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
-				rttiGetElemSize(elemName) + rttiGetElemSize(data.lastUpdateTime);
+			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 
+				rtti_size(elemName) + rtti_size(data.lastUpdateTime);
 
 #if BS_DEBUG_MODE
 			if(dataSize > std::numeric_limits<uint32_t>::max())
@@ -127,24 +127,24 @@ namespace bs
 				// For compatibility, encoding the name as a wide string
 				WString elemName = UTF8::toWide(data.elementName);
 
-				size += rttiWriteElem(data.type, stream);
-				size += rttiWriteElem(data.path, stream);
-				size += rttiWriteElem(elemName, stream);
+				size += rtti_write(data.type, stream);
+				size += rtti_write(data.path, stream);
+				size += rtti_write(elemName, stream);
 
 				uint32_t numChildren = (UINT32)data.mChildren.size();
-				size += rttiWriteElem(numChildren, stream);
+				size += rtti_write(numChildren, stream);
 
 				for(auto& child : data.mChildren)
 				{
 					if(child->type == ProjectLibrary::LibraryEntryType::File)
 					{
 						auto* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
-						size = rttiWriteElem(*childResEntry, stream);
+						size = rtti_write(*childResEntry, stream);
 					}
 					else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
 					{
 						auto* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
-						size += rttiWriteElem(*childDirEntry, stream);
+						size += rtti_write(*childDirEntry, stream);
 					}
 				}
 
@@ -155,18 +155,18 @@ namespace bs
 		static uint32_t fromMemory(ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
+			rtti_read(size, stream);
 
-			rttiReadElem(data.type, stream);
-			rttiReadElem(data.path, stream);
+			rtti_read(data.type, stream);
+			rtti_read(data.path, stream);
 
 			WString elemName;
-			rttiReadElem(elemName, stream);
+			rtti_read(elemName, stream);
 			data.elementName = UTF8::fromWide(elemName);
 			data.elementNameHash = bs_hash(UTF8::toLower(data.elementName));
 
 			UINT32 numChildren = 0;
-			rttiReadElem(numChildren, stream);
+			rtti_read(numChildren, stream);
 
 			for (UINT32 i = 0; i < numChildren; i++)
 			{
@@ -174,14 +174,14 @@ namespace bs
 
 				uint32_t prevLoc = stream.tell();
 				stream.skipBytes(sizeof(uint32_t)); // Skip ahead to get the type
-				rttiReadElem(childType, stream);
+				rtti_read(childType, stream);
 				stream.seek(prevLoc);
 
 				if (childType == ProjectLibrary::LibraryEntryType::File)
 				{
 					USPtr<ProjectLibrary::FileEntry> childResEntry = bs_ushared_ptr_new<ProjectLibrary::FileEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
-					rttiReadElem(*childResEntry, stream);
+					rtti_read(*childResEntry, stream);
 
 					childResEntry->parent = &data;
 					data.mChildren.push_back(childResEntry);
@@ -190,7 +190,7 @@ namespace bs
 				{
 					USPtr<ProjectLibrary::DirectoryEntry> childDirEntry = bs_ushared_ptr_new<ProjectLibrary::DirectoryEntry>();
 					// Note: Assumes that ProjectLibrary takes care of the cleanup
-					rttiReadElem(*childDirEntry, stream);
+					rtti_read(*childDirEntry, stream);
 
 					childDirEntry->parent = &data;
 					data.mChildren.push_back(childDirEntry);
@@ -203,8 +203,8 @@ namespace bs
 		static uint32_t getDynamicSize(const ProjectLibrary::DirectoryEntry& data)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
-			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.type) + rttiGetElemSize(data.path) + 
-				rttiGetElemSize(elemName);
+			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 
+				rtti_size(elemName);
 
 			dataSize += sizeof(uint32_t);
 
@@ -213,12 +213,12 @@ namespace bs
 				if(child->type == ProjectLibrary::LibraryEntryType::File)
 				{
 					ProjectLibrary::FileEntry* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
-					dataSize += rttiGetElemSize(*childResEntry);
+					dataSize += rtti_size(*childResEntry);
 				}
 				else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
 				{
 					ProjectLibrary::DirectoryEntry* childDirEntry = static_cast<ProjectLibrary::DirectoryEntry*>(child.get());
-					dataSize += rttiGetElemSize(*childDirEntry);
+					dataSize += rtti_size(*childDirEntry);
 				}
 			}
 

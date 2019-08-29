@@ -85,15 +85,15 @@ namespace bs
 			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
 				uint32_t size = 0;
-				size += rttiWriteElem(data.isLeaf, stream);
-				size += rttiWriteElem(data.horizontalSplit, stream);
-				size += rttiWriteElem(data.splitPosition, stream);
-				size += rttiWriteElem(data.widgetNames, stream);
+				size += rtti_write(data.isLeaf, stream);
+				size += rtti_write(data.horizontalSplit, stream);
+				size += rtti_write(data.splitPosition, stream);
+				size += rtti_write(data.widgetNames, stream);
 
 				if (!data.isLeaf)
 				{
-					size += rttiWriteElem(*data.children[0], stream);
-					size += rttiWriteElem(*data.children[1], stream);
+					size += rtti_write(*data.children[0], stream);
+					size += rtti_write(*data.children[1], stream);
 				}
 
 				return size;
@@ -103,20 +103,20 @@ namespace bs
 		static uint32_t fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
+			rtti_read(size, stream);
 
-			rttiReadElem(data.isLeaf, stream);
-			rttiReadElem(data.horizontalSplit, stream);
-			rttiReadElem(data.splitPosition, stream);
-			rttiReadElem(data.widgetNames, stream);
+			rtti_read(data.isLeaf, stream);
+			rtti_read(data.horizontalSplit, stream);
+			rtti_read(data.splitPosition, stream);
+			rtti_read(data.widgetNames, stream);
 
 			if(!data.isLeaf)
 			{
 				data.children[0] = bs_new<bs::DockManagerLayout::Entry>();
 				data.children[1] = bs_new<bs::DockManagerLayout::Entry>();
 
-				rttiReadElem(*data.children[0], stream);
-				rttiReadElem(*data.children[1], stream);
+				rtti_read(*data.children[0], stream);
+				rtti_read(*data.children[1], stream);
 				
 				data.children[0]->parent = &data;
 				data.children[1]->parent = &data;
@@ -127,13 +127,13 @@ namespace bs
 
 		static uint32_t getDynamicSize(const bs::DockManagerLayout::Entry& data)	
 		{ 
-			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.isLeaf) + rttiGetElemSize(data.horizontalSplit) + 
-				rttiGetElemSize(data.splitPosition) + rttiGetElemSize(data.widgetNames);
+			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
+				rtti_size(data.splitPosition) + rtti_size(data.widgetNames);
 
 			if(!data.isLeaf)
 			{
-				dataSize += rttiGetElemSize(*data.children[0]);
-				dataSize += rttiGetElemSize(*data.children[1]);
+				dataSize += rtti_size(*data.children[0]);
+				dataSize += rtti_size(*data.children[1]);
 			}
 
 #if BS_DEBUG_MODE

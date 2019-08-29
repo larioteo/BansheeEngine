@@ -67,12 +67,12 @@ namespace bs
 			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
 				uint32_t size = 0;
-				size += rttiWriteElem(data.widgetNames, stream);
-				size += rttiWriteElem(data.isDocked, stream);
-				size += rttiWriteElem(data.x, stream);
-				size += rttiWriteElem(data.y, stream);
-				size += rttiWriteElem(data.width, stream);
-				size += rttiWriteElem(data.height, stream);
+				size += rtti_write(data.widgetNames, stream);
+				size += rtti_write(data.isDocked, stream);
+				size += rtti_write(data.x, stream);
+				size += rtti_write(data.y, stream);
+				size += rtti_write(data.width, stream);
+				size += rtti_write(data.height, stream);
 
 				return size;
 			});
@@ -81,21 +81,21 @@ namespace bs
 		static uint32_t fromMemory(bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{ 
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
-			rttiReadElem(data.widgetNames, stream);
-			rttiReadElem(data.isDocked, stream);
-			rttiReadElem(data.x, stream);
-			rttiReadElem(data.y, stream);
-			rttiReadElem(data.width, stream);
-			rttiReadElem(data.height, stream);
+			rtti_read(size, stream);
+			rtti_read(data.widgetNames, stream);
+			rtti_read(data.isDocked, stream);
+			rtti_read(data.x, stream);
+			rtti_read(data.y, stream);
+			rtti_read(data.width, stream);
+			rtti_read(data.height, stream);
 
 			return size;
 		}
 
 		static uint32_t getDynamicSize(const bs::EditorWidgetLayout::Entry& data)	
 		{ 
-			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.widgetNames) + rttiGetElemSize(data.isDocked) + 
-				rttiGetElemSize(data.x) + rttiGetElemSize(data.y) + rttiGetElemSize(data.width) + rttiGetElemSize(data.height);
+			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.widgetNames) + rtti_size(data.isDocked) + 
+				rtti_size(data.x) + rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height);
 
 #if BS_DEBUG_MODE
 			if(dataSize > std::numeric_limits<uint32_t>::max())

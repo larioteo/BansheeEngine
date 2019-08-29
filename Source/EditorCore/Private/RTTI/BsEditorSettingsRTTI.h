@@ -73,8 +73,8 @@ namespace bs
 			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
 				uint32_t size = 0;
-				size += rttiWriteElem(data.path, stream);
-				size += rttiWriteElem(data.accessTimestamp, stream);
+				size += rtti_write(data.path, stream);
+				size += rtti_write(data.accessTimestamp, stream);
 
 				return size;
 			});
@@ -83,16 +83,16 @@ namespace bs
 		static uint32_t fromMemory(RecentProject& data, Bitstream& stream, const RTTIFieldInfo& info)
 		{
 			uint32_t size = 0;
-			rttiReadElem(size, stream);
-			rttiReadElem(data.path, stream);
-			rttiReadElem(data.accessTimestamp, stream);
+			rtti_read(size, stream);
+			rtti_read(data.path, stream);
+			rtti_read(data.accessTimestamp, stream);
 
 			return size;
 		}
 
 		static uint32_t getDynamicSize(const RecentProject& data)
 		{
-			uint64_t dataSize = sizeof(uint32_t) + rttiGetElemSize(data.path) + rttiGetElemSize(data.accessTimestamp);
+			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.path) + rtti_size(data.accessTimestamp);
 
 #if BS_DEBUG_MODE
 			if (dataSize > std::numeric_limits<uint32_t>::max())
