@@ -58,7 +58,7 @@ namespace bs
 		static uint32_t toMemory(const ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
 			return rtti_write_with_size_header(stream, [&data, &stream]()
-				{
+			{
 				uint32_t size = 0;
 
 				// For compatibility, encoding the name as a wide string
@@ -139,7 +139,7 @@ namespace bs
 					if(child->type == ProjectLibrary::LibraryEntryType::File)
 					{
 						auto* childResEntry = static_cast<ProjectLibrary::FileEntry*>(child.get());
-						size = rtti_write(*childResEntry, stream);
+						size += rtti_write(*childResEntry, stream);
 					}
 					else if(child->type == ProjectLibrary::LibraryEntryType::Directory)
 					{
