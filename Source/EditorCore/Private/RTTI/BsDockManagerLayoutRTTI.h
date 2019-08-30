@@ -80,7 +80,7 @@ namespace bs
 	{	
 		enum { id = bs::TID_DockManagerLayoutEntry }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
+		static uint32_t toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
 			return rtti_write_with_size_header(stream, [&data, &stream]()
 			{
@@ -100,7 +100,7 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& info)
+		static uint32_t fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
 			uint32_t size = 0;
 			rtti_read(size, stream);

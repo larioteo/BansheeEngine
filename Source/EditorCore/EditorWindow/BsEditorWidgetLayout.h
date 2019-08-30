@@ -61,7 +61,7 @@ namespace bs
 	public:
 		friend class EditorWidgetLayoutRTTI;
 		static RTTITypeBase* getRTTIStatic();
-		virtual RTTITypeBase* getRTTI() const override;	
+		RTTITypeBase* getRTTI() const override;	
 	};
 
 	/** @} */
