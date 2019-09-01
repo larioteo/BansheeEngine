@@ -7,7 +7,6 @@
 #include "Reflection/BsRTTIType.h"
 #include "Private/RTTI/BsGameObjectRTTI.h"
 #include "Serialization/BsBinarySerializer.h"
-#include "Serialization/BsMemorySerializer.h"
 #include "Serialization/BsBinaryDiff.h"
 #include "Scene/BsPrefab.h"
 #include "Resources/BsResources.h"

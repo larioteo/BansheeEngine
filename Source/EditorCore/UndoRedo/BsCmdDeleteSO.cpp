@@ -4,7 +4,6 @@
 #include "UndoRedo/BsUndoRedo.h"
 #include "Scene/BsSceneObject.h"
 #include "Scene/BsSerializedSceneObject.h"
-#include "Serialization/BsMemorySerializer.h"
 #include "Scene/BsSelection.h"
 
 namespace bs

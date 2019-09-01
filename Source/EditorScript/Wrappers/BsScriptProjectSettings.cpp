@@ -11,7 +11,8 @@
 #include "Reflection/BsRTTIType.h"
 #include "Serialization/BsScriptAssemblyManager.h"
 #include "Settings/BsEditorSettings.h"
-#include "Serialization/BsMemorySerializer.h"
+#include "Serialization/BsBinarySerializer.h"
+#include "FileSystem/BsDataStream.h"
 
 namespace bs
 {
@@ -154,11 +155,13 @@ namespace bs
 
 			// Make a copy of the object as deserialization modifies the object in-place (in particular in can create
 			// GC handles, which would then not get released on a potential assembly refresh)
-			MemorySerializer ms;
+			BinarySerializer bs;
 
-			UINT32 size = 0;
-			UINT8* encodedData = ms.encode(managedSerializableObject.get(), size);
-			SPtr<ManagedSerializableObject> clone = std::static_pointer_cast<ManagedSerializableObject>(ms.decode(encodedData, size));
+			SPtr<MemoryDataStream> stream = bs_shared_ptr_new<MemoryDataStream>();
+			bs.encode(managedSerializableObject.get(), stream);
+
+			stream->seek(0);
+			SPtr<ManagedSerializableObject> clone = std::static_pointer_cast<ManagedSerializableObject>(bs.decode(stream, (UINT32)stream->size()));
 
 			return clone->deserialize();
 		}

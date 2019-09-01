@@ -4,6 +4,7 @@
 
 #include "BsEditorPrerequisites.h"
 #include "Utility/BsEditorUtility.h"
+#include "FileSystem/BsDataStream.h"
 
 namespace bs
 {
@@ -28,7 +29,6 @@ namespace bs
 		 */
 		BS_SCRIPT_EXPORT()
 		SerializedSceneObject(const HSceneObject& sceneObject, bool hierarchy = false);
-		~SerializedSceneObject();
 
 		/**
 		 * Restores the scene object to the state as it was when this object was created. If the scene object was deleted
@@ -44,8 +44,7 @@ namespace bs
 		EditorUtility::SceneObjProxy mSceneObjectProxy;
 		bool mRecordHierarchy;
 
-		UINT8* mSerializedObject = nullptr;
-		UINT32 mSerializedObjectSize = 0;
+		SPtr<MemoryDataStream> mSerializedObject;
 		UINT64 mSerializedObjectParentId = 0;
 	};
 

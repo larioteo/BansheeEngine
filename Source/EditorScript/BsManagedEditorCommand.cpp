@@ -8,8 +8,9 @@
 #include "BsMonoManager.h"
 #include "BsMonoUtil.h"
 #include "Serialization/BsScriptAssemblyManager.h"
-#include "Serialization/BsMemorySerializer.h"
 #include "Serialization/BsManagedSerializableObject.h"
+#include "Serialization/BsBinarySerializer.h"
+#include "FileSystem/BsDataStream.h"
 
 namespace bs
 {
@@ -156,8 +157,12 @@ namespace bs
 
 			if (serializableObject != nullptr)
 			{
-				MemorySerializer ms;
-				backupData.data = ms.encode(serializableObject.get(), backupData.size);
+				SPtr<MemoryDataStream> stream = bs_shared_ptr_new<MemoryDataStream>();
+				BinarySerializer bs;
+				bs.encode(serializableObject.get(), stream);
+
+				backupData.size = (UINT32)stream->size();
+				backupData.data = stream->disownMemory();
 			}
 		}
 
@@ -168,9 +173,9 @@ namespace bs
 	{
 		const RawBackupData& data = any_cast_ref<RawBackupData>(backupData.data);
 
-		MemorySerializer ms;
+		BinarySerializer bs;
 		SPtr<ManagedSerializableObject> serializableObject = std::static_pointer_cast<ManagedSerializableObject>(
-			ms.decode(data.data, data.size));
+			bs.decode(bs_shared_ptr_new<MemoryDataStream>(data.data, data.size), data.size));
 
 		if(!mTypeMissing)
 		{

@@ -2,13 +2,16 @@
 //**************** Copyright (c) 2019 Marko Pintera (marko.pintera@gmail.com). All rights reserved. **********************//
 #include "Scene/BsSerializedSceneObject.h"
 #include "Scene/BsSceneObject.h"
-#include "Serialization/BsMemorySerializer.h"
 #include "Utility/BsUtility.h"
+#include "Serialization/BsBinarySerializer.h"
+#include "FileSystem/BsDataStream.h"
 
 namespace bs
 {
+	class BinarySerializer;
+
 	SerializedSceneObject::SerializedSceneObject(const HSceneObject& sceneObject, bool hierarchy)
-		:mSceneObject(sceneObject), mRecordHierarchy(hierarchy)
+		:mSceneObject(sceneObject), mRecordHierarchy(hierarchy), mSerializedObject(bs_shared_ptr_new<MemoryDataStream>())
 	{
 		if(mSceneObject.isDestroyed())
 			return;
@@ -31,9 +34,9 @@ namespace bs
 		bool isInstantiated = !mSceneObject->hasFlag(SOF_DontInstantiate);
 		mSceneObject->_setFlags(SOF_DontInstantiate);
 
-		MemorySerializer serializer;
-		mSerializedObject = serializer.encode(mSceneObject.get(), mSerializedObjectSize);
-
+		BinarySerializer serializer;
+		serializer.encode(mSceneObject.get(), mSerializedObject);
+		
 		if (isInstantiated)
 			mSceneObject->_unsetFlags(SOF_DontInstantiate);
 
@@ -49,15 +52,6 @@ namespace bs
 				children[i]->setParent(sceneObject->getHandle());
 
 			bs_stack_delete(children, numChildren);
-		}
-	}
-
-	SerializedSceneObject::~SerializedSceneObject()
-	{
-		if (mSerializedObject != nullptr)
-		{
-			bs_free(mSerializedObject);
-			mSerializedObject = nullptr;
 		}
 	}
 
@@ -90,9 +84,10 @@ namespace bs
 		CoreSerializationContext serzContext;
 		serzContext.goState = bs_shared_ptr_new<GameObjectDeserializationState>(GODM_RestoreExternal | GODM_UseNewIds);
 
-		MemorySerializer serializer;
+		BinarySerializer serializer;
+		mSerializedObject->seek(0);
 		SPtr<SceneObject> restored = std::static_pointer_cast<SceneObject>(
-			serializer.decode(mSerializedObject, mSerializedObjectSize, &serzContext));
+			serializer.decode(mSerializedObject, (UINT32)mSerializedObject->size(), &serzContext));
 
 		EditorUtility::restoreIds(restored->getHandle(), mSceneObjectProxy);
 		restored->setParent(parent);
