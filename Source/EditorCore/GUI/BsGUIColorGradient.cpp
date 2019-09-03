@@ -62,47 +62,6 @@ namespace bs
 	}
 
 	template<class T, class SELF>
-	UINT32 TGUIColorGradient<T, SELF>::_getNumRenderElements() const
-	{
-		UINT32 numElements = mColorSprite->getNumRenderElements();
-		numElements += mAlphaSprite->getNumRenderElements();
-
-		return numElements;
-	}
-
-	template<class T, class SELF>
-	const SpriteMaterialInfo& TGUIColorGradient<T, SELF>::_getMaterial(UINT32 renderElementIdx, SpriteMaterial** material) const
-	{
-		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
-
-		if (renderElementIdx >= alphaSpriteIdx)
-		{
-			*material = mAlphaSprite->getMaterial(alphaSpriteIdx - renderElementIdx);
-			return mAlphaSprite->getMaterialInfo(alphaSpriteIdx - renderElementIdx);
-		}
-		else
-		{
-			*material = mColorSprite->getMaterial(renderElementIdx);
-			return mColorSprite->getMaterialInfo(renderElementIdx);
-		}
-	}
-	template<class T, class SELF>
-	void TGUIColorGradient<T, SELF>::_getMeshInfo(UINT32 renderElementIdx, UINT32& numVertices, UINT32& numIndices, GUIMeshType& type) const
-	{
-		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
-
-		UINT32 numQuads = 0;
-		if(renderElementIdx >= alphaSpriteIdx)
-			numQuads = mAlphaSprite->getNumQuads(alphaSpriteIdx - renderElementIdx);
-		else
-			numQuads = mColorSprite->getNumQuads(renderElementIdx);
-
-		numVertices = numQuads * 4;
-		numIndices = numQuads * 6;
-		type = GUIMeshType::Triangle;
-	}
-
-	template<class T, class SELF>
 	void TGUIColorGradient<T, SELF>::updateRenderElementsInternal()
 	{
 		const Color color = getTint();
@@ -121,6 +80,12 @@ namespace bs
 
 		mColorSprite->update(mColorImageDesc, (UINT64)_getParentWidget());
 		mAlphaSprite->update(mAlphaImageDesc, (UINT64)_getParentWidget());
+
+		// Populate GUI render elements from the sprites
+		{
+			using H = impl::GUIRenderElementHelper;
+			H::populate({ H::SpriteInfo(mColorSprite), H::SpriteInfo(mAlphaSprite, 1) }, mRenderElements);
+		}
 
 		GUIElement::updateRenderElementsInternal();
 	}

@@ -54,45 +54,6 @@ namespace bs
 		}
 	}
 
-	UINT32 GUIColor::_getNumRenderElements() const
-	{
-		UINT32 numElements = mColorSprite->getNumRenderElements();
-		numElements += mAlphaSprite->getNumRenderElements();
-
-		return numElements;
-	}
-
-	const SpriteMaterialInfo& GUIColor::_getMaterial(UINT32 renderElementIdx, SpriteMaterial** material) const
-	{
-		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
-
-		if (renderElementIdx >= alphaSpriteIdx)
-		{
-			*material = mAlphaSprite->getMaterial(alphaSpriteIdx - renderElementIdx);
-			return mAlphaSprite->getMaterialInfo(alphaSpriteIdx - renderElementIdx);
-		}
-		else
-		{
-			*material = mColorSprite->getMaterial(renderElementIdx);
-			return mColorSprite->getMaterialInfo(renderElementIdx);
-		}
-	}
-
-	void GUIColor::_getMeshInfo(UINT32 renderElementIdx, UINT32& numVertices, UINT32& numIndices, GUIMeshType& type) const
-	{
-		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
-
-		UINT32 numQuads = 0;
-		if(renderElementIdx >= alphaSpriteIdx)
-			numQuads = mAlphaSprite->getNumQuads(alphaSpriteIdx - renderElementIdx);
-		else
-			numQuads = mColorSprite->getNumQuads(renderElementIdx);
-
-		numVertices = numQuads * 4;
-		numIndices = numQuads * 6;
-		type = GUIMeshType::Triangle;
-	}
-
 	void GUIColor::updateRenderElementsInternal()
 	{		
 		Color color = mValue * getTint();
@@ -111,6 +72,12 @@ namespace bs
 
 		mColorSprite->update(mColorImageDesc, (UINT64)_getParentWidget());
 		mAlphaSprite->update(mAlphaImageDesc, (UINT64)_getParentWidget());
+
+		// Populate GUI render elements from the sprites
+		{
+			using T = impl::GUIRenderElementHelper;
+			T::populate({ T::SpriteInfo(mColorSprite), T::SpriteInfo(mAlphaSprite) }, mRenderElements);
+		}
 
 		GUIElement::updateRenderElementsInternal();
 	}
