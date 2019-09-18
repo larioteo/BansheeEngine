@@ -293,18 +293,18 @@ namespace bs
 		bs_zero_out(mTypeCounters);
 	}
 
-	bool HandleRenderer::check(const Camera& camera)
+	RendererExtensionRequest HandleRenderer::check(const Camera& camera)
 	{
 		for(auto& entry : mQueuedData)
 		{
 			if (entry.camera.get() == &camera)
-				return true;
+				return RendererExtensionRequest::ForceRender;
 		}
 
-		return false;
+		return RendererExtensionRequest::DontRender;
 	}
 
-	void HandleRenderer::render(const Camera& camera)
+	void HandleRenderer::render(const Camera& camera, const RendererViewContext& viewContext)
 	{
 		THROW_IF_NOT_CORE_THREAD;
 

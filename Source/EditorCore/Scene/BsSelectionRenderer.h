@@ -46,11 +46,11 @@ namespace bs
 		/** @copydoc RendererExtension::initialize */
 		void initialize(const Any& data) override;
 
-		/** @copydoc RendererExtension::check */
-		bool check(const Camera& camera) override;
+		/**	@copydoc RendererExtension::check */
+		RendererExtensionRequest check(const Camera& camera) override;
 
-		/** @copydoc RendererExtension::render */
-		void render(const Camera& camera) override;
+		/**	@copydoc RendererExtension::render */
+		void render(const Camera& camera, const RendererViewContext& viewContext) override;
 
 		/**
 		 * Updates the internal data that determines what will be rendered on the next render() call.

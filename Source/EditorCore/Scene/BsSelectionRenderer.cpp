@@ -127,12 +127,12 @@ namespace bs
 		mObjects = objects;
 	}
 
-	bool SelectionRendererCore::check(const Camera& camera)
+	RendererExtensionRequest SelectionRendererCore::check(const Camera& camera)
 	{
-		return mCamera.get() == &camera;
+		return mCamera.get() == &camera ? RendererExtensionRequest::ForceRender : RendererExtensionRequest::DontRender;
 	}
 
-	void SelectionRendererCore::render(const Camera& camera)
+	void SelectionRendererCore::render(const Camera& camera, const RendererViewContext& viewContext)
 	{
 		THROW_IF_NOT_CORE_THREAD;
 

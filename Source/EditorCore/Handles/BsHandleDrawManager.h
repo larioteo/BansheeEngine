@@ -250,11 +250,11 @@ namespace bs
 		/** @copydoc RendererExtension::destroy */
 		void destroy() override;
 
-		/** @copydoc RendererExtension::check */
-		bool check(const Camera& camera) override;
+		/**	@copydoc RendererExtension::check */
+		RendererExtensionRequest check(const Camera& camera) override;
 
-		/** @copydoc RendererExtension::render */
-		void render(const Camera& camera) override;
+		/**	@copydoc RendererExtension::render */
+		void render(const Camera& camera, const RendererViewContext& viewContext) override;
 
 		/**
 		 * Queues new data for rendering.

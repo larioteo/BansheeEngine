@@ -1052,12 +1052,12 @@ namespace bs
 		}
 	}
 
-	bool GizmoRenderer::check(const Camera& camera)
+	RendererExtensionRequest GizmoRenderer::check(const Camera& camera)
 	{
-		return &camera == mCamera.get();
+		return &camera == mCamera.get() ? RendererExtensionRequest::ForceRender : RendererExtensionRequest::DontRender;
 	}
 
-	void GizmoRenderer::render(const Camera& camera)
+	void GizmoRenderer::render(const Camera& camera, const RendererViewContext& viewContext)
 	{
 		renderData(mCamera, mMeshes, mIconMesh, mIconRenderData, false);
 	}

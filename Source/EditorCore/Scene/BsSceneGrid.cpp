@@ -206,12 +206,12 @@ namespace bs
 		mGridPlaneNormal = gridPlaneNormal;
 	}
 
-	bool SceneGridRenderer::check(const Camera& camera)
+	RendererExtensionRequest SceneGridRenderer::check(const Camera& camera)
 	{
-		return mCamera.get() == &camera;
+		return mCamera.get() == &camera ? RendererExtensionRequest::ForceRender : RendererExtensionRequest::DontRender;
 	}
 
-	void SceneGridRenderer::render(const Camera& camera)
+	void SceneGridRenderer::render(const Camera& camera, const RendererViewContext& viewContext)
 	{
 		THROW_IF_NOT_CORE_THREAD;
 

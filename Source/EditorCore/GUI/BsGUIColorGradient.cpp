@@ -98,7 +98,7 @@ namespace bs
 
 	template<class T, class SELF>
 	void TGUIColorGradient<T, SELF>::_fillBuffer(UINT8* vertices, UINT32* indices, UINT32 vertexOffset, UINT32 indexOffset,
-		UINT32 maxNumVerts, UINT32 maxNumIndices, UINT32 renderElementIdx) const
+		const Vector2I& offset, UINT32 maxNumVerts, UINT32 maxNumIndices, UINT32 renderElementIdx) const
 	{
 		UINT8* uvs = vertices + sizeof(Vector2);
 		UINT32 vertexStride = sizeof(Vector2) * 2;
@@ -106,15 +106,15 @@ namespace bs
 		
 		UINT32 alphaSpriteIdx = mColorSprite->getNumRenderElements();
 		
-		Vector2I offset(mLayoutData.area.x, mLayoutData.area.y);
+		Vector2I spriteOffset = Vector2I(mLayoutData.area.x, mLayoutData.area.y) + offset;
 		if(renderElementIdx < alphaSpriteIdx)
 		{
 			mColorSprite->fillBuffer(vertices, uvs, indices, vertexOffset, indexOffset, maxNumVerts, maxNumIndices,
-				vertexStride, indexStride, renderElementIdx, offset, mLayoutData.getLocalClipRect());
+				vertexStride, indexStride, renderElementIdx, spriteOffset, mLayoutData.getLocalClipRect());
 		}
 		else if(renderElementIdx >= alphaSpriteIdx)
 		{
-			Vector2I alphaOffset = offset;
+			Vector2I alphaOffset = spriteOffset;
 			UINT32 yOffset = (UINT32)(mLayoutData.area.height * ALPHA_SPLIT_POSITION);
 			alphaOffset.y += yOffset;
 

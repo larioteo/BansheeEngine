@@ -1141,12 +1141,12 @@ namespace bs
 		mHighlightedDropLoc = location;
 	}
 
-	bool DockOverlayRenderer::check(const Camera& camera)
+	RendererExtensionRequest DockOverlayRenderer::check(const Camera& camera)
 	{
-		return mCamera.get() == &camera;
+		return mCamera.get() == &camera ? RendererExtensionRequest::ForceRender : RendererExtensionRequest::DontRender;
 	}
 
-	void DockOverlayRenderer::render(const Camera& camera)
+	void DockOverlayRenderer::render(const Camera& camera, const RendererViewContext& viewContext)
 	{
 		THROW_IF_NOT_CORE_THREAD;
 
