@@ -125,7 +125,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getDynamicSize(const bs::DockManagerLayout::Entry& data)	
+		static uint32_t getSize(const bs::DockManagerLayout::Entry& data)	
 		{ 
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
 				rtti_size(data.splitPosition) + rtti_size(data.widgetNames);

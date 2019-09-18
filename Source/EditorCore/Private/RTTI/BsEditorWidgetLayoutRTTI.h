@@ -92,7 +92,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getDynamicSize(const bs::EditorWidgetLayout::Entry& data)	
+		static uint32_t getSize(const bs::EditorWidgetLayout::Entry& data)	
 		{ 
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.widgetNames) + rtti_size(data.isDocked) + 
 				rtti_size(data.x) + rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height);

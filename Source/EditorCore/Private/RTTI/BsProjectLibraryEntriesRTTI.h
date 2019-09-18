@@ -96,7 +96,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getDynamicSize(const ProjectLibrary::FileEntry& data)	
+		static uint32_t getSize(const ProjectLibrary::FileEntry& data)	
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
@@ -200,7 +200,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getDynamicSize(const ProjectLibrary::DirectoryEntry& data)
+		static uint32_t getSize(const ProjectLibrary::DirectoryEntry& data)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 

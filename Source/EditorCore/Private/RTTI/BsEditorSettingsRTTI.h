@@ -90,7 +90,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getDynamicSize(const RecentProject& data)
+		static uint32_t getSize(const RecentProject& data)
 		{
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.path) + rtti_size(data.accessTimestamp);
 
