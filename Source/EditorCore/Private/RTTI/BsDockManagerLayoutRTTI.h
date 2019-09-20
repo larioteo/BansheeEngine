@@ -84,7 +84,7 @@ namespace bs
 		{ 
 			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
-				uint32_t size = 0;
+				BitLength size = 0;
 				size += rtti_write(data.isLeaf, stream);
 				size += rtti_write(data.horizontalSplit, stream);
 				size += rtti_write(data.splitPosition, stream);
@@ -127,8 +127,8 @@ namespace bs
 
 		static BitLength getSize(const bs::DockManagerLayout::Entry& data, bool compress)	
 		{ 
-			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
-				rtti_size(data.splitPosition) + rtti_size(data.widgetNames);
+			BitLength dataSize = rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
+				rtti_size(data.splitPosition) + rtti_size(data.widgetNames) + sizeof(uint32_t);
 
 			if(!data.isLeaf)
 			{
@@ -136,14 +136,7 @@ namespace bs
 				dataSize += rtti_size(*data.children[1]);
 			}
 
-#if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<uint32_t>::max())
-			{
-				__string_throwDataOverflowException();
-			}
-#endif
-
-			return (uint32_t)dataSize;
+			return dataSize;
 		}	
 	}; 
 

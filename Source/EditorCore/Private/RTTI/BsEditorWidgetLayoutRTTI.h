@@ -66,7 +66,7 @@ namespace bs
 		{ 
 			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
-				uint32_t size = 0;
+				BitLength size = 0;
 				size += rtti_write(data.widgetNames, stream);
 				size += rtti_write(data.isDocked, stream);
 				size += rtti_write(data.x, stream);
@@ -95,17 +95,8 @@ namespace bs
 
 		static BitLength getSize(const bs::EditorWidgetLayout::Entry& data, bool compress)	
 		{ 
-			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.widgetNames) + rtti_size(data.isDocked) + 
-				rtti_size(data.x) + rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height);
-
-#if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<uint32_t>::max())
-			{
-				__string_throwDataOverflowException();
-			}
-#endif
-
-			return (uint32_t)dataSize;
+			return rtti_size(data.widgetNames) + rtti_size(data.isDocked) + rtti_size(data.x) + 
+				rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height) + sizeof(uint32_t);
 		}	
 	}; 
 

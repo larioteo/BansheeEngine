@@ -59,7 +59,7 @@ namespace bs
 		{ 
 			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
-				uint32_t size = 0;
+				BitLength size = 0;
 
 				// For compatibility, encoding the name as a wide string
 				WString elemName = UTF8::toWide(data.elementName);
@@ -100,17 +100,8 @@ namespace bs
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
-			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 
-				rtti_size(elemName) + rtti_size(data.lastUpdateTime);
-
-#if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<uint32_t>::max())
-			{
-				__string_throwDataOverflowException();
-			}
-#endif
-
-			return (uint32_t)dataSize;
+			return rtti_size(data.type) + rtti_size(data.path) + 
+				rtti_size(elemName) + rtti_size(data.lastUpdateTime) + sizeof(uint32_t);
 		}	
 	}; 
 
@@ -122,7 +113,7 @@ namespace bs
 		{ 
 			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
-				uint32_t size = 0;
+				BitLength size = 0;
 
 				// For compatibility, encoding the name as a wide string
 				WString elemName = UTF8::toWide(data.elementName);
@@ -203,8 +194,7 @@ namespace bs
 		static BitLength getSize(const ProjectLibrary::DirectoryEntry& data, bool compress)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
-			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 
-				rtti_size(elemName);
+			BitLength dataSize = rtti_size(data.type) + rtti_size(data.path) + rtti_size(elemName) + sizeof(uint32_t);
 
 			dataSize += sizeof(uint32_t);
 
@@ -222,14 +212,7 @@ namespace bs
 				}
 			}
 
-#if BS_DEBUG_MODE
-			if(dataSize > std::numeric_limits<uint32_t>::max())
-			{
-				__string_throwDataOverflowException();
-			}
-#endif
-
-			return (uint32_t)dataSize;
+			return dataSize;
 		}	
 	};
 
