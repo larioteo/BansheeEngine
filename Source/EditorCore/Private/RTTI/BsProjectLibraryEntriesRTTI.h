@@ -55,9 +55,9 @@ namespace bs
 	{	
 		enum { id = TID_ProjectLibraryResEntry }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength toMemory(const ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, [&data, &stream]()
+			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
 				uint32_t size = 0;
 
@@ -75,10 +75,10 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength fromMemory(ProjectLibrary::FileEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			uint32_t size = 0;
-			rtti_read(size, stream);
+			BitLength size;
+			rtti_read_size_header(stream, compress, size);
 
 			uint32_t type;
 			rtti_read(type, stream);
@@ -96,7 +96,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getSize(const ProjectLibrary::FileEntry& data)	
+		static BitLength getSize(const ProjectLibrary::FileEntry& data, bool compress)	
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 
@@ -118,9 +118,9 @@ namespace bs
 	{	
 		enum { id = TID_ProjectLibraryDirEntry }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength toMemory(const ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, [&data, &stream]()
+			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
 				uint32_t size = 0;
 
@@ -152,10 +152,10 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength fromMemory(ProjectLibrary::DirectoryEntry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			uint32_t size = 0;
-			rtti_read(size, stream);
+			BitLength size;
+			rtti_read_size_header(stream, compress, size);
 
 			rtti_read(data.type, stream);
 			rtti_read(data.path, stream);
@@ -200,7 +200,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getSize(const ProjectLibrary::DirectoryEntry& data)
+		static BitLength getSize(const ProjectLibrary::DirectoryEntry& data, bool compress)
 		{ 
 			WString elemName = UTF8::toWide(data.elementName);
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.type) + rtti_size(data.path) + 

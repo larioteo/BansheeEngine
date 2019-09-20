@@ -80,9 +80,9 @@ namespace bs
 	{	
 		enum { id = bs::TID_DockManagerLayoutEntry }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, [&data, &stream]()
+			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
 				uint32_t size = 0;
 				size += rtti_write(data.isLeaf, stream);
@@ -100,10 +100,10 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength fromMemory(bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			uint32_t size = 0;
-			rtti_read(size, stream);
+			BitLength size;
+			rtti_read_size_header(stream, compress, size);
 
 			rtti_read(data.isLeaf, stream);
 			rtti_read(data.horizontalSplit, stream);
@@ -125,7 +125,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getSize(const bs::DockManagerLayout::Entry& data)	
+		static BitLength getSize(const bs::DockManagerLayout::Entry& data, bool compress)	
 		{ 
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
 				rtti_size(data.splitPosition) + rtti_size(data.widgetNames);

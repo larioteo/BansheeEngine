@@ -68,9 +68,9 @@ namespace bs
 	{
 		enum { id = TID_RecentProject }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const RecentProject& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength toMemory(const RecentProject& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			return rtti_write_with_size_header(stream, [&data, &stream]()
+			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
 				uint32_t size = 0;
 				size += rtti_write(data.path, stream);
@@ -80,17 +80,18 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(RecentProject& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength fromMemory(RecentProject& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			uint32_t size = 0;
-			rtti_read(size, stream);
+			BitLength size;
+			rtti_read_size_header(stream, compress, size);
+
 			rtti_read(data.path, stream);
 			rtti_read(data.accessTimestamp, stream);
 
 			return size;
 		}
 
-		static uint32_t getSize(const RecentProject& data)
+		static BitLength getSize(const RecentProject& data, bool compress)
 		{
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.path) + rtti_size(data.accessTimestamp);
 

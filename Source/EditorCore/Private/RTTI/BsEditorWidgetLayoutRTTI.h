@@ -62,9 +62,9 @@ namespace bs
 	{	
 		enum { id = bs::TID_EditorWidgetLayoutEntry }; enum { hasDynamicSize = 1 };
 
-		static uint32_t toMemory(const bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength toMemory(const bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, [&data, &stream]()
+			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
 			{
 				uint32_t size = 0;
 				size += rtti_write(data.widgetNames, stream);
@@ -78,10 +78,11 @@ namespace bs
 			});
 		}
 
-		static uint32_t fromMemory(bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
+		static BitLength fromMemory(bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			uint32_t size = 0;
-			rtti_read(size, stream);
+			BitLength size;
+			rtti_read_size_header(stream, compress, size);
+
 			rtti_read(data.widgetNames, stream);
 			rtti_read(data.isDocked, stream);
 			rtti_read(data.x, stream);
@@ -92,7 +93,7 @@ namespace bs
 			return size;
 		}
 
-		static uint32_t getSize(const bs::EditorWidgetLayout::Entry& data)	
+		static BitLength getSize(const bs::EditorWidgetLayout::Entry& data, bool compress)	
 		{ 
 			uint64_t dataSize = sizeof(uint32_t) + rtti_size(data.widgetNames) + rtti_size(data.isDocked) + 
 				rtti_size(data.x) + rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height);
