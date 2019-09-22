@@ -82,7 +82,7 @@ namespace bs
 
 		static BitLength toMemory(const bs::DockManagerLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
+			return rtti_write_with_size_header(stream, data, compress, [&data, &stream]()
 			{
 				BitLength size = 0;
 				size += rtti_write(data.isLeaf, stream);
@@ -125,10 +125,10 @@ namespace bs
 			return size;
 		}
 
-		static BitLength getSize(const bs::DockManagerLayout::Entry& data, bool compress)	
+		static BitLength getSize(const bs::DockManagerLayout::Entry& data, const RTTIFieldInfo& fieldInfo, bool compress)	
 		{ 
-			BitLength dataSize = rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) + 
-				rtti_size(data.splitPosition) + rtti_size(data.widgetNames) + sizeof(uint32_t);
+			BitLength dataSize = rtti_size(data.isLeaf) + rtti_size(data.horizontalSplit) +
+				rtti_size(data.splitPosition) + rtti_size(data.widgetNames);
 
 			if(!data.isLeaf)
 			{
@@ -136,6 +136,7 @@ namespace bs
 				dataSize += rtti_size(*data.children[1]);
 			}
 
+			rtti_add_header_size(dataSize, compress);
 			return dataSize;
 		}	
 	}; 

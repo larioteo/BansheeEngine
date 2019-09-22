@@ -64,7 +64,7 @@ namespace bs
 
 		static BitLength toMemory(const bs::EditorWidgetLayout::Entry& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{ 
-			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
+			return rtti_write_with_size_header(stream, data, compress, [&data, &stream]()
 			{
 				BitLength size = 0;
 				size += rtti_write(data.widgetNames, stream);
@@ -93,10 +93,13 @@ namespace bs
 			return size;
 		}
 
-		static BitLength getSize(const bs::EditorWidgetLayout::Entry& data, bool compress)	
+		static BitLength getSize(const bs::EditorWidgetLayout::Entry& data, const RTTIFieldInfo& fieldInfo, bool compress)	
 		{ 
-			return rtti_size(data.widgetNames) + rtti_size(data.isDocked) + rtti_size(data.x) + 
-				rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height) + sizeof(uint32_t);
+			BitLength dataSize = rtti_size(data.widgetNames) + rtti_size(data.isDocked) + rtti_size(data.x) +
+				rtti_size(data.y) + rtti_size(data.width) + rtti_size(data.height);
+
+			rtti_add_header_size(dataSize, compress);
+			return dataSize;
 		}	
 	}; 
 

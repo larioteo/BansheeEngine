@@ -70,7 +70,7 @@ namespace bs
 
 		static BitLength toMemory(const RecentProject& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
+			return rtti_write_with_size_header(stream, data, compress, [&data, &stream]()
 			{
 				BitLength size = 0;
 				size += rtti_write(data.path, stream);
@@ -91,9 +91,12 @@ namespace bs
 			return size;
 		}
 
-		static BitLength getSize(const RecentProject& data, bool compress)
+		static BitLength getSize(const RecentProject& data, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			return rtti_size(data.path) + rtti_size(data.accessTimestamp) + sizeof(uint32_t);
+			BitLength dataSize = rtti_size(data.path) + rtti_size(data.accessTimestamp);
+
+			rtti_add_header_size(dataSize, compress);
+			return dataSize;
 		}
 	};
 

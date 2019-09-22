@@ -87,7 +87,8 @@ namespace bs
 		BinarySerializer serializer;
 		mSerializedObject->seek(0);
 		SPtr<SceneObject> restored = std::static_pointer_cast<SceneObject>(
-			serializer.decode(mSerializedObject, (UINT32)mSerializedObject->size(), &serzContext));
+			serializer.decode(mSerializedObject, (UINT32)mSerializedObject->size(), 
+			BinarySerializerFlag::None, &serzContext));
 
 		EditorUtility::restoreIds(restored->getHandle(), mSceneObjectProxy);
 		restored->setParent(parent);

@@ -14,9 +14,6 @@ namespace bs
 #endif
 	{ }
 
-	PlatformInfo::~PlatformInfo()
-	{ }
-
 	RTTITypeBase* PlatformInfo::getRTTIStatic()
 	{
 		return PlatformInfoRTTI::instance();
@@ -26,9 +23,6 @@ namespace bs
 	{
 		return PlatformInfo::getRTTIStatic();
 	}
-
-	WinPlatformInfo::WinPlatformInfo()
-	{ }
 
 	RTTITypeBase* WinPlatformInfo::getRTTIStatic()
 	{

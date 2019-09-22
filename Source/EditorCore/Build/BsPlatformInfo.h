@@ -23,7 +23,7 @@ namespace bs
 	struct BS_ED_EXPORT PlatformInfo : public IReflectable
 	{
 		PlatformInfo();
-		virtual ~PlatformInfo();
+		virtual ~PlatformInfo() = default;
 
 		PlatformType type; /**< Type of platform this object contains data for. */
 		String defines; /**< A set of semicolon separated defines to use when compiling scripts for this platform. */
@@ -45,7 +45,7 @@ namespace bs
 	/** Contains Windows specific per-platform information used primarily for build purposes. */
 	struct BS_ED_EXPORT WinPlatformInfo : public PlatformInfo
 	{
-		WinPlatformInfo();
+		WinPlatformInfo() = default;
 
 		ResourceHandle<Texture> icon;
 		WString titlebarText;

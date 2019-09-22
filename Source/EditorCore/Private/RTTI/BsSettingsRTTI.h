@@ -33,7 +33,7 @@ namespace bs
 		/** @copydoc RTTIPlainType::toMemory */
 		static BitLength toMemory(const TSettingsValue<T>& data, Bitstream& stream, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			return rtti_write_with_size_header(stream, compress, [&data, &stream]()
+			return rtti_write_with_size_header(stream, data, compress, [&data, &stream]()
 			{
 				BitLength size = 0;
 				size += rtti_write(data.key, stream);
@@ -56,12 +56,13 @@ namespace bs
 		}
 
 		/** @copydoc RTTIPlainType::getSize */
-		static BitLength getSize(const TSettingsValue<T>& data, bool compress)
+		static BitLength getSize(const TSettingsValue<T>& data, const RTTIFieldInfo& fieldInfo, bool compress)
 		{
-			BitLength dataSize = sizeof(uint32_t);
+			BitLength dataSize;
 			dataSize += rtti_size(data.key);
 			dataSize += rtti_size(data.value);
 
+			rtti_add_header_size(dataSize, compress);
 			return dataSize;
 		}
 	};
