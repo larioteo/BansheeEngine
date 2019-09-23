@@ -1143,7 +1143,10 @@ namespace bs
 
 	RendererExtensionRequest DockOverlayRenderer::check(const Camera& camera)
 	{
-		return mCamera.get() == &camera ? RendererExtensionRequest::ForceRender : RendererExtensionRequest::DontRender;
+		if (mCamera.get() != &camera || !mShowOverlay)
+			return RendererExtensionRequest::DontRender;
+
+		return RendererExtensionRequest::ForceRender;
 	}
 
 	void DockOverlayRenderer::render(const Camera& camera, const RendererViewContext& viewContext)
