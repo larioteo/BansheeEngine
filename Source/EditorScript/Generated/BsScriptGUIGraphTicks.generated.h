@@ -6,10 +6,9 @@
 #include "BsScriptObject.h"
 #include "../../EditorCore/GUI/BsGUIGraphTicks.h"
 
+namespace bs { class GUIGraphTicks; }
 namespace bs
 {
-	class GUIGraphTicks;
-
 	class BS_SCR_BED_EXPORT ScriptGUIGraphTicks : public ScriptObject<ScriptGUIGraphTicks>
 	{
 	public:

@@ -9,10 +9,9 @@
 #include "../../bsf/Source/Foundation/bsfCore/Image/BsPixelData.h"
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 
+namespace bs { class TextureImportOptions; }
 namespace bs
 {
-	class TextureImportOptions;
-
 	class BS_SCR_BED_EXPORT ScriptTextureImportOptions : public TScriptReflectable<ScriptTextureImportOptions, TextureImportOptions, ScriptImportOptionsBase>
 	{
 	public:

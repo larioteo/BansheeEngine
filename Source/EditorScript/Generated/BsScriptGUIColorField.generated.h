@@ -7,11 +7,10 @@
 #include "Image/BsColor.h"
 #include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 
+namespace bs { class GUIColorField; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIColorField;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIColorField : public TScriptGUIElement<ScriptGUIColorField>
 	{
 	public:

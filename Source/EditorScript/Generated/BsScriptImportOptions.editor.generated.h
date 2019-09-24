@@ -6,10 +6,9 @@
 #include "Wrappers/BsScriptReflectable.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsImportOptions.h"
 
+namespace bs { class ImportOptions; }
 namespace bs
 {
-	class ImportOptions;
-
 	class BS_SCR_BED_EXPORT ScriptImportOptionsBase : public ScriptReflectableBase
 	{
 	public:

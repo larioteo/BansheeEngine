@@ -5,10 +5,9 @@
 #include "BsScriptEditorPrerequisites.h"
 #include "BsScriptObject.h"
 
+namespace bs { class SerializedSceneObject; }
 namespace bs
 {
-	class SerializedSceneObject;
-
 	class BS_SCR_BED_EXPORT ScriptSerializedSceneObject : public ScriptObject<ScriptSerializedSceneObject>
 	{
 	public:

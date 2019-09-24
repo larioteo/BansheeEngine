@@ -9,11 +9,10 @@
 #include "Math/BsVector2.h"
 #include "../../EditorCore/GUI/BsGUICurves.h"
 
+namespace bs { struct __GUIContentInterop; }
+namespace bs { class GUICurvesField; }
 namespace bs
 {
-	class GUICurvesField;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUICurvesField : public TScriptGUIElement<ScriptGUICurvesField>
 	{
 	public:

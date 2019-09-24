@@ -8,11 +8,10 @@
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 #include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 
+namespace bs { class GUIVector2Field; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIVector2Field;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIVector2Field : public TScriptGUIElement<ScriptGUIVector2Field>
 	{
 	public:

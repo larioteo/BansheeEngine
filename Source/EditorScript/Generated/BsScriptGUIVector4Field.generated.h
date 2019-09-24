@@ -8,11 +8,10 @@
 #include "Math/BsVector4.h"
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 
+namespace bs { class GUIVector4Field; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIVector4Field;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIVector4Field : public TScriptGUIElement<ScriptGUIVector4Field>
 	{
 	public:

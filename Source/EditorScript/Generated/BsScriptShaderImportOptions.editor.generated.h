@@ -8,10 +8,9 @@
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsShaderImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Importer/BsShaderImportOptions.h"
 
+namespace bs { class ShaderImportOptions; }
 namespace bs
 {
-	class ShaderImportOptions;
-
 	class BS_SCR_BED_EXPORT ScriptShaderImportOptions : public TScriptReflectable<ScriptShaderImportOptions, ShaderImportOptions, ScriptImportOptionsBase>
 	{
 	public:

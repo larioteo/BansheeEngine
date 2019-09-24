@@ -7,11 +7,10 @@
 #include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../bsf/Source/Foundation/bsfUtility/Image/BsColorGradient.h"
 
+namespace bs { class GUIColorGradientHDRField; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIColorGradientHDRField;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIColorGradientHDRField : public TScriptGUIElement<ScriptGUIColorGradientHDRField>
 	{
 	public:

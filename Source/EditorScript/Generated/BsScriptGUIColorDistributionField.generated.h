@@ -8,11 +8,10 @@
 #include "../../bsf/Source/Foundation/bsfCore/Localization/BsHString.h"
 #include "../../bsf/Source/Foundation/bsfCore/Particles/BsParticleDistribution.h"
 
+namespace bs { class GUIColorDistributionField; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIColorDistributionField;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIColorDistributionField : public TScriptGUIElement<ScriptGUIColorDistributionField>
 	{
 	public:

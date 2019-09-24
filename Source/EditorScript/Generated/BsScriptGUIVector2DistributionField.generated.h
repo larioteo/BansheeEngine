@@ -10,11 +10,10 @@
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 #include "../../bsf/Source/Foundation/bsfCore/Utility/BsCommonTypes.h"
 
+namespace bs { class GUIVector2DistributionField; }
+namespace bs { struct __GUIContentInterop; }
 namespace bs
 {
-	class GUIVector2DistributionField;
-	struct __GUIContentInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUIVector2DistributionField : public TScriptGUIElement<ScriptGUIVector2DistributionField>
 	{
 	public:

@@ -7,10 +7,9 @@
 #include "BsScriptImportOptions.editor.generated.h"
 #include "../../bsf/Source/Foundation/bsfEngine/Resources/BsScriptCodeImportOptions.h"
 
+namespace bs { class ScriptCodeImportOptions; }
 namespace bs
 {
-	class ScriptCodeImportOptions;
-
 	class BS_SCR_BED_EXPORT ScriptScriptCodeImportOptions : public TScriptReflectable<ScriptScriptCodeImportOptions, ScriptCodeImportOptions, ScriptImportOptionsBase>
 	{
 	public:

@@ -6,10 +6,9 @@
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "../../bsf/Source/Foundation/bsfUtility/Image/BsColorGradient.h"
 
+namespace bs { class GUIColorGradientHDR; }
 namespace bs
 {
-	class GUIColorGradientHDR;
-
 	class BS_SCR_BED_EXPORT ScriptGUIColorGradientHDR : public TScriptGUIElement<ScriptGUIColorGradientHDR>
 	{
 	public:

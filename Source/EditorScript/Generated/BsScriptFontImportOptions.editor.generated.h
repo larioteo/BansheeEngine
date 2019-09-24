@@ -9,10 +9,9 @@
 #include "../../bsf/Source/Foundation/bsfCore/Text/BsFontImportOptions.h"
 #include "../../bsf/Source/Foundation/bsfCore/Text/BsFontImportOptions.h"
 
+namespace bs { class FontImportOptions; }
 namespace bs
 {
-	class FontImportOptions;
-
 	class BS_SCR_BED_EXPORT ScriptFontImportOptions : public TScriptReflectable<ScriptFontImportOptions, FontImportOptions, ScriptImportOptionsBase>
 	{
 	public:

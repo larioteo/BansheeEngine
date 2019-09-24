@@ -6,10 +6,9 @@
 #include "Wrappers/GUI/BsScriptGUIElement.h"
 #include "Math/BsVector2I.h"
 
+namespace bs { class GUITimeline; }
 namespace bs
 {
-	class GUITimeline;
-
 	class BS_SCR_BED_EXPORT ScriptGUITimeline : public TScriptGUIElement<ScriptGUITimeline>
 	{
 	public:

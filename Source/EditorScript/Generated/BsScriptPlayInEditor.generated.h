@@ -6,10 +6,9 @@
 #include "BsScriptObject.h"
 #include "../../bsf/Source/Scripting/bsfScript/BsPlayInEditor.h"
 
+namespace bs { class PlayInEditor; }
 namespace bs
 {
-	class PlayInEditor;
-
 	class BS_SCR_BED_EXPORT ScriptPlayInEditor : public ScriptObject<ScriptPlayInEditor>
 	{
 	public:

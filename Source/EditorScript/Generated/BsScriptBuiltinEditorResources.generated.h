@@ -17,11 +17,10 @@
 #include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
 #include "../../EditorCore/Utility/BsBuiltinEditorResources.h"
 
+namespace bs { class BuiltinEditorResources; }
+namespace bs { struct __GUIContentImagesInterop; }
 namespace bs
 {
-	struct __GUIContentImagesInterop;
-	class BuiltinEditorResources;
-
 	class BS_SCR_BED_EXPORT ScriptBuiltinEditorResources : public ScriptObject<ScriptBuiltinEditorResources>
 	{
 	public:

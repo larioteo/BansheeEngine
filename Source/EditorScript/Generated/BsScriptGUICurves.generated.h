@@ -11,12 +11,11 @@
 #include "Math/BsVector2I.h"
 #include "../../bsf/Source/Foundation/bsfCore/Animation/BsAnimationUtility.h"
 
+namespace bs { class GUICurves; }
+namespace bs { struct __CurveDrawInfoInterop; }
+namespace bs { struct __TangentRefInterop; }
 namespace bs
 {
-	class GUICurves;
-	struct __CurveDrawInfoInterop;
-	struct __TangentRefInterop;
-
 	class BS_SCR_BED_EXPORT ScriptGUICurves : public TScriptGUIElement<ScriptGUICurves>
 	{
 	public:

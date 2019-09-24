@@ -6,11 +6,10 @@
 #include "BsScriptObject.h"
 #include "../../EditorCore/GUI/BsGUISceneTreeView.h"
 
+namespace bs { struct SceneTreeViewState; }
+namespace bs { struct __SceneTreeViewElementInterop; }
 namespace bs
 {
-	struct SceneTreeViewState;
-	struct __SceneTreeViewElementInterop;
-
 	class BS_SCR_BED_EXPORT ScriptSceneTreeViewState : public ScriptObject<ScriptSceneTreeViewState>
 	{
 	public:
