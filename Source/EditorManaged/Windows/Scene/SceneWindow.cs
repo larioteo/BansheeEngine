@@ -351,6 +351,7 @@ namespace bs.Editor
             UpdateCameraPreviews();
 
             Selection.OnSelectionChanged += OnSelectionChanged;
+            ToggleOnDemandDrawing(EditorApplication.IsOnDemandDrawingEnabled());
         }
 
         private void OnCameraOptionsClicked()
@@ -1013,7 +1014,7 @@ namespace bs.Editor
             // render target destroy/create cycle for every single pixel.
 
             camera.AspectRatio = width / (float)height;
-            camera.NotifyNeedsRedraw();
+            NotifyNeedsRedraw();
         }
 
         /// <summary>

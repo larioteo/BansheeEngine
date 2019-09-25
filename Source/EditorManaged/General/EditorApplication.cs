@@ -897,13 +897,23 @@ namespace bs.Editor
             else
                 onDemandDrawingDisablers.Add(caller);
 
-            bool isEnabled = onDemandDrawingDisablers.Count == 0;
+            bool isEnabled = IsOnDemandDrawingEnabled();
 
             SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
             sceneWindow?.ToggleOnDemandDrawing(isEnabled);
 
             GameWindow gameWindow = EditorWindow.GetWindow<GameWindow>();
             gameWindow?.ToggleOnDemandDrawing(isEnabled);
+        }
+
+        /// <summary>
+        /// Checks is 3D viewport on demand drawing enabled. If enabled the viewport will only redraw when explicitly
+        /// requested, otherwise it will redraw itself every frame.
+        /// </summary>
+        /// <returns>True if on demand drawing is enabled, false otherwise.</returns>
+        public static bool IsOnDemandDrawingEnabled()
+        {
+            return onDemandDrawingDisablers.Count == 0;
         }
 
         /// <summary>

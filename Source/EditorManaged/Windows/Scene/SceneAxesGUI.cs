@@ -61,7 +61,7 @@ namespace bs.Editor
             camera.OrthoHeight = 2.0f;
             camera.RenderSettings.EnableHDR = false;
             camera.RenderSettings.EnableSkybox = false;
-            camera.Flags = CameraFlag.OnDemand;
+            camera.Flags |= CameraFlag.OnDemand;
 
             renderTextureGUI = new GUIRenderTexture(renderTexture, true);
 
@@ -153,7 +153,10 @@ namespace bs.Editor
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)
         {
-            camera.Flags = enabled ? CameraFlag.OnDemand : new CameraFlag();
+            if (enabled)
+                camera.Flags |= CameraFlag.OnDemand;
+            else
+                camera.Flags &= ~CameraFlag.OnDemand;
         }
 
         /// <summary>

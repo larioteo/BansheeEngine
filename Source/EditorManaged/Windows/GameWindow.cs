@@ -29,6 +29,9 @@ namespace bs.Editor
         private GUITexture renderTextureBg;
         private GUILabel noCameraLabel;
 
+        private Camera currentCamera;
+        private bool onDemandDisabled;
+
         /// <summary>
         /// Opens the game window.
         /// </summary>
@@ -141,15 +144,31 @@ namespace bs.Editor
 
             UpdateRenderTexture(Width, Height);
 
-            bool hasMainCamera = Scene.Camera != null;
+            currentCamera = Scene.Camera;
+            bool hasMainCamera = currentCamera != null;
 
             renderTextureGUI.Active = hasMainCamera;
             noCameraLabel.Active = !hasMainCamera;
+
+            ToggleOnDemandDrawing(EditorApplication.IsOnDemandDrawingEnabled());
+            NotifyNeedsRedraw();
         }
 
         private void OnEditorUpdate()
         {
-            bool hasMainCamera = Scene.Camera != null;
+            Camera camera = Scene.Camera;
+            if (camera != currentCamera)
+            {
+                if (currentCamera != null)
+                    currentCamera.Flags &= ~CameraFlag.OnDemand;
+
+                if(!onDemandDisabled)
+                    camera.Flags |= CameraFlag.OnDemand;
+
+                currentCamera = camera;
+            }
+
+            bool hasMainCamera = camera != null;
 
             renderTextureGUI.Active = hasMainCamera;
             noCameraLabel.Active = !hasMainCamera;
@@ -157,6 +176,9 @@ namespace bs.Editor
 
         private void OnDestroy()
         {
+            if (currentCamera != null)
+                currentCamera.Flags &= ~CameraFlag.OnDemand;
+
             EditorApplication.MainRenderTarget = null;
         }
 
@@ -178,14 +200,15 @@ namespace bs.Editor
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)
         {
-            Camera camera = Scene.Camera;
-            if (camera == null)
+            onDemandDisabled = !enabled;
+
+            if (currentCamera == null)
                 return;
 
             if (enabled)
-                camera.Flags = CameraFlag.OnDemand;
+                currentCamera.Flags |= CameraFlag.OnDemand;
             else
-                camera.Flags = new CameraFlag();
+                currentCamera.Flags &= ~CameraFlag.OnDemand;
         }
 
         /// <summary>

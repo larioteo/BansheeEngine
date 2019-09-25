@@ -194,7 +194,10 @@ namespace bs.Editor
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)
         {
-            camera.Flags = enabled ? CameraFlag.OnDemand : new CameraFlag();
+            if (enabled)
+                camera.Flags |= CameraFlag.OnDemand;
+            else
+                camera.Flags &= ~CameraFlag.OnDemand;
         }
 
         #endregion
@@ -207,6 +210,9 @@ namespace bs.Editor
             ViewSettings = ProjectSettings.GetObject<SceneCameraViewSettings>(ViewSettingsKey);
             MoveSettings = ProjectSettings.GetObject<SceneCameraMoveSettings>(MoveSettingsKey);
             RenderSettings = ProjectSettings.GetObject<RenderSettings>(RenderSettingsKey);
+
+            if (RenderSettings == null)
+                RenderSettings = SceneCameraSettingsWindow.GetDefaultRenderSettings();
 
             moveForwardBtn = new VirtualButton(MoveForwardBinding);
             moveLeftBtn = new VirtualButton(MoveLeftBinding);

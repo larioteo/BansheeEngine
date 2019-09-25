@@ -186,8 +186,8 @@ namespace bs.Editor
         {
             viewSettings = new SceneCameraViewSettings();
             moveSettings = new SceneCameraMoveSettings();
-            renderSettings = new RenderSettings();
             gizmoSettings = GizmoDrawSettings.Default();
+            renderSettings = GetDefaultRenderSettings();
 
             SceneWindow sceneWindow = SceneWindow.GetWindow<SceneWindow>();
             if (sceneWindow != null)
@@ -217,6 +217,18 @@ namespace bs.Editor
                     else
                         cancel?.Invoke();
                 });
+        }
+
+        /// <summary>
+        /// Returns the default set of render settings used by scene cameras.
+        /// </summary>
+        /// <returns>New render settings object with appropriate default values.</returns>
+        public static RenderSettings GetDefaultRenderSettings()
+        {
+            RenderSettings renderSettings = new RenderSettings();
+            renderSettings.EnableAutoExposure = false;
+
+            return renderSettings;
         }
     }
 
