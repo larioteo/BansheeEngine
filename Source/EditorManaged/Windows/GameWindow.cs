@@ -172,6 +172,8 @@ namespace bs.Editor
         /// <summary>
         /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
         /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// Normally you always want to keep this disabled unless you know the viewport will require updates
+        /// every frame (e.g. when a game is running, or when previewing animations).
         /// </summary>
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)

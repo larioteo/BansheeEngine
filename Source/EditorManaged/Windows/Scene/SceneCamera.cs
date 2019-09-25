@@ -74,6 +74,11 @@ namespace bs.Editor
         public Camera Camera { get => camera; }
 
         /// <summary>
+        /// Counter that increments every frame when the camera transform changes.
+        /// </summary>
+        public ulong UpdateCount { get; private set; }
+
+        /// <summary>
         /// Settings for controlling scene camera view.
         /// </summary>
         public SceneCameraViewSettings ViewSettings
@@ -177,23 +182,19 @@ namespace bs.Editor
         /// </summary>
         internal void NotifyNeedsRedraw()
         {
-            camera?.NotifyNeedsRedraw();
+            camera.NotifyNeedsRedraw();
         }
 
         /// <summary>
         /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
         /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// Normally you always want to keep this disabled unless you know the viewport will require updates
+        /// every frame (e.g. when a game is running, or when previewing animations).
         /// </summary>
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)
         {
-            if (camera == null)
-                return;
-
-            if (enabled)
-                camera.Flags = CameraFlag.OnDemand;
-            else
-                camera.Flags = new CameraFlag();
+            camera.Flags = enabled ? CameraFlag.OnDemand : new CameraFlag();
         }
 
         #endregion
@@ -228,6 +229,7 @@ namespace bs.Editor
             bool isOrthographic = camera.ProjectionType == ProjectionType.Orthographic;
             float frameDelta = Time.FrameDelta;
 
+            bool updated = false;
             if (inputEnabled)
             {
                 bool goingForward = VirtualInput.IsButtonHeld(moveForwardBtn);
@@ -318,7 +320,7 @@ namespace bs.Editor
                         SceneObject.Move(velocity * frameDelta);
                     }
 
-                    NotifyNeedsRedraw();
+                    updated = true;
                 }
 
                 // Pan
@@ -332,7 +334,7 @@ namespace bs.Editor
 
                     SceneObject.Move(direction * MoveSettings.panSpeed * frameDelta);
 
-                    NotifyNeedsRedraw();
+                    updated = true;
                 }
             }
             else
@@ -371,12 +373,18 @@ namespace bs.Editor
                                 camera.OrthoHeight = orthoHeight;
                         }
 
-                        NotifyNeedsRedraw();
+                        updated = true;
                     }
                 }
             }
 
             UpdateAnim();
+
+            if (updated)
+            {
+                NotifyNeedsRedraw();
+                UpdateCount++;
+            }
         }
 
         /// <summary>
@@ -492,6 +500,7 @@ namespace bs.Editor
             camera.FarClipPlane = far;
 
             NotifyNeedsRedraw();
+            UpdateCount++;
         }
 
         /// <summary>

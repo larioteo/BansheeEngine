@@ -838,6 +838,7 @@ namespace bs.Editor
                 float time = guiCurveEditor.GetTimeForFrame(currentFrameIdx);
 
                 animation.EditorPlay(clipInfo.clip, time);
+                EditorApplication.ToggleOnDemandDrawing("__AnimationPreview", false);
             }
 
             playButton.Value = true;
@@ -849,6 +850,7 @@ namespace bs.Editor
         private void EndPlayback()
         {
             PreviewFrame(currentFrameIdx);
+            EditorApplication.ToggleOnDemandDrawing("__AnimationPreview", true);
             playButton.Value = false;
         }
 
@@ -868,6 +870,7 @@ namespace bs.Editor
                 animation.EditorPlay(clipInfo.clip, time, true);
 
             UpdateGenericCurves(time);
+            EditorApplication.NotifyNeedsRedraw();
         }
 
         /// <summary>

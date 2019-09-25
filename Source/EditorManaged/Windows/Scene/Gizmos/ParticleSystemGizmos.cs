@@ -297,6 +297,7 @@ namespace bs.Editor
         [OnSelectionChanged]
         private static void SelectionChanged(ParticleSystem component, bool selected)
         {
+            EditorApplication.ToggleOnDemandDrawing("__ParticlesPreview", !selected);
             component.TogglePreviewMode(selected);
         }
     }

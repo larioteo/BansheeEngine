@@ -61,6 +61,7 @@ namespace bs.Editor
             camera.OrthoHeight = 2.0f;
             camera.RenderSettings.EnableHDR = false;
             camera.RenderSettings.EnableSkybox = false;
+            camera.Flags = CameraFlag.OnDemand;
 
             renderTextureGUI = new GUIRenderTexture(renderTexture, true);
 
@@ -79,6 +80,8 @@ namespace bs.Editor
 
             this.panel = panel;
             this.bounds = bounds;
+
+            NotifyNeedsRedraw();
         }
 
         /// <summary>
@@ -92,7 +95,8 @@ namespace bs.Editor
 
             pointerPos.x -= bounds.x;
             pointerPos.y -= bounds.y;
-            sceneHandles.TrySelect(pointerPos);
+            if(sceneHandles.TrySelect(pointerPos))
+                NotifyNeedsRedraw();
         }
 
         /// <summary>
@@ -110,6 +114,7 @@ namespace bs.Editor
         public void ClearSelection()
         {
             sceneHandles.ClearSelection();
+            NotifyNeedsRedraw();
         }
 
         /// <summary>
@@ -121,7 +126,8 @@ namespace bs.Editor
             pointerPos.x -= bounds.x;
             pointerPos.y -= bounds.y;
 
-            sceneHandles.UpdateInput(pointerPos, Input.PointerDelta);
+            if(sceneHandles.UpdateInput(pointerPos, Input.PointerDelta))
+                NotifyNeedsRedraw();
         }
 
         /// <summary>
@@ -130,6 +136,24 @@ namespace bs.Editor
         public void Draw()
         {
             sceneHandles.Draw();
+        }
+
+        /// <summary>
+        /// Notifies the system that the 3D viewport should be redrawn.
+        /// </summary>
+        internal void NotifyNeedsRedraw()
+        {
+            camera.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
+        /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// </summary>
+        /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
+        internal void ToggleOnDemandDrawing(bool enabled)
+        {
+            camera.Flags = enabled ? CameraFlag.OnDemand : new CameraFlag();
         }
 
         /// <summary>

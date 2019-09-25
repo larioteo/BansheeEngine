@@ -247,6 +247,8 @@ namespace bs.Editor
         private static bool delayUnloadProject;
         private static Action delayUnloadCallback;
 
+        private static HashSet<string> onDemandDrawingDisablers = new HashSet<string>();
+
         #pragma warning disable 0414
         private static EditorApplication instance;
         #pragma warning restore 0414
@@ -284,25 +286,25 @@ namespace bs.Editor
                         log.Refresh();
                 }
 
-                ToggleOnDemandDrawing(false);
+                ToggleOnDemandDrawing("__PlayMode", false);
                 ToggleToolbarItem("Play", true);
             };
 
             PlayInEditor.OnStopped += () =>
             {
-                ToggleOnDemandDrawing(true);
+                ToggleOnDemandDrawing("__PlayMode", true);
                 ToggleToolbarItem("Play", false);
             };
 
             PlayInEditor.OnPaused += () =>
             {
-                ToggleOnDemandDrawing(true);
+                ToggleOnDemandDrawing("__PlayMode", true);
                 ToggleToolbarItem("Pause", true);
             };
 
             PlayInEditor.OnUnpaused += () =>
             {
-                ToggleOnDemandDrawing(false);
+                ToggleOnDemandDrawing("__PlayMode", false);
                 ToggleToolbarItem("Pause", false);
             };
 
@@ -880,18 +882,28 @@ namespace bs.Editor
         }
 
         /// <summary>
-        /// Enables or disables on-demand drawing for 3D viewports. When enabled the viewports will only be
-        /// redrawn when <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn
-        /// every frame.
+        /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
+        /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// Normally you always want to keep this disabled unless you know the viewport will require updates
+        /// every frame (e.g. when a game is running, or when previewing animations).
         /// </summary>
+        /// <param name="caller">Unique string describing the caller that's requesting on-demand drawing is enabled or
+        /// disabled. On-demand drawing will be enabled only if *all* callers enable it.</param>
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
-        public static void ToggleOnDemandDrawing(bool enabled)
+        public static void ToggleOnDemandDrawing(string caller, bool enabled)
         {
+            if (enabled)
+                onDemandDrawingDisablers.Remove(caller);
+            else
+                onDemandDrawingDisablers.Add(caller);
+
+            bool isEnabled = onDemandDrawingDisablers.Count == 0;
+
             SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
-            sceneWindow?.ToggleOnDemandDrawing(enabled);
+            sceneWindow?.ToggleOnDemandDrawing(isEnabled);
 
             GameWindow gameWindow = EditorWindow.GetWindow<GameWindow>();
-            gameWindow?.ToggleOnDemandDrawing(enabled);
+            gameWindow?.ToggleOnDemandDrawing(isEnabled);
         }
 
         /// <summary>

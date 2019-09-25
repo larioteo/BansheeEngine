@@ -36,6 +36,7 @@ namespace bs.Editor
 
         private Camera camera;
         private SceneCamera sceneCamera;
+        private ulong cameraUpdateCount;
         private RenderTexture renderTexture;
         private GUILayoutY mainLayout;
         private GUIPanel rtPanel;
@@ -776,7 +777,7 @@ namespace bs.Editor
                 SceneHandles.EndInput();
             }
 
-            if(sceneHandles.IsActive())
+            if(handleActive)
                 NotifyNeedsRedraw();
 
             sceneHandles.Draw();
@@ -787,6 +788,12 @@ namespace bs.Editor
             sceneSelection.Draw();
 
             UpdateGridMode();
+
+            if (cameraUpdateCount != sceneCamera.UpdateCount)
+            {
+                sceneAxesGUI.NotifyNeedsRedraw();
+                cameraUpdateCount = sceneCamera.UpdateCount;
+            }
 
             if (VirtualInput.IsButtonDown(frameKey))
                 sceneCamera.FrameSelected();
@@ -1014,17 +1021,21 @@ namespace bs.Editor
         /// </summary>
         internal void NotifyNeedsRedraw()
         {
-            sceneCamera?.NotifyNeedsRedraw();
+            sceneCamera.NotifyNeedsRedraw();
+            sceneAxesGUI.NotifyNeedsRedraw();
         }
 
         /// <summary>
         /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
         /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// Normally you always want to keep this disabled unless you know the viewport will require updates
+        /// every frame (e.g. when a game is running, or when previewing animations).
         /// </summary>
         /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
         internal void ToggleOnDemandDrawing(bool enabled)
         {
-            sceneCamera?.ToggleOnDemandDrawing(enabled);
+            sceneCamera.ToggleOnDemandDrawing(enabled);
+            sceneAxesGUI.ToggleOnDemandDrawing(enabled);
         }
 
         /// <summary>
