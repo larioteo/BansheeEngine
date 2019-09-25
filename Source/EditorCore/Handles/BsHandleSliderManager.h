@@ -28,16 +28,18 @@ namespace bs
 		 * @param[in]	camera		Camera through which we're interacting with sliders.
 		 * @param[in]	inputPos	Position of the pointer.
 		 * @param[in]	inputDelta	Movement of the pointer since last frame.
+		 * @return					True if slider state changed, false otherwise.
 		 */
-		void update(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta);
+		bool update(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta);
 
 		/**
 		 * Attempts to select (activate) a slider at the specified position.
 		 *
 		 * @param[in]	camera		Camera through which we're interacting with sliders.
 		 * @param[in]	inputPos	Position of the pointer.
+		 * @return					True if handle slider state changed, false otherwise.
 		 */
-		void trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos);
+		bool trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos);
 
 		/** Clears the active slider (deactivates it) for the specified camera. */
 		void clearSelection(const SPtr<Camera>& camera);

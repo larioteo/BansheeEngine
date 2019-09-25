@@ -11,8 +11,6 @@
 namespace bs
 {
 	HandleManager::HandleManager()
-		: mSliderManager(nullptr), mDrawManager(nullptr), mInputStarted(false), mSettingsHash(0xFFFFFFFF)
-		, mLastDrawFrameIdx((UINT64)-1)
 	{
 		mSliderManager = bs_new<HandleSliderManager>();
 		mDrawManager = bs_new<HandleDrawManager>();
@@ -35,18 +33,18 @@ namespace bs
 		mInputStarted = true;
 	}
 
-	void HandleManager::updateInput(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta)
+	bool HandleManager::updateInput(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta)
 	{
 		if(!mInputStarted)
 		{
 			BS_LOG(Warning, Editor, "Updating handle input without calling beginInput() first. Input won't be processed.");
-			return;
+			return false;
 		}
 
 		if (mSettings != nullptr && mSettingsHash != mSettings->getHash())
 			updateFromEditorSettings();
 
-		mSliderManager->update(camera, inputPos, inputDelta);
+		return mSliderManager->update(camera, inputPos, inputDelta);
 	}
 
 	void HandleManager::endInput()
@@ -82,7 +80,7 @@ namespace bs
 		mSettingsHash = mSettings->getHash();
 	}
 
-	void HandleManager::trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos)
+	bool HandleManager::trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos)
 	{
 		return mSliderManager->trySelect(camera, inputPos);
 	}

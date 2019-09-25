@@ -49,9 +49,10 @@ namespace bs.Editor
         /// </summary>
         /// <param name="pointerPos">Position of the pointer relative to the scene camera viewport.</param>
         /// <param name="inputDelta">Movement of the pointer since last frame.</param>
-        internal void UpdateInput(Vector2I pointerPos, Vector2I inputDelta)
+        /// <returns>True if the state of any handle sliders changed, false otherwise.</returns>
+        internal bool UpdateInput(Vector2I pointerPos, Vector2I inputDelta)
         {
-            Internal_UpdateInput(mCachedPtr, ref pointerPos, ref inputDelta);
+            return Internal_UpdateInput(mCachedPtr, ref pointerPos, ref inputDelta);
         }
 
         /// <summary>
@@ -66,9 +67,10 @@ namespace bs.Editor
         /// Selects a handle under the pointer position.
         /// </summary>
         /// <param name="pointerPos">Position of the pointer relative to the target camera's viewport.</param>
-        internal void TrySelect(Vector2I pointerPos)
+        /// <returns>True if the state of any handle sliders changed, false otherwise.</returns>
+        internal bool TrySelect(Vector2I pointerPos)
         {
-            Internal_TrySelect(mCachedPtr, ref pointerPos);
+            return Internal_TrySelect(mCachedPtr, ref pointerPos);
         }
 
         /// <summary>
@@ -98,13 +100,13 @@ namespace bs.Editor
         private static extern void Internal_EndInput();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_UpdateInput(IntPtr thisPtr, ref Vector2I pointerPos, ref Vector2I inputDelta);
+        private static extern bool Internal_UpdateInput(IntPtr thisPtr, ref Vector2I pointerPos, ref Vector2I inputDelta);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Draw(IntPtr thisPtr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_TrySelect(IntPtr thisPtr, ref Vector2I pointerPos);
+        private static extern bool Internal_TrySelect(IntPtr thisPtr, ref Vector2I pointerPos);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool Internal_IsActive(IntPtr thisPtr);

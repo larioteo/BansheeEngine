@@ -32,8 +32,9 @@ namespace bs
 		 * @param[in]	camera		Camera that the input positions are relative to.
 		 * @param[in]	inputPos	Position of the pointer, relative to the provided camera viewport.
 		 * @param[in]	inputDelta	Determines pointer movement since last call to this method.
+		 * @return					True if handle slider hover state changed, false otherwise.
 		 */
-		void updateInput(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta);
+		bool updateInput(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta);
 
 		/** 
 		 * Triggers handle post-input callbacks. Must be called after all updateInput() calls and after beginInput().
@@ -54,8 +55,9 @@ namespace bs
 		 *
 		 * @param[in]	camera		Camera that the input positions are relative to, and destination to draw the handles to.
 		 * @param[in]	inputPos	Position of the pointer, relative to the provided camera viewport.
+		 * @return					True if handle slider active state changed, false otherwise.
 		 */
-		void trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos);
+		bool trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos);
 
 		/**	Clears the currently selected/active handle slider for the specified camera. */
 		void clearSelection(const SPtr<Camera>& camera);
@@ -97,15 +99,15 @@ namespace bs
 		/** Called during handle update. Allows implementation to queue handle draw commands. */
 		virtual void queueDrawCommands() = 0;
 
-		HandleSliderManager* mSliderManager;
-		HandleDrawManager* mDrawManager;
+		HandleSliderManager* mSliderManager = nullptr;
+		HandleDrawManager* mDrawManager = nullptr;
 
 		float mDefaultHandleSize = 20.0f;
-		bool mInputStarted;
+		bool mInputStarted = false;
 
 		SPtr<EditorSettings> mSettings;
-		UINT32 mSettingsHash;
-		UINT64 mLastDrawFrameIdx;
+		UINT32 mSettingsHash = 0xFFFFFFFF;
+		UINT64 mLastDrawFrameIdx = (UINT64)-1;
 	};
 
 	/** @} */

@@ -161,6 +161,32 @@ namespace bs.Editor
         }
 
         /// <summary>
+        /// Notifies the system that the 3D viewport should be redrawn.
+        /// </summary>
+        internal void NotifyNeedsRedraw()
+        {
+            Camera camera = Scene.Camera;
+            camera?.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
+        /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// </summary>
+        /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
+        internal void ToggleOnDemandDrawing(bool enabled)
+        {
+            Camera camera = Scene.Camera;
+            if (camera == null)
+                return;
+
+            if (enabled)
+                camera.Flags = CameraFlag.OnDemand;
+            else
+                camera.Flags = new CameraFlag();
+        }
+
+        /// <summary>
         /// Creates or rebuilds the main render texture. Should be called at least once before using the
         /// game window. Should be called whenever the window is resized.
         /// </summary>

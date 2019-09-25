@@ -606,7 +606,10 @@ namespace bs.Editor
             {
                 dragResult = EndDragSelection();
                 if (sceneHandles.IsActive())
+                {
                     sceneHandles.ClearSelection();
+                    NotifyNeedsRedraw();
+                }
 
                 if (sceneAxesGUI.IsActive())
                     sceneAxesGUI.ClearSelection();
@@ -736,7 +739,10 @@ namespace bs.Editor
                         if (sceneAxesGUIBounds.Contains(scenePos))
                             sceneAxesGUI.TrySelect(scenePos);
                         else
-                            sceneHandles.TrySelect(scenePos);
+                        {
+                            if(sceneHandles.TrySelect(scenePos))
+                                NotifyNeedsRedraw();
+                        }
                     }
                     else if (Input.IsPointerButtonHeld(PointerButton.Left) && !handleActive && !dragActive &&
                              draggedSO == null && scenePos != mouseDownPosition)
@@ -764,10 +770,14 @@ namespace bs.Editor
             if (AllowViewportInput)
             {
                 SceneHandles.BeginInput();
-                sceneHandles.UpdateInput(scenePos, Input.PointerDelta);
+                if(sceneHandles.UpdateInput(scenePos, Input.PointerDelta))
+                    NotifyNeedsRedraw();
                 sceneAxesGUI.UpdateInput(scenePos);
                 SceneHandles.EndInput();
             }
+
+            if(sceneHandles.IsActive())
+                NotifyNeedsRedraw();
 
             sceneHandles.Draw();
             sceneAxesGUI.Draw();
@@ -796,6 +806,7 @@ namespace bs.Editor
             if (!inFocus)
             {
                 sceneHandles.ClearSelection();
+                NotifyNeedsRedraw();
             }
         }
 
@@ -967,6 +978,7 @@ namespace bs.Editor
                 camera.Priority = 2;
                 camera.Viewport.ClearColor = ClearColor;
                 camera.Layers = UInt64.MaxValue & ~SceneAxesHandle.LAYER; // Don't draw scene axes in this camera
+                camera.Flags = CameraFlag.OnDemand;
 
                 sceneCamera = sceneCameraSO.AddComponent<SceneCamera>();
 
@@ -994,6 +1006,25 @@ namespace bs.Editor
             // render target destroy/create cycle for every single pixel.
 
             camera.AspectRatio = width / (float)height;
+            camera.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Notifies the system that the 3D viewport should be redrawn.
+        /// </summary>
+        internal void NotifyNeedsRedraw()
+        {
+            sceneCamera?.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
+        /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// </summary>
+        /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
+        internal void ToggleOnDemandDrawing(bool enabled)
+        {
+            sceneCamera?.ToggleOnDemandDrawing(enabled);
         }
 
         /// <summary>

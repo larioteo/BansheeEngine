@@ -9,7 +9,7 @@ using namespace std::placeholders;
 
 namespace bs
 {
-	void HandleSliderManager::update(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta)
+	bool HandleSliderManager::update(const SPtr<Camera>& camera, const Vector2I& inputPos, const Vector2I& inputDelta)
 	{
 		for (auto& slider : mSliders)
 		{
@@ -44,19 +44,26 @@ namespace bs
 					state.hoverSlider = newHoverSlider;
 					state.hoverSlider->setHover();
 				}
+
+				return true;
 			}
 		}
+
+		return false;
 	}
 
-	void HandleSliderManager::trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos)
+	bool HandleSliderManager::trySelect(const SPtr<Camera>& camera, const Vector2I& inputPos)
 	{
 		HandleSlider* newActiveSlider = findUnderCursor(camera, inputPos);
 
+		bool stateChanged = false;
 		StatePerCamera& state = mStates[camera->getInternalID()];
 		if (state.hoverSlider != nullptr)
 		{
 			state.hoverSlider->setInactive();
 			state.hoverSlider = nullptr;
+
+			stateChanged = true;
 		}
 
 		if (newActiveSlider != state.activeSlider)
@@ -72,7 +79,11 @@ namespace bs
 				state.activeSlider = newActiveSlider;
 				state.activeSlider->setActive(camera, inputPos);
 			}
+
+			return true;
 		}
+
+		return stateChanged;
 	}
 
 	bool HandleSliderManager::isSliderActive(const SPtr<Camera>& camera) const

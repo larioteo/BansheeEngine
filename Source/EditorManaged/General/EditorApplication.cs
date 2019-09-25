@@ -284,12 +284,29 @@ namespace bs.Editor
                         log.Refresh();
                 }
 
+                ToggleOnDemandDrawing(false);
                 ToggleToolbarItem("Play", true);
             };
 
-            PlayInEditor.OnStopped += () => ToggleToolbarItem("Play", false);
-            PlayInEditor.OnPaused += () => ToggleToolbarItem("Pause", true);
-            PlayInEditor.OnUnpaused += () => ToggleToolbarItem("Pause", false);
+            PlayInEditor.OnStopped += () =>
+            {
+                ToggleOnDemandDrawing(true);
+                ToggleToolbarItem("Play", false);
+            };
+
+            PlayInEditor.OnPaused += () =>
+            {
+                ToggleOnDemandDrawing(true);
+                ToggleToolbarItem("Pause", true);
+            };
+
+            PlayInEditor.OnUnpaused += () =>
+            {
+                ToggleOnDemandDrawing(false);
+                ToggleToolbarItem("Pause", false);
+            };
+
+            Selection.OnSelectionChanged += OnSelectionChanged;
 
             // Register controls
             InputConfiguration inputConfig = VirtualInput.KeyConfig;
@@ -348,6 +365,13 @@ namespace bs.Editor
             hierarcyWindow?.SaveHierarchyState(EditorSceneData);
         }
 
+        /// <summary>
+        /// Triggered whenever object or resource selection changes.
+        /// </summary>
+        private static void OnSelectionChanged(SceneObject[] sceneObjects, string[] resourcePaths)
+        {
+            NotifyNeedsRedraw();
+        }
 
         /// <summary>
         /// Triggered when the scene has been loaded.
@@ -817,6 +841,7 @@ namespace bs.Editor
         public static void SetSceneDirty()
         {
             SetSceneDirty(true);
+            NotifyNeedsRedraw();
         }
 
         /// <summary>
@@ -840,6 +865,33 @@ namespace bs.Editor
         public static bool IsDirty(Resource resource)
         {
             return persistentData.dirtyResources.ContainsKey(resource.UUID);
+        }
+
+        /// <summary>
+        /// Notifies the system that the 3D viewports should be redrawn.
+        /// </summary>
+        public static void NotifyNeedsRedraw()
+        {
+            SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
+            sceneWindow?.NotifyNeedsRedraw();
+
+            GameWindow gameWindow = EditorWindow.GetWindow<GameWindow>();
+            gameWindow?.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Enables or disables on-demand drawing for 3D viewports. When enabled the viewports will only be
+        /// redrawn when <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn
+        /// every frame.
+        /// </summary>
+        /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
+        public static void ToggleOnDemandDrawing(bool enabled)
+        {
+            SceneWindow sceneWindow = EditorWindow.GetWindow<SceneWindow>();
+            sceneWindow?.ToggleOnDemandDrawing(enabled);
+
+            GameWindow gameWindow = EditorWindow.GetWindow<GameWindow>();
+            gameWindow?.ToggleOnDemandDrawing(enabled);
         }
 
         /// <summary>

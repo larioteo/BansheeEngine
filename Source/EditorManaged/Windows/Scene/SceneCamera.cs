@@ -89,6 +89,8 @@ namespace bs.Editor
                 camera.OrthoHeight = value.orthographicSize;
                 camera.FieldOfView = value.fieldOfView;
                 camera.Viewport.ClearColor = value.backgroundColor;
+
+                NotifyNeedsRedraw();
             }
         }
 
@@ -170,6 +172,30 @@ namespace bs.Editor
             SetState(state);
         }
 
+        /// <summary>
+        /// Notifies the system that the 3D viewport should be redrawn.
+        /// </summary>
+        internal void NotifyNeedsRedraw()
+        {
+            camera?.NotifyNeedsRedraw();
+        }
+
+        /// <summary>
+        /// Enables or disables on-demand drawing. When enabled the 3D viewport will only be redrawn when
+        /// <see cref="NotifyNeedsRedraw"/> is called. If disabled the viewport will be redrawn every frame.
+        /// </summary>
+        /// <param name="enabled">True to enable on-demand drawing, false otherwise.</param>
+        internal void ToggleOnDemandDrawing(bool enabled)
+        {
+            if (camera == null)
+                return;
+
+            if (enabled)
+                camera.Flags = CameraFlag.OnDemand;
+            else
+                camera.Flags = new CameraFlag();
+        }
+
         #endregion
 
         #region Private methods
@@ -193,6 +219,8 @@ namespace bs.Editor
             horizontalAxis = new VirtualAxis(HorizontalAxisBinding);
             verticalAxis = new VirtualAxis(VerticalAxisBinding);
             scrollAxis = new VirtualAxis(ScrollAxisBinding);
+
+            NotifyNeedsRedraw();
         }
 
         private void OnUpdate()
@@ -289,6 +317,8 @@ namespace bs.Editor
                         Vector3 velocity = direction * currentSpeed;
                         SceneObject.Move(velocity * frameDelta);
                     }
+
+                    NotifyNeedsRedraw();
                 }
 
                 // Pan
@@ -301,6 +331,8 @@ namespace bs.Editor
                     direction = camera.SceneObject.Rotation.Rotate(direction);
 
                     SceneObject.Move(direction * MoveSettings.panSpeed * frameDelta);
+
+                    NotifyNeedsRedraw();
                 }
             }
             else
@@ -338,6 +370,8 @@ namespace bs.Editor
                             if (oldOrthoHeight != orthoHeight)
                                 camera.OrthoHeight = orthoHeight;
                         }
+
+                        NotifyNeedsRedraw();
                     }
                 }
             }
@@ -456,6 +490,8 @@ namespace bs.Editor
 
             camera.NearClipPlane = near;
             camera.FarClipPlane = far;
+
+            NotifyNeedsRedraw();
         }
 
         /// <summary>

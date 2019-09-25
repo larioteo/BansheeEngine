@@ -102,7 +102,7 @@ namespace bs
 		HandleManager::instance().endInput();
 	}
 
-	void ScriptSceneHandles::internal_UpdateInput(ScriptSceneHandles* thisPtr, Vector2I* inputPos, Vector2I* inputDelta)
+	bool ScriptSceneHandles::internal_UpdateInput(ScriptSceneHandles* thisPtr, Vector2I* inputPos, Vector2I* inputDelta)
 	{
 		// If mouse wrapped around last frame then we need to compensate for the jump amount
 		Vector2I realDelta = *inputDelta - thisPtr->mMouseDeltaCompensate;
@@ -111,12 +111,12 @@ namespace bs
 		if (HandleManager::instance().isHandleActive(thisPtr->mCamera->_getCamera()))
 			thisPtr->mMouseDeltaCompensate = thisPtr->wrapCursorToWindow();
 
-		HandleManager::instance().updateInput(thisPtr->mCamera->_getCamera(), *inputPos, realDelta);
+		return HandleManager::instance().updateInput(thisPtr->mCamera->_getCamera(), *inputPos, realDelta);
 	}
 
-	void ScriptSceneHandles::internal_TrySelect(ScriptSceneHandles* thisPtr, Vector2I* inputPos)
+	bool ScriptSceneHandles::internal_TrySelect(ScriptSceneHandles* thisPtr, Vector2I* inputPos)
 	{
-		HandleManager::instance().trySelect(thisPtr->mCamera->_getCamera(), *inputPos);
+		return HandleManager::instance().trySelect(thisPtr->mCamera->_getCamera(), *inputPos);
 	}
 
 	bool ScriptSceneHandles::internal_IsActive(ScriptSceneHandles* thisPtr)
