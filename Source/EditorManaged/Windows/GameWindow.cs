@@ -254,6 +254,8 @@ namespace bs.Editor
 
             Rect2I bgBounds = new Rect2I(0, 0, width, height);
             renderTextureBg.Bounds = bgBounds;
+
+            NotifyNeedsRedraw();
         }
 
         /// <summary>
