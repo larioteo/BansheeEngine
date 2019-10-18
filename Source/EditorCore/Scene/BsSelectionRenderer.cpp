@@ -73,6 +73,10 @@ namespace bs
 		constexpr int numTechniques = sizeof(mTechniqueIndices) / sizeof(mTechniqueIndices[0]);
 		static_assert(numTechniques == (int)RenderableAnimType::Count, "Number of techniques doesn't match the number of possible animation types.");
 
+		static const StringID RTag_Skinned = "Skinned";
+		static const StringID RTag_Morph = "Morph";
+		static const StringID RTag_SkinnedMorph = "SkinnedMorph";
+		
 		FIND_TECHNIQUE_DESC findSkinned;
 		findSkinned.addTag(RTag_Skinned);
 
