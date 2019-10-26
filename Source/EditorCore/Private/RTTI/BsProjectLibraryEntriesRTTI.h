@@ -166,7 +166,7 @@ namespace bs
 			{
 				ProjectLibrary::LibraryEntryType childType = ProjectLibrary::LibraryEntryType::File;
 
-				uint32_t prevLoc = stream.tell();
+				uint64_t prevLoc = stream.tell();
 				stream.skipBytes(sizeof(uint32_t)); // Skip ahead to get the type
 				rtti_read(childType, stream);
 				stream.seek(prevLoc);

@@ -47,7 +47,7 @@ namespace bs
 		SPtr<ManagedSerializableObject> serializableOldObj = ManagedSerializableObject::createFromExisting(oldObj);
 		SPtr<ManagedSerializableObject> serializableNewObj = ManagedSerializableObject::createFromExisting(newObj);
 
-		tempDiff = ManagedSerializableDiff::create(serializableOldObj, serializableNewObj);
+		tempDiff = ManagedSerializableDiff::create(serializableOldObj.get(), serializableNewObj.get());
 	}
 
 	void ScriptUnitTests::internal_UT3_ApplyDiff(MonoObject* obj)

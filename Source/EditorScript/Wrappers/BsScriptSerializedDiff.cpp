@@ -44,7 +44,7 @@ namespace bs
 
 		SPtr<IReflectable> diff;
 		if(oldManagedSerializedObject != nullptr && newManagedSerializedObject != nullptr)
-			diff = ManagedSerializableDiff::create(oldManagedSerializedObject, newManagedSerializedObject);
+			diff = ManagedSerializableDiff::create(oldManagedSerializedObject.get(), newManagedSerializedObject.get());
 		else if(oldNativeSerializedObj != nullptr && newNativeSerializedObj != nullptr)
 		{
 			BinaryDiff diffHandler;
