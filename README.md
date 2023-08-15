@@ -7,7 +7,7 @@ This repository is a fork of the latest public release from Banshee 3D, which wa
 Integrated bsf, bsf examples and made the project compilable.
 
 #### Note
-Every change from now (2023-08-15), outside the original source files that are under the LGPL 3.0, is licensed under the MIT license.
+Every change from now (2023-08-15), outside the original source files that are under the LGPL 3.0, are licensed under the MIT license.
 
 My main goal is to preserve this project, nothing more, so there could be some minor bugfixes around the build system.
 
