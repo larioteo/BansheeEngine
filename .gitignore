@@ -5,6 +5,7 @@
 *.opensdf
 bin
 obj
+out
 lib
 Dependencies
 Builds

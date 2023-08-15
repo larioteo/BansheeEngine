@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>${BS_SHARP_ROOT_NS}</RootNamespace>
     <AssemblyName>${BS_SHARP_ASSEMBLY_NAME}</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
 	<Deterministic>true</Deterministic>
   </PropertyGroup>

@@ -1,0 +1,12 @@
+# Ignored files
+*~
+*.suo
+*.sdf
+*.opensdf
+bin
+lib
+Build
+Data
+BsExampleConfig.h
+Source/Experimental
+ExperimentalData

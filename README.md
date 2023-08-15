@@ -1,7 +1,13 @@
 [![Latest version](https://img.shields.io/badge/latest-v0.4--dev-red.svg)](https://img.shields.io/badge/latest-v0.4--dev-red.svg) [![Build status](https://ci.appveyor.com/api/projects/status/v043naykgplkj42s?svg=true)](https://ci.appveyor.com/project/BearishSun/bansheeengine) [![Discord](https://img.shields.io/discord/572359664528916490.svg?logo=discord)](https://discord.gg/8Xyf5gF)
 
-# What is Banshee? 
-Banshee is a high-quality and modern game development toolkit. It provides a **high-performance, multi-threaded game engine** written in C++14. The engine includes math and utility libraries, Vulkan, DirectX 11 and OpenGL support, handles common tasks such as input, GUI, physics, audio, animation and scripting, and supports many popular resource formats (e.g. FBX, PNG, PSD, TTF, OGG, WAV).
+# Preserving Banshee3D...
+This repository is a fork of the latest public release from Banshee 3D, which was removed from the original author.
+
+### Major Changes
+Integrated bsf, bsf examples and made the project compilable.
+
+# What was Banshee? 
+Banshee was a high-quality and modern game development toolkit. It provides a **high-performance, multi-threaded game engine** written in C++14. The engine includes math and utility libraries, Vulkan, DirectX 11 and OpenGL support, handles common tasks such as input, GUI, physics, audio, animation and scripting, and supports many popular resource formats (e.g. FBX, PNG, PSD, TTF, OGG, WAV).
 
 Banshee provides an intuitive and customizable **editor** that can be used to manage assets, build levels, compile scripts, and to test and publish your game. The editor can be extended or customized with scripts to meet the exact needs of your project.
 
