@@ -3,8 +3,13 @@
 # Preserving Banshee3D...
 This repository is a fork of the latest public release from Banshee 3D, which was removed from the original author.
 
-### Major Changes
+#### Changes
 Integrated bsf, bsf examples and made the project compilable.
+
+#### Note
+Every change from 2023-08-15 outside the original source files that wehere under the LGPL 3.0 are now licensed under the MIT license.
+
+My main goal is to preserve this project, nothing more, so there could be some minor bugfixes around the build system.
 
 # What was Banshee? 
 Banshee was a high-quality and modern game development toolkit. It provides a **high-performance, multi-threaded game engine** written in C++14. The engine includes math and utility libraries, Vulkan, DirectX 11 and OpenGL support, handles common tasks such as input, GUI, physics, audio, animation and scripting, and supports many popular resource formats (e.g. FBX, PNG, PSD, TTF, OGG, WAV).
