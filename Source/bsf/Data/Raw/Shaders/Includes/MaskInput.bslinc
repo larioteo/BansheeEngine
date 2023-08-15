@@ -1,0 +1,17 @@
+mixin MaskInput
+{
+	code 
+	{
+		#ifndef MSAA_COUNT
+			#define MSAA_COUNT 1
+		#endif
+
+		#if MSAA_COUNT > 1
+		[internal]
+		Texture2DMS<float> gMaskTex;
+		#else
+		[internal]
+		Texture2D<float> gMaskTex;
+		#endif	
+	};
+};

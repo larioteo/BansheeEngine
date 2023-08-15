@@ -1,0 +1,85 @@
+#include "$ENGINE$\SurfaceData.bslinc"
+
+mixin GBufferInput
+{
+	mixin SurfaceData;
+	mixin PerCameraData;
+
+	code 
+	{
+		// Note: Only one or two sampler states are likely required, I can avoid wasting register space
+		SamplerState gGBufferASamp;
+		SamplerState gGBufferBSamp;
+		SamplerState gGBufferCSamp;
+		[alias(gDepthBufferTex)]
+		SamplerState gDepthBufferSamp;
+		
+		#ifndef MSAA_COUNT
+			#define MSAA_COUNT 1
+		#endif
+
+		#if MSAA_COUNT > 1
+		Texture2DMS<float4> gGBufferATex;
+		Texture2DMS<float4>	gGBufferBTex;
+		Texture2DMS<float2>	gGBufferCTex;
+		Texture2DMS<float4> gDepthBufferTex;
+		#else
+		Texture2D gGBufferATex;
+		Texture2D gGBufferBTex;
+		Texture2D gGBufferCTex;
+		Texture2D gDepthBufferTex;
+		#endif
+		
+		SurfaceData decodeGBuffer(float4 GBufferAData, float4 GBufferBData, float2 GBufferCData, float deviceZ)
+		{
+			SurfaceData output;
+			
+			output.albedo.xyz = GBufferAData.xyz;
+			output.albedo.w = 1.0f;
+			output.worldNormal = GBufferBData * float4(2, 2, 2, 1) - float4(1, 1, 1, 0);
+			output.worldNormal.xyz = normalize(output.worldNormal.xyz);
+			output.depth = convertFromDeviceZ(deviceZ);
+			output.roughness = GBufferCData.x;
+			output.metalness = GBufferCData.y;
+			
+			// Not being read at the moment, as these are only needed in specific circumstances
+			output.mask = 0; 
+			output.velocity = 0.0f;
+			
+			return output;
+		}
+		
+		#if MSAA_COUNT > 1
+		SurfaceData getGBufferData(uint2 pixelPos, uint sampleIndex)
+		{
+			float4 GBufferAData = gGBufferATex.Load(pixelPos, sampleIndex);
+			float4 GBufferBData = gGBufferBTex.Load(pixelPos, sampleIndex);
+			float2 GBufferCData = gGBufferCTex.Load(pixelPos, sampleIndex).rg;
+			float deviceZ = gDepthBufferTex.Load(pixelPos, sampleIndex).r;
+			
+			return decodeGBuffer(GBufferAData, GBufferBData, GBufferCData, deviceZ);
+		}
+		
+		#else
+		SurfaceData getGBufferData(uint2 pixelPos)
+		{
+			float4 GBufferAData = gGBufferATex.Load(int3(pixelPos, 0));
+			float4 GBufferBData = gGBufferBTex.Load(int3(pixelPos, 0));
+			float2 GBufferCData = gGBufferCTex.Load(int3(pixelPos, 0)).rg;
+			float deviceZ = gDepthBufferTex.Load(int3(pixelPos, 0)).r;
+			
+			return decodeGBuffer(GBufferAData, GBufferBData, GBufferCData, deviceZ);
+		}
+
+		SurfaceData getGBufferData(float2 uvPos)
+		{
+			float4 GBufferAData = gGBufferATex.Sample(gGBufferASamp, uvPos);
+			float4 GBufferBData = gGBufferBTex.Sample(gGBufferBSamp, uvPos);
+			float2 GBufferCData = gGBufferCTex.Sample(gGBufferCSamp, uvPos).rg;
+			float deviceZ = gDepthBufferTex.Sample(gDepthBufferSamp, uvPos).r;
+			
+			return decodeGBuffer(GBufferAData, GBufferBData, GBufferCData, deviceZ);
+		}			
+		#endif			
+	};
+};

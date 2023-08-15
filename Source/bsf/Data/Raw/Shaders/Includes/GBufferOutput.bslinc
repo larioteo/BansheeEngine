@@ -1,0 +1,45 @@
+#include "$ENGINE$\SurfaceData.bslinc"
+
+#ifndef WRITE_VELOCITY
+	#define WRITE_VELOCITY 0
+#endif
+
+mixin GBufferOutput 
+{
+	mixin SurfaceData;
+
+	code
+	{
+		struct GBufferData
+		{
+			float4 albedo : SV_Target1;
+			float4 normal : SV_Target2; 
+			float2 metalRoughness : SV_Target3;
+			
+			#if WRITE_VELOCITY
+			float2 velocity : SV_Target4;
+			float id : SV_Target5;
+			#else
+			float id : SV_Target4;
+			#endif
+		};
+	
+		GBufferData encodeGBuffer(SurfaceData input)
+		{
+			GBufferData output;
+			output.albedo = input.albedo;
+			output.normal.xyz = float3(input.worldNormal.xyz * 0.5f + 0.5f);
+			output.normal.w = 1.0f; // Marks that some deferred data was written
+			output.metalRoughness.x = input.roughness;
+			output.metalRoughness.y = input.metalness;
+			
+			#if WRITE_VELOCITY
+				output.velocity = encodeVelocity16SNORM(input.velocity);
+			#endif
+			
+			output.id = input.mask / 256.0f;
+			
+			return output;
+		}
+	};
+};

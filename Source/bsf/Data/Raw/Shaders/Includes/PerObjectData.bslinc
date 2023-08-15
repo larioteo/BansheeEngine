@@ -1,0 +1,23 @@
+mixin PerObjectData
+{
+	code
+	{
+		[internal]
+		cbuffer PerObject
+		{
+			float4x4 gMatWorld;
+			float4x4 gMatInvWorld;
+			float4x4 gMatWorldNoScale;
+			float4x4 gMatInvWorldNoScale;
+			float4x4 gMatPrevWorld;
+			float gWorldDeterminantSign;
+			uint gLayer;
+		}	
+
+		[internal]
+		cbuffer PerCall
+		{
+			float4x4 gMatWorldViewProj;
+		}			
+	};
+};

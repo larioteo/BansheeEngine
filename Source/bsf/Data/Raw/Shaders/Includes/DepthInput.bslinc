@@ -1,0 +1,20 @@
+mixin DepthInput
+{
+	code 
+	{
+		[alias(gDepthBufferTex)]
+		SamplerState gDepthBufferSamp;
+		
+		#ifndef MSAA_COUNT
+			#define MSAA_COUNT 1
+		#endif
+
+		#if MSAA_COUNT > 1
+		[internal]
+		Texture2DMS<float4> gDepthBufferTex;
+		#else
+		[internal]
+		Texture2D gDepthBufferTex;
+		#endif	
+	};
+};

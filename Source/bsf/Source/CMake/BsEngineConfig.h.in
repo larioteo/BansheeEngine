@@ -1,0 +1,33 @@
+#pragma once
+
+#define BS_RENDERER_MODULE "@RENDERER_MODULE_LIB@"
+#define BS_RENDER_API_MODULE "@RENDER_API_MODULE_LIB@"
+#define BS_AUDIO_MODULE "@AUDIO_MODULE_LIB@"
+#define BS_PHYSICS_MODULE "@PHYSICS_MODULE_LIB@"
+#define BS_SCRIPTING_ENABLED @BS_SCRIPTING_ENABLED@
+
+/** Path to the framework source directory. */
+static constexpr const char* RAW_APP_ROOT = "@APP_ROOT_DIR@/";
+
+/** Path to the framework build directory. */
+static constexpr const char* BUILD_APP_ROOT = "@PROJECT_BINARY_DIR@/";
+
+/** Path to the binaries when files haven't been packaged yet (e.g. running from debugger). */
+#if BS_CONFIG == BS_CONFIG_DEBUG
+static constexpr const char* BINARIES_PATH = "@CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG@";
+#elif BS_CONFIG == BS_CONFIG_RELWITHDEBINFO
+static constexpr const char* BINARIES_PATH = "@CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO@";
+#elif BS_CONFIG == BS_CONFIG_MINSIZEREL
+static constexpr const char* BINARIES_PATH = "@CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL@";
+#elif BS_CONFIG == BS_CONFIG_RELEASE
+static constexpr const char* BINARIES_PATH = "@CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE@";
+#endif
+
+/** Banshee 3D related version stuff*/
+#if BS_IS_BANSHEE3D
+#define BS_B3D_VERSION_MAJOR @BS_B3D_VERSION_MAJOR@
+#define BS_B3D_VERSION_MINOR @BS_B3D_VERSION_MINOR@
+#define BS_B3D_VERSION_PATCH @BS_B3D_VERSION_PATCH@
+#define BS_B3D_CURRENT_RELEASE_YEAR @BS_B3D_CURRENT_RELEASE_YEAR@
+#define BS_B3D_VERSION_STRING _MKSTR(BS_B3D_VERSION_MAJOR) "." _MKSTR(BS_B3D_VERSION_MINOR) "." _MKSTR(BS_B3D_VERSION_PATCH) ".0"
+#endif
