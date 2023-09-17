@@ -6,7 +6,7 @@
 bin
 obj
 out
-lib
+#lib
 #Dependencies
 Builds
 #Data/Binaries
@@ -30,7 +30,7 @@ Documentation/html
 *.aps
 *.opendb
 Source/Experimental
-.vs/*
+.vs
 Source/EditorManaged/MBansheeEditor.csproj
 bsfImportToolBuild
 CMakeSettings.json
