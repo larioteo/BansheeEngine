@@ -5,6 +5,7 @@
 .vs
 .vscode
 bin
+!Source/bsf/bin
 !Source/bsf/Dependencies/mono/bin
 !Source/bsf/Dependencies/tools/BansheeSBGen/bin
 obj

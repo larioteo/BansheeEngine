@@ -6,8 +6,16 @@ This repository is a fork of the latest public release from Banshee 3D, which wa
 #### Changes
 Integrated bsf, bsf examples and made the project compilable.
 
+#### HowTo
+- Clone the repository: git clone <url> <target>
+- Open the Folder with Visual Studio 2022 17.7 or later
+- Wait for CMake to prepare the project
+- Switch to CMake Targets View
+- Select startup project: Banshee3D.exe
+- Enjoy
+
 #### Note
-Every change from now (2023-08-15), outside the original source files that are under the LGPL 3.0, are licensed under the MIT license.
+Every change from now (2023-08-15) is licensed under the MIT license, expect the original source files that are under the LGPL 3.0.
 
 My main goal is to preserve this project, nothing more, so there could be some minor bugfixes around the build system.
 
