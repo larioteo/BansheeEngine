@@ -6,6 +6,7 @@
 .vscode
 bin
 !Source/bsf/Dependencies/mono/bin
+!Source/bsf/Dependencies/tools/BansheeSBGen/bin
 obj
 out
 
