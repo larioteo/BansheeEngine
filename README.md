@@ -12,7 +12,7 @@ Integrated bsf, bsf examples and made the project compilable.
 - Wait for CMake to prepare the project
 - Switch to CMake Targets View
 - Select startup project: Banshee3D.exe
-- Enjoy
+- Press the play button and enjoy
 
 #### Note
 Every change from now (2023-08-15) is licensed under the MIT license, expect the original source files that are under the LGPL 3.0.
