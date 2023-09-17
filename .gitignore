@@ -1,14 +1,27 @@
-# Ignored files
-*~
-*.suo
-*.sdf
-*.opensdf
+################################################################
+# Visual Studio and Visual Studio Code
+################################################################
+# Directories
+.vs
+.vscode
 bin
+!Source/bsf/Dependencies/mono/bin
 obj
 out
-#lib
-#Dependencies
+
+# files
+*~
+*.sdf
+*.opensdf
+*.suo
+################################################################
+# Project
+################################################################
+# Directories
+/Build
 Builds
+bsfImportToolBuild
+#Dependencies
 #Data/Binaries
 #Data/Settings.asset
 #Data/.version
@@ -26,13 +39,13 @@ Builds
 #!Data/Raw/.reqversion
 #!Data/Raw/DataPackageContents.txt
 Documentation/html
-/Build
+#lib
+Source/Experimental
+
+# Files
+CMakeSettings.json
 *.aps
 *.opendb
-Source/Experimental
-.vs
 Source/EditorManaged/MBansheeEditor.csproj
-bsfImportToolBuild
-CMakeSettings.json
-.vscode/*
 Source/EditorManaged/Properties/AssemblyInfo.cs
+################################################################
