@@ -1,10 +1,7 @@
 [![Latest version](https://img.shields.io/badge/latest-v0.4--dev-red.svg)](https://img.shields.io/badge/latest-v0.4--dev-red.svg) [![Build status](https://ci.appveyor.com/api/projects/status/v043naykgplkj42s?svg=true)](https://ci.appveyor.com/project/BearishSun/bansheeengine) [![Discord](https://img.shields.io/discord/572359664528916490.svg?logo=discord)](https://discord.gg/8Xyf5gF)
 
-# Disclaimer
-
-
 # Preserving Banshee3D...
-This repository is a fork of the latest public release from Banshee 3D, which was removed from the original author.
+This repository is a fork of the latest public release from Banshee3D (or BansheeEngine), which was removed from the original author, for more information look at the disclaimer below.
 
 #### Changes
 Integrated bsf, bsf examples and made the project compilable.
@@ -22,9 +19,32 @@ Every change from now (2023-08-15) is licensed under the MIT license, expect the
 
 My main goal is to preserve this project, nothing more, so there could be some minor bugfixes around the build system.
 
+# Disclaimer
+
+"I would like to emphasize that this fork is not intended for commercial use and will adhere to the terms of the original GPL3 license agreement. My aim is solely to preserve the original work for educational and research purposes."
+
+Why have you made this fork public?
+I was unsure about any legal consequences so I made some research, after a odyssee on the internet I found the last statements from the original author on his discord channel. After reading everything carefully I didn't find any sign which would point to a real reason why the project was switched private, only something wage, which doesn't made sense.
+
+So I decided to switch my fork public and made it buildable again. I like it a lot and I think it should be preserved. I am not the original copyright holder, neither I want to have any to do with it. I am only a "preserver" nothing more, nothing less.
+
+Details
+The original author said that he had to switch his original repository private due to legal reasons, but never stated why, he also wrote that we can use existing forks. The project itself is under GPL3, also there are more people who contributed to it.
+
+Original Statement
+Source: https://discord.com/channels/572359664528916490/573449156589518848/662359697835294720
+BearishSun — 02.01.2020 19:20
+Hi everyone. For legal reasons I cannot talk about BansheeEngine repository had to be made private. If you still need the source you can use existing forks. When I have information I can share with you guys I will. Thanks for understanding. bsf repository remains as-is.
+
+Also he stated around two years later that he will not continue the project in its current state:
+Source: https://discord.com/channels/572359664528916490/572359664528916492/860601856093978625
+BearishSun — 02.07.2021 21:24
+Banshee/bsf in its current state is unlikely to be continued for the time being, but a much improved version has been in the works for a while and I hope I can share it with you guys in the next year or so!
+
+So as you see the original author said we should use existing forks, never wrote anything against it.
 
 # What was Banshee? 
-Banshee was a high-quality and modern game development toolkit. It provides a **high-performance, multi-threaded game engine** written in C++14. The engine includes math and utility libraries, Vulkan, DirectX 11 and OpenGL support, handles common tasks such as input, GUI, physics, audio, animation and scripting, and supports many popular resource formats (e.g. FBX, PNG, PSD, TTF, OGG, WAV).
+Banshee was a high-quality and modern game development toolkit. It provided a **high-performance, multi-threaded game engine** written in C++14. The engine includes math and utility libraries, Vulkan, DirectX 11 and OpenGL support, handles common tasks such as input, GUI, physics, audio, animation and scripting, and supports many popular resource formats (e.g. FBX, PNG, PSD, TTF, OGG, WAV).
 
 Banshee provides an intuitive and customizable **editor** that can be used to manage assets, build levels, compile scripts, and to test and publish your game. The editor can be extended or customized with scripts to meet the exact needs of your project.
 
@@ -44,14 +64,14 @@ Banshee can also be used as a **low-level framework**, or as a powerful foundati
 * [Compiling](https://github.com/OmniVortexStudios/BansheeEngine/blob/master/Documentation/GitHub/compiling.md) - Learn how to compile the engine yourself.
 
 # Documentation
-* [Documentation](http://docs.banshee3d.com/Managed/index.html) - Documentation for the scripting (C#) API.
+* [Documentation (link dewad)](https://github.com/larioteo/BansheeEngine/ReadMe.md) - Documentation for the scripting (C#) API.
 
 # About
 * [License](https://github.com/OmniVortexStudios/BansheeEngine/blob/master/Documentation/GitHub/license.md) - Information about Banshee's license.
-* [Contribute](http://www.banshee3d.com/contribute) - Help out with the development
+* [Contribute (link dead)](https://github.com/larioteo/BansheeEngine/ReadMe.md) - Help out with the development
 
 # Media
 **Banshee Editor**
-![Banshee Editor](http://bearishsun.thalassa.feralhosting.com/BansheeEditor.png "Banshee Editor")
+![Banshee Editor (link dead)](https://github.com/larioteo/BansheeEngine/ReadMe.md "Banshee Editor")
 
 [**Video overview**](https://youtu.be/WJsYOyCXGEU)
