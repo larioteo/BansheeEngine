@@ -64,7 +64,7 @@ Banshee can also be used as a **low-level framework**, or as a powerful foundati
 * [Compiling](https://github.com/OmniVortexStudios/BansheeEngine/blob/master/Documentation/GitHub/compiling.md) - Learn how to compile the engine yourself.
 
 # Documentation
-* [Documentation (link dewad)](https://github.com/larioteo/BansheeEngine/ReadMe.md) - Documentation for the scripting (C#) API.
+* [Documentation (link dead)](https://github.com/larioteo/BansheeEngine/ReadMe.md) - Documentation for the scripting (C#) API.
 
 # About
 * [License](https://github.com/OmniVortexStudios/BansheeEngine/blob/master/Documentation/GitHub/license.md) - Information about Banshee's license.
